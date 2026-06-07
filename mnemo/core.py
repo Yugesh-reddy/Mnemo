@@ -473,6 +473,40 @@ class MnemoStore:
                 json.dumps({"text": text, "role": role}),
             )
 
+    async def list_current(self, *, limit: int = 200) -> list[Fact]:
+        """All HEAD facts (most recently changed first) — for the UI list view."""
+        rows = await self.conn.fetch(
+            """
+            SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
+                   kind, event_id, object_text, object_number, object_json,
+                   provenance, confidence, trust_level, valid_from, recorded_at
+            FROM memory_current
+            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
+            ORDER BY recorded_at DESC
+            LIMIT $4
+            """,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+            limit,
+        )
+        return [Fact.from_row(r) for r in rows]
+
+    async def list_commits(self, *, limit: int = 100) -> list[Commit]:
+        """Commits in this namespace (most recent first) — for the diff view."""
+        rows = await self.conn.fetch(
+            """
+            SELECT commit_id, namespace, parent_commit_id, label, at_seq, created_by, created_at
+            FROM memory_commit
+            WHERE namespace=$1
+            ORDER BY at_seq DESC, created_at DESC
+            LIMIT $2
+            """,
+            self.namespace,
+            limit,
+        )
+        return [Commit.from_row(r) for r in rows]
+
     async def get(self, fact_id: UUID) -> Fact | None:
         """The HEAD fact for ``fact_id`` (current believed value), or None."""
         row = await self.conn.fetchrow(

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center justify-between mb-5">
+  <h1 class="text-xl font-semibold">Memory</h1>
+  <span class="text-xs text-slate-400">{{ facts|length }} fact(s) at HEAD</span>
+</div>
+
+<input type="search" name="q" value="{{ q }}" placeholder="Search memory…" autofocus
+  class="w-full border rounded-lg px-4 py-2.5 mb-6 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+  hx-get="/rows" hx-trigger="keyup changed delay:250ms, search" hx-target="#rows" hx-include="this">
+
+<div class="bg-white border rounded-lg overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-slate-500 text-left">
+      <tr>
+        <th class="px-4 py-2 font-medium">Subject</th>
+        <th class="py-2 font-medium">Predicate</th>
+        <th class="py-2 font-medium">Value</th>
+        <th class="py-2 font-medium">Provenance</th>
+        <th class="py-2 font-medium">Trust</th>
+        <th class="px-4 py-2 font-medium">Updated</th>
+      </tr>
+    </thead>
+    <tbody id="rows">
+      {% include "_rows.html" %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

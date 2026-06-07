@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Diff <span class="text-slate-400 font-normal text-sm">— how beliefs changed between two points</span></h1>
+
+<form method="post" action="/commit" class="mb-5 flex gap-2 items-center">
+  <input name="label" placeholder="snapshot label (optional)"
+    class="border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+  <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Snapshot now</button>
+  <span class="text-xs text-slate-400">captures the current state as a commit</span>
+</form>
+
+{% if commits|length >= 2 %}
+<form method="get" action="/diff" class="flex gap-3 items-end mb-6">
+  <label class="text-sm text-slate-600">From
+    <select name="a" class="block border rounded px-2 py-1.5 text-sm mono mt-1">
+      {% for c in commits %}
+      <option value="{{ c.commit_id }}" {{ 'selected' if a == c.commit_id|string }}>{{ c.label or '(no label)' }} · seq {{ c.at_seq }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label class="text-sm text-slate-600">To
+    <select name="b" class="block border rounded px-2 py-1.5 text-sm mono mt-1">
+      {% for c in commits %}
+      <option value="{{ c.commit_id }}" {{ 'selected' if b == c.commit_id|string }}>{{ c.label or '(no label)' }} · seq {{ c.at_seq }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button class="px-3 py-1.5 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-500">Compare</button>
+</form>
+{% else %}
+<p class="text-slate-400 text-sm mb-6">Take at least two snapshots, then compare them.</p>
+{% endif %}
+
+{% if diff %}
+<div class="bg-white border rounded-lg divide-y mono text-sm">
+  {% for e in diff.entries %}
+  {% set bg = {'added': 'bg-emerald-50', 'removed': 'bg-rose-50', 'changed': 'bg-amber-50'} %}
+  {% set sign = {'added': '+', 'removed': '−', 'changed': '~'} %}
+  <div class="px-4 py-2 flex gap-3 items-center {{ bg.get(e.change, '') }}">
+    <span class="w-4 text-center font-semibold">{{ sign.get(e.change, '?') }}</span>
+    <span class="text-slate-600">{{ e.subject }} {{ e.predicate }}</span>
+    <span class="ml-auto">
+      {% if e.change == 'changed' %}
+        <span class="text-rose-600 line-through">{{ e.old }}</span>
+        <span class="text-slate-400">→</span>
+        <span class="text-emerald-700">{{ e.new }}</span>
+      {% elif e.change == 'added' %}
+        <span class="text-emerald-700">{{ e.new }}</span>
+      {% else %}
+        <span class="text-rose-600 line-through">{{ e.old }}</span>
+      {% endif %}
+    </span>
+  </div>
+  {% else %}
+  <div class="px-4 py-6 text-center text-slate-400">No changes between these commits.</div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

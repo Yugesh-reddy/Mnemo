@@ -1,0 +1,20 @@
+{% from "_macros.html" import trust_badge %}
+{% for f in facts %}
+<tr class="border-t hover:bg-slate-50 cursor-pointer" onclick="window.location='/fact/{{ f.fact_id }}'">
+  <td class="px-4 py-2.5">{{ f.subject }}</td>
+  <td class="py-2.5">{{ f.predicate }}</td>
+  <td class="py-2.5 mono text-indigo-700">{{ f.value }}</td>
+  <td class="py-2.5 text-slate-500 text-xs">{{ f.provenance }}</td>
+  <td class="py-2.5">{{ trust_badge(f.trust_level) }}</td>
+  <td class="px-4 py-2.5 text-slate-400 text-xs">
+    {{ f.recorded_at.strftime('%Y-%m-%d %H:%M') if f.recorded_at else '' }}
+  </td>
+</tr>
+{% else %}
+<tr>
+  <td colspan="6" class="px-4 py-10 text-center text-slate-400">
+    No facts yet. Run <span class="mono text-slate-600">make seed</span>
+    or <span class="mono text-slate-600">python examples/agent.py setup</span>.
+  </td>
+</tr>
+{% endfor %}

@@ -1,0 +1,8 @@
+{% macro trust_badge(level) -%}
+  {%- set colors = {
+    'high': 'bg-emerald-100 text-emerald-700',
+    'medium': 'bg-amber-100 text-amber-700',
+    'low': 'bg-rose-100 text-rose-700'
+  } -%}
+  <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ colors.get(level, 'bg-slate-100 text-slate-600') }}">{{ level }}</span>
+{%- endmacro %}

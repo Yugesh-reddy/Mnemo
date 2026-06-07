@@ -43,7 +43,11 @@ async def agent_answer(store: MnemoStore, fact_id: UUID, question: str) -> Any:
 
 
 async def run_scenario(
-    store: MnemoStore, worker: ExtractionWorker, *, say: Callable[[str], None] = lambda _s: None
+    store: MnemoStore,
+    worker: ExtractionWorker,
+    *,
+    say: Callable[[str], None] = lambda _s: None,
+    stop_before_revert: bool = False,
 ) -> dict[str, Any]:
     """The §10 scenario. Returns key results so callers/tests can assert on them."""
     say("=== Mnemo demo — see → blame → revert → behavior change ===\n")
@@ -95,6 +99,16 @@ async def run_scenario(
         say(f"  {e.op:<7} {str(e.value):<12} {e.provenance:<22} {e.trust_level:<6}")
     say("")
 
+    if stop_before_revert:
+        say("→ Open the web UI (make ui) to blame and revert this fact yourself.")
+        return {
+            "fact_id": fact_id,
+            "ops": [e.op for e in history],
+            "values": [e.value for e in history],
+            "answer_wrong": wrong,
+            "answer_fixed": None,
+        }
+
     # 4) A human reverts to the original PostgreSQL belief.
     say("[human review] reverting to the original PostgreSQL belief…")
     add_event = history[0]
@@ -120,7 +134,7 @@ async def run_scenario(
     }
 
 
-async def _demo() -> None:
+async def _scenario(stop_before_revert: bool) -> None:
     conn = await connect()
     try:
         # Fresh state each run, so the demo is reproducible.
@@ -130,9 +144,9 @@ async def _demo() -> None:
         )
         embedder = build_embedder()
         extractor = build_extractor()
-        store = MnemoStore(conn, embedder, user_id="demo")
-        worker = ExtractionWorker(conn, embedder, extractor, user_id="demo")
-        await run_scenario(store, worker, say=print)
+        store = MnemoStore(conn, embedder)
+        worker = ExtractionWorker(conn, embedder, extractor)
+        await run_scenario(store, worker, say=print, stop_before_revert=stop_before_revert)
     finally:
         await conn.close()
 
@@ -142,8 +156,8 @@ async def _chat() -> None:
     try:
         embedder = build_embedder()
         extractor = build_extractor()
-        store = MnemoStore(conn, embedder, user_id="you")
-        worker = ExtractionWorker(conn, embedder, extractor, user_id="you")
+        store = MnemoStore(conn, embedder)
+        worker = ExtractionWorker(conn, embedder, extractor)
         print("Mnemo chat — type a message, or 'recall <query>' to search memory. Ctrl-D to exit.")
         turn = 0
         while True:
@@ -171,7 +185,13 @@ async def _chat() -> None:
 @app.command()
 def demo() -> None:
     """Run the scripted §10 rollback scenario end to end."""
-    asyncio.run(_demo())
+    asyncio.run(_scenario(stop_before_revert=False))
+
+
+@app.command()
+def setup() -> None:
+    """Leave the corrupted (MongoDB) state so you can revert it in the web UI."""
+    asyncio.run(_scenario(stop_before_revert=True))
 
 
 @app.command()

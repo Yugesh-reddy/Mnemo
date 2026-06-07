@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_macros.html" import trust_badge %}
+{% block content %}
+<a href="/" class="text-sm text-slate-500 hover:text-indigo-600">← back to memory</a>
+
+{% if fact %}
+<div class="mt-4 bg-white border rounded-lg p-6">
+  <div class="text-sm text-slate-500">{{ fact.subject }} · {{ fact.predicate }}</div>
+  <div class="text-2xl font-semibold mono text-indigo-700 mt-1">{{ fact.value }}</div>
+  <div class="mt-2 flex items-center gap-2 text-sm">
+    {{ trust_badge(fact.trust_level) }}
+    <span class="text-slate-500">{{ fact.provenance }}</span>
+  </div>
+  <form method="post" action="/fact/{{ fact_id }}/edit" class="mt-5 flex gap-2">
+    <input name="value" placeholder="Correct the value (records a human_review edit)…"
+      class="flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+    <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Edit</button>
+  </form>
+</div>
+{% else %}
+<p class="mt-4 text-slate-500">Fact not found.</p>
+{% endif %}
+
+<h2 class="mt-8 mb-3 font-semibold">History
+  <span class="text-slate-400 font-normal text-sm">— blame, newest first</span></h2>
+<div class="bg-white border rounded-lg divide-y">
+  {% for e in history %}
+  <div class="px-4 py-3 flex items-center gap-3 flex-wrap">
+    <span class="mono text-xs px-2 py-0.5 rounded
+      {{ 'bg-indigo-100 text-indigo-700' if e.op == 'REVERT' else 'bg-slate-100 text-slate-600' }}">{{ e.op }}</span>
+    <span class="mono text-indigo-700">{{ e.value }}</span>
+    <span class="text-xs text-slate-500">{{ e.provenance }}</span>
+    {{ trust_badge(e.trust_level) }}
+    <span class="text-xs text-slate-400">{{ e.recorded_at.strftime('%Y-%m-%d %H:%M') if e.recorded_at else '' }}</span>
+    <div class="ml-auto">
+      {% if fact and e.event_id == fact.event_id %}
+        <span class="text-xs text-slate-400">current</span>
+      {% else %}
+        <form method="post" action="/fact/{{ fact_id }}/revert/{{ e.event_id }}">
+          <button class="text-xs px-2 py-1 rounded border hover:bg-indigo-50 hover:border-indigo-300">Revert to this</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

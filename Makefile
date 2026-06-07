@@ -42,4 +42,4 @@ demo:  ## Run the end-to-end rollback demo (spec §10)
 	$(RUN) python examples/agent.py demo
 
 ui:  ## Run the FastAPI + HTMX web UI
-	@echo "ui: not yet — implemented in M7"; exit 1
+	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
