@@ -12,7 +12,7 @@ from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # asyncpg Record is mapping-like; dict(row) gives us .get for optional columns.
 Row = Any
@@ -56,40 +56,50 @@ class Event(BaseModel):
     @classmethod
     def from_row(cls, row: Row) -> Event:
         d = dict(row)
-        return cls(**{k: d.get(k) for k in cls.model_fields})
+        return cls(**{k: d[k] for k in cls.model_fields if k in d})
 
 
 class Fact(BaseModel):
-    """A fact at HEAD — stable identity plus its current believed value."""
+    """A fact at HEAD — its current believed value.
+
+    A search result is either a reconciled ``semantic`` fact or an un-reconciled
+    ``fast_cache`` hit (raw turn text awaiting extraction); ``source`` says which.
+    """
 
     fact_id: UUID
-    namespace: str
-    user_id: str
-    agent_id: str
+    namespace: str = "default"
+    user_id: str = "default"
+    agent_id: str = "default"
     session_id: str | None = None
-    subject: str
-    predicate: str
-    kind: str
-    event_id: UUID
+    subject: str = ""
+    predicate: str = ""
+    kind: str = "triple"
+    event_id: UUID | None = None
     object_text: str | None = None
     object_number: Decimal | None = None
     object_json: Any | None = None
-    provenance: str
-    confidence: float
-    trust_level: str
+    provenance: str = "agent_inference"
+    confidence: float = 1.0
+    trust_level: str = "medium"
     valid_from: datetime | None = None
     recorded_at: datetime | None = None
     score: float | None = None
+    source: str = "semantic"
+    raw_text: str | None = None
 
     @property
     def value(self) -> Any:
+        if self.source == "fast_cache":
+            return self.raw_text
         return _value_of(self.object_text, self.object_number, self.object_json)
 
     @classmethod
     def from_row(cls, row: Row, *, score: float | None = None) -> Fact:
         d = dict(row)
-        d["score"] = score
-        return cls(**{k: d.get(k) for k in cls.model_fields})
+        data = {k: d[k] for k in cls.model_fields if k in d}
+        if score is not None:
+            data["score"] = score
+        return cls(**data)
 
 
 class Commit(BaseModel):
@@ -128,3 +138,14 @@ class Diff(BaseModel):
     seq_a: int
     seq_b: int
     entries: list[DiffEntry]
+
+
+class ExtractedFact(BaseModel):
+    """A candidate fact from the (untrusted) extractor — validated before use."""
+
+    subject: str
+    predicate: str
+    object: Any
+    kind: str = "triple"
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    assertion_type: str = "agent_inference"

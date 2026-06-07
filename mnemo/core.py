@@ -8,7 +8,8 @@ payload.
 Identity is by ``fact_key`` (canonical subject|predicate); embedding cosine refines
 routing — near-identical restatements (>= update_sim) no-op, and a new key that is
 semantically very close to an existing fact (>= dedup_sim) resolves to it. ``search``
-is hybrid keyword + vector. Fast-cache merge and extraction arrive in M4.
+is hybrid keyword + vector and merges un-reconciled fast_cache rows (§8) when given a
+session. ``observe`` feeds the async extraction worker (mnemo/extraction.py).
 """
 
 from __future__ import annotations
@@ -347,7 +348,12 @@ class MnemoStore:
         session_id: str | None = None,
     ) -> list[Fact]:
         """Hybrid search over HEAD (memory_current): keyword matches first, then
-        vector neighbours at/above ``search_floor``. Fast-cache merge arrives in M4."""
+        vector neighbours at/above ``search_floor``.
+
+        When ``session_id`` is given, un-reconciled fast_cache rows for that session
+        are merged in (immediate next-turn recall, spec §8). The ``reconciled`` flag
+        is the dedup: a cache row is dropped the moment its semantic fact lands, so a
+        belief is never double-counted (raw + semantic)."""
         embedding = await self._embed(query)
         vec = to_vector_literal(embedding)
         like = f"%{query}%"
@@ -376,10 +382,96 @@ class MnemoStore:
             self.settings.search_floor,
             k,
         )
-        return [
+        results = [
             Fact.from_row(r, score=(float(r["score"]) if r["score"] is not None else None))
             for r in rows
         ]
+
+        if session_id is not None:
+            results.extend(await self._search_fast_cache(query, vec, like, session_id, k))
+        return results[:k]
+
+    async def _search_fast_cache(
+        self, query: str, vec: str | None, like: str, session_id: str, k: int
+    ) -> list[Fact]:
+        rows = await self.conn.fetch(
+            """
+            SELECT cache_id, turn_id, raw_text,
+                   CASE WHEN embedding IS NULL THEN NULL
+                        ELSE 1 - (embedding <=> $4::vector) END AS score
+            FROM fast_cache
+            WHERE namespace=$1 AND user_id=$2 AND session_id=$3 AND reconciled = false
+              AND (
+                  raw_text ILIKE $5
+                  OR (embedding IS NOT NULL AND 1 - (embedding <=> $4::vector) >= $6)
+              )
+            ORDER BY created_at DESC
+            LIMIT $7
+            """,
+            self.namespace,
+            self.user_id,
+            session_id,
+            vec,
+            like,
+            self.settings.search_floor,
+            k,
+        )
+        return [
+            Fact(
+                fact_id=r["cache_id"],
+                namespace=self.namespace,
+                user_id=self.user_id,
+                agent_id=self.agent_id,
+                session_id=session_id,
+                kind="raw",
+                event_id=None,
+                object_text=r["raw_text"],
+                raw_text=r["raw_text"],
+                provenance="fast_cache",
+                trust_level="low",
+                source="fast_cache",
+                score=(float(r["score"]) if r["score"] is not None else None),
+            )
+            for r in rows
+        ]
+
+    async def observe(
+        self, turn_id: str, text: str, session_id: str, *, role: str = "user"
+    ) -> None:
+        """Synchronously cache a turn and enqueue extraction (spec §8).
+
+        Writes a fast_cache row (for immediate recall) and an extraction_job (for the
+        async worker), in one transaction.
+        """
+        embedding = await self._embed(text)
+        vec = to_vector_literal(embedding)
+        async with self.conn.transaction():
+            await self.conn.execute(
+                """
+                INSERT INTO fast_cache
+                    (namespace, user_id, session_id, turn_id, raw_text, embedding)
+                VALUES ($1, $2, $3, $4, $5, $6::vector)
+                """,
+                self.namespace,
+                self.user_id,
+                session_id,
+                turn_id,
+                text,
+                vec,
+            )
+            await self.conn.execute(
+                """
+                INSERT INTO extraction_job
+                    (namespace, user_id, agent_id, session_id, turn_id, payload)
+                VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+                """,
+                self.namespace,
+                self.user_id,
+                self.agent_id,
+                session_id,
+                turn_id,
+                json.dumps({"text": text, "role": role}),
+            )
 
     async def blame(
         self,

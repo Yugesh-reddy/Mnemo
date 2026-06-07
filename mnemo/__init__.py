@@ -85,4 +85,4 @@ class Mnemo:
         return self._run(lambda s: s.commit(label))
 
     def observe(self, turn_id: str, text: str, session_id: str, *, role: str = "user") -> None:
-        raise NotImplementedError("observe() lands in M4 (two-tier memory + extraction)")
+        return self._run(lambda s: s.observe(turn_id, text, session_id, role=role))
