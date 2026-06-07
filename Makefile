@@ -39,7 +39,7 @@ mcp:  ## Run the MCP server (stdio)
 	$(RUN) python -m mnemo.mcp_server
 
 demo:  ## Run the end-to-end rollback demo (spec §10)
-	@echo "demo: not yet — implemented in M6"; exit 1
+	$(RUN) python examples/agent.py demo
 
 ui:  ## Run the FastAPI + HTMX web UI
 	@echo "ui: not yet — implemented in M7"; exit 1
