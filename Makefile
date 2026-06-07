@@ -43,3 +43,6 @@ demo:  ## Run the end-to-end rollback demo (spec §10)
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
+
+gif:  ## Record the rollback demo GIF (needs `brew install vhs`)
+	vhs docs/demo.tape
