@@ -69,6 +69,9 @@ class Mnemo:
     def search(self, query: str, **kwargs: Any) -> list[Fact]:
         return self._run(lambda s: s.search(query, **kwargs))
 
+    def get(self, fact_id: UUID) -> Fact | None:
+        return self._run(lambda s: s.get(fact_id))
+
     def blame(self, **kwargs: Any) -> list[Event]:
         return self._run(lambda s: s.blame(**kwargs))
 

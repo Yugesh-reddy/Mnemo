@@ -36,7 +36,7 @@ fmt:  ## ruff --fix + black
 	$(RUN) black .
 
 mcp:  ## Run the MCP server (stdio)
-	@echo "mcp: not yet — implemented in M5"; exit 1
+	$(RUN) python -m mnemo.mcp_server
 
 demo:  ## Run the end-to-end rollback demo (spec §10)
 	@echo "demo: not yet — implemented in M6"; exit 1

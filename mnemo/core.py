@@ -473,6 +473,23 @@ class MnemoStore:
                 json.dumps({"text": text, "role": role}),
             )
 
+    async def get(self, fact_id: UUID) -> Fact | None:
+        """The HEAD fact for ``fact_id`` (current believed value), or None."""
+        row = await self.conn.fetchrow(
+            """
+            SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
+                   kind, event_id, object_text, object_number, object_json,
+                   provenance, confidence, trust_level, valid_from, recorded_at
+            FROM memory_current
+            WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4
+            """,
+            fact_id,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+        )
+        return Fact.from_row(row) if row else None
+
     async def blame(
         self,
         *,
