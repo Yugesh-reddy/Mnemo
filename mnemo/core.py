@@ -5,12 +5,15 @@ transaction. The append-only invariant is sacred: state changes are *new* events
 we only ever flip supersession flags and move the HEAD pointer, never rewrite a
 payload.
 
-M2 scope: identity/dedup is by ``fact_key`` (canonical subject|predicate). Embedding
-similarity routing and vector search arrive in M3 — embeddings are stored NULL here.
+Identity is by ``fact_key`` (canonical subject|predicate); embedding cosine refines
+routing — near-identical restatements (>= update_sim) no-op, and a new key that is
+semantically very close to an existing fact (>= dedup_sim) resolves to it. ``search``
+is hybrid keyword + vector. Fast-cache merge and extraction arrive in M4.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 from decimal import Decimal
 from typing import Any
@@ -19,6 +22,7 @@ from uuid import UUID
 import asyncpg
 
 from mnemo.config import Settings, get_settings
+from mnemo.db import to_vector_literal
 from mnemo.models import Commit, Diff, DiffEntry, Event, Fact
 
 # Predicate synonyms collapsed to a canonical key (spec §5 step 1). Small + in-code.
@@ -106,7 +110,7 @@ class MnemoStore:
         settings: Settings | None = None,
     ) -> None:
         self.conn = conn
-        self.embedder = embedder  # stored for M3 (vector routing + search)
+        self.embedder = embedder
         self.namespace = namespace
         self.user_id = user_id
         self.agent_id = agent_id
@@ -135,17 +139,18 @@ class MnemoStore:
         source_span: Any | None,
         valid_from: Any | None,
         parent_event_id: UUID | None,
+        embedding: list[float] | None = None,
     ) -> Event:
         object_text, object_number, object_json = _encode_object(value)
         row = await self.conn.fetchrow(
             f"""
             INSERT INTO memory_event
-                (fact_id, op, object_text, object_number, object_json,
+                (fact_id, op, object_text, object_number, object_json, embedding,
                  provenance, actor, confidence, trust_level, source_span,
                  valid_from, parent_event_id)
-            VALUES ($1, $2::mem_op, $3, $4, $5::jsonb,
-                    $6::mem_provenance, $7, $8, $9::mem_trust, $10::jsonb,
-                    COALESCE($11, now()), $12)
+            VALUES ($1, $2::mem_op, $3, $4, $5::jsonb, $6::vector,
+                    $7::mem_provenance, $8, $9, $10::mem_trust, $11::jsonb,
+                    COALESCE($12, now()), $13)
             RETURNING {_EVENT_COLS}
             """,
             fact_id,
@@ -153,6 +158,7 @@ class MnemoStore:
             object_text,
             object_number,
             object_json,
+            to_vector_literal(embedding),
             provenance,
             actor,
             confidence,
@@ -162,6 +168,46 @@ class MnemoStore:
             parent_event_id,
         )
         return Event.from_row(row)
+
+    async def _embed(self, text: str) -> list[float]:
+        """Embed off the event loop (the backend call may hit the network)."""
+        return await asyncio.to_thread(self.embedder.embed, text)
+
+    async def _cosine_to_event(self, vec_literal: str | None, event_id: UUID) -> float | None:
+        """Cosine similarity between a query vector and an event's stored embedding."""
+        if vec_literal is None:
+            return None
+        value = await self.conn.fetchval(
+            "SELECT 1 - (embedding <=> $1::vector) FROM memory_event "
+            "WHERE event_id=$2 AND embedding IS NOT NULL",
+            vec_literal,
+            event_id,
+        )
+        return float(value) if value is not None else None
+
+    async def _nearest_fact(self, vec_literal: str | None) -> tuple[UUID, UUID, float] | None:
+        """Nearest HEAD fact by cosine, if at/above the dedup threshold (entity resolution)."""
+        if vec_literal is None:
+            return None
+        row = await self.conn.fetchrow(
+            """
+            SELECT fact_id, event_id AS current_event_id,
+                   1 - (embedding <=> $4::vector) AS cosine
+            FROM memory_current
+            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND embedding IS NOT NULL
+            ORDER BY embedding <=> $4::vector
+            LIMIT 1
+            """,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+            vec_literal,
+        )
+        if row is None or row["cosine"] is None:
+            return None
+        if float(row["cosine"]) >= self.settings.dedup_sim:
+            return row["fact_id"], row["current_event_id"], float(row["cosine"])
+        return None
 
     async def _set_head(self, fact_id: UUID, event_id: UUID) -> None:
         await self.conn.execute(
@@ -203,9 +249,26 @@ class MnemoStore:
         valid_from: Any | None = None,
         session_id: str | None = None,
     ) -> Event:
-        """Insert a fact value: ADD a new fact, UPDATE an existing one, or no-op."""
+        """Insert a fact value, routing to ADD / UPDATE / no-op (spec §5).
+
+        - Same ``fact_key``: no-op if the value is unchanged or a near-identical
+          restatement (cosine >= update_sim); otherwise UPDATE.
+        - New ``fact_key``: if a different fact is semantically very close
+          (cosine >= dedup_sim), UPDATE *that* fact (entity resolution); else ADD.
+        """
         fact_key = canonicalize(subject, predicate)
         trust = derive_trust(provenance, confidence)
+        embedding = await self._embed(f"{subject} {predicate} {object}")
+        vec = to_vector_literal(embedding)
+        emit = dict(
+            provenance=provenance,
+            actor=actor,
+            confidence=confidence,
+            trust_level=trust,
+            source_span=source_span,
+            valid_from=valid_from,
+            embedding=embedding,
+        )
 
         async with self.conn.transaction():
             fact = await self.conn.fetchrow(
@@ -219,60 +282,60 @@ class MnemoStore:
                 fact_key,
             )
 
-            if fact is None:
-                fact_id = await self.conn.fetchval(
-                    """
-                    INSERT INTO memory_fact
-                        (namespace, user_id, agent_id, session_id,
-                         subject, predicate, fact_key, kind)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind)
-                    RETURNING fact_id
-                    """,
-                    self.namespace,
-                    self.user_id,
-                    self.agent_id,
-                    session_id,
-                    subject,
-                    predicate,
-                    fact_key,
-                    kind,
+            # --- existing fact under the same key ---
+            if fact is not None:
+                current = await self._get_event(fact["current_event_id"])
+                if current is not None:
+                    if _same_object(current, object):
+                        return current  # exact no-op
+                    cosine = await self._cosine_to_event(vec, current.event_id)
+                    if cosine is not None and cosine >= self.settings.update_sim:
+                        return current  # near-identical restatement: don't churn
+                return await self._emit_update(
+                    fact["fact_id"], fact["current_event_id"], object, **emit
                 )
-                event = await self._insert_event(
-                    fact_id,
-                    "ADD",
-                    object,
-                    provenance=provenance,
-                    actor=actor,
-                    confidence=confidence,
-                    trust_level=trust,
-                    source_span=source_span,
-                    valid_from=valid_from,
-                    parent_event_id=None,
-                )
-                await self._set_head(fact_id, event.event_id)
-                return event
 
-            fact_id = fact["fact_id"]
-            current = await self._get_event(fact["current_event_id"])
-            if current is not None and _same_object(current, object):
-                return current  # no-op: same belief already at HEAD
+            # --- new key: semantic dedup may resolve to a different fact ---
+            match = await self._nearest_fact(vec)
+            if match is not None:
+                matched_fact_id, matched_event_id, _ = match
+                current = await self._get_event(matched_event_id)
+                if current is not None and _same_object(current, object):
+                    return current
+                return await self._emit_update(matched_fact_id, matched_event_id, object, **emit)
 
-            event = await self._insert_event(
-                fact_id,
-                "UPDATE",
-                object,
-                provenance=provenance,
-                actor=actor,
-                confidence=confidence,
-                trust_level=trust,
-                source_span=source_span,
-                valid_from=valid_from,
-                parent_event_id=fact["current_event_id"],
+            # --- brand-new fact ---
+            fact_id = await self.conn.fetchval(
+                """
+                INSERT INTO memory_fact
+                    (namespace, user_id, agent_id, session_id,
+                     subject, predicate, fact_key, kind)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind)
+                RETURNING fact_id
+                """,
+                self.namespace,
+                self.user_id,
+                self.agent_id,
+                session_id,
+                subject,
+                predicate,
+                fact_key,
+                kind,
             )
-            if fact["current_event_id"] is not None:
-                await self._supersede(fact["current_event_id"], event.event_id)
+            event = await self._insert_event(fact_id, "ADD", object, parent_event_id=None, **emit)
             await self._set_head(fact_id, event.event_id)
             return event
+
+    async def _emit_update(
+        self, fact_id: UUID, current_event_id: UUID | None, object: Any, **emit: Any
+    ) -> Event:
+        event = await self._insert_event(
+            fact_id, "UPDATE", object, parent_event_id=current_event_id, **emit
+        )
+        if current_event_id is not None:
+            await self._supersede(current_event_id, event.event_id)
+        await self._set_head(fact_id, event.event_id)
+        return event
 
     async def search(
         self,
@@ -283,26 +346,40 @@ class MnemoStore:
         include_superseded: bool = False,
         session_id: str | None = None,
     ) -> list[Fact]:
-        """Keyword search over HEAD (memory_current). Vector + fast-cache merge: M3/M4."""
+        """Hybrid search over HEAD (memory_current): keyword matches first, then
+        vector neighbours at/above ``search_floor``. Fast-cache merge arrives in M4."""
+        embedding = await self._embed(query)
+        vec = to_vector_literal(embedding)
         like = f"%{query}%"
         rows = await self.conn.fetch(
             """
             SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
                    kind, event_id, object_text, object_number, object_json,
-                   provenance, confidence, trust_level, valid_from, recorded_at
+                   provenance, confidence, trust_level, valid_from, recorded_at,
+                   (subject ILIKE $4 OR predicate ILIKE $4 OR object_text ILIKE $4) AS kw_match,
+                   CASE WHEN embedding IS NULL THEN NULL
+                        ELSE 1 - (embedding <=> $5::vector) END AS score
             FROM memory_current
             WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
-              AND (subject ILIKE $4 OR predicate ILIKE $4 OR object_text ILIKE $4)
-            ORDER BY recorded_at DESC
-            LIMIT $5
+              AND (
+                  (subject ILIKE $4 OR predicate ILIKE $4 OR object_text ILIKE $4)
+                  OR (embedding IS NOT NULL AND 1 - (embedding <=> $5::vector) >= $6)
+              )
+            ORDER BY kw_match DESC, score DESC NULLS LAST
+            LIMIT $7
             """,
             self.namespace,
             self.user_id,
             self.agent_id,
             like,
+            vec,
+            self.settings.search_floor,
             k,
         )
-        return [Fact.from_row(r) for r in rows]
+        return [
+            Fact.from_row(r, score=(float(r["score"]) if r["score"] is not None else None))
+            for r in rows
+        ]
 
     async def blame(
         self,

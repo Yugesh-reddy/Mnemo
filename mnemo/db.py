@@ -17,9 +17,49 @@ from mnemo.config import get_settings
 MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 
 
+def to_vector_literal(vec: list[float] | str | None) -> str | None:
+    """Format a vector as a pgvector text literal.
+
+    Idempotent: a string is assumed already-formatted and passed through. This also
+    serves as the asyncpg encoder, which may receive either form.
+    """
+    if vec is None:
+        return None
+    if isinstance(vec, str):
+        return vec
+    return "[" + ",".join(repr(float(x)) for x in vec) + "]"
+
+
+def _decode_vector(text: str) -> list[float]:
+    text = text.strip()
+    if text in ("", "[]"):
+        return []
+    return [float(x) for x in text[1:-1].split(",")]
+
+
+async def register_vector(conn: asyncpg.Connection) -> None:
+    """Teach a connection to read pgvector columns as ``list[float]``.
+
+    Tolerant of the type not existing yet (e.g. before migrations run). Writes use
+    ``$n::vector`` literals, so this is only needed for reading embeddings back.
+    """
+    try:
+        await conn.set_type_codec(
+            "vector",
+            schema="public",
+            encoder=to_vector_literal,
+            decoder=_decode_vector,
+            format="text",
+        )
+    except asyncpg.exceptions.UndefinedObjectError:
+        pass
+
+
 async def connect(dsn: str | None = None) -> asyncpg.Connection:
     """Open a single asyncpg connection (caller owns closing it)."""
-    return await asyncpg.connect(dsn or get_settings().dsn)
+    conn = await asyncpg.connect(dsn or get_settings().dsn)
+    await register_vector(conn)
+    return conn
 
 
 async def apply_migrations(

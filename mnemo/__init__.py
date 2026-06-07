@@ -18,6 +18,7 @@ from uuid import UUID
 import asyncpg
 
 from mnemo.core import MnemoStore
+from mnemo.db import register_vector
 from mnemo.models import Commit, Diff, Event, Fact
 
 __version__ = "0.0.1"
@@ -47,6 +48,7 @@ class Mnemo:
     def _run(self, fn: Callable[[MnemoStore], Awaitable[T]]) -> T:
         async def _wrapped() -> T:
             conn = await asyncpg.connect(self._dsn)
+            await register_vector(conn)
             try:
                 store = MnemoStore(
                     conn,

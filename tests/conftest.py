@@ -95,7 +95,10 @@ def _disposable_test_db() -> str:
 @pytest.fixture
 async def db(_disposable_test_db: str) -> AsyncIterator[asyncpg.Connection]:
     """A connection to the migrated test DB, wrapped in a rolled-back transaction."""
+    from mnemo.db import register_vector
+
     conn = await asyncpg.connect(_disposable_test_db)
+    await register_vector(conn)  # so SELECT * can decode embedding columns
     tx = conn.transaction()
     await tx.start()
     try:

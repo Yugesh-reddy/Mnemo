@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     confidence_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Drop extracted facts whose confidence is below this."""
 
+    search_floor: float = Field(0.5, ge=0.0, le=1.0)
+    """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
+
     # --- Extraction worker ---
     extractor_max_retries: int = 2
 
