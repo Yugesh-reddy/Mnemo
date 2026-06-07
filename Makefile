@@ -22,7 +22,7 @@ migrate:  ## Apply migrations/*.sql in order
 	$(RUN) python -m mnemo.db
 
 seed:  ## Load demo seed data
-	@echo "seed: not yet — implemented in M1"; exit 1
+	$(RUN) python -m mnemo.seed
 
 test:  ## Run pytest
 	$(RUN) pytest -q
