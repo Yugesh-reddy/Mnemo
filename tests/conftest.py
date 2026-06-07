@@ -103,3 +103,29 @@ async def db(_disposable_test_db: str) -> AsyncIterator[asyncpg.Connection]:
     finally:
         await tx.rollback()
         await conn.close()
+
+
+@pytest.fixture
+async def store(db: asyncpg.Connection, fake_embedder: FakeEmbedder):
+    """An async MnemoStore bound to the rolled-back test connection."""
+    from mnemo.core import MnemoStore  # lazy: core.py may not exist yet during M2 RED
+
+    return MnemoStore(db, fake_embedder)
+
+
+@pytest.fixture
+def clean_memory(_disposable_test_db: str):
+    """Teardown that truncates memory tables — for sync-SDK tests that commit for real."""
+    yield
+
+    async def _truncate() -> None:
+        conn = await asyncpg.connect(_disposable_test_db)
+        try:
+            await conn.execute(
+                "TRUNCATE memory_event, memory_fact, memory_commit, "
+                "fast_cache, extraction_job RESTART IDENTITY CASCADE"
+            )
+        finally:
+            await conn.close()
+
+    asyncio.run(_truncate())
