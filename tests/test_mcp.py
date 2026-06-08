@@ -50,7 +50,18 @@ async def test_mcp_add_search_blame_revert_roundtrip(mcp_overrides) -> None:
     assert updated["op"] == "UPDATE"
 
     results = await srv.memory_search("database")
-    assert any(f["object_text"] == "MongoDB" for f in results)
+    assert any(f["value"] == "MongoDB" for f in results)
+    # Compact contract: exactly these keys, nothing else (token-efficient index).
+    assert set(results[0].keys()) == {
+        "fact_id",
+        "subject",
+        "predicate",
+        "value",
+        "trust",
+        "tier",
+        "score",
+        "source",
+    }
 
     history = await srv.memory_blame(subject="user", predicate="preferred_database")
     assert [e["op"] for e in history] == ["ADD", "UPDATE"]
@@ -68,3 +79,4 @@ async def test_mcp_observe_then_log(mcp_overrides) -> None:
     # the enqueued turn is visible via search by session (fast-cache tier)
     hits = await srv.memory_search("Postgres", session_id="sess-1")
     assert any(h["source"] == "fast_cache" for h in hits)
+    assert all("recorded_at" not in h for h in hits)  # full dumps are gone

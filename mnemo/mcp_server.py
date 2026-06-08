@@ -35,17 +35,38 @@ def reset_overrides() -> None:
     _OVERRIDE.clear()
 
 
+_pool: asyncpg.Pool | None = None
+_embedder: Any | None = None
+
+
+async def _get_pool() -> asyncpg.Pool:
+    global _pool
+    if _pool is None:
+        _pool = await asyncpg.create_pool(
+            get_settings().dsn, init=register_vector, min_size=1, max_size=5
+        )
+    return _pool
+
+
 async def _run(fn: Any) -> Any:
     settings = get_settings()
-    dsn = _OVERRIDE.get("dsn", settings.dsn)
-    embedder = _OVERRIDE.get("embedder") or build_embedder(settings)
-    conn = await asyncpg.connect(dsn)
-    await register_vector(conn)
-    try:
-        store = MnemoStore(conn, embedder, settings=settings)
-        return await fn(store)
-    finally:
-        await conn.close()
+    if _OVERRIDE:
+        # Test seam: short-lived connection per call (pools are loop-bound; the
+        # test harness spins up a fresh event loop per test).
+        conn = await asyncpg.connect(_OVERRIDE.get("dsn", settings.dsn))
+        await register_vector(conn)
+        try:
+            embedder = _OVERRIDE.get("embedder") or build_embedder(settings)
+            return await fn(MnemoStore(conn, embedder, settings=settings))
+        finally:
+            await conn.close()
+
+    global _embedder
+    if _embedder is None:
+        _embedder = build_embedder(settings)
+    pool = await _get_pool()
+    async with pool.acquire() as conn:
+        return await fn(MnemoStore(conn, _embedder, settings=settings))
 
 
 @mcp.tool()
@@ -68,9 +89,22 @@ async def memory_add(
 
 @mcp.tool()
 async def memory_search(query: str, k: int = 8, session_id: str | None = None) -> list[dict]:
-    """Search current memory for facts relevant to a query (semantic + keyword)."""
+    """Search current memory (semantic + keyword). Returns a compact index —
+    call memory_get(fact_id) or memory_blame(fact_id) for full detail/history."""
     facts = await _run(lambda s: s.search(query, k=k, session_id=session_id))
-    return [f.model_dump(mode="json") for f in facts]
+    return [
+        {
+            "fact_id": str(f.fact_id),
+            "subject": f.subject,
+            "predicate": f.predicate,
+            "value": "" if f.value is None else str(f.value),
+            "trust": f.trust_level,
+            "tier": f.tier,
+            "score": round(f.score, 3) if f.score is not None else None,
+            "source": f.source,
+        }
+        for f in facts
+    ]
 
 
 @mcp.tool()
