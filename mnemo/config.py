@@ -62,6 +62,15 @@ class Settings(BaseSettings):
     # --- Extraction worker ---
     extractor_max_retries: int = 2
 
+    job_lease_seconds: float = Field(60.0, gt=0.0)
+    """A 'processing' job whose updated_at is older than this is presumed orphaned
+    (its worker died mid-extraction) and is eligible to be reclaimed. Must exceed the
+    worst-case extraction time for your backend."""
+
+    job_max_attempts: int = Field(3, ge=1)
+    """A job is marked 'failed' (not requeued forever) once attempts exceeds this.
+    Default 3 = the initial try + 2 retries (kept in lockstep with extractor_max_retries)."""
+
 
 @lru_cache
 def get_settings() -> Settings:

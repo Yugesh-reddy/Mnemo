@@ -193,17 +193,47 @@ class ExtractionWorker:
         self.actor = actor
 
     async def process_one(self) -> bool:
-        """Process a single pending job. Returns False if the queue is empty."""
+        """Process a single job. Returns False if the queue is empty.
+
+        Claims a ``pending`` job, or a ``processing`` job whose lease expired (the
+        owning worker died mid-extraction). Jobs past ``job_max_attempts`` are marked
+        ``failed`` rather than retried forever.
+        """
         async with self.conn.transaction():
-            job = await self.conn.fetchrow("""
-                SELECT job_id, turn_id, session_id, payload FROM extraction_job
+            # Reclaim stale 'processing' rows too: a worker that died after claiming
+            # would otherwise leave the job stranded (the original claim released the
+            # txn before the network-bound extraction ran). The lease interval is built
+            # in SQL from a numeric arg (asyncpg binds interval params as timedelta).
+            job = await self.conn.fetchrow(
+                """
+                SELECT job_id, attempts FROM extraction_job
                 WHERE status = 'pending'
+                   OR (status = 'processing' AND updated_at < now() - make_interval(secs => $1))
                 ORDER BY created_at, job_id
                 LIMIT 1
                 FOR UPDATE SKIP LOCKED
-                """)
+                """,
+                float(self.settings.job_lease_seconds),
+            )
             if job is None:
                 return False
+
+            # Past the attempt cap: give up permanently rather than loop forever.
+            if job["attempts"] >= self.settings.job_max_attempts:
+                await self.conn.execute(
+                    "UPDATE extraction_job SET status='failed', updated_at=now() WHERE job_id=$1",
+                    job["job_id"],
+                )
+                return True  # there may be more jobs; keep draining
+
+            # Re-fetch the full row now that we know we're proceeding.
+            job = await self.conn.fetchrow(
+                """
+                SELECT job_id, turn_id, session_id, payload FROM extraction_job
+                WHERE job_id=$1
+                """,
+                job["job_id"],
+            )
             await self.conn.execute(
                 "UPDATE extraction_job SET status='processing', attempts=attempts+1, "
                 "updated_at=now() WHERE job_id=$1",

@@ -110,6 +110,50 @@ async def test_worker_empty_queue_returns_false(store: MnemoStore, db: asyncpg.C
     assert await worker.process_one() is False
 
 
+async def test_worker_reclaims_orphaned_processing_job(
+    store: MnemoStore, db: asyncpg.Connection
+) -> None:
+    # A worker claimed the job then died mid-extraction: status stuck at 'processing'
+    # but its lease (updated_at) is stale. The next process_one() must reclaim it.
+    worker = ExtractionWorker(db, store.embedder, StubExtractor())
+    await store.observe("t1", "I use Postgres.", SESSION)
+    # Simulate the crash: force the job to 'processing' with an expired lease.
+    await db.execute(
+        "UPDATE extraction_job SET status='processing', attempts=1, "
+        "updated_at=now() - ($1::text || ' seconds')::interval WHERE turn_id='t1'",
+        str(store.settings.job_lease_seconds + 5),
+    )
+
+    assert await worker.process_one() is True  # reclaimed and processed
+
+    # The reclaimed job completed normally: fact extracted, cache reconciled.
+    facts = await store.search("Postgres", session_id=SESSION)
+    assert any(f.object_text == "PostgreSQL" for f in facts)
+    assert await db.fetchval("SELECT status FROM extraction_job WHERE turn_id='t1'") == "done"
+    assert await db.fetchval(
+        "SELECT reconciled FROM fast_cache WHERE turn_id='t1' AND session_id=$1", SESSION
+    )
+
+
+async def test_worker_marks_job_failed_after_attempt_cap(
+    store: MnemoStore, db: asyncpg.Connection
+) -> None:
+    # A job that keeps failing must eventually be marked 'failed', not retried forever.
+    # StubExtractor succeeds, so we force attempts to the cap to exercise the guard.
+    worker = ExtractionWorker(db, store.embedder, StubExtractor())
+    await store.observe("t1", "I use Postgres.", SESSION)
+    await db.execute(
+        "UPDATE extraction_job SET attempts=$1 WHERE turn_id='t1'",
+        store.settings.job_max_attempts,
+    )
+
+    assert await worker.process_one() is True  # drained (it marked the job failed)
+
+    assert await db.fetchval("SELECT status FROM extraction_job WHERE turn_id='t1'") == "failed"
+    # And it did NOT extract/store anything this round.
+    assert await db.fetchval("SELECT count(*) FROM memory_current") == 0
+
+
 async def test_extracted_provenance_and_trust(store: MnemoStore, db: asyncpg.Connection) -> None:
     worker = ExtractionWorker(db, store.embedder, StubExtractor())
     await store.observe("t1", "I use Postgres.", SESSION)
