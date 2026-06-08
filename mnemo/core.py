@@ -285,16 +285,7 @@ class MnemoStore:
 
             # --- existing fact under the same key ---
             if fact is not None:
-                current = await self._get_event(fact["current_event_id"])
-                if current is not None:
-                    if _same_object(current, object):
-                        return current  # exact no-op
-                    cosine = await self._cosine_to_event(vec, current.event_id)
-                    if cosine is not None and cosine >= self.settings.update_sim:
-                        return current  # near-identical restatement: don't churn
-                return await self._emit_update(
-                    fact["fact_id"], fact["current_event_id"], object, **emit
-                )
+                return await self._apply_to_existing(fact, object, vec, **emit)
 
             # --- new key: semantic dedup may resolve to a different fact ---
             match = await self._nearest_fact(vec)
@@ -306,23 +297,21 @@ class MnemoStore:
                 return await self._emit_update(matched_fact_id, matched_event_id, object, **emit)
 
             # --- brand-new fact ---
-            fact_id = await self.conn.fetchval(
-                """
-                INSERT INTO memory_fact
-                    (namespace, user_id, agent_id, session_id,
-                     subject, predicate, fact_key, kind)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind)
-                RETURNING fact_id
-                """,
-                self.namespace,
-                self.user_id,
-                self.agent_id,
-                session_id,
-                subject,
-                predicate,
-                fact_key,
-                kind,
-            )
+            fact_id = await self._insert_fact(subject, predicate, fact_key, kind, session_id)
+            if fact_id is None:
+                # Lost the UNIQUE race to a concurrent add: act as the second arrival.
+                fact = await self.conn.fetchrow(
+                    """
+                    SELECT fact_id, current_event_id FROM memory_fact
+                    WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+                    """,
+                    self.namespace,
+                    self.user_id,
+                    self.agent_id,
+                    fact_key,
+                )
+                assert fact is not None  # the constraint fired, so the row must exist
+                return await self._apply_to_existing(fact, object, vec, **emit)
             event = await self._insert_event(fact_id, "ADD", object, parent_event_id=None, **emit)
             await self._set_head(fact_id, event.event_id)
             return event
@@ -337,6 +326,58 @@ class MnemoStore:
             await self._supersede(current_event_id, event.event_id)
         await self._set_head(fact_id, event.event_id)
         return event
+
+    async def _apply_to_existing(
+        self, fact: asyncpg.Record, object: Any, vec: str | None, **emit: Any
+    ) -> Event:
+        """Route a value to an existing fact: no-op on (near-)duplicate, else UPDATE.
+
+        Shared by the same-key path and the concurrent-insert recovery path (the latter
+        wins the ``UNIQUE`` race when a parallel ``add`` inserted the fact first).
+        """
+        current = await self._get_event(fact["current_event_id"])
+        if current is not None:
+            if _same_object(current, object):
+                return current  # exact no-op
+            cosine = await self._cosine_to_event(vec, current.event_id)
+            if cosine is not None and cosine >= self.settings.update_sim:
+                return current  # near-identical restatement: don't churn
+        return await self._emit_update(fact["fact_id"], fact["current_event_id"], object, **emit)
+
+    async def _insert_fact(
+        self, subject: str, predicate: str, fact_key: str, kind: str, session_id: str | None
+    ) -> UUID | None:
+        """Insert a brand-new fact. Returns ``None`` if a concurrent add won the race.
+
+        Two parallel ``add`` calls for a new key can both miss the existence check,
+        then collide on ``UNIQUE (namespace, user_id, agent_id, fact_key)``. The loser
+        would otherwise surface as a raw ``UniqueViolationError``; instead we catch it
+        *outside* the savepoint (asyncpg only rolls a savepoint back when the exception
+        propagates out of the ``async with`` block — catching inside leaves the
+        transaction aborted), so the enclosing ``add`` transaction stays usable and the
+        caller can re-fetch and route through the existing-fact path.
+        """
+        try:
+            async with self.conn.transaction():  # savepoint
+                return await self.conn.fetchval(
+                    """
+                    INSERT INTO memory_fact
+                        (namespace, user_id, agent_id, session_id,
+                         subject, predicate, fact_key, kind)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind)
+                    RETURNING fact_id
+                    """,
+                    self.namespace,
+                    self.user_id,
+                    self.agent_id,
+                    session_id,
+                    subject,
+                    predicate,
+                    fact_key,
+                    kind,
+                )
+        except asyncpg.UniqueViolationError:
+            return None  # lost the race to a parallel add
 
     async def search(
         self,

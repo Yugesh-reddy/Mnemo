@@ -103,6 +103,37 @@ async def test_alias_predicate_updates_same_fact(store) -> None:
     assert e2.fact_id == e1.fact_id
 
 
+async def test_add_recovers_from_concurrent_insert_race(store, db: asyncpg.Connection) -> None:
+    # The UNIQUE fact_key race: two parallel adds for a brand-new key both miss the
+    # existence check, then the loser's INSERT hits the constraint. _insert_fact must
+    # catch the UniqueViolationError *outside* its savepoint (asyncpg only rolls a
+    # savepoint back when the exception propagates out — catching inside poisons the
+    # transaction), return None, and leave the outer transaction healthy so add() can
+    # re-fetch and route through the existing-fact path.
+    from mnemo.core import canonicalize
+
+    fact_key = canonicalize("user", "favorite_color")
+
+    # First arrival wins the race and creates the fact.
+    first = await store._insert_fact("user", "favorite_color", fact_key, "triple", None)
+    assert first is not None
+
+    # Second arrival collides on the UNIQUE constraint -> None, no exception, and
+    # (critically) the transaction is NOT left aborted.
+    second = await store._insert_fact("user", "favorite_color", fact_key, "triple", None)
+    assert second is None
+
+    # Proof the transaction stayed usable: a normal query still runs, and add() now
+    # sees the existing fact and routes to a write rather than erroring.
+    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=$1", fact_key) == 1
+    upd = await store.add("user", "favorite_color", "red", provenance="direct_user_statement")
+    assert upd.fact_id == first
+    assert upd.op in ("ADD", "UPDATE")  # ADD: no prior event seeded; UPDATE otherwise
+
+    # Exactly one fact row survived.
+    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=$1", fact_key) == 1
+
+
 # ---- blame / search -----------------------------------------------------
 
 
