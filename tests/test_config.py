@@ -30,3 +30,13 @@ def test_backend_defaults_to_local_ollama() -> None:
 
 def test_get_settings_is_cached() -> None:
     assert get_settings() is get_settings()
+
+
+def test_gate_knobs_have_spec_defaults() -> None:
+    s = _clean()
+    assert (s.w_imp, s.w_spec, s.w_nov) == (0.4, 0.3, 0.3)
+    assert s.w_src == 0.4
+    assert s.durable_cutoff == 0.70
+    assert s.ephemeral_floor == 0.45
+    assert "preferred_database" in s.predicate_vocab
+    assert "timezone" in s.predicate_vocab
