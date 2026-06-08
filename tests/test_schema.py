@@ -11,7 +11,6 @@ import pytest
 from mnemo.seed import seed
 
 CORE_TABLES = [
-    "memory_entity",
     "memory_fact",
     "memory_event",
     "memory_commit",
@@ -69,6 +68,34 @@ async def test_fact_state_as_of_reflects_seq(db: asyncpg.Connection) -> None:
     # As of seq 0 (before anything), no facts exist.
     rows_before = await db.fetch("SELECT * FROM fact_state_as_of('default', 'default', $1)", 0)
     assert len(rows_before) == 0
+
+
+async def test_memory_entity_dropped_and_view_has_decay_columns(
+    db: asyncpg.Connection,
+) -> None:
+    assert await db.fetchval("SELECT to_regclass('public.memory_entity')") is None
+    cols = {
+        r["column_name"]
+        for r in await db.fetch(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name='memory_current'"
+        )
+    }
+    assert {"last_used", "valid_to", "reason"} <= cols
+
+
+async def test_expired_valid_to_hides_fact_from_head(store, db: asyncpg.Connection) -> None:
+    ev = await store.add("user", "location", "Austin", provenance="direct_user_statement")
+    # Simulate a fact whose world-validity ended (bitemporal filter, spec §5 step 3).
+    # Test scaffolding only — production never mutates valid_to; invalidate() appends.
+    await db.execute(
+        "UPDATE memory_event SET valid_to = now() - interval '1 day' WHERE event_id=$1",
+        ev.event_id,
+    )
+    assert (
+        await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=$1", ev.fact_id)
+        == 0
+    )
 
 
 @pytest.mark.parametrize("predicate", ["preferred_database", "name", "preferred_language"])
