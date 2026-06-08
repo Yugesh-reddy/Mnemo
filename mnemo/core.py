@@ -197,6 +197,22 @@ class MnemoStore:
         )
         return float(value) if value is not None else None
 
+    async def _max_cosine(self, vec_literal: str | None) -> float:
+        """Best cosine between a candidate and any HEAD fact (0.0 on empty store)."""
+        if vec_literal is None:
+            return 0.0
+        value = await self.conn.fetchval(
+            """
+            SELECT max(1 - (embedding <=> $4::vector)) FROM memory_current
+            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND embedding IS NOT NULL
+            """,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+            vec_literal,
+        )
+        return float(value) if value is not None else 0.0
+
     async def _nearest_fact(self, vec_literal: str | None) -> tuple[UUID, UUID, float] | None:
         """Nearest HEAD fact by cosine, if at/above the dedup threshold (entity resolution)."""
         if vec_literal is None:
@@ -264,6 +280,7 @@ class MnemoStore:
         write_score: float = 1.0,
         tier: str = "durable",
         reason: str | None = None,
+        embedding: list[float] | None = None,
     ) -> Event:
         """Insert a fact value, routing to ADD / UPDATE / no-op (spec §5).
 
@@ -274,7 +291,8 @@ class MnemoStore:
         """
         fact_key = canonicalize(subject, predicate)
         trust = derive_trust(provenance, confidence)
-        embedding = await self._embed(f"{subject} {predicate} {object}")
+        if embedding is None:
+            embedding = await self._embed(f"{subject} {predicate} {object}")
         vec = to_vector_literal(embedding)
         emit = dict(
             provenance=provenance,

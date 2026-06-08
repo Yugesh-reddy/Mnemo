@@ -38,3 +38,15 @@ async def test_naive_baseline_stores_junk_and_false_facts(
     assert m["precision"] < 1.0
     # ...but it does capture the must-keep facts (recall is not the naive problem).
     assert m["recall"] == 1.0
+
+
+async def test_gated_beats_naive_the_north_star(_disposable_test_db: str, clean_memory) -> None:
+    """CLAUDE.md test #4: gated precision > naive; gated false-count = 0 while
+    naive > 0; recall of must-keep facts stays 100%."""
+    from mnemo.eval import evaluate
+
+    result = await evaluate(_disposable_test_db)
+    assert result["gated"]["precision"] > result["naive"]["precision"]
+    assert result["gated"]["false"] == 0
+    assert result["naive"]["false"] > 0
+    assert result["gated"]["recall"] == 1.0

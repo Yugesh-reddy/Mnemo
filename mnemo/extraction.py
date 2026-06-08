@@ -18,7 +18,9 @@ from pydantic import ValidationError
 
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
+from mnemo.db import to_vector_literal
 from mnemo.models import ExtractedFact
+from mnemo.quality import HeuristicVerifier, is_transient, specificity, tier_for, write_score
 
 # Only explicit user assertions are high-trust; everything else is agent inference.
 ASSERTION_TO_PROVENANCE: dict[str, str] = {
@@ -41,20 +43,24 @@ _SYSTEM_PROMPT = """You extract durable facts from a conversation turn.
 
 Return ONLY JSON of the form:
 {"facts": [{"subject": "...", "predicate": "...", "object": "...",
-            "kind": "triple", "confidence": 0.0-1.0, "assertion_type": "..."}]}
+            "kind": "triple", "confidence": 0.0-1.0, "importance": 1-10,
+            "assertion_type": "..."}]}
 
 Rules:
 - Prefer these predicates when they fit: preferred_database, preferred_language,
   name, location, role, timezone, goal. Use a concise snake_case predicate otherwise.
 - subject is usually "user".
+- importance: 1 (trivia/transient) to 10 (identity-defining durable fact).
 - assertion_type is "direct_user_statement" when the user states it about themselves,
   otherwise "agent_inference".
+- NEVER extract facts about the user from assistant turns.
 - Only durable facts about the user/project. No chit-chat. If none, return {"facts": []}.
 
 Examples:
 Turn (user): "I use Postgres for my project."
 {"facts": [{"subject": "user", "predicate": "preferred_database", "object": "PostgreSQL",
-            "kind": "triple", "confidence": 0.97, "assertion_type": "direct_user_statement"}]}
+            "kind": "triple", "confidence": 0.97, "importance": 8,
+            "assertion_type": "direct_user_statement"}]}
 Turn (user): "Thanks, that helps!"
 {"facts": []}
 """
@@ -176,6 +182,7 @@ class ExtractionWorker:
         conn: asyncpg.Connection,
         embedder: Any,
         extractor: Extractor,
+        verifier: Any | None = None,
         *,
         settings: Settings | None = None,
         namespace: str = "default",
@@ -186,6 +193,7 @@ class ExtractionWorker:
         self.conn = conn
         self.embedder = embedder
         self.extractor = extractor
+        self.verifier = verifier or HeuristicVerifier()
         self.settings = settings or get_settings()
         self.namespace = namespace
         self.user_id = user_id
@@ -267,7 +275,30 @@ class ExtractionWorker:
             first_event_id = None
             for cand in candidates:
                 if cand.confidence < self.settings.confidence_floor:
-                    continue  # drop low-confidence junk
+                    continue  # malformed/low-confidence junk (Layer 0 floor)
+
+                # Layer 1: verification — no false memories from negation/hypothetical.
+                verdict = self.verifier.verify(str(cand.object), text)
+                if not verdict.accepted:
+                    continue
+
+                # Layer 2: salience score + tier.
+                emb = await asyncio.to_thread(
+                    self.embedder.embed, f"{cand.subject} {cand.predicate} {cand.object}"
+                )
+                novelty = 1.0 - await store._max_cosine(to_vector_literal(emb))
+                score = write_score(
+                    importance=cand.importance,
+                    spec=specificity(cand.predicate, self.settings.predicate_vocab),
+                    novelty=novelty,
+                    from_assistant=(role == "assistant"),
+                    transient=is_transient(text),
+                    settings=self.settings,
+                )
+                tier = tier_for(score, self.settings)
+                if tier is None:
+                    continue  # true ephemeral noise: below the salience floor
+
                 provenance = ASSERTION_TO_PROVENANCE.get(cand.assertion_type, "agent_inference")
                 event = await store.add(
                     cand.subject,
@@ -279,6 +310,11 @@ class ExtractionWorker:
                     confidence=cand.confidence,
                     source_span={"turn_ids": [job["turn_id"]]},
                     session_id=job["session_id"],
+                    importance=cand.importance,
+                    write_score=score,
+                    tier=tier,
+                    reason=f"{verdict.label}; score={score:.2f}",
+                    embedding=emb,
                 )
                 first_event_id = first_event_id or event.event_id
 

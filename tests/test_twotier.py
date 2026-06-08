@@ -202,6 +202,60 @@ async def test_extracted_provenance_and_trust(store: MnemoStore, db: asyncpg.Con
     assert json.loads(span) == {"turn_ids": ["t1"]}
 
 
+async def test_gate_rejects_negation_no_false_memory(
+    store: MnemoStore, db: asyncpg.Connection
+) -> None:
+    from mnemo.eval import EvalExtractor
+
+    worker = ExtractionWorker(db, store.embedder, EvalExtractor())
+    await store.observe("t1", "I don't use MongoDB, never liked it.", SESSION)
+    await worker.process_one()
+    assert await db.fetchval("SELECT count(*) FROM memory_current") == 0
+    assert (
+        await db.fetchval("SELECT count(*) FROM memory_event WHERE object_text='MongoDB'") == 0
+    )  # not even hidden — never stored
+
+
+async def test_gate_drops_junk_but_demotes_borderline(
+    store: MnemoStore, db: asyncpg.Connection
+) -> None:
+    from mnemo.eval import EvalExtractor
+
+    worker = ExtractionWorker(db, store.embedder, EvalExtractor())
+    # junk: weather (imp 2, out-of-vocab, assistant turn) -> dropped entirely
+    await store.observe("t1", "By the way it's a sunny 72F here today.", SESSION, role="assistant")
+    # borderline: debugging (imp 3, in-vocab 'currently_debugging', transient) -> session
+    await store.observe("t2", "Today I'm just debugging the auth service.", SESSION)
+    while await worker.process_one():
+        pass
+
+    assert await db.fetchval("SELECT count(*) FROM memory_event WHERE object_text LIKE '72F%'") == 0
+    row = await db.fetchrow(
+        "SELECT mc.tier, mc.write_score, e.reason "
+        "FROM memory_current mc JOIN memory_event e ON e.event_id = mc.event_id "
+        "WHERE mc.predicate='currently_debugging'"
+    )
+    assert row is not None, "borderline fact must be demoted, not dropped"
+    assert row["tier"] == "session"
+    assert row["write_score"] is not None
+    assert "score=" in row["reason"]
+
+
+async def test_gate_stores_good_fact_durable_with_importance(
+    store: MnemoStore, db: asyncpg.Connection
+) -> None:
+    from mnemo.eval import EvalExtractor
+
+    worker = ExtractionWorker(db, store.embedder, EvalExtractor())
+    await store.observe("t1", "I use PostgreSQL for my main project.", SESSION)
+    await worker.process_one()
+    row = await db.fetchrow(
+        "SELECT tier, importance FROM memory_current WHERE predicate='preferred_database'"
+    )
+    assert row["tier"] == "durable"
+    assert row["importance"] == 8
+
+
 # ---- live extraction (real instruct model) ------------------------------
 
 
