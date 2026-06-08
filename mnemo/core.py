@@ -696,6 +696,20 @@ class MnemoStore:
             )
             return event
 
+    async def reinforce(self, fact_id: UUID) -> None:
+        """Recall reinforcement (MemoryBank): S += 1, t -> 0 on the live event.
+
+        strength/recall_count/last_used are the documented mutable decay
+        bookkeeping — never payload."""
+        await self.conn.execute(
+            """
+            UPDATE memory_event SET strength = strength + 1,
+                   recall_count = recall_count + 1, last_used = now()
+            WHERE event_id = (SELECT current_event_id FROM memory_fact WHERE fact_id=$1)
+            """,
+            fact_id,
+        )
+
     async def invalidate(
         self, fact_id: UUID, *, actor: str | None = None, reason: str | None = None
     ) -> Event:

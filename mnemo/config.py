@@ -81,6 +81,13 @@ class Settings(BaseSettings):
     ephemeral_floor: float = Field(0.45, ge=0.0, le=1.0)
     """write_score < this => true noise: not stored at all."""
 
+    # --- Decay / reinforcement (spec §4 Layer 5; MemoryBank R = e^(−t/S)) ---
+    decay_lambda_base: float = 0.16
+    """Base decay rate; effective λ = base · (1 − (importance/10) · 0.8)."""
+
+    decay_archive_below: float = Field(0.35, ge=0.0, le=1.0)
+    """Retention below this archives the fact (reversible tier demotion)."""
+
     predicate_vocab: list[str] = [
         "name",
         "role",
