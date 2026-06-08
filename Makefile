@@ -27,6 +27,9 @@ seed:  ## Load demo seed data
 test:  ## Run pytest
 	$(RUN) pytest -q
 
+eval:  ## Precision/recall junk-rate eval — the north star
+	$(RUN) python -m mnemo.eval
+
 lint:  ## ruff check + black --check
 	$(RUN) ruff check .
 	$(RUN) black --check .

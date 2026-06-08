@@ -161,4 +161,5 @@ class ExtractedFact(BaseModel):
     object: Any
     kind: str = "triple"
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    importance: int = Field(default=5, ge=1, le=10)
     assertion_type: str = "agent_inference"
