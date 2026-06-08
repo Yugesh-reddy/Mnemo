@@ -78,6 +78,9 @@ class Mnemo:
     def revert(self, fact_id: UUID, to_event_id: UUID, **kwargs: Any) -> Event:
         return self._run(lambda s: s.revert(fact_id, to_event_id, **kwargs))
 
+    def invalidate(self, fact_id: UUID, **kwargs: Any) -> Event:
+        return self._run(lambda s: s.invalidate(fact_id, **kwargs))
+
     def diff(self, commit_a: Commit | UUID, commit_b: Commit | UUID) -> Diff:
         return self._run(lambda s: s.diff(commit_a, commit_b))
 

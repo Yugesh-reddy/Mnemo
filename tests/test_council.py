@@ -53,6 +53,24 @@ async def test_ephemeral_is_hidden_from_head_but_not_deleted(store, db: asyncpg.
     assert history[0].tier == "ephemeral"
 
 
+async def test_invalidate_hides_fact_reversibly(store, db: asyncpg.Connection) -> None:
+    e1 = await store.add("user", "location", "Austin", provenance="direct_user_statement")
+    inv = await store.invalidate(e1.fact_id, reason="user moved away")
+    assert inv.op == "INVALIDATE"
+    assert inv.valid_to is not None
+    assert inv.parent_event_id == e1.event_id
+
+    # Hidden from HEAD and search; history fully preserved.
+    assert await store.get(e1.fact_id) is None
+    assert await store.search("Austin") == []
+    assert [e.op for e in await store.blame(fact_id=e1.fact_id)] == ["ADD", "INVALIDATE"]
+
+    # Reversible: revert to the original ADD restores the fact.
+    await store.revert(e1.fact_id, e1.event_id)
+    restored = await store.get(e1.fact_id)
+    assert restored is not None and restored.object_text == "Austin"
+
+
 async def test_revert_restores_target_tier_and_importance(store) -> None:
     e1 = await store.add(
         "user",

@@ -690,6 +690,59 @@ class MnemoStore:
             if current_id is not None and current_id != event.event_id:
                 await self._supersede(current_id, event.event_id)
             await self._set_head(fact_id, event.event_id)
+            # Revert is the undo for invalidate() too: reactivate the fact.
+            await self.conn.execute(
+                "UPDATE memory_fact SET status='active' WHERE fact_id=$1", fact_id
+            )
+            return event
+
+    async def invalidate(
+        self, fact_id: UUID, *, actor: str | None = None, reason: str | None = None
+    ) -> Event:
+        """Mark a fact no longer true in the world (bitemporal): append an
+        INVALIDATE event with valid_to=now(). Reversible via revert()."""
+        async with self.conn.transaction():
+            fact = await self.conn.fetchrow(
+                "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", fact_id
+            )
+            if fact is None or fact["current_event_id"] is None:
+                raise ValueError(f"fact {fact_id} not found")
+            current = await self._get_event(fact["current_event_id"])
+
+            object_json = current.object_json
+            if object_json is not None and not isinstance(object_json, str):
+                object_json = json.dumps(object_json, sort_keys=True)
+
+            row = await self.conn.fetchrow(
+                f"""
+                INSERT INTO memory_event
+                    (fact_id, op, object_text, object_number, object_json,
+                     provenance, actor, confidence, trust_level, parent_event_id,
+                     importance, tier, reason, valid_to)
+                VALUES ($1, 'INVALIDATE', $2, $3, $4::jsonb,
+                        $5::mem_provenance, $6, $7, $8::mem_trust, $9,
+                        $10, $11::mem_tier, $12, now())
+                RETURNING {_EVENT_COLS}
+                """,
+                fact_id,
+                current.object_text,
+                current.object_number,
+                object_json,
+                current.provenance,
+                actor,
+                current.confidence,
+                current.trust_level,
+                current.event_id,
+                current.importance,
+                current.tier,
+                reason or "invalidated",
+            )
+            event = Event.from_row(row)
+            await self._supersede(current.event_id, event.event_id)
+            await self._set_head(fact_id, event.event_id)
+            await self.conn.execute(
+                "UPDATE memory_fact SET status='invalidated' WHERE fact_id=$1", fact_id
+            )
             return event
 
     async def log(self, *, fact_id: UUID | None = None, limit: int = 50) -> list[Event]:
