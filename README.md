@@ -1,11 +1,28 @@
 # Mnemo
 
-**Git for agent memory** — see, diff, blame, and roll back what your AI remembers.
+**Agent memory that stores less and remembers what matters.**
 
-Mnemo is an **append-only, inspectable, reversible** memory layer for LLM agents. When a
-stored fact is wrong — a bad extraction, drift, or poisoning — you can see what the agent
-believes, *why* it believes it, and undo it without destroying history. Plain Postgres,
-exposed via a **Python SDK** and an **MCP server**, self-hostable and local-first.
+A write-quality gate keeps junk out (salience scoring → verification → tiering → dedup →
+decay), provenance tells you where every fact came from, and one-click rollback fixes what
+slips through — all on an **append-only, versioned, bitemporal** Postgres store, so every
+keep / demote / drop / forget is auditable and reversible. Python SDK + MCP server,
+self-hostable and local-first.
+
+## The number (run it yourself: `make eval`)
+
+Same conversation, same extractor — with and without the gate:
+
+```
+PRECISION / RECALL JUNK-RATE EVAL (naive vs gated — the north star)
+  NAIVE : stored  15 | P  60.0% | R 100.0% | F1  75.0% | false 2
+  GATED : stored  10 | P  90.0% | R 100.0% | F1  94.7% | false 0
+```
+
+The gate rejects false memories (negations like *"I **don't** use MongoDB"*, hypotheticals
+like *"what if I switched…"*), drops junk (weather, math, chit-chat), demotes borderline
+facts to a session tier instead of guessing — and keeps **100% of the facts that matter**.
+And because every decision is an event in an append-only log, any of it can be audited
+(`blame`) and undone (`revert`).
 
 ![Mnemo rollback demo](docs/rollback.gif)
 
@@ -27,6 +44,7 @@ ollama pull llama3.2:3b          # fact extraction
 make install      # uv venv + install
 make up           # Postgres 16 + pgvector
 make migrate      # apply the schema
+make eval         # the hero demo: naive vs gated precision/recall
 make demo         # the rollback scenario, end to end
 ```
 
@@ -46,17 +64,30 @@ make ui                          # open http://127.0.0.1:8000
 
 ## Why Mnemo
 
-Existing agent-memory systems (Mem0, Zep, Letta) **silently overwrite** memory. When a
-belief is wrong you can't tell what changed, why, or how to undo it — your agent just
-quietly starts being wrong.
+Agent memory has two diseases: it stores ~96–98% junk, and it invents false facts from
+negations and hypotheticals (see Mem0 issue #4573 — 97.8% of 10,134 entries were junk).
+And when a belief *is* wrong, incumbent systems **silently overwrite** memory — you can't
+tell what changed, why, or how to undo it.
 
-Mnemo treats memory like a **version-controlled event log**, so you get the operations you'd
-want from `git`:
+Mnemo attacks both:
 
-- **`blame`** — for any belief, which turn/source introduced it, and when.
+**The quality gate (the product)** — every turn runs through a write-time pipeline:
+- **extract** — salience-first fact decomposition with LLM-assigned importance (1–10)
+- **verify** — negations/hypotheticals rejected before they become false memories
+- **dedup** — canonical fact identity + embedding similarity route restatements to UPDATE
+- **score + tier** — `write_score` from importance/specificity/novelty; **demote
+  borderline facts to a session tier, drop only true noise** (recall is protected)
+- **decay** — Ebbinghaus forgetting (`R = e^(−t/S)`), recall reinforces, faded facts are
+  *archived reversibly*, never deleted
+
+**The versioned store (the foundation)** — an append-only event log makes every gate
+decision auditable and reversible:
+
+- **`blame`** — for any belief: which turn introduced it, its score, tier, and reason.
 - **`revert`** — roll a fact back to a previous value; history is never destroyed.
+- **`invalidate`** — retire a fact that's no longer true (bitemporal `valid_to`), undoable.
 - **`diff` / `log`** — how the agent's beliefs changed between two points in time.
-- **`add` / `search`** — the table-stakes store/retrieve layer (semantic + keyword).
+- **`search`** — hybrid FTS + vector retrieval, reranked by relevance + recency + importance.
 - **provenance & trust** — every belief records *how* it was learned and how much to trust it.
 
 The event log is the source of truth; `memory_current` is just a view of HEAD. State changes
@@ -68,9 +99,14 @@ product.
 | Capability | Mem0 / Zep / Letta | **Mnemo** |
 |---|:---:|:---:|
 | Store & semantic search | ✅ | ✅ |
+| Write-time quality gate (verify / score / tier) | ❌ | ✅ |
+| Measured precision/recall (`make eval`) | ❌ | ✅ |
+| Rejects negation/hypothetical false memories | ❌ | ✅ |
+| Demote-don't-drop (recall protected) | ❌ | ✅ |
+| Principled forgetting (Ebbinghaus, reversible) | ❌ | ✅ |
 | Append-only history (never destroyed) | ❌ | ✅ |
-| `blame` — provenance of every belief | ❌ | ✅ |
-| `revert` — roll back a fact | ❌ | ✅ |
+| `blame` — provenance + reason for every belief | ❌ | ✅ |
+| `revert` / `invalidate` — undo, bitemporally | partial | ✅ |
 | `diff` / time-travel between commits | ❌ | ✅ |
 | Trust levels from provenance | partial | ✅ |
 | Transparent, inspectable SQL | ❌ | ✅ |

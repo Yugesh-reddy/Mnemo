@@ -6,13 +6,16 @@
   <td class="py-2.5 mono text-indigo-700">{{ f.value }}</td>
   <td class="py-2.5 text-slate-500 text-xs">{{ f.provenance }}</td>
   <td class="py-2.5">{{ trust_badge(f.trust_level) }}</td>
+  <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-xs
+    {{ 'bg-indigo-100 text-indigo-700' if f.tier == 'durable' else 'bg-slate-100 text-slate-600' }}">{{ f.tier }}</span></td>
+  <td class="py-2.5 text-xs text-slate-500">imp {{ f.importance or 5 }}</td>
   <td class="px-4 py-2.5 text-slate-400 text-xs">
     {{ f.recorded_at.strftime('%Y-%m-%d %H:%M') if f.recorded_at else '' }}
   </td>
 </tr>
 {% else %}
 <tr>
-  <td colspan="6" class="px-4 py-10 text-center text-slate-400">
+  <td colspan="8" class="px-4 py-10 text-center text-slate-400">
     No facts yet. Run <span class="mono text-slate-600">make seed</span>
     or <span class="mono text-slate-600">python examples/agent.py setup</span>.
   </td>

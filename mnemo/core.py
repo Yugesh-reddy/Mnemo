@@ -591,7 +591,8 @@ class MnemoStore:
             """
             SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
                    kind, event_id, object_text, object_number, object_json,
-                   provenance, confidence, trust_level, valid_from, recorded_at
+                   provenance, confidence, trust_level, valid_from, recorded_at,
+                   importance, write_score, tier, strength, recall_count
             FROM memory_current
             WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
             ORDER BY recorded_at DESC
@@ -625,7 +626,8 @@ class MnemoStore:
             """
             SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
                    kind, event_id, object_text, object_number, object_json,
-                   provenance, confidence, trust_level, valid_from, recorded_at
+                   provenance, confidence, trust_level, valid_from, recorded_at,
+                   importance, write_score, tier, strength, recall_count
             FROM memory_current
             WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4
             """,

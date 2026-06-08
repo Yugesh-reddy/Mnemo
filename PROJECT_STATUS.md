@@ -1,44 +1,48 @@
-# Mnemo — build status (what's done vs what Claude Code finishes)
+# Mnemo — build status (spec v3 = target, this file = progress)
 
-This starter implements the **Model-Council quality pipeline** on a runnable,
-tested core. Hand it to Claude Code with PROJECT_SPEC.md + CLAUDE.md to productionize.
+Updated 2026-07-05. All milestones below are committed on `main`, one commit per task,
+tests green (88) + ruff/black clean at every step.
 
-## Done here (runnable + tested)
-- [x] Event-sourced store, append-only, with HEAD pointer (SQLite, Postgres-shaped)
-- [x] Version ops: add, search, blame, revert, diff, log, commit  (M1–M2 substance)
-- [x] Quality gate: salience-first scoring, importance(1–10), specificity, novelty
-- [x] Verification gate (negation/hypothetical/assistant) — NLI stand-in
-- [x] Dedup by canonical fact identity
-- [x] "Demote, don't drop" tiering (durable/session/ephemeral) — protects recall
-- [x] Ebbinghaus decay + recall reinforcement (S+1), reversible archive (not delete)
-- [x] Reusable precision/recall eval harness (mnemo/eval.py) — the north star
-- [x] Pluggable extractor (swap mock -> real LLM without touching the gate)
-- [x] Production Postgres DDL (migrations/0001_init.sql)
+## Done (runnable + tested, on real Postgres 16 + pgvector)
+- [x] Event-sourced store, append-only, HEAD pointer, bitemporal columns (M0–M2)
+- [x] Version ops: add / search / blame / revert / diff / log / commit / **invalidate**
+- [x] Real embeddings (Ollama `nomic-embed-text` 768-d default, OpenAI switch) +
+      similarity routing (update_sim 0.90 / dedup_sim 0.92) (M3)
+- [x] Two-tier fast-cache + extraction worker + invalidation handshake (M4)
+      · R1 orphaned-job lease recovery · R3 concurrent-add race · observe() hash dedup
+- [x] MCP server (8 tools, stdio, pooled, compact search results) + Python SDK (M5, R2)
+- [x] Reference agent + `make demo` rollback scenario (M6) · web UI with tier/importance
+      badges (M7)
+- [x] **Eval harness FIRST** (`make eval`): labeled 18-turn conversation, naive-vs-gated
+      precision/recall/F1/false-count (spec §7)
+- [x] **Quality gate (Layers 1–2)**: HeuristicVerifier (negation scope-aware,
+      hypotheticals), write_score (.4/.3/.3 + assistant/transient penalties),
+      tier durable ≥ .70 / session ≥ .45 / drop below — demote-don't-drop
+- [x] **Gated write path in the worker** — events carry importance/write_score/tier/reason
+- [x] **Decay + reinforcement (Layer 5)**: R = e^(−λ_eff·t/S), λ_eff = 0.16·(1−imp·0.8);
+      recall → S+1; decay_sweep archives via appended event (reversible)
+- [x] **Hybrid retrieval**: english FTS + cosine + composite rerank
+      (0.5·rel + 0.2·recency + 0.3·imp), auto-reinforce on recall
+- [x] Bitemporal enforcement: `memory_current` filters valid_to; `invalidate()` op
 
-## Claude Code completes (against PROJECT_SPEC.md)
-- [ ] M3  swap lexical cosine -> real embeddings + pgvector; SQLite -> Postgres
-- [ ] M4  swap mock extractor -> salience-first LLM call (structured output);
-          swap heuristic verifier -> NLI entailment gatekeeper (>0.99) + LLM fallback;
-          wire the two-tier fast-cache + invalidation handshake
-- [ ] M4+ async consolidation/reflection job (episodic -> semantic)
-- [ ] M5  MCP server (mnemo/mcp_server.py is scaffolded) + Python SDK polish
-- [ ] M6  reference agent wired via MCP/SDK (examples/agent.py)
-- [ ] M7  web UI: memory list/search, blame view, revert button, diff view
-- [ ] M8  README polish + record the side-by-side junk-rate GIF (the launch asset)
+## The number (make eval, deterministic FakeEmbedder)
+```
+NAIVE : stored 15 | P  60.0% | R 100.0% | F1  75.0% | false 2
+GATED : stored 10 | P  90.0% | R 100.0% | F1  94.7% | false 0
+```
+All four CLAUDE.md must-pass tests are green: fact-lifecycle, two-tier handshake,
+quality gate (no false memories, dedup, demote-not-drop), eval (gated > naive,
+false = 0, recall 100%).
 
-## Tuning targets (start values in MODEL_COUNCIL_solution.md)
-DUP_COSINE=0.90, EPHEMERAL_FLOOR=0.45, DURABLE_CUTOFF=0.70,
-write-score weights .4/.3/.3, decay lambda_base=0.16. Tune for F1 on the eval.
+## Open
+- [ ] Consolidation/reflection (Layer 4) — deliberately LAST (spec §11.5), only with the
+      trust-laundering safeguards (`agent_reflection` provenance, medium trust,
+      source_span event_ids, NLI gate vs all sources)
+- [ ] Real NLI entailment backend behind the Verifier seam (heuristic regex today)
+- [ ] Run the eval on a labeled LoCoMo/LongMemEval conversation (the headline number)
+- [ ] Record the GIFs: `make eval` side-by-side (hero) + rollback (`docs/demo.tape`, vhs)
 
-
-## Revised build order (after round-4 review)
-1. M2   core ops (event store solid)  ............................ DONE
-2. M2.5 eval harness FIRST + baseline (mnemo/eval.py) ........... DONE (demo data; swap LoCoMo)
-3. M3   extraction + Layers 0-3 (salience, regex, NLI, dedup) .. real LLM/NLI swap
-4. M4   decay + tiering (Layer 5 before Layer 4) ............... mostly done; tune vs eval
-5. M4.5 consolidation/reflection (Layer 4) LAST + trust-laundering safeguards
-
-## Consolidation safeguards (when you build Layer 4)
-- provenance='agent_reflection', default MEDIUM trust (never higher than sources)
-- keep all source episodic event_ids in source_span so blame traces through
-- run the NLI gate on each synthesized fact against ALL its source episodics
+## Tuning targets
+All knobs live in `mnemo/config.py` and are covered by tests; tune ONLY against
+`make eval` (weights .4/.3/.3, cutoffs .70/.45, decay λ=0.16 / archive < 0.35,
+rerank .5/.2/.3, γ=0.995/hr).

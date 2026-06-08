@@ -14,6 +14,31 @@ from mnemo.core import MnemoStore
 from web.app import app, get_store
 
 
+async def test_list_shows_tier_and_importance(db: asyncpg.Connection, fake_embedder) -> None:
+    store = MnemoStore(db, fake_embedder)
+    await store.add(
+        "user",
+        "preferred_database",
+        "PostgreSQL",
+        provenance="direct_user_statement",
+        importance=8,
+        tier="durable",
+    )
+
+    async def _override():
+        yield MnemoStore(db, fake_embedder)
+
+    app.dependency_overrides[get_store] = _override
+    try:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://t") as client:
+            r = await client.get("/")
+            assert "durable" in r.text
+            assert "imp 8" in r.text
+    finally:
+        app.dependency_overrides.clear()
+
+
 async def test_list_blame_revert_flow(db: asyncpg.Connection, fake_embedder) -> None:
     store = MnemoStore(db, fake_embedder)
     e1 = await store.add(

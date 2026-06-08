@@ -31,6 +31,8 @@
     <span class="mono text-indigo-700">{{ e.value }}</span>
     <span class="text-xs text-slate-500">{{ e.provenance }}</span>
     {{ trust_badge(e.trust_level) }}
+    <span class="text-xs text-slate-400">{{ e.tier }} · imp {{ e.importance or '—' }}</span>
+    {% if e.reason %}<span class="text-xs italic text-slate-400">{{ e.reason }}</span>{% endif %}
     <span class="text-xs text-slate-400">{{ e.recorded_at.strftime('%Y-%m-%d %H:%M') if e.recorded_at else '' }}</span>
     <div class="ml-auto">
       {% if fact and e.event_id == fact.event_id %}

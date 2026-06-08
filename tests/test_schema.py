@@ -93,8 +93,7 @@ async def test_expired_valid_to_hides_fact_from_head(store, db: asyncpg.Connecti
         ev.event_id,
     )
     assert (
-        await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=$1", ev.fact_id)
-        == 0
+        await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=$1", ev.fact_id) == 0
     )
 
 
