@@ -42,7 +42,8 @@ PREDICATE_ALIASES: dict[str, str] = {
 _EVENT_COLS = """
     event_id, seq, fact_id, op, object_text, object_number, object_json,
     provenance, actor, confidence, trust_level, source_span,
-    valid_from, valid_to, recorded_at, superseded_at, superseded_by, parent_event_id
+    valid_from, valid_to, recorded_at, superseded_at, superseded_by, parent_event_id,
+    importance, write_score, tier, reason, strength, recall_count, last_used
 """
 
 
@@ -141,6 +142,10 @@ class MnemoStore:
         valid_from: Any | None,
         parent_event_id: UUID | None,
         embedding: list[float] | None = None,
+        importance: int | None = None,
+        write_score: float | None = None,
+        tier: str = "durable",
+        reason: str | None = None,
     ) -> Event:
         object_text, object_number, object_json = _encode_object(value)
         row = await self.conn.fetchrow(
@@ -148,10 +153,12 @@ class MnemoStore:
             INSERT INTO memory_event
                 (fact_id, op, object_text, object_number, object_json, embedding,
                  provenance, actor, confidence, trust_level, source_span,
-                 valid_from, parent_event_id)
+                 valid_from, parent_event_id,
+                 importance, write_score, tier, reason)
             VALUES ($1, $2::mem_op, $3, $4, $5::jsonb, $6::vector,
                     $7::mem_provenance, $8, $9, $10::mem_trust, $11::jsonb,
-                    COALESCE($12, now()), $13)
+                    COALESCE($12, now()), $13,
+                    $14, $15, $16::mem_tier, $17)
             RETURNING {_EVENT_COLS}
             """,
             fact_id,
@@ -167,6 +174,10 @@ class MnemoStore:
             json.dumps(source_span) if source_span is not None else None,
             valid_from,
             parent_event_id,
+            importance,
+            write_score,
+            tier,
+            reason,
         )
         return Event.from_row(row)
 
@@ -249,6 +260,10 @@ class MnemoStore:
         source_span: Any | None = None,
         valid_from: Any | None = None,
         session_id: str | None = None,
+        importance: int = 5,
+        write_score: float = 1.0,
+        tier: str = "durable",
+        reason: str | None = None,
     ) -> Event:
         """Insert a fact value, routing to ADD / UPDATE / no-op (spec §5).
 
@@ -269,6 +284,10 @@ class MnemoStore:
             source_span=source_span,
             valid_from=valid_from,
             embedding=embedding,
+            importance=importance,
+            write_score=write_score,
+            tier=tier,
+            reason=reason,
         )
 
         async with self.conn.transaction():
@@ -612,9 +631,11 @@ class MnemoStore:
                 f"""
                 INSERT INTO memory_event
                     (fact_id, op, object_text, object_number, object_json,
-                     provenance, actor, confidence, trust_level, parent_event_id)
+                     provenance, actor, confidence, trust_level, parent_event_id,
+                     importance, write_score, tier, reason)
                 VALUES ($1, 'REVERT', $2, $3, $4::jsonb,
-                        'human_review', $5, 1.0, 'high', $6)
+                        'human_review', $5, 1.0, 'high', $6,
+                        $7, 1.0, $8::mem_tier, $9)
                 RETURNING {_EVENT_COLS}
                 """,
                 fact_id,
@@ -623,6 +644,9 @@ class MnemoStore:
                 object_json,
                 actor,
                 to_event_id,
+                target.importance,
+                target.tier,
+                f"revert to {str(to_event_id)[:8]}",
             )
             event = Event.from_row(row)
 

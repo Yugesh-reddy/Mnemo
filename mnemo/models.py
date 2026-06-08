@@ -48,6 +48,14 @@ class Event(BaseModel):
     superseded_at: datetime | None = None
     superseded_by: UUID | None = None
     parent_event_id: UUID | None = None
+    # --- council quality / decay fields (0003) ---
+    importance: int | None = None
+    write_score: float | None = None
+    tier: str = "durable"
+    reason: str | None = None
+    strength: float = 1.0
+    recall_count: int = 0
+    last_used: datetime | None = None
 
     @property
     def value(self) -> Any:
@@ -86,6 +94,11 @@ class Fact(BaseModel):
     score: float | None = None
     source: str = "semantic"
     raw_text: str | None = None
+    importance: int | None = None
+    write_score: float | None = None
+    tier: str = "durable"
+    strength: float = 1.0
+    recall_count: int = 0
 
     @property
     def value(self) -> Any:
