@@ -503,6 +503,24 @@ class MnemoStore:
         Writes a fast_cache row (for immediate recall) and an extraction_job (for the
         async worker), in one transaction.
         """
+        # Exact-duplicate turn for this session (Mem0-v3-style hash dedup): re-observing
+        # identical text would re-embed, re-extract, and double-store the same belief
+        # source. md5 comparison keeps the check index-friendly and cheap.
+        duplicate = await self.conn.fetchval(
+            """
+            SELECT 1 FROM fast_cache
+            WHERE namespace=$1 AND user_id=$2 AND session_id=$3
+              AND md5(raw_text) = md5($4)
+            LIMIT 1
+            """,
+            self.namespace,
+            self.user_id,
+            session_id,
+            text,
+        )
+        if duplicate:
+            return
+
         embedding = await self._embed(text)
         vec = to_vector_literal(embedding)
         async with self.conn.transaction():

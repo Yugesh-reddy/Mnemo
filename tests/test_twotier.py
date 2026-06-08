@@ -105,6 +105,37 @@ async def test_worker_drops_low_confidence(store: MnemoStore, db: asyncpg.Connec
     assert await db.fetchval("SELECT reconciled FROM fast_cache WHERE turn_id='t1'")
 
 
+class CountingEmbedder:
+    """FakeEmbedder wrapper that counts embed() calls."""
+
+    def __init__(self, inner) -> None:
+        self.inner = inner
+        self.calls = 0
+        self.dim = inner.dim
+
+    def embed(self, text: str) -> list[float]:
+        self.calls += 1
+        return self.inner.embed(text)
+
+
+async def test_observe_skips_exact_duplicate_turn(db: asyncpg.Connection, fake_embedder) -> None:
+    counting = CountingEmbedder(fake_embedder)
+    store = MnemoStore(db, counting)
+
+    await store.observe("t1", "I use Postgres.", SESSION)
+    calls_after_first = counting.calls
+    await store.observe("t2", "I use Postgres.", SESSION)  # identical text, new turn
+
+    # Second observe was a no-op: no new cache row, no new job, no embed call.
+    assert await db.fetchval("SELECT count(*) FROM fast_cache") == 1
+    assert await db.fetchval("SELECT count(*) FROM extraction_job") == 1
+    assert counting.calls == calls_after_first
+
+    # A genuinely different turn still goes through.
+    await store.observe("t3", "I also use Redis.", SESSION)
+    assert await db.fetchval("SELECT count(*) FROM fast_cache") == 2
+
+
 async def test_worker_empty_queue_returns_false(store: MnemoStore, db: asyncpg.Connection) -> None:
     worker = ExtractionWorker(db, store.embedder, StubExtractor())
     assert await worker.process_one() is False
