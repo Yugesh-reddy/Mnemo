@@ -59,6 +59,19 @@ class Settings(BaseSettings):
     search_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
 
+    # --- Retrieval rerank (spec §5: rerank over top-k, not a custom index) ---
+    search_w_rel: float = 0.5
+    """Rerank weight: relevance (best of cosine / FTS / keyword hit)."""
+
+    search_w_rec: float = 0.2
+    """Rerank weight: recency of last recall."""
+
+    search_w_imp: float = 0.3
+    """Rerank weight: importance/10."""
+
+    recency_gamma: float = 0.995
+    """Per-hour recency decay in the rerank (Generative Agents)."""
+
     # --- Quality gate (spec §4 Layer 2 / §13; tune ONLY against make eval) ---
     w_imp: float = 0.4
     """write_score weight: importance/10."""

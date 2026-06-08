@@ -437,33 +437,49 @@ class MnemoStore:
         like = f"%{query}%"
         rows = await self.conn.fetch(
             """
-            SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
-                   kind, event_id, object_text, object_number, object_json,
-                   provenance, confidence, trust_level, valid_from, recorded_at,
-                   (subject ILIKE $4 OR predicate ILIKE $4 OR object_text ILIKE $4) AS kw_match,
-                   CASE WHEN embedding IS NULL THEN NULL
-                        ELSE 1 - (embedding <=> $5::vector) END AS score
-            FROM memory_current
-            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
-              AND (
-                  (subject ILIKE $4 OR predicate ILIKE $4 OR object_text ILIKE $4)
-                  OR (embedding IS NOT NULL AND 1 - (embedding <=> $5::vector) >= $6)
-              )
-            ORDER BY kw_match DESC, score DESC NULLS LAST
-            LIMIT $7
+            WITH scored AS (
+              SELECT fact_id, namespace, user_id, agent_id, session_id, subject, predicate,
+                     kind, event_id, object_text, object_number, object_json,
+                     provenance, confidence, trust_level, valid_from, recorded_at,
+                     importance, write_score, tier, strength, recall_count,
+                     COALESCE(1 - (embedding <=> $5::vector), 0) AS rel_vec,
+                     to_tsvector('english', subject || ' ' || predicate || ' '
+                                 || coalesce(object_text, ''))
+                         @@ plainto_tsquery('english', $4) AS fts_hit,
+                     (subject ILIKE $6 OR predicate ILIKE $6 OR object_text ILIKE $6) AS kw_hit,
+                     power($9, EXTRACT(EPOCH FROM (now() - last_used)) / 3600.0) AS recency
+              FROM memory_current
+              WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
+            )
+            SELECT *,
+                   ($10 * GREATEST(rel_vec,
+                                   CASE WHEN fts_hit THEN 0.85 ELSE 0 END,
+                                   CASE WHEN kw_hit THEN 0.80 ELSE 0 END)
+                    + $11 * recency
+                    -- parens matter: int*int context would make PG infer $12 as
+                    -- integer and asyncpg truncate the 0.3 weight to 0
+                    + $12 * (COALESCE(importance, 5) / 10.0)) AS score
+            FROM scored
+            WHERE fts_hit OR kw_hit OR rel_vec >= $7
+            ORDER BY score DESC
+            LIMIT $8
             """,
             self.namespace,
             self.user_id,
             self.agent_id,
-            like,
+            query,
             vec,
+            like,
             self.settings.search_floor,
             k,
+            self.settings.recency_gamma,
+            self.settings.search_w_rel,
+            self.settings.search_w_rec,
+            self.settings.search_w_imp,
         )
-        results = [
-            Fact.from_row(r, score=(float(r["score"]) if r["score"] is not None else None))
-            for r in rows
-        ]
+        results = [Fact.from_row(r, score=float(r["score"])) for r in rows]
+        for fact in results:
+            await self.reinforce(fact.fact_id)  # recall reinforcement (S+1, t->0)
 
         if session_id is not None:
             results.extend(await self._search_fast_cache(query, vec, like, session_id, k))

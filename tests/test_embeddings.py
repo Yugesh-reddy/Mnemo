@@ -131,7 +131,10 @@ async def test_search_ranks_by_vector_similarity(db: asyncpg.Connection) -> None
     results = await store.search("what database")
     assert results
     assert results[0].predicate == "db_engine"
-    assert results[0].score is not None and results[0].score >= 0.9
+    # score is a composite (relevance + recency + importance), so assert ordering,
+    # not the raw cosine magnitude.
+    assert results[0].score is not None
+    assert results[0].score == max(f.score for f in results)
 
 
 # ---- live Ollama --------------------------------------------------------
