@@ -128,6 +128,26 @@ class MnemoStore:
         )
         return Event.from_row(row) if row else None
 
+    async def _lock_scope(self) -> None:
+        """Serialize writes and checkpoints within this store scope."""
+        await self.conn.execute(
+            "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+            f"{self.namespace}\x1f{self.user_id}\x1f{self.agent_id}",
+        )
+
+    async def _locked_fact(self, fact_id: UUID) -> asyncpg.Record | None:
+        return await self.conn.fetchrow(
+            """
+            SELECT fact_id, current_event_id, status FROM memory_fact
+            WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4
+            FOR UPDATE
+            """,
+            fact_id,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+        )
+
     async def _insert_event(
         self,
         fact_id: UUID,
@@ -309,10 +329,12 @@ class MnemoStore:
         )
 
         async with self.conn.transaction():
+            await self._lock_scope()
             fact = await self.conn.fetchrow(
                 """
                 SELECT fact_id, current_event_id FROM memory_fact
                 WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+                FOR UPDATE
                 """,
                 self.namespace,
                 self.user_id,
@@ -609,13 +631,16 @@ class MnemoStore:
         """Commits in this namespace (most recent first) — for the diff view."""
         rows = await self.conn.fetch(
             """
-            SELECT commit_id, namespace, parent_commit_id, label, at_seq, created_by, created_at
+            SELECT commit_id, namespace, user_id, agent_id, parent_commit_id, label,
+                   at_seq, created_by, created_at
             FROM memory_commit
-            WHERE namespace=$1
+            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
             ORDER BY at_seq DESC, created_at DESC
-            LIMIT $2
+            LIMIT $4
             """,
             self.namespace,
+            self.user_id,
+            self.agent_id,
             limit,
         )
         return [Commit.from_row(r) for r in rows]
@@ -658,7 +683,16 @@ class MnemoStore:
         self, fact_id: UUID | None, subject: str | None, predicate: str | None
     ) -> UUID | None:
         if fact_id is not None:
-            return fact_id
+            return await self.conn.fetchval(
+                """
+                SELECT fact_id FROM memory_fact
+                WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4
+                """,
+                fact_id,
+                self.namespace,
+                self.user_id,
+                self.agent_id,
+            )
         if subject is not None and predicate is not None:
             return await self._fact_id_for_key(canonicalize(subject, predicate))
         raise ValueError("provide fact_id or both subject and predicate")
@@ -668,38 +702,33 @@ class MnemoStore:
     ) -> Event:
         """Roll a fact back to a prior event's value via a new REVERT event."""
         async with self.conn.transaction():
-            target = await self._get_event(to_event_id)
-            if target is None:
-                raise ValueError(f"event {to_event_id} not found")
-            fact = await self.conn.fetchrow(
-                "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", fact_id
-            )
+            await self._lock_scope()
+            fact = await self._locked_fact(fact_id)
             if fact is None:
                 raise ValueError(f"fact {fact_id} not found")
-
-            object_json = target.object_json
-            if object_json is not None and not isinstance(object_json, str):
-                object_json = json.dumps(object_json, sort_keys=True)
+            target = await self.conn.fetchrow(
+                "SELECT * FROM memory_event WHERE event_id=$1 AND fact_id=$2", to_event_id, fact_id
+            )
+            if target is None:
+                raise ValueError(f"event {to_event_id} does not belong to fact {fact_id}")
 
             row = await self.conn.fetchrow(
                 f"""
                 INSERT INTO memory_event
-                    (fact_id, op, object_text, object_number, object_json,
-                     provenance, actor, confidence, trust_level, parent_event_id,
-                     importance, write_score, tier, reason)
-                VALUES ($1, 'REVERT', $2, $3, $4::jsonb,
-                        'human_review', $5, 1.0, 'high', $6,
-                        $7, 1.0, $8::mem_tier, $9)
+                    (fact_id, op, object_text, object_number, object_json, embedding,
+                     provenance, actor, confidence, trust_level, source_span,
+                     valid_from, parent_event_id, importance, write_score, tier,
+                     reason, strength, recall_count, last_used)
+                SELECT fact_id, 'REVERT', object_text, object_number, object_json, embedding,
+                       'human_review', $3, 1.0, 'high', source_span,
+                       valid_from, event_id, importance, write_score, tier,
+                       $4, strength, recall_count, last_used
+                FROM memory_event WHERE event_id=$1 AND fact_id=$2
                 RETURNING {_EVENT_COLS}
                 """,
-                fact_id,
-                target.object_text,
-                target.object_number,
-                object_json,
-                actor,
                 to_event_id,
-                target.importance,
-                target.tier,
+                fact_id,
+                actor,
                 f"revert to {str(to_event_id)[:8]}",
             )
             event = Event.from_row(row)
@@ -719,14 +748,19 @@ class MnemoStore:
 
         strength/recall_count/last_used are the documented mutable decay
         bookkeeping — never payload."""
-        await self.conn.execute(
-            """
-            UPDATE memory_event SET strength = strength + 1,
-                   recall_count = recall_count + 1, last_used = now()
-            WHERE event_id = (SELECT current_event_id FROM memory_fact WHERE fact_id=$1)
-            """,
-            fact_id,
-        )
+        async with self.conn.transaction():
+            await self._lock_scope()
+            fact = await self._locked_fact(fact_id)
+            if fact is None:
+                return
+            await self.conn.execute(
+                """
+                UPDATE memory_event SET strength = strength + 1,
+                       recall_count = recall_count + 1, last_used = now()
+                WHERE event_id=$1
+                """,
+                fact["current_event_id"],
+            )
 
     async def invalidate(
         self, fact_id: UUID, *, actor: str | None = None, reason: str | None = None
@@ -734,39 +768,28 @@ class MnemoStore:
         """Mark a fact no longer true in the world (bitemporal): append an
         INVALIDATE event with valid_to=now(). Reversible via revert()."""
         async with self.conn.transaction():
-            fact = await self.conn.fetchrow(
-                "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", fact_id
-            )
+            await self._lock_scope()
+            fact = await self._locked_fact(fact_id)
             if fact is None or fact["current_event_id"] is None:
                 raise ValueError(f"fact {fact_id} not found")
             current = await self._get_event(fact["current_event_id"])
 
-            object_json = current.object_json
-            if object_json is not None and not isinstance(object_json, str):
-                object_json = json.dumps(object_json, sort_keys=True)
-
             row = await self.conn.fetchrow(
                 f"""
                 INSERT INTO memory_event
-                    (fact_id, op, object_text, object_number, object_json,
-                     provenance, actor, confidence, trust_level, parent_event_id,
-                     importance, tier, reason, valid_to)
-                VALUES ($1, 'INVALIDATE', $2, $3, $4::jsonb,
-                        $5::mem_provenance, $6, $7, $8::mem_trust, $9,
-                        $10, $11::mem_tier, $12, now())
+                    (fact_id, op, object_text, object_number, object_json, embedding,
+                     provenance, actor, confidence, trust_level, source_span,
+                     valid_from, valid_to, parent_event_id, importance, write_score,
+                     tier, reason, strength, recall_count, last_used)
+                SELECT fact_id, 'INVALIDATE', object_text, object_number, object_json, embedding,
+                       provenance, $2, confidence, trust_level, source_span,
+                       valid_from, now(), event_id, importance, write_score,
+                       tier, $3, strength, recall_count, last_used
+                FROM memory_event WHERE event_id=$1
                 RETURNING {_EVENT_COLS}
                 """,
-                fact_id,
-                current.object_text,
-                current.object_number,
-                object_json,
-                current.provenance,
-                actor,
-                current.confidence,
-                current.trust_level,
                 current.event_id,
-                current.importance,
-                current.tier,
+                actor,
                 reason or "invalidated",
             )
             event = Event.from_row(row)
@@ -777,38 +800,96 @@ class MnemoStore:
             )
             return event
 
+    async def archive_if_head(
+        self, fact_id: UUID, expected_event_id: UUID, *, actor: str, reason: str
+    ) -> Event | None:
+        """Append an archival event only if ``expected_event_id`` is still HEAD."""
+        async with self.conn.transaction():
+            await self._lock_scope()
+            fact = await self._locked_fact(fact_id)
+            if fact is None or fact["current_event_id"] != expected_event_id:
+                return None
+            row = await self.conn.fetchrow(
+                f"""
+                INSERT INTO memory_event
+                    (fact_id, op, object_text, object_number, object_json, embedding,
+                     provenance, actor, confidence, trust_level, source_span,
+                     valid_from, valid_to, parent_event_id, importance, write_score,
+                     tier, reason, strength, recall_count, last_used)
+                SELECT fact_id, 'UPDATE', object_text, object_number, object_json, embedding,
+                       provenance, $2, confidence, trust_level, source_span,
+                       valid_from, valid_to, event_id, importance, write_score,
+                       'ephemeral', $3, strength, recall_count, last_used
+                FROM memory_event WHERE event_id=$1
+                RETURNING {_EVENT_COLS}
+                """,
+                expected_event_id,
+                actor,
+                reason,
+            )
+            event = Event.from_row(row)
+            await self._supersede(expected_event_id, event.event_id)
+            await self._set_head(fact_id, event.event_id)
+            return event
+
     async def log(self, *, fact_id: UUID | None = None, limit: int = 50) -> list[Event]:
         """Event history for a fact (newest first), or the recent global timeline."""
         if fact_id is not None:
             rows = await self.conn.fetch(
                 f"SELECT {_EVENT_COLS} FROM memory_event WHERE fact_id=$1 "
-                f"ORDER BY seq DESC LIMIT $2",
+                f"AND fact_id IN (SELECT fact_id FROM memory_fact WHERE namespace=$2 "
+                f"AND user_id=$3 AND agent_id=$4) "
+                f"ORDER BY seq DESC LIMIT $5",
                 fact_id,
+                self.namespace,
+                self.user_id,
+                self.agent_id,
                 limit,
             )
         else:
             rows = await self.conn.fetch(
-                f"SELECT {_EVENT_COLS} FROM memory_event ORDER BY seq DESC LIMIT $1", limit
+                f"SELECT {_EVENT_COLS} FROM memory_event WHERE fact_id IN "
+                f"(SELECT fact_id FROM memory_fact WHERE namespace=$1 AND user_id=$2 "
+                f"AND agent_id=$3) "
+                f"ORDER BY seq DESC LIMIT $4",
+                self.namespace,
+                self.user_id,
+                self.agent_id,
+                limit,
             )
         return [Event.from_row(r) for r in rows]
 
     async def commit(self, label: str | None = None) -> Commit:
         """Capture the current high-water seq as a named, chained commit."""
         async with self.conn.transaction():
-            at_seq = await self.conn.fetchval("SELECT COALESCE(max(seq), 0) FROM memory_event")
+            await self._lock_scope()
+            at_seq = await self.conn.fetchval(
+                """SELECT COALESCE(max(e.seq), 0) FROM memory_event e
+                   JOIN memory_fact f USING (fact_id)
+                   WHERE f.namespace=$1 AND f.user_id=$2 AND f.agent_id=$3""",
+                self.namespace,
+                self.user_id,
+                self.agent_id,
+            )
             parent = await self.conn.fetchval(
-                "SELECT commit_id FROM memory_commit WHERE namespace=$1 "
+                "SELECT commit_id FROM memory_commit "
+                "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 "
                 "ORDER BY at_seq DESC, created_at DESC LIMIT 1",
                 self.namespace,
+                self.user_id,
+                self.agent_id,
             )
             row = await self.conn.fetchrow(
                 """
-                INSERT INTO memory_commit (namespace, parent_commit_id, label, at_seq, created_by)
-                VALUES ($1, $2, $3, $4, $5)
-                RETURNING commit_id, namespace, parent_commit_id, label, at_seq,
+                INSERT INTO memory_commit
+                    (namespace, user_id, agent_id, parent_commit_id, label, at_seq, created_by)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                RETURNING commit_id, namespace, user_id, agent_id, parent_commit_id, label, at_seq,
                           created_by, created_at
                 """,
                 self.namespace,
+                self.user_id,
+                self.agent_id,
                 parent,
                 label,
                 at_seq,
@@ -821,16 +902,38 @@ class MnemoStore:
         ca = commit_a.commit_id if isinstance(commit_a, Commit) else commit_a
         cb = commit_b.commit_id if isinstance(commit_b, Commit) else commit_b
 
-        seq_a = await self.conn.fetchval("SELECT at_seq FROM memory_commit WHERE commit_id=$1", ca)
-        seq_b = await self.conn.fetchval("SELECT at_seq FROM memory_commit WHERE commit_id=$1", cb)
+        seq_a = await self.conn.fetchval(
+            "SELECT at_seq FROM memory_commit WHERE commit_id=$1 AND namespace=$2 "
+            "AND user_id=$3 AND agent_id=$4",
+            ca,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+        )
+        seq_b = await self.conn.fetchval(
+            "SELECT at_seq FROM memory_commit WHERE commit_id=$1 AND namespace=$2 "
+            "AND user_id=$3 AND agent_id=$4",
+            cb,
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+        )
         if seq_a is None or seq_b is None:
             raise ValueError("unknown commit id")
 
         rows_a = await self.conn.fetch(
-            "SELECT * FROM fact_state_as_of($1, $2, $3)", self.namespace, self.user_id, seq_a
+            "SELECT * FROM fact_state_as_of($1, $2, $3, $4)",
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+            seq_a,
         )
         rows_b = await self.conn.fetch(
-            "SELECT * FROM fact_state_as_of($1, $2, $3)", self.namespace, self.user_id, seq_b
+            "SELECT * FROM fact_state_as_of($1, $2, $3, $4)",
+            self.namespace,
+            self.user_id,
+            self.agent_id,
+            seq_b,
         )
         a = {r["fact_id"]: r for r in rows_a}
         b = {r["fact_id"]: r for r in rows_b}

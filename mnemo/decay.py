@@ -57,21 +57,11 @@ async def decay_sweep(store: MnemoStore, *, now: datetime | None = None) -> int:
         )
         if score >= settings.decay_archive_below:
             continue
-        await store._emit_update(
+        event = await store.archive_if_head(
             r["fact_id"],
             r["event_id"],
-            r["object_text"] if r["object_text"] is not None else r["object_number"],
-            provenance=r["provenance"],
             actor="decay_sweep",
-            confidence=float(r["confidence"]),
-            trust_level=r["trust_level"],
-            source_span=None,
-            valid_from=None,
-            embedding=None,
-            importance=r["importance"],
-            write_score=None,
-            tier="ephemeral",
             reason=f"archived by decay (reversible); retention={score:.2f}",
         )
-        archived += 1
+        archived += event is not None
     return archived

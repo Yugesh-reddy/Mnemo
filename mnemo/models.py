@@ -120,6 +120,8 @@ class Commit(BaseModel):
 
     commit_id: UUID
     namespace: str
+    user_id: str = "default"
+    agent_id: str = "default"
     parent_commit_id: UUID | None = None
     label: str | None = None
     at_seq: int

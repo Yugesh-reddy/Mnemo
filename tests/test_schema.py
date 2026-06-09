@@ -86,12 +86,8 @@ async def test_memory_entity_dropped_and_view_has_decay_columns(
 
 async def test_expired_valid_to_hides_fact_from_head(store, db: asyncpg.Connection) -> None:
     ev = await store.add("user", "location", "Austin", provenance="direct_user_statement")
-    # Simulate a fact whose world-validity ended (bitemporal filter, spec §5 step 3).
-    # Test scaffolding only — production never mutates valid_to; invalidate() appends.
-    await db.execute(
-        "UPDATE memory_event SET valid_to = now() - interval '1 day' WHERE event_id=$1",
-        ev.event_id,
-    )
+    # World-validity ends through a new event; payload rows cannot be rewritten.
+    await store.invalidate(ev.fact_id)
     assert (
         await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=$1", ev.fact_id) == 0
     )
