@@ -1,0 +1,315 @@
+{
+  "answer_4be1b6b4_2:0": [
+    {
+      "subject": "user",
+      "predicate": "car_first_service_date",
+      "value": "March 15th",
+      "disposition": "must_keep",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_first_service_experience",
+      "value": "great",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_detailing_booked",
+      "value": "true",
+      "disposition": "forbidden",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:1": [],
+  "answer_4be1b6b4_2:2": [
+    {
+      "subject": "user",
+      "predicate": "car_detailing_schedule",
+      "value": "every 3-4 months",
+      "disposition": "forbidden",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:3": [],
+  "answer_4be1b6b4_2:4": [
+    {
+      "subject": "user",
+      "predicate": "car_fuel_economy",
+      "value": "32 miles per gallon",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:5": [],
+  "answer_4be1b6b4_2:6": [
+    {
+      "subject": "user",
+      "predicate": "gas_rewards_program",
+      "value": "Shell",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:7": [],
+  "answer_4be1b6b4_2:8": [
+    {
+      "subject": "user",
+      "predicate": "credit_card_points_redeemed",
+      "value": "50000",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "reward_gift_card_value",
+      "value": "$500",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_accessories_purchased",
+      "value": "car cover",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_floor_mats",
+      "value": "purchased",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_steering_wheel_cover",
+      "value": "purchased",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:9": [],
+  "answer_4be1b6b4_2:10": [
+    {
+      "subject": "user",
+      "predicate": "car_accessory_satisfaction",
+      "value": "happy",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_detailing_booked",
+      "value": "true",
+      "disposition": "forbidden",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_2:11": [],
+  "answer_4be1b6b4_3:0": [
+    {
+      "subject": "user",
+      "predicate": "car_detailing_booked",
+      "value": "true",
+      "disposition": "forbidden",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:1": [],
+  "answer_4be1b6b4_3:2": [
+    {
+      "subject": "user",
+      "predicate": "car_gps_issue_date",
+      "value": "March 22nd",
+      "disposition": "must_keep",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_gps_repair",
+      "value": "entire system replaced by dealership",
+      "disposition": "must_keep",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_gps_status",
+      "value": "working flawlessly",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:3": [],
+  "answer_4be1b6b4_3:4": [
+    {
+      "subject": "user",
+      "predicate": "car_model",
+      "value": "Honda Civic",
+      "disposition": "must_keep",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_color",
+      "value": "silver",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:5": [],
+  "answer_4be1b6b4_3:6": [
+    {
+      "subject": "user",
+      "predicate": "car_fuel_economy",
+      "value": "32 miles per gallon",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:7": [],
+  "answer_4be1b6b4_3:8": [
+    {
+      "subject": "user",
+      "predicate": "insurance_payment_method",
+      "value": "bank's mobile app",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "insurance_monthly_reduction",
+      "value": "$20",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "insurance_discount_reason",
+      "value": "safe driving record",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:9": [],
+  "answer_4be1b6b4_3:10": [
+    {
+      "subject": "user",
+      "predicate": "friend",
+      "value": "Emily",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "helped_friend_move",
+      "value": "Emily",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_used_for",
+      "value": "transporting furniture",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_3:11": [],
+  "answer_4be1b6b4_1:0": [
+    {
+      "subject": "user",
+      "predicate": "car_model",
+      "value": "Honda Civic",
+      "disposition": "must_keep",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_color",
+      "value": "silver",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "car_purchase_date",
+      "value": "February 10th",
+      "disposition": "must_keep",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:1": [],
+  "answer_4be1b6b4_1:2": [
+    {
+      "subject": "user",
+      "predicate": "planned_trip_destination",
+      "value": "Yellowstone National Park",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_trip_duration",
+      "value": "5 days",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "travel_budget_preference",
+      "value": "budget-friendly",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:3": [],
+  "answer_4be1b6b4_1:4": [
+    {
+      "subject": "user",
+      "predicate": "car_city_fuel_economy",
+      "value": "32 miles per gallon",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:5": [],
+  "answer_4be1b6b4_1:6": [
+    {
+      "subject": "user",
+      "predicate": "gas_rewards_program",
+      "value": "Shell",
+      "disposition": "truth",
+      "importance": 8
+    },
+    {
+      "subject": "user",
+      "predicate": "usual_gas_station",
+      "value": "Shell near office",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:7": [],
+  "answer_4be1b6b4_1:8": [
+    {
+      "subject": "user",
+      "predicate": "gas_price_strategy",
+      "value": "balance Shell rewards with cheaper gas prices",
+      "disposition": "truth",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:9": [],
+  "answer_4be1b6b4_1:10": [
+    {
+      "subject": "user",
+      "predicate": "car_detailing_booked",
+      "value": "true",
+      "disposition": "forbidden",
+      "importance": 8
+    }
+  ],
+  "answer_4be1b6b4_1:11": []
+}
