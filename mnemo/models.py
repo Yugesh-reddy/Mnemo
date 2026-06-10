@@ -7,6 +7,7 @@ deliberately not surfaced here.
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from decimal import Decimal
 from typing import Any
@@ -42,8 +43,10 @@ class Event(BaseModel):
     confidence: float
     trust_level: str
     source_span: Any | None = None
+    session_id: str | None = None
     valid_from: datetime
     valid_to: datetime | None = None
+    expires_at: datetime | None = None
     recorded_at: datetime
     superseded_at: datetime | None = None
     superseded_by: UUID | None = None
@@ -64,6 +67,9 @@ class Event(BaseModel):
     @classmethod
     def from_row(cls, row: Row) -> Event:
         d = dict(row)
+        for field in ("object_json", "source_span"):
+            if isinstance(d.get(field), str):
+                d[field] = json.loads(d[field])
         return cls(**{k: d[k] for k in cls.model_fields if k in d})
 
 
@@ -81,6 +87,7 @@ class Fact(BaseModel):
     session_id: str | None = None
     subject: str = ""
     predicate: str = ""
+    fact_key: str = ""
     kind: str = "triple"
     event_id: UUID | None = None
     object_text: str | None = None
@@ -89,7 +96,10 @@ class Fact(BaseModel):
     provenance: str = "agent_inference"
     confidence: float = 1.0
     trust_level: str = "medium"
+    source_span: Any | None = None
     valid_from: datetime | None = None
+    valid_to: datetime | None = None
+    expires_at: datetime | None = None
     recorded_at: datetime | None = None
     score: float | None = None
     source: str = "semantic"
@@ -109,6 +119,9 @@ class Fact(BaseModel):
     @classmethod
     def from_row(cls, row: Row, *, score: float | None = None) -> Fact:
         d = dict(row)
+        for field in ("object_json", "source_span"):
+            if isinstance(d.get(field), str):
+                d[field] = json.loads(d[field])
         data = {k: d[k] for k in cls.model_fields if k in d}
         if score is not None:
             data["score"] = score

@@ -13,8 +13,11 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
-from collections.abc import AsyncIterator
+import os
+import re
+from collections.abc import AsyncIterator, Iterator
 from urllib.parse import urlsplit, urlunsplit
+from uuid import uuid4
 
 import asyncpg
 import pytest
@@ -62,7 +65,7 @@ def _split_dsn(dsn: str) -> tuple[str, str]:
 
 
 @pytest.fixture(scope="session")
-def _disposable_test_db() -> str:
+def _disposable_test_db() -> Iterator[str]:
     """Drop + recreate the test DB and apply all migrations, once per session.
 
     Runs its own event loop so it composes with function-scoped async fixtures.
@@ -70,14 +73,22 @@ def _disposable_test_db() -> str:
     """
 
     async def _setup() -> str:
-        dsn = get_settings().test_dsn
-        admin_dsn, db_name = _split_dsn(dsn)
+        configured = get_settings().test_dsn
+        admin_dsn, prefix = _split_dsn(configured)
+        if not re.fullmatch(r"[a-zA-Z0-9_]+", prefix):
+            raise ValueError(
+                "test database name must contain only letters, numbers and underscores"
+            )
+        # Never drop a configured database. Each pytest invocation owns a new one.
+        db_name = prefix[:35] + "_" + uuid4().hex[:12]
+        dsn = urlunsplit(urlsplit(configured)._replace(path="/" + db_name))
         try:
-            admin = await asyncpg.connect(admin_dsn)
+            admin = await asyncpg.connect(admin_dsn, timeout=5)
         except (OSError, asyncpg.PostgresError) as exc:
+            if os.environ.get("CI") or os.environ.get("MNEMO_REQUIRE_DB") == "1":
+                pytest.fail(f"Required Postgres integration database unavailable: {exc!s}")
             pytest.skip(f"Postgres not available ({exc!s}); run `make up` first.")
         try:
-            await admin.execute(f'DROP DATABASE IF EXISTS "{db_name}" WITH (FORCE)')
             await admin.execute(f'CREATE DATABASE "{db_name}"')
         finally:
             await admin.close()
@@ -89,7 +100,20 @@ def _disposable_test_db() -> str:
             await conn.close()
         return dsn
 
-    return asyncio.run(_setup())
+    dsn = asyncio.run(_setup())
+    try:
+        yield dsn
+    finally:
+
+        async def cleanup() -> None:
+            admin_dsn, db_name = _split_dsn(dsn)
+            admin = await asyncpg.connect(admin_dsn, timeout=5)
+            try:
+                await admin.execute(f'DROP DATABASE "{db_name}" WITH (FORCE)')
+            finally:
+                await admin.close()
+
+        asyncio.run(cleanup())
 
 
 @pytest.fixture
@@ -132,3 +156,19 @@ def clean_memory(_disposable_test_db: str):
             await conn.close()
 
     asyncio.run(_truncate())
+
+
+@pytest.fixture
+async def worker_connections(_disposable_test_db):
+    from mnemo.db import drop_isolated_schema, prepare_isolated_schema
+
+    schema = "mnemo_worker_" + uuid4().hex
+    a = await prepare_isolated_schema(_disposable_test_db, schema)
+    b = await asyncpg.connect(_disposable_test_db)
+    await b.execute(f'SET search_path TO "{schema}", public')
+    try:
+        yield a, b
+    finally:
+        await b.close()
+        await drop_isolated_schema(a, schema)
+        await a.close()

@@ -1,9 +1,8 @@
-"""M3: similarity-routing thresholds + live Ollama checks.
+"""Structured identity and correction routing, plus real Ollama retrieval checks.
 
-The routing thresholds (update_sim 0.90, dedup_sim 0.92) are exercised with a
-*planted* embedder that returns vectors at exact, known cosines — so the boundaries
-are deterministic and hermetic. Two live tests verify the real Ollama embedder and,
-crucially, that the demo's Postgres→Mongo change isn't suppressed as a "restatement".
+Planted vectors exercise high similarity without permitting it to erase value
+changes or merge unrelated identities. Live tests check the same behavior using
+Ollama embeddings when the local model is available.
 """
 
 from __future__ import annotations
@@ -56,15 +55,15 @@ def _store(db: asyncpg.Connection, mapping: dict[str, list[float]]) -> MnemoStor
     return MnemoStore(db, PlantedEmbedder(mapping), settings=Settings(_env_file=None))
 
 
-# ---- update_sim: same key, restatement vs real change ------------------
+# ---- same identity, aliases versus changed values ----------------------
 
 
 async def test_same_key_high_cosine_restatement_is_noop(db: asyncpg.Connection) -> None:
     base = _planted(1.0, 0.0)
     mapping = {
         "user preferred_database PostgreSQL": base,
-        "user preferred_database Postgres": _at_cosine(0.95),  # >= update_sim (0.90)
-        "user preferred_database MongoDB": _at_cosine(0.30),  # < update_sim
+        "user preferred_database Postgres": _at_cosine(0.95),
+        "user preferred_database MongoDB": _at_cosine(0.30),
     }
     store = _store(db, mapping)
 
@@ -84,22 +83,24 @@ async def test_same_key_high_cosine_restatement_is_noop(db: asyncpg.Connection) 
     assert e3.fact_id == e1.fact_id
 
 
-# ---- dedup_sim: new key, entity resolution ------------------------------
+# ---- structured predicate aliases -------------------------------------
 
 
-async def test_new_key_high_cosine_resolves_to_existing_fact(db: asyncpg.Connection) -> None:
+async def test_known_predicate_and_object_aliases_resolve_to_existing_fact(
+    db: asyncpg.Connection,
+) -> None:
     mapping = {
         "user db_engine PostgreSQL": _at_cosine(1.0, axis=2),
-        "user database_system Postgres": _at_cosine(0.95, axis=2),  # >= dedup_sim (0.92)
+        "user database_system Postgres": _at_cosine(0.95, axis=2),
     }
     store = _store(db, mapping)
 
     e1 = await store.add("user", "db_engine", "PostgreSQL", provenance="direct_user_statement")
     assert e1.op == "ADD"
 
-    # Different fact_key, but semantically the same entity -> UPDATE the existing fact.
+    # The narrow predicate and object aliases resolve to one existing event.
     e2 = await store.add("user", "database_system", "Postgres", provenance="agent_inference")
-    assert e2.op == "UPDATE"
+    assert e2.event_id == e1.event_id
     assert e2.fact_id == e1.fact_id
     assert await db.fetchval("SELECT count(*) FROM memory_fact") == 1
 
@@ -107,7 +108,7 @@ async def test_new_key_high_cosine_resolves_to_existing_fact(db: asyncpg.Connect
 async def test_new_key_low_cosine_creates_separate_fact(db: asyncpg.Connection) -> None:
     mapping = {
         "user db_engine PostgreSQL": _at_cosine(1.0, axis=2),
-        "user favorite_color blue": _at_cosine(0.10, axis=2),  # < dedup_sim
+        "user favorite_color blue": _at_cosine(0.10, axis=2),
     }
     store = _store(db, mapping)
 
@@ -148,33 +149,31 @@ def _ollama_up() -> bool:
         return False
 
 
-def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=True))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(x * x for x in b))
-    return dot / (na * nb)
-
-
 @pytest.mark.skipif(not _ollama_up(), reason="Ollama server not running")
 def test_ollama_embedder_live_returns_expected_dim() -> None:
     from mnemo.embedder import OllamaEmbedder
 
     emb = OllamaEmbedder()
-    vec = emb.embed("the user prefers PostgreSQL")
-    assert len(vec) == DIM
-    assert any(x != 0.0 for x in vec)
+    try:
+        vec = emb.embed("the user prefers PostgreSQL")
+        assert len(vec) == DIM
+        assert any(x != 0.0 for x in vec)
+    finally:
+        emb.close()
 
 
 @pytest.mark.skipif(not _ollama_up(), reason="Ollama server not running")
-def test_demo_change_is_not_suppressed_as_restatement() -> None:
-    # Guards the §10 demo: if cos(Postgres, Mongo) were >= update_sim, the agent's
-    # mis-inferred switch to MongoDB would be silently dropped as a restatement.
+async def test_live_embeddings_preserve_the_demo_correction(db) -> None:
     from mnemo.embedder import OllamaEmbedder
 
     emb = OllamaEmbedder()
-    pg = emb.embed("user preferred_database PostgreSQL")
-    mongo = emb.embed("user preferred_database MongoDB")
-    cos = _cosine(pg, mongo)
-    assert (
-        cos < Settings(_env_file=None).update_sim
-    ), f"cos(Postgres, Mongo)={cos:.3f} >= update_sim — demo UPDATE would be suppressed"
+    try:
+        store = MnemoStore(db, emb)
+        first = await store.add("user", "preferred_database", "PostgreSQL")
+        changed = await store.add("user", "preferred_database", "MongoDB")
+        assert changed.op == "UPDATE" and changed.fact_id == first.fact_id
+        assert (await store.get(first.fact_id)).value == "MongoDB"
+        results = await store.search("database")
+        assert results and results[0].value == "MongoDB"
+    finally:
+        emb.close()

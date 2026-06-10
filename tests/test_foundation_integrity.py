@@ -72,6 +72,38 @@ async def test_archive_rechecks_selected_head(store) -> None:
     assert current is not None and current.object_text == "beta"
 
 
+@pytest.mark.parametrize("before,after", [("Friday", "Monday"), (100, 150)])
+async def test_identical_embeddings_do_not_suppress_corrections(store, before, after) -> None:
+    vector = [1.0] + [0.0] * (store.settings.embed_dim - 1)
+    first = await store.add("user", "schedule", before, embedding=vector)
+    changed = await store.add("user", "schedule", after, embedding=vector)
+    assert changed.op == "UPDATE"
+    assert changed.parent_event_id == first.event_id
+    assert (await store.get(first.fact_id)).value == after
+
+
+async def test_archival_failure_rolls_back_event_and_head(store, db, monkeypatch) -> None:
+    first = await store.add("user", "profile", {"budget": 150})
+
+    async def broken_head(*args):
+        raise RuntimeError("injected HEAD failure")
+
+    monkeypatch.setattr(store, "_set_head", broken_head)
+    with pytest.raises(RuntimeError, match="injected"):
+        await store.archive_if_head(
+            first.fact_id, first.event_id, actor="test", reason="failure regression"
+        )
+    history = await store.blame(fact_id=first.fact_id)
+    assert len(history) == 1
+    assert history[0].superseded_by is None
+    assert (
+        await db.fetchval(
+            "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", first.fact_id
+        )
+        == first.event_id
+    )
+
+
 async def test_event_payload_guard_allows_only_bookkeeping(store, db) -> None:
     event = await store.add("user", "name", "Sai", provenance="direct_user_statement")
     with pytest.raises(asyncpg.CheckViolationError, match="payload is immutable"):

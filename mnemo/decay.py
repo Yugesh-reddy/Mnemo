@@ -61,6 +61,7 @@ async def decay_sweep(store: MnemoStore, *, now: datetime | None = None) -> int:
             r["fact_id"],
             r["event_id"],
             actor="decay_sweep",
+            expected_last_used=r["last_used"],
             reason=f"archived by decay (reversible); retention={score:.2f}",
         )
         archived += event is not None

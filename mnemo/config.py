@@ -9,7 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -48,16 +48,29 @@ class Settings(BaseSettings):
 
     # --- Thresholds (spec §5) ---
     update_sim: float = Field(0.90, ge=0.0, le=1.0)
-    """Same fact_key + cosine >= this => UPDATE the fact (otherwise no-op)."""
+    """Legacy similarity setting; value equivalence now governs no-op decisions."""
 
     dedup_sim: float = Field(0.92, ge=0.0, le=1.0)
-    """New key but cosine >= this against an existing fact => UPDATE it (entity resolution)."""
+    """Legacy similarity setting; identity aliases govern safe deduplication."""
 
     confidence_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Drop extracted facts whose confidence is below this."""
 
     search_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
+
+    search_candidate_multiplier: int = Field(8, ge=1, le=100)
+    search_reinforce: bool = True
+    session_ttl_seconds: float = Field(86400.0, gt=0.0)
+
+    # Verification runs off the event loop. Optional NLI models load only when selected.
+    verifier_backend: Literal["heuristic", "cross_encoder", "ollama", "openai"] = "heuristic"
+    verifier_model: str = "cross-encoder/nli-deberta-v3-small"
+    verifier_entailment_threshold: float = Field(0.99, ge=0.0, le=1.0)
+    verifier_timeout_seconds: float = Field(20.0, gt=0.0)
+    verifier_max_retries: int = Field(1, ge=0, le=3)
+    verifier_fallback_backend: Literal["none", "ollama", "openai"] = "none"
+    verifier_fallback_model: str | None = None
 
     # --- Retrieval rerank (spec §5: rerank over top-k, not a custom index) ---
     search_w_rel: float = 0.5
@@ -118,16 +131,46 @@ class Settings(BaseSettings):
     """Controlled predicate vocabulary — specificity=1.0 in-vocab, 0.2 otherwise."""
 
     # --- Extraction worker ---
-    extractor_max_retries: int = 2
+    extractor_max_retries: int = Field(2, ge=0, le=2)
+    extractor_timeout_seconds: float = Field(120.0, gt=0.0)
 
     job_lease_seconds: float = Field(60.0, gt=0.0)
     """A 'processing' job whose updated_at is older than this is presumed orphaned
-    (its worker died mid-extraction) and is eligible to be reclaimed. Must exceed the
-    worst-case extraction time for your backend."""
+    (its worker died mid-extraction) and is eligible to be reclaimed. The
+    worker refreshes the lease every third of this interval."""
 
     job_max_attempts: int = Field(3, ge=1)
     """A job is marked 'failed' (not requeued forever) once attempts exceeds this.
     Default 3 = the initial try + 2 retries (kept in lockstep with extractor_max_retries)."""
+
+    job_retry_base_seconds: float = Field(1.0, ge=0.0)
+    job_retry_max_seconds: float = Field(60.0, ge=0.0)
+    worker_poll_seconds: float = Field(0.5, gt=0.0)
+    worker_enabled: bool = True
+    decay_interval_seconds: float = Field(3600.0, gt=0.0)
+    namespace: str = "default"
+    user_id: str = "default"
+    agent_id: str = "default"
+
+    @model_validator(mode="after")
+    def validate_configuration(self) -> Settings:
+        # A backend switch must not silently send Ollama model names to OpenAI.
+        if self.backend == "openai":
+            if "embed_model" not in self.model_fields_set:
+                self.embed_model = "text-embedding-3-small"
+            if "embed_dim" not in self.model_fields_set:
+                self.embed_dim = 1536
+            if "extractor_model" not in self.model_fields_set:
+                self.extractor_model = "gpt-4o-mini"
+        if not 1 <= self.embed_dim <= 2000:
+            raise ValueError("embed_dim must be 1..2000 for the vector HNSW index")
+        if self.ephemeral_floor > self.durable_cutoff:
+            raise ValueError("ephemeral_floor must not exceed durable_cutoff")
+        if self.job_retry_base_seconds > self.job_retry_max_seconds:
+            raise ValueError("job_retry_base_seconds must not exceed job_retry_max_seconds")
+        if not 0 < self.recency_gamma <= 1:
+            raise ValueError("recency_gamma must be in (0, 1]")
+        return self
 
 
 @lru_cache
