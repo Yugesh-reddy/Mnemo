@@ -1,7 +1,7 @@
 [project]
 name = "mnemo"
 version = "0.0.1"
-description = "Git for agent memory — append-only, inspectable, reversible memory for LLM agents."
+description = "Agent memory that stores less and remembers what matters."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -11,13 +11,15 @@ dependencies = [
     "pydantic-settings>=2.2",
     "typer>=0.12",
     "httpx>=0.27",
-    "mcp>=1.2",
+    "mcp>=1.2,<2",
     "fastapi>=0.110",
     "jinja2>=3.1",
+    "uvicorn>=0.30",
+    "python-multipart>=0.0.9",
 ]
 
-# Later milestones add their own deps (mcp @ M5, fastapi/jinja2 @ M7) so M0 stays lean.
 [project.optional-dependencies]
+nli = ["sentence-transformers>=3.0"]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
@@ -30,7 +32,20 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["mnemo"]
+packages = ["mnemo", "web", "examples"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"migrations" = "mnemo/migrations"
+
+[tool.hatch.build.targets.sdist]
+include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "docker-compose.yml", "pyproject.toml"]
+
+[project.scripts]
+mnemo-migrate = "mnemo.db:main"
+mnemo-mcp = "mnemo.mcp_server:main"
+mnemo-worker = "mnemo.worker:main"
+mnemo-eval = "mnemo.eval:main"
+mnemo-demo = "examples.agent:app"
 
 [tool.ruff]
 line-length = 100

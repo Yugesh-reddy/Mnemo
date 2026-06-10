@@ -49,3 +49,12 @@ ui:  ## Run the FastAPI + HTMX web UI
 
 gif:  ## Record the rollback demo GIF (needs `brew install vhs`)
 	vhs docs/demo.tape
+
+worker:  ## Run extraction with lease renewal and scheduled decay
+	$(RUN) python -m mnemo.worker
+
+health:  ## Print scoped queue health and archival activity
+	$(RUN) python -m mnemo.worker --health
+
+test-db:  ## Required Postgres correctness checks
+	MNEMO_REQUIRE_DB=1 $(RUN) pytest -q

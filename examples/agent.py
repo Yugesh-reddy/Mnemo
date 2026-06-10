@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import typer
 
@@ -64,16 +64,12 @@ async def run_scenario(
     if db is not None:
         fact_id, subject, predicate = db.fact_id, db.subject, db.predicate
         stored = db.value
-    else:  # extractor produced nothing usable — store directly so the demo proceeds
-        ev = await store.add(
-            "user",
-            "preferred_database",
-            "PostgreSQL",
-            provenance="direct_user_statement",
-            actor="user",
+    else:
+        raise RuntimeError(
+            "The extraction pipeline did not produce a database fact; "
+            "inspect memory_decisions/health."
         )
-        fact_id, subject, predicate, stored = ev.fact_id, "user", "preferred_database", ev.value
-    say(f"  ✓ extracted & stored: {subject} {predicate} = {stored}  (trust=high)\n")
+    say(f"  extracted & stored: {subject} {predicate} = {stored} (trust={db.trust_level})\n")
 
     # 2) The agent mis-infers a switch to MongoDB (low-trust agent inference).
     say("[turn 2] The agent wrongly infers the user switched to MongoDB.")
@@ -137,15 +133,11 @@ async def run_scenario(
 async def _scenario(stop_before_revert: bool) -> None:
     conn = await connect()
     try:
-        # Fresh state each run, so the demo is reproducible.
-        await conn.execute(
-            "TRUNCATE memory_event, memory_fact, memory_commit, fast_cache, "
-            "extraction_job RESTART IDENTITY CASCADE"
-        )
         embedder = build_embedder()
         extractor = build_extractor()
-        store = MnemoStore(conn, embedder)
+        store = MnemoStore(conn, embedder, namespace=f"demo-{uuid4().hex[:12]}")
         worker = ExtractionWorker(conn, embedder, extractor)
+        print(f"Demo namespace: {store.namespace} (set MNEMO_NAMESPACE for the web UI)")
         await run_scenario(store, worker, say=print, stop_before_revert=stop_before_revert)
     finally:
         await conn.close()

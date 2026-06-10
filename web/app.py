@@ -16,12 +16,13 @@ from uuid import UUID
 
 import asyncpg
 from fastapi import Depends, FastAPI, Form, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from mnemo.config import get_settings
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector
+from mnemo.db import register_vector, validate_embedding_dimension
 from mnemo.embedder import build_embedder
 
 TEMPLATES = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -32,11 +33,21 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     app.state.settings = settings
     app.state.embedder = build_embedder(settings)
-    app.state.pool = await asyncpg.create_pool(settings.dsn, init=register_vector)
+    pool = None
+
+    async def init(conn: asyncpg.Connection) -> None:
+        await register_vector(conn)
+        await validate_embedding_dimension(conn, settings.embed_dim)
+
     try:
+        pool = app.state.pool = await asyncpg.create_pool(settings.dsn, init=init)
         yield
     finally:
-        await app.state.pool.close()
+        if pool is not None:
+            await pool.close()
+        close = getattr(app.state.embedder, "close", None)
+        if close:
+            close()
 
 
 app = FastAPI(title="Mnemo", lifespan=lifespan)
@@ -44,7 +55,15 @@ app = FastAPI(title="Mnemo", lifespan=lifespan)
 
 async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
     async with request.app.state.pool.acquire() as conn:
-        yield MnemoStore(conn, request.app.state.embedder, settings=request.app.state.settings)
+        settings = request.app.state.settings
+        yield MnemoStore(
+            conn,
+            request.app.state.embedder,
+            settings=settings,
+            namespace=settings.namespace,
+            user_id=settings.user_id,
+            agent_id=settings.agent_id,
+        )
 
 
 async def _facts(store: MnemoStore, q: str):
@@ -105,3 +124,41 @@ async def diff_view(
 async def do_commit(label: str = Form(""), store: MnemoStore = Depends(get_store)):
     await store.commit(label.strip() or None)
     return RedirectResponse("/diff", status_code=303)
+
+
+@app.get("/health")
+async def health(store: MnemoStore = Depends(get_store)):
+    from mnemo.audit import queue_health
+
+    return await queue_health(
+        store.conn, namespace=store.namespace, user_id=store.user_id, agent_id=store.agent_id
+    )
+
+
+@app.get("/decisions")
+async def quality_decisions(
+    turn_id: str | None = None, limit: int = 100, store: MnemoStore = Depends(get_store)
+):
+    from mnemo.audit import decisions
+
+    return await decisions(
+        store.conn,
+        namespace=store.namespace,
+        user_id=store.user_id,
+        agent_id=store.agent_id,
+        turn_id=turn_id,
+        limit=limit,
+    )
+
+
+@app.get("/operations", response_class=HTMLResponse)
+async def operations(request: Request, turn_id: str = "", store: MnemoStore = Depends(get_store)):
+    return TEMPLATES.TemplateResponse(
+        request,
+        "operations.html",
+        {
+            "health": jsonable_encoder(await health(store)),
+            "decisions": jsonable_encoder(await quality_decisions(turn_id or None, 100, store)),
+            "turn_id": turn_id,
+        },
+    )

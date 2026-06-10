@@ -1,0 +1,37 @@
+name: correctness
+on: [push, pull_request]
+jobs:
+  correctness:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: mnemo
+          POSTGRES_PASSWORD: mnemo
+          POSTGRES_DB: mnemo
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U mnemo -d mnemo"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      MNEMO_REQUIRE_DB: '1'
+      MNEMO_DSN: postgresql://mnemo:mnemo@localhost:5432/mnemo
+      MNEMO_TEST_DSN: postgresql://mnemo:mnemo@localhost:5432/mnemo_test
+      MNEMO_VERIFIER_BACKEND: heuristic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - run: uv sync --extra dev
+      - run: make lint
+      - run: make test-db
+      - run: make migrate
+      - run: make eval
+      - run: uv build
+      - run: bash scripts/check-wheel.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel
+          path: dist/*.whl

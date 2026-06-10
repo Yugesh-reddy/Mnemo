@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-2">Operations</h1>
+<p class="text-slate-500 mb-6">Queue health and the reasons memories were kept, demoted or rejected in this scope.</p>
+<details class="border-b pb-4 mb-6" open>
+  <summary class="font-medium cursor-pointer">Queue and archival activity</summary>
+  <pre class="mono text-xs overflow-auto mt-3">{{ health | tojson(indent=2) }}</pre>
+</details>
+<form action="/operations" class="flex gap-3 mb-6">
+  <label for="turn-id" class="self-center text-sm">Source turn</label>
+  <input id="turn-id" name="turn_id" value="{{ turn_id }}" placeholder="All recent turns"
+    class="border rounded px-3 py-2 flex-1 text-sm">
+  <button class="bg-slate-800 text-white rounded px-4 py-2 text-sm">Filter</button>
+</form>
+<h2 class="text-lg font-semibold mb-3">Recent decisions</h2>
+{% for decision in decisions %}
+<article class="border-t py-4">
+  <div class="flex items-baseline justify-between gap-4 text-sm">
+    <strong>{{ decision.outcome }}</strong>
+    <span class="text-slate-500 mono">{{ decision.turn_id }} · {{ decision.recorded_at }}</span>
+  </div>
+  {% if decision.candidate %}
+  <p class="mono text-sm mt-2">{{ decision.candidate.subject }} {{ decision.candidate.predicate }} {{ decision.candidate.object }}</p>
+  {% endif %}
+  <p class="mt-2 text-sm">{{ decision.reason }}</p>
+  {% if decision.event_id %}
+  <p class="text-xs text-slate-500 mt-1 mono">Stored event: {{ decision.event_id }}</p>
+  {% endif %}
+  <details class="text-sm mt-3">
+    <summary class="cursor-pointer text-slate-500">Evidence, scores and configuration</summary>
+    <pre class="mono text-xs overflow-auto mt-2">{{ {'verification': decision.verification, 'scores': decision.score_components, 'source': decision.source_span, 'configuration': decision.config_snapshot} | tojson(indent=2) }}</pre>
+  </details>
+</article>
+{% else %}
+<p class="text-slate-500 text-sm">No decisions match this turn. Check queue health above for work still pending or failed.</p>
+{% endfor %}
+{% endblock %}
