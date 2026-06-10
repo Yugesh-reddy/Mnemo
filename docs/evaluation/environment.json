@@ -1,0 +1,49 @@
+{
+  "recorded_date": "2026-09-09",
+  "python": "3.12.2",
+  "platform": "Darwin 27.0.0",
+  "architecture": "arm64",
+  "packages": {
+    "asyncpg": "0.31.0",
+    "mcp": "1.28.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.16.1",
+    "torch": "2.14.0",
+    "httpx": "0.28.1"
+  },
+  "ollama_models": [
+    {
+      "name": "qwen3.5:4b-mlx",
+      "digest": "61aa3858e9d3022e8fca725550089addd9289c4446f33bd09dfd12f95f2a6792",
+      "size": 3973305013,
+      "details": {
+        "parent_model": "",
+        "format": "safetensors",
+        "family": "",
+        "families": null,
+        "parameter_size": "",
+        "quantization_level": "nvfp4"
+      }
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "size": 274302450,
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "nomic-bert",
+        "families": [
+          "nomic-bert"
+        ],
+        "parameter_size": "137M",
+        "quantization_level": "F16",
+        "context_length": 2048,
+        "embedding_length": 768
+      }
+    }
+  ],
+  "nli_model": "cross-encoder/nli-deberta-v3-small",
+  "nli_revision": "fa2804872c3b4bd748f38c0185cc85775361e735",
+  "measurement_notes": "Local wall-clock measurements include model HTTP calls and database work. Workstation activity was not isolated; these are run diagnostics, not a throughput benchmark. Local compute/electricity cost was not measured."
+}

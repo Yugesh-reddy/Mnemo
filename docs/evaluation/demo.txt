@@ -1,0 +1,27 @@
+uv run python examples/agent.py demo
+Demo namespace: demo-9b4633eb6cd5 (set MNEMO_NAMESPACE for the web UI)
+=== Mnemo demo — see → blame → revert → behavior change ===
+
+[turn 1] User: "I use Postgres for my project."
+  extracted & stored: user uses_database = PostgreSQL (trust=low)
+
+[turn 2] The agent wrongly infers the user switched to MongoDB.
+  ✗ UPDATE: uses_database = MongoDB  (agent_inference, trust=low)
+
+[turn 3] User: "What database do I use?"
+  Agent: "You use MongoDB."   ← WRONG (from the bad inference)
+
+--- blame (git blame for memory) ---
+  ADD     PostgreSQL   agent_inference        low
+  UPDATE  MongoDB      agent_inference        low
+
+[human review] reverting to the original PostgreSQL belief…
+  ✓ REVERT applied
+
+[turn 4] User: "What database do I use?"
+  Agent: "You use PostgreSQL."   ← FIXED (memory was corrected)
+
+--- log (history intact) ---
+  ADD(PostgreSQL) → UPDATE(MongoDB) → REVERT(PostgreSQL)
+
+✓ Answer changed MongoDB → PostgreSQL after a human fixed the memory; history kept.

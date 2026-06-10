@@ -2,214 +2,195 @@
 
 **Agent memory that stores less and remembers what matters.**
 
-A write-quality gate keeps junk out (salience scoring → verification → tiering → dedup →
-decay), provenance tells you where every fact came from, and one-click rollback fixes what
-slips through — all on an **append-only, versioned, bitemporal** Postgres store, so every
-keep / demote / drop / forget is auditable and reversible. Python SDK + MCP server,
-self-hostable and local-first.
+Mnemo verifies and scores extracted assertions before writing them to an append-only
+Postgres event store. Every stored revision has provenance and evidence; `blame`
+and `revert` make mistakes inspectable and reversible. Python SDK, MCP server and a
+small FastAPI/HTMX UI are included.
 
-## The number (run it yourself: `make eval`)
+## Run locally
 
-Same conversation, same extractor — with and without the gate:
-
-```
-PRECISION / RECALL JUNK-RATE EVAL (naive vs gated — the north star)
-  NAIVE : stored  15 | P  60.0% | R 100.0% | F1  75.0% | false 2
-  GATED : stored  10 | P  90.0% | R 100.0% | F1  94.7% | false 0
-```
-
-The gate rejects false memories (negations like *"I **don't** use MongoDB"*, hypotheticals
-like *"what if I switched…"*), drops junk (weather, math, chit-chat), demotes borderline
-facts to a session tier instead of guessing — and keeps **100% of the facts that matter**.
-And because every decision is an event in an append-only log, any of it can be audited
-(`blame`) and undone (`revert`).
-
-![Mnemo rollback demo](docs/rollback.gif)
-
-> _(Recording the GIF is the last step — see [Record the demo GIF](#record-the-demo-gif).)_
-
----
-
-## Quickstart (≈30s)
-
-Prerequisites: **Docker**, **Python 3.12**, [**uv**](https://docs.astral.sh/uv/), and
-[**Ollama**](https://ollama.com) (default, free/local) — or an OpenAI API key.
+Requires Python 3.12, Docker and [uv](https://docs.astral.sh/uv/).
+The database needs Postgres with pgvector >= 0.8; the supplied Compose image includes it.
 
 ```bash
-# 1. Models for the default local backend (free, offline)
-ollama pull nomic-embed-text     # embeddings (768-dim)
-ollama pull llama3.2:3b          # fact extraction
-
-# 2. Set up and run
-make install      # uv venv + install
-make up           # Postgres 16 + pgvector
-make migrate      # apply the schema
-make eval         # the hero demo: naive vs gated precision/recall
-make demo         # the rollback scenario, end to end
+make install
+make up
+make migrate
+make eval       # 18-turn deterministic regression, no model required
 ```
 
-`make demo` prints the whole story: the agent learns "PostgreSQL", mis-infers a switch to
-"MongoDB", answers wrongly — then a human **reverts** the memory and the answer flips back,
-with the full history intact.
-
-Want to do the revert yourself, in a browser?
+For extraction and embeddings, start Ollama and install the configured models:
 
 ```bash
-python examples/agent.py setup   # leaves the corrupted "MongoDB" state
-make ui                          # open http://127.0.0.1:8000
-# → search "database" → click the fact → blame → "Revert to this"
+ollama pull nomic-embed-text
+ollama pull llama3.2:3b
+make worker     # extraction, retries, lease renewal and scheduled decay
+make health     # queue age, failures, retries, latency and archival count
 ```
 
----
+`MNEMO_EXTRACTOR_MODEL` can select another installed instruct model. Configuration
+is read from `.env` / `MNEMO_*` variables; see [config.py](mnemo/config.py).
 
-## Why Mnemo
+`make mcp` starts the stdio MCP server **and its worker**. Set
+`MNEMO_WORKER_ENABLED=false` when running dedicated workers. Multiple consumers are
+safe: each job gets an ownership token and renewed lease. The global consumer uses
+the job's namespace/user/agent/session, with atomic writes and cache reconciliation.
+SIGINT/SIGTERM stop new claims; shutdown allows in-flight work to finish for ten
+seconds, then requeues owned work. Synchronous HTTP requests have bounded timeouts
+and may finish after cancellation before Python exits.
 
-Agent memory has two diseases: it stores ~96–98% junk, and it invents false facts from
-negations and hypotheticals (see Mem0 issue #4573 — 97.8% of 10,134 entries were junk).
-And when a belief *is* wrong, incumbent systems **silently overwrite** memory — you can't
-tell what changed, why, or how to undo it.
+## Verification
 
-Mnemo attacks both:
+The default `heuristic` verifier is a conservative **regression mode**, with limited
+predicate coverage. For full semantic entailment, install the optional NLI extra:
 
-**The quality gate (the product)** — every turn runs through a write-time pipeline:
-- **extract** — salience-first fact decomposition with LLM-assigned importance (1–10)
-- **verify** — negations/hypotheticals rejected before they become false memories
-- **dedup** — canonical fact identity + embedding similarity route restatements to UPDATE
-- **score + tier** — `write_score` from importance/specificity/novelty; **demote
-  borderline facts to a session tier, drop only true noise** (recall is protected)
-- **decay** — Ebbinghaus forgetting (`R = e^(−t/S)`), recall reinforces, faded facts are
-  *archived reversibly*, never deleted
+```bash
+uv sync --extra dev --extra nli
+export MNEMO_VERIFIER_BACKEND=cross_encoder
+export MNEMO_VERIFIER_MODEL=cross-encoder/nli-deberta-v3-small
+export MNEMO_VERIFIER_FALLBACK_BACKEND=ollama
+# The fallback defaults to MNEMO_EXTRACTOR_MODEL.
+make mcp
+```
 
-**The versioned store (the foundation)** — an append-only event log makes every gate
-decision auditable and reversible:
+NLI checks the complete subject/relation/value assertion. High-confidence
+entailment is accepted; ambiguous results can use the bounded JSON LLM fallback.
+Unknown labels, malformed responses and model failures do not become accepted
+facts. `ollama` and `openai` verifier modes are also available. The OpenAI backend
+uses the configured API key and model; embedding dimensions must match storage.
+Changing backend on an existing database does not silently recast vectors.
 
-- **`blame`** — for any belief: which turn introduced it, its score, tier, and reason.
-- **`revert`** — roll a fact back to a previous value; history is never destroyed.
-- **`invalidate`** — retire a fact that's no longer true (bitemporal `valid_to`), undoable.
-- **`diff` / `log`** — how the agent's beliefs changed between two points in time.
-- **`search`** — hybrid FTS + vector retrieval, reranked by relevance + recency + importance.
-- **provenance & trust** — every belief records *how* it was learned and how much to trust it.
+Assistant turns are excluded in code. Extractor-supplied provenance is never
+trusted: extracted writes carry `agent_inference` / low trust. Explicit SDK/MCP
+`add()` remains a direct write API, with caller-supplied provenance; it bypasses
+the observation quality pipeline.
 
-The event log is the source of truth; `memory_current` is just a view of HEAD. State changes
-are **new events** — supersession is a flag, never a rewrite. The transparent SQL *is* the
-product.
+## Evaluation and its limits
 
-## How Mnemo compares
+The familiar **90% precision / 100% recall** is the 18-turn scripted regression
+with deterministic embeddings, not measured real-model accuracy. Its naive arm
+has 60% precision and 100% recall. Neither arm is a competitor implementation.
 
-| Capability | Mem0 / Zep / Letta | **Mnemo** |
-|---|:---:|:---:|
-| Store & semantic search | ✅ | ✅ |
-| Write-time quality gate (verify / score / tier) | ❌ | ✅ |
-| Measured precision/recall (`make eval`) | ❌ | ✅ |
-| Rejects negation/hypothetical false memories | ❌ | ✅ |
-| Demote-don't-drop (recall protected) | ❌ | ✅ |
-| Principled forgetting (Ebbinghaus, reversible) | ❌ | ✅ |
-| Append-only history (never destroyed) | ❌ | ✅ |
-| `blame` — provenance + reason for every belief | ❌ | ✅ |
-| `revert` / `invalidate` — undo, bitemporally | partial | ✅ |
-| `diff` / time-travel between commits | ❌ | ✅ |
-| Trust levels from provenance | partial | ✅ |
-| Transparent, inspectable SQL | ❌ | ✅ |
-| Self-hostable / local-first (no cloud) | partial | ✅ |
-| MCP server + Python SDK | partial | ✅ |
+```bash
+# Broader, project-authored synthetic data: 100 dev + 100 held-out turns
+uv run mnemo-eval --dataset benchmark --split all --output synthetic.json
 
-## How it works
+# Real extraction + embeddings + selected entailment verifier, identical
+# extracted candidates replayed into both arms to isolate the gate
+uv run --extra nli mnemo-eval --real --dataset benchmark --split held_out \
+  --verifier cross_encoder --output real-held-out.json
 
-- **Event log (`memory_event`)** — immutable, append-only; the source of truth. Ops:
-  `ADD` / `UPDATE` / `INVALIDATE` / `REVERT` / `DELETE`.
-- **Facts (`memory_fact`)** — stable identity (the "file"); a `current_event_id` HEAD pointer.
-- **`memory_current`** — a SQL view = HEAD = the latest non-superseded event per fact.
-- **Two-tier memory** — `observe()` writes a synchronous *fast cache* for immediate
-  next-turn recall while an async worker extracts structured facts; a cache-invalidation
-  **handshake** guarantees a belief shows up *exactly once* (no stale reads, no double counts).
-- **Bitemporal + provenance** — events carry valid/recorded times, `provenance`, `actor`,
-  `confidence`, and a derived `trust_level`. The extractor is an untrusted, low-trust actor.
+# Independent end-to-end runs of extraction through each arm
+uv run mnemo-eval --real --mode pipeline --output pipeline.json
 
-## Usage
+# Complete 36-turn LongMemEval record with provisional atomic annotations
+uv run mnemo-eval --real --verifier ollama \
+  --longmemeval mnemo/data/longmemeval-car.json \
+  --labels mnemo/data/longmemeval-car-labels.json --output longmemeval.json
+```
 
-### Python SDK
+Reports include final-state precision/recall/F1, historical precision/recall,
+explicit false writes, unmatched assertions, must-keep coverage, event/row counts,
+allocated storage bytes including indexes and audit records, latency, measured
+request/token counts and fingerprints. Historical judgments use each write's own
+source labels, so later corrections cannot hide earlier mistakes. Unmatched
+assertions can be paraphrases or unfamiliar predicate names; that count is not an
+adjudicated hallucination count. Retention scores and thresholds remain priors.
+
+Candidate preparation time and shared extraction tokens are separate from the
+comparison-arm latency/cost in replay mode. `--prices prices.json` estimates API
+cost from supplied USD-per-million `input` and `output` rates keyed by `extractor`,
+`embedder`, and `verifier`. Cost is null when pricing or token usage is missing;
+local compute cost is not estimated. Ollama's legacy embedding endpoint does not
+report tokens. Evaluation creates private temporary schemas and never truncates
+application tables.
+Reports retain the actual assertion history for review. Cleanup lock conflicts
+are retried; if cleanup still fails, scores are saved with error metadata and the
+CLI exits unsuccessfully instead of losing the report.
+
+See [recorded evidence](docs/evaluation), [annotation scope and attribution](mnemo/data/README.md),
+and [the detailed implementation plan](docs/CORRECTNESS_PLAN.md).
+
+The recorded real-model 200-turn synthetic run achieved **25% final precision and
+16% recall**, with **one explicitly false historical write**. Total storage grew
+after including evidence and audit records. The broader evaluation exposes
+substantial remaining quality gaps; see [current status](PROJECT_STATUS.md).
+
+## Memory semantics
+
+- Writes lock scope and HEAD before changing a fact. Payloads are immutable;
+  supersession and recall counters are the explicitly mutable bookkeeping.
+- Exact values and narrow spelling/predicate aliases deduplicate. Similar
+  embeddings alone never suppress numeric, date or other meaningful corrections,
+  or merge facts about different subjects.
+- Session-tier facts require a session ID and expire after a configurable 24-hour
+  TTL. Semantic session hits and raw cache hits are restricted to that session;
+  durable facts are shared across sessions in the same scope. Legacy session
+  events receive a read-time 24-hour TTL without changing their payloads.
+- Current reads select active HEAD with `valid_from <= now < valid_to` and unexpired
+  retention. `search(as_of=T, valid_at=V)` selects the latest revision recorded by T
+  and filters its world-valid interval at V (default T). Both timestamps must be
+  timezone-aware. Historical search excludes cache and never reinforces history.
+- New future-effective HEAD revisions are hidden until valid_from; reads do not
+  implicitly fall back to superseded revisions. Fact identity remains one HEAD per
+  subject/predicate in a store scope, including session-tier updates.
+- Revert checks fact/scope ownership, copies typed payload/embedding/source lineage,
+  and starts a new belief interval. Session reverts retain session identity and
+  renew TTL. Archival appends an event and rechecks HEAD and last recall under lock.
+- Vector and lexical candidates are independently bounded, then scored together
+  with unreconciled cache candidates before truncation. Live vector candidates use
+  HNSW; historical snapshots use exact selection. HNSW is approximate and restrictive
+  filters can return fewer than k matches. Iterative scans continue past filtered
+  history, bounded by `MNEMO_SEARCH_HNSW_MAX_SCAN_TUPLES` (20,000 by default), following
+  [pgvector's filtering guidance](https://github.com/pgvector/pgvector#iterative-index-scans).
+
+## SDK, MCP and UI
 
 ```python
+from datetime import datetime, timezone
 from mnemo import Mnemo
 from mnemo.embedder import build_embedder
 
-m = Mnemo("postgresql://mnemo:mnemo@localhost:5432/mnemo", build_embedder())
-
-e = m.add("user", "preferred_database", "PostgreSQL", provenance="direct_user_statement")
-m.add("user", "preferred_database", "MongoDB", provenance="agent_inference")  # a bad guess
-
-m.search("database")                       # → MongoDB (current HEAD)
-m.blame(subject="user", predicate="preferred_database")   # ADD(PostgreSQL) → UPDATE(MongoDB)
-m.revert(e.fact_id, e.event_id)            # roll back to PostgreSQL
-m.search("database")                       # → PostgreSQL again
+memory = Mnemo("postgresql://mnemo:mnemo@localhost:5432/mnemo", build_embedder())
+first = memory.add("user", "location", "Austin", provenance="direct_user_statement")
+memory.add("user", "location", "Portland", provenance="agent_inference")
+memory.blame(fact_id=first.fact_id)
+memory.revert(first.fact_id, first.event_id)
+memory.search("location", as_of=datetime.now(timezone.utc))
+memory.observe("turn-1", "I use Postgres.", "session-1")  # run make worker for SDK observations
 ```
 
-### MCP server
+MCP tools: `memory_add`, `memory_observe`, `memory_search`, `memory_get`,
+`memory_blame`, `memory_revert`, `memory_diff`, `memory_log`, `memory_decisions`,
+`memory_health`. `memory_decisions` exposes rejection reasons, evidence, score
+components, configuration snapshots and duplicate resolution.
+The UI's **Operations** page shows the same queue health and decision evidence,
+with a filter by source turn. JSON endpoints remain available at `/health` and
+`/decisions`.
 
 ```bash
-make mcp     # stdio transport
+make demo   # real extraction → bad direct write → blame → revert; fresh namespace
+make ui     # http://127.0.0.1:8000 — search → fact history → revert
 ```
 
-Exposes `memory_add`, `memory_search`, `memory_get`, `memory_blame`, `memory_revert`,
-`memory_diff`, `memory_log`, `memory_observe` to any MCP client (Claude Code, Cursor, …).
+The demo fails clearly if extraction yields no usable database fact. It does not
+insert a fallback fact to disguise a failed pipeline and does not truncate memory.
+Use `MNEMO_NAMESPACE` to select the same scope in MCP/UI and in diagnostic commands.
 
-### Web UI
+## Correctness and installation checks
 
 ```bash
-make ui      # http://127.0.0.1:8000
+make test-db   # fails when Postgres is unavailable, including in CI
+make lint
+uv build
+bash scripts/check-wheel.sh  # new environment + cwd, no tests package
 ```
 
-Search → fact detail (blame + revert + inline edit) → diff between snapshots.
+CI runs the required database suite against Postgres 16 + pgvector, lint, eval and
+wheel checks. Optional local-model tests can skip when those models are absent;
+required database tests cannot silently skip in CI. Repository branch protection
+must be configured by the repository owner to require the `correctness` job.
 
-## Configuration
-
-All settings live in [`mnemo/config.py`](mnemo/config.py); copy `.env.example` → `.env` to
-override. The default backend is **local Ollama** (`nomic-embed-text`, `vector(768)`).
-
-To use OpenAI instead, set `MNEMO_BACKEND=openai`, `OPENAI_API_KEY`, `MNEMO_EMBED_DIM=1536`,
-and change `vector(768)` → `vector(1536)` in the migrations (the dimension is kept in sync
-between config and schema on purpose).
-
-Thresholds (`update_sim` 0.90, `dedup_sim` 0.92, `confidence_floor` 0.5) are centralized in
-config and covered by tests.
-
-## Development
-
-```bash
-make test     # pytest against a disposable Postgres
-make lint     # ruff + black --check
-make fmt      # ruff --fix + black
-```
-
-The suite is hermetic by default (a deterministic fake embedder); live Ollama/OpenAI tests
-skip automatically when the backend isn't available. Two tests encode the core promises:
-
-- [`tests/test_lifecycle.py`](tests/test_lifecycle.py) — `ADD → UPDATE → BLAME → REVERT`;
-  HEAD returns to PostgreSQL, exactly 3 events, history immutable.
-- [`tests/test_twotier.py`](tests/test_twotier.py) — after `observe()`, search returns the
-  fact before extraction; after reconcile it appears exactly once.
-
-## Record the demo GIF
-
-The launch asset is a <15s GIF of the rollback. Generate it with
-[VHS](https://github.com/charmbracelet/vhs) (`brew install vhs`):
-
-```bash
-make gif      # runs `vhs docs/demo.tape` → docs/rollback.gif
-```
-
-Or screen-record the web-UI revert: `python examples/agent.py setup`, then `make ui` and
-revert the fact in the browser.
-
-## Project layout
-
-```
-mnemo/        SDK + core ops, embedder, extraction worker, MCP server, config
-migrations/   numbered .sql (the schema is the product)
-web/          FastAPI + HTMX UI
-examples/     reference agent + the rollback demo
-tests/        lifecycle + two-tier + ops/embeddings/mcp/web
-```
-
-See [`PROJECT_SPEC.md`](PROJECT_SPEC.md) for the full design and
-[`CLAUDE.md`](CLAUDE.md) for how the project is built.
+Consolidation remains deferred until evaluation establishes a benefit. Reflection
+would require complete source lineage, entailment verification and trust capped
+at the least-trusted source and at medium; no reflection writer is enabled.

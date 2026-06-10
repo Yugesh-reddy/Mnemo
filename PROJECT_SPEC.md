@@ -1,4 +1,8 @@
-# Mnemo — Project Spec (single source of truth, v3)
+# Mnemo — Project Spec (single source of truth, v4)
+
+The September 9, 2026 correctness amendment in §14 supersedes earlier wording
+where indicated. The implementation plan is in `docs/CORRECTNESS_PLAN.md`;
+executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
 
 > **Working name:** Mnemo · **One-liner:** *Agent memory that stores less and remembers what matters.*
 > A quality gate keeps junk out, provenance tells you where every fact came from, and one-click
@@ -52,8 +56,13 @@ turn ─▶ observe() ─▶ [fast cache | enqueue]
 
 ---
 
-## 3. Database schema (full DDL — the unified, current schema)
-Numbered migrations (`migrations/0001_init.sql` …). Includes council fields, versioning spine, and the structured `source_span` (NOT `source_text`).
+## 3. Database schema (design baseline)
+The executable schema is the numbered migrations (`migrations/0001_init.sql` …).
+The design sketch below predates the §14 queue, decision and temporal additions.
+Its `agent_reflection` enum member describes a future consolidation requirement;
+the current `mem_provenance` enum intentionally has no reflection writer/member.
+The configured fresh-install dimension defaults to 768, not the sketch's 1536.
+Includes council fields, versioning spine, and structured `source_span` (NOT `source_text`).
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -230,3 +239,77 @@ Foundation is largely built already (real Postgres, embeddings, LLM extractor, M
 | retrieval recency γ | 0.995 / hour | Generative Agents |
 
 Build the smallest thing that makes the two demos real; tune everything against the eval; ship consolidation last.
+
+## 14. Correctness amendment — September 9, 2026
+
+These contracts implement the requested correctness milestone. They replace the
+incomplete identity, verification, temporal and evaluation rules in §§3–7; the
+original thresholds remain unvalidated priors.
+
+- **Transactions and identity.** Mutations lock namespace/user/agent scope and the
+  fact row before reading HEAD. A revert target must belong to that scoped fact;
+  SQL copies its typed payload, embedding and source lineage into a new event.
+  Archival owns its transaction and rechecks HEAD and last recall. Exact visible
+  values and narrow aliases deduplicate; embedding similarity cannot suppress a
+  changed number/date/value or merge different structured identities.
+- **Worker ownership.** `make mcp` starts extraction and scheduled decay by
+  default; `mnemo-worker` supports a separate consumer. Jobs define their own
+  scope, exact cache row, retry availability, attempts, token and renewable lease.
+  Model calls run outside transactions. Ownership is checked under a row lock
+  before atomic event/decision/cache/completion writes. Shutdown stops claims,
+  gives in-flight work ten seconds, then cancels and requeues owned work; bounded
+  synchronous HTTP requests may finish after cancellation.
+- **Verification and provenance.** The verifier receives a typed
+  `{subject,predicate,object}` assertion and source evidence. Assistant turns are
+  excluded before model calls. Extractor assertions always become
+  `agent_inference` with low trust; the model cannot choose a stronger provenance.
+  Optional NLI reads model label metadata and delegates ambiguous cases to a
+  bounded JSON fallback. Hypotheses must preserve the relation, including
+  preference versus use. Heuristic mode is explicitly a regression backend;
+  clause-local rules do not establish general semantic entailment. Broad regex
+  rejection must not remove a factual clause beside an unrelated hypothetical.
+  Explicit SDK/MCP `add()` is the caller-controlled direct-write API.
+- **Decision history.** `quality_decision` is append-only and retains candidates,
+  rejected/demoted/accepted/duplicate/error outcomes, evidence, verdict, scoring
+  components, configuration fingerprints and source IDs. It is separate from
+  retrieval-visible beliefs. Queue health and decision history are exposed by
+  commands, MCP tools, JSON endpoints and the operations UI.
+- **Temporal contract.** Event `session_id` and `expires_at` describe session and
+  retention independently of world validity. Session facts require a session and
+  default to a 24-hour TTL. Legacy events receive the same read-time expiry from
+  recorded_at without rewriting payloads. Current reads select active HEAD and
+  filter `[valid_from, valid_to)` plus expiry. A future HEAD hides older revisions;
+  there is no implicit fallback to an earlier event. Historical search selects
+  the latest revision recorded by `as_of=T`, then filters world validity at
+  `valid_at=V` (default T) and retention at T. Require aware datetimes. History
+  excludes cache and reinforcement. Session search is restricted to that session;
+  administrative get/list/history remain scoped to namespace/user/agent.
+- **Retrieval.** Bound vector and lexical candidates independently before
+  reranking. The live vector query orders raw distance with a limit on the indexed
+  event table and checks scoped HEAD membership; verify the actual plan. Historical
+  candidate selection is exact. Approximate filtered HNSW can underfill k. Search
+  uses pgvector >= 0.8 iterative scans with a configured work bound to continue
+  past superseded or out-of-scope neighbors. Search
+  owns a repeatable-read transaction for both tiers; when called inside a caller
+  transaction it inherits that transaction's isolation. Merge and deduplicate
+  both tiers before the final ranking limit.
+- **Evaluation.** Preserve the scripted 18-turn regression, add a versioned
+  200-turn synthetic development/held-out corpus, and adapt external conversations
+  only with explicit atomic labels. Compare complete normalized assertions and
+  judge every write against its own source turn, including superseded writes.
+  Keep explicit false writes separate from unmatched labels. Report final/history
+  precision and recall, must-keep coverage, total rows/events/allocated bytes,
+  latency, measured usage and cost when supplied prices permit it. Retain assertion
+  snapshots before cleanup. Synthetic scores and provisional labels establish
+  neither real-world accuracy nor competitor results.
+- **Installation and CI.** Package migrations, templates, evaluation data and demo
+  modules. Declare UI runtime dependencies and optional NLI; use the supported MCP
+  1.x API. A fresh database renders the configured vector dimension; existing
+  dimensions must match and require explicit re-embedding when changed. Required
+  Postgres CI fails when its database is unavailable. Validate a built wheel from
+  a clean environment outside the source checkout.
+
+Consolidation stays disabled until evaluation demonstrates a benefit. Adding the
+reflection enum alone would not complete it: it still needs every source event,
+verification against source evidence, and trust no higher than medium or its
+least-trusted source.

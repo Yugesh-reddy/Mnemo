@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-09",
+  "checks": [
+    {
+      "command": "MNEMO_REQUIRE_DB=1 MNEMO_EXTRACTOR_MODEL=qwen3.5:4b-mlx .venv/bin/pytest -q -rs",
+      "exit_code": 0,
+      "passed": 149,
+      "skipped": 0,
+      "log": "test-results.txt"
+    },
+    {
+      "command": "make lint",
+      "exit_code": 0,
+      "result": "ruff and Black pass"
+    },
+    {
+      "command": "uv build",
+      "exit_code": 0,
+      "result": "sdist and wheel built"
+    },
+    {
+      "command": "bash scripts/check-wheel.sh",
+      "exit_code": 0,
+      "result": "fresh venv and temporary cwd: imports, assets, installed eval CLI and migration command pass"
+    },
+    {
+      "command": "MNEMO_REQUIRE_DB=1 MNEMO_TEST_DSN=postgresql://mnemo:mnemo@127.0.0.1:1/mnemo_test .venv/bin/pytest tests/test_schema.py --tb=line",
+      "exit_code": 1,
+      "result": "intentional unavailable-DB check: 10 errors, zero skips"
+    },
+    {
+      "command": "MNEMO_EXTRACTOR_MODEL=qwen3.5:4b-mlx make demo",
+      "exit_code": 0,
+      "log": "demo.txt"
+    },
+    {
+      "command": "external MCP stdio client with real user observation and NLI/fallback",
+      "exit_code": 0,
+      "report": "mcp-real-smoke.json"
+    },
+    {
+      "command": "real NLI/fallback verifier probes for all three reported failures",
+      "exit_code": 0,
+      "report": "verifier-probes.json"
+    }
+  ],
+  "ci_workflow": ".github/workflows/correctness.yml",
+  "remote_ci_executed": false,
+  "branch_protection_configured": false
+}

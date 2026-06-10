@@ -1,0 +1,76 @@
+{
+  "date": "2026-09-09",
+  "model": "cross-encoder/nli-deberta-v3-small",
+  "revision": "fa2804872c3b4bd748f38c0185cc85775361e735",
+  "probes": [
+    {
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 8,
+        "assertion_type": "agent_inference"
+      },
+      "source": "I live in Austin.",
+      "expected_accepted": false,
+      "verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9953060746192932,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I live in Austin."
+      },
+      "passed": true
+    },
+    {
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 8,
+        "assertion_type": "agent_inference"
+      },
+      "source": "I don't use Redis, and I don't use MongoDB.",
+      "expected_accepted": false,
+      "verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use MongoDB, which directly contradicts the hypothesis claiming the user uses MongoDB.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I don't use Redis, and I don't use MongoDB."
+      },
+      "passed": true
+    },
+    {
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Austin",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 8,
+        "assertion_type": "agent_inference"
+      },
+      "source": "I live in Austin. What if I switched databases?",
+      "expected_accepted": true,
+      "verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9916792511940002,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I live in Austin. What if I switched databases?"
+      },
+      "passed": true
+    }
+  ]
+}
