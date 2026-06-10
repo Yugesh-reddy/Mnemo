@@ -9,7 +9,15 @@ from __future__ import annotations
 import pytest
 
 from mnemo.config import Settings
-from mnemo.quality import HeuristicVerifier, is_transient, specificity, tier_for, write_score
+from mnemo.models import ExtractedFact
+from mnemo.quality import (
+    HeuristicVerifier,
+    LLMVerifier,
+    is_transient,
+    specificity,
+    tier_for,
+    write_score,
+)
 
 S = Settings(_env_file=None)
 V = HeuristicVerifier()
@@ -19,13 +27,18 @@ V = HeuristicVerifier()
 
 
 def test_negation_rejected() -> None:
-    v = V.verify("MongoDB", "I don't use MongoDB, never liked it.")
+    v = V.verify(
+        _candidate("user", "preferred_database", "MongoDB"), "I don't use MongoDB, never liked it."
+    )
     assert not v.accepted
     assert v.label == "contradiction"
 
 
 def test_hypothetical_rejected() -> None:
-    v = V.verify("graph database", "What if I switched to a graph database someday?")
+    v = V.verify(
+        _candidate("user", "preferred_database", "graph database"),
+        "What if I switched to a graph database someday?",
+    )
     assert not v.accepted
     assert v.label == "neutral"
 
@@ -38,15 +51,108 @@ def test_hypothetical_rejected() -> None:
     ],
 )
 def test_plain_assertion_accepted(obj: str, src: str) -> None:
-    v = V.verify(obj, src)
+    v = V.verify(
+        _candidate("user", "team_lead" if obj == "Priya" else "preferred_database", obj), src
+    )
     assert v.accepted
     assert v.label == "entailment"
 
 
 def test_negation_of_a_different_object_is_not_rejected() -> None:
     # "I don't work weekends" must not poison an unrelated fact from the same turn.
-    v = V.verify("Austin", "I don't work weekends anymore, I moved to Austin.")
+    v = V.verify(
+        _candidate("user", "location", "Austin"),
+        "I don't work weekends anymore, I moved to Austin.",
+    )
     assert v.accepted
+
+
+def _candidate(subject: str, predicate: str, value: str) -> ExtractedFact:
+    return ExtractedFact(subject=subject, predicate=predicate, object=value)
+
+
+def test_full_candidate_rejects_invented_object() -> None:
+    verdict = V.verify(_candidate("user", "preferred_database", "MongoDB"), "I live in Austin.")
+    assert not verdict.accepted
+    assert verdict.label == "neutral"
+    assert verdict.backend == "heuristic"
+    assert verdict.probability == 1.0
+
+
+def test_full_candidate_rejects_wrong_relation_and_subject() -> None:
+    assert not V.verify(_candidate("user", "team_lead", "Austin"), "I live in Austin.").accepted
+    assert not V.verify(_candidate("Priya", "location", "Austin"), "I live in Austin.").accepted
+
+
+def test_multiple_negations_reject_matching_denial() -> None:
+    verdict = V.verify(
+        _candidate("user", "preferred_database", "MongoDB"),
+        "I don't use Redis and I never use MongoDB.",
+    )
+    assert not verdict.accepted
+    assert verdict.label == "contradiction"
+    assert verdict.evidence == "I never use MongoDB."
+
+
+def test_unrelated_hypothetical_does_not_poison_factual_clause() -> None:
+    verdict = V.verify(
+        _candidate("user", "location", "Austin"),
+        "What if I used MongoDB someday? I live in Austin.",
+    )
+    assert verdict.accepted
+
+
+@pytest.mark.parametrize(
+    "candidate, source",
+    [
+        (_candidate("user", "preferred_database", "PostgreSQL"), "I use Postgres."),
+        (_candidate("user", "ship_day", "Friday"), "We ship on Fridays."),
+        (_candidate("user", "timezone", "America/Chicago"), "My timezone is US Central."),
+    ],
+)
+def test_full_candidate_aliases(candidate: ExtractedFact, source: str) -> None:
+    assert V.verify(candidate, source).accepted
+
+
+def test_unknown_relation_is_honestly_neutral() -> None:
+    verdict = V.verify(_candidate("user", "favorite_orm", "SQLAlchemy"), "I use SQLAlchemy.")
+    assert not verdict.accepted
+    assert verdict.label == "neutral"
+    assert "no rule" in verdict.reason
+
+
+def test_relation_must_attach_to_candidate_object() -> None:
+    language = _candidate("user", "preferred_language", "Rust")
+    assert not V.verify(language, "I use PostgreSQL and want to learn Rust.").accepted
+    name = _candidate("user", "name", "Austin")
+    assert not V.verify(name, "I am in Austin.").accepted
+
+
+def test_llm_acceptance_is_derived_from_label_and_threshold() -> None:
+    verifier = LLMVerifier(backend="ollama", model="test", base_url="http://unused", max_retries=0)
+    verifier._request = lambda _: {  # type: ignore[method-assign]
+        "label": "entailment",
+        "probability": 0.98,
+        "reason": "model confidence",
+    }
+    verdict = verifier.verify(_candidate("user", "location", "Austin"), "I live in Austin")
+    assert verdict.label == "entailment"
+    assert not verdict.accepted
+    verifier.close()
+
+
+def test_llm_rejects_unexpected_self_reported_acceptance() -> None:
+    verifier = LLMVerifier(backend="ollama", model="test", base_url="http://unused", max_retries=0)
+    verifier._request = lambda _: {  # type: ignore[method-assign]
+        "accepted": True,
+        "label": "entailment",
+        "probability": 1.0,
+        "reason": "trust me",
+    }
+    verdict = verifier.verify(_candidate("user", "location", "Austin"), "unrelated")
+    assert not verdict.accepted
+    assert verdict.label == "neutral"
+    verifier.close()
 
 
 # ---- scoring + tiering (Layer 2) ------------------------------------------
@@ -96,3 +202,53 @@ def test_duplicate_novelty_zero_drags_score_down() -> None:
         importance=7, spec=1.0, novelty=0.0, from_assistant=False, transient=False, settings=S
     )
     assert dupe < fresh
+
+
+def test_object_only_verification_is_not_an_acceptance_path() -> None:
+    with pytest.raises(TypeError, match="subject, predicate and object"):
+        V.verify("Austin", "I live in Austin.")
+
+
+def test_cross_encoder_label_mapping_and_bounded_fallback(monkeypatch) -> None:
+    import sys
+    from types import SimpleNamespace
+
+    from mnemo.quality import CrossEncoderVerifier, Verdict
+
+    class Encoder:
+        def __init__(self, model):
+            self.model = SimpleNamespace(
+                config=SimpleNamespace(id2label={0: "neutral", 1: "entailment", 2: "contradiction"})
+            )
+
+        def predict(self, pairs, **kwargs):
+            assert pairs[0][1] == "I live in Austin."
+            return [[0.2, 0.7, 0.1]]
+
+    class Fallback:
+        calls = 0
+
+        def verify(self, candidate, source):
+            self.calls += 1
+            return Verdict(
+                accepted=True,
+                label="entailment",
+                probability=1,
+                reason="explicit statement",
+                backend="stub",
+            )
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", SimpleNamespace(CrossEncoder=Encoder))
+    fallback = Fallback()
+    verifier = CrossEncoderVerifier("stub", fallback=fallback)
+    assert verifier.verify(_candidate("user", "location", "Austin"), "I live in Austin.").accepted
+    assert fallback.calls == 1
+
+
+def test_nli_hypothesis_preserves_preference_and_subject():
+    from mnemo.quality import _hypothesis
+
+    assert _hypothesis(_candidate("Priya", "preferred_database", "MongoDB")) == (
+        "Priya prefers MongoDB."
+    )
+    assert _hypothesis(_candidate("user", "uses_database", "MongoDB")) == "I use MongoDB."

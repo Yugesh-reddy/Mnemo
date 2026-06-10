@@ -195,11 +195,12 @@ async def test_extracted_provenance_and_trust(store: MnemoStore, db: asyncpg.Con
         "FROM memory_current mc JOIN memory_event e ON e.event_id = mc.event_id "
         "WHERE mc.predicate='preferred_database'"
     )
-    assert row["provenance"] == "direct_user_statement"
-    assert row["trust_level"] == "high"
+    assert row["provenance"] == "agent_inference"
+    assert row["trust_level"] == "low"
     assert row["actor"] == "extractor"
     span = row["source_span"]
-    assert json.loads(span) == {"turn_ids": ["t1"]}
+    assert json.loads(span)["turn_ids"] == ["t1"]
+    assert json.loads(span)["cache_ids"]
 
 
 async def test_gate_rejects_negation_no_false_memory(
@@ -225,7 +226,7 @@ async def test_gate_drops_junk_but_demotes_borderline(
     # junk: weather (imp 2, out-of-vocab, assistant turn) -> dropped entirely
     await store.observe("t1", "By the way it's a sunny 72F here today.", SESSION, role="assistant")
     # borderline: debugging (imp 3, in-vocab 'currently_debugging', transient) -> session
-    await store.observe("t2", "Today I'm just debugging the auth service.", SESSION)
+    await store.observe("t2", "Today I'm just debugging the auth service, nothing major.", SESSION)
     while await worker.process_one():
         pass
 
@@ -247,7 +248,9 @@ async def test_gate_stores_good_fact_durable_with_importance(
     from mnemo.eval import EvalExtractor
 
     worker = ExtractionWorker(db, store.embedder, EvalExtractor())
-    await store.observe("t1", "I use PostgreSQL for my main project.", SESSION)
+    await store.observe(
+        "t1", "Hey, I'm Sai. I'm a data engineer and I use PostgreSQL for my main project.", SESSION
+    )
     await worker.process_one()
     row = await db.fetchrow(
         "SELECT tier, importance FROM memory_current WHERE predicate='preferred_database'"
@@ -259,7 +262,10 @@ async def test_gate_stores_good_fact_durable_with_importance(
 # ---- live extraction (real instruct model) ------------------------------
 
 
-def _llama_present(prefix: str = "llama3.2") -> bool:
+def _llama_present() -> bool:
+    from mnemo.config import get_settings
+
+    prefix = get_settings().extractor_model
     try:
         resp = httpx.get("http://localhost:11434/api/tags", timeout=2.0)
         return any(prefix in m.get("name", "") for m in resp.json().get("models", []))
@@ -271,9 +277,9 @@ def _llama_present(prefix: str = "llama3.2") -> bool:
 async def test_live_extraction_reconciles_a_database_fact(
     store: MnemoStore, db: asyncpg.Connection
 ) -> None:
-    from mnemo.extraction import OllamaExtractor
+    from mnemo.extraction import build_extractor
 
-    worker = ExtractionWorker(db, store.embedder, OllamaExtractor())
+    worker = ExtractionWorker(db, store.embedder, build_extractor())
     await store.observe("t1", "I use Postgres for my project.", SESSION, role="user")
     assert await worker.process_one() is True
 

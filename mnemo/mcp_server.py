@@ -7,6 +7,9 @@ connection. Run with ``make mcp`` (``python -m mnemo.mcp_server``).
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from datetime import datetime
 from typing import Any
 from uuid import UUID
 
@@ -18,7 +21,21 @@ from mnemo.core import MnemoStore
 from mnemo.db import register_vector
 from mnemo.embedder import build_embedder
 
-mcp = FastMCP("mnemo")
+
+@asynccontextmanager
+async def lifespan(server: FastMCP) -> AsyncIterator[dict[str, Any]]:
+    from mnemo.runtime import background_runtime
+
+    global _pool, _embedder
+    async with background_runtime(get_settings()) as runtime:
+        _pool, _embedder = runtime["pool"], runtime["embedder"]
+        try:
+            yield runtime
+        finally:
+            _pool, _embedder = None, None
+
+
+mcp = FastMCP("mnemo", lifespan=lifespan)
 
 # Test seam: override the DSN / embedder without touching global config.
 _OVERRIDE: dict[str, Any] = {}
@@ -57,7 +74,16 @@ async def _run(fn: Any) -> Any:
         await register_vector(conn)
         try:
             embedder = _OVERRIDE.get("embedder") or build_embedder(settings)
-            return await fn(MnemoStore(conn, embedder, settings=settings))
+            return await fn(
+                MnemoStore(
+                    conn,
+                    embedder,
+                    settings=settings,
+                    namespace=settings.namespace,
+                    user_id=settings.user_id,
+                    agent_id=settings.agent_id,
+                )
+            )
         finally:
             await conn.close()
 
@@ -66,7 +92,16 @@ async def _run(fn: Any) -> Any:
         _embedder = build_embedder(settings)
     pool = await _get_pool()
     async with pool.acquire() as conn:
-        return await fn(MnemoStore(conn, _embedder, settings=settings))
+        return await fn(
+            MnemoStore(
+                conn,
+                _embedder,
+                settings=settings,
+                namespace=settings.namespace,
+                user_id=settings.user_id,
+                agent_id=settings.agent_id,
+            )
+        )
 
 
 @mcp.tool()
@@ -88,10 +123,18 @@ async def memory_add(
 
 
 @mcp.tool()
-async def memory_search(query: str, k: int = 8, session_id: str | None = None) -> list[dict]:
+async def memory_search(
+    query: str,
+    k: int = 8,
+    session_id: str | None = None,
+    as_of: datetime | None = None,
+    valid_at: datetime | None = None,
+) -> list[dict]:
     """Search current memory (semantic + keyword). Returns a compact index —
     call memory_get(fact_id) or memory_blame(fact_id) for full detail/history."""
-    facts = await _run(lambda s: s.search(query, k=k, session_id=session_id))
+    facts = await _run(
+        lambda s: s.search(query, k=k, session_id=session_id, as_of=as_of, valid_at=valid_at)
+    )
     return [
         {
             "fact_id": str(f.fact_id),
@@ -151,6 +194,35 @@ async def memory_observe(turn_id: str, text: str, session_id: str, role: str = "
     """Record a conversation turn for immediate recall + async fact extraction."""
     await _run(lambda s: s.observe(turn_id, text, session_id, role=role))
     return {"status": "observed", "turn_id": turn_id}
+
+
+@mcp.tool()
+async def memory_decisions(turn_id: str | None = None, limit: int = 100) -> list[dict]:
+    """Explain accepted, demoted, duplicate and rejected candidates with source evidence."""
+    from mnemo.audit import decisions
+
+    return await _run(
+        lambda s: decisions(
+            s.conn,
+            namespace=s.namespace,
+            user_id=s.user_id,
+            agent_id=s.agent_id,
+            turn_id=turn_id,
+            limit=limit,
+        )
+    )
+
+
+@mcp.tool()
+async def memory_health() -> dict:
+    """Queue age, retries, failures, processing latency and archival activity."""
+    from mnemo.audit import queue_health
+
+    return await _run(
+        lambda s: queue_health(
+            s.conn, namespace=s.namespace, user_id=s.user_id, agent_id=s.agent_id
+        )
+    )
 
 
 def main() -> None:

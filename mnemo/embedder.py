@@ -12,6 +12,7 @@ from typing import Protocol, runtime_checkable
 import httpx
 
 from mnemo.config import Settings, get_settings
+from mnemo.telemetry import record_usage
 
 
 @runtime_checkable
@@ -44,6 +45,7 @@ class OllamaEmbedder:
             f"{self.host}/api/embeddings", json={"model": self.model, "prompt": text}
         )
         resp.raise_for_status()
+        record_usage(self, resp.json())
         vec = resp.json()["embedding"]
         if len(vec) != self.dim:
             raise ValueError(f"{self.model} returned dim {len(vec)}, expected {self.dim}")
@@ -77,6 +79,7 @@ class OpenAIEmbedder:
             f"{self.base_url}/embeddings", json={"model": self.model, "input": text}
         )
         resp.raise_for_status()
+        record_usage(self, resp.json())
         vec = resp.json()["data"][0]["embedding"]
         if len(vec) != self.dim:
             raise ValueError(f"{self.model} returned dim {len(vec)}, expected {self.dim}")
