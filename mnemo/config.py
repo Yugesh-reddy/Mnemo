@@ -60,6 +60,7 @@ class Settings(BaseSettings):
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
 
     search_candidate_multiplier: int = Field(8, ge=1, le=100)
+    search_hnsw_max_scan_tuples: int = Field(20000, ge=1, le=1_000_000)
     search_reinforce: bool = True
     session_ttl_seconds: float = Field(86400.0, gt=0.0)
 

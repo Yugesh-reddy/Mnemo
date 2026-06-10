@@ -78,6 +78,9 @@ async def validate_embedding_dimension(
 ) -> None:
     """Fail before writing if the configured model dimension disagrees with storage."""
     expected = expected or get_settings().embed_dim
+    version = await conn.fetchval("SELECT extversion FROM pg_extension WHERE extname='vector'")
+    if version and tuple(map(int, version.split(".")[:2])) < (0, 8):
+        raise ValueError("pgvector >= 0.8 is required for filtered iterative HNSW retrieval")
     for table in ("memory_event", "fast_cache"):
         dimension = await conn.fetchval(
             "SELECT atttypmod FROM pg_attribute "

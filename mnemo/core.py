@@ -466,6 +466,13 @@ class MnemoStore:
         async with self.conn.transaction(
             isolation=None if self.conn.is_in_transaction() else "repeatable_read"
         ):
+            if recorded_at is None:
+                # Continue past filtered historical events while bounding index work.
+                await self.conn.execute("SET LOCAL hnsw.iterative_scan = 'strict_order'")
+                await self.conn.execute(
+                    "SELECT set_config('hnsw.max_scan_tuples', $1, true)",
+                    str(self.settings.search_hnsw_max_scan_tuples),
+                )
             rows = await self._search_semantic(
                 query,
                 vec,
