@@ -25,6 +25,7 @@ from mnemo.models import ExtractedFact
 from mnemo.quality import (
     build_verifier,
     is_transient,
+    representation_error,
     specificity,
     tier_for,
     write_score,
@@ -39,7 +40,7 @@ class Extractor(Protocol):
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]: ...
 
 
-_SYSTEM_PROMPT = """You extract durable facts from a conversation turn.
+_SYSTEM_PROMPT = """Extract atomic memory assertions supported by the user's turn.
 
 Return ONLY JSON of the form:
 {"facts": [{"subject": "...", "predicate": "...", "object": "...",
@@ -47,16 +48,34 @@ Return ONLY JSON of the form:
             "assertion_type": "..."}]}
 
 Rules:
-- Prefer these predicates when they fit: preferred_database, preferred_language,
-  name, location, role, timezone, goal. Use a concise snake_case predicate otherwise.
-- subject is usually "user".
-- Preserve the stated relation: using something does not establish preferring it.
-  Use uses_database for database use and preferred_database for an explicit preference.
+- Use a precise snake_case predicate for the relationship actually stated. The
+  vocabulary is open. Do not force an unfamiliar relationship into role, timezone,
+  goal, location or uses_database. Distinct attributes need distinct predicates.
+- subject is the actual actor or entity. Use "user" for the speaker, but preserve
+  named people, teams, services and projects when they are the subject.
+- Preserve direction: "My manager is Dana" means user/manager/Dana, not that the
+  user manages Dana. A team membership is not a job role.
+- Preserve type: using an editor is editor use, not database use. A scheduled day
+  is not a timezone. A need is not merely a generic goal. Use uses_database only
+  for database use, and preferred_database only for an explicit database preference.
+- Preserve numbers, times and complete corrected values. Keep independent facts
+  separate, including accessibility needs, allergies and emergency contacts.
+- Never encode an excluded value as a positive attribute: do not write name="not
+  Dana", timezone="not UTC", object=null, or object={"not":...}. A denial supplies
+  no positive replacement value. Leave its positive candidate out. A factual clause
+  beside a denial or hypothetical still supports its own assertion.
+- Distinguish plans from completed actions using planned_ or considered_ predicates.
+  Do not turn a question into a fact. Extract all clearly stated, memory-relevant
+  facts from multi-clause turns, even when the turn also asks for advice.
 - importance: 1 (trivia/transient) to 10 (identity-defining durable fact).
 - assertion_type is "direct_user_statement" when the user states it about themselves,
   otherwise "agent_inference".
 - NEVER extract facts about the user from assistant turns.
-- Only durable facts about the user/project. No chit-chat. If none, return {"facts": []}.
+- Include stable preferences, important needs, project context and explicit plans.
+  Also include relevant completed activities, accomplishments and experiences.
+  A question following a factual statement does not erase the stated fact. Do not
+  replace a reported past event with a generic goal or a request for advice.
+  Exclude chit-chat. If none, return {"facts": []}.
 
 Examples:
 Turn (user): "I prefer Postgres for my project."
@@ -280,6 +299,8 @@ class ExtractionWorker:
             result: dict[str, Any] = {"candidate": cand.model_dump(mode="json"), "fact": cand}
             if cand.confidence < self.settings.confidence_floor:
                 result.update(reason="below extraction confidence floor", outcome="rejected")
+            elif error := representation_error(cand, text):
+                result.update(reason=error, outcome="rejected")
             else:
                 verdict = await asyncio.to_thread(self.verifier.verify, cand, text)
                 result["verification"] = verdict.model_dump(mode="json")

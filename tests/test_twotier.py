@@ -34,7 +34,7 @@ class StubExtractor:
             out.append(
                 ExtractedFact(
                     subject="user",
-                    predicate="preferred_database",
+                    predicate="uses_database",
                     object="PostgreSQL",
                     confidence=0.97,
                     assertion_type="direct_user_statement",
@@ -90,7 +90,7 @@ async def test_worker_drops_low_confidence(store: MnemoStore, db: asyncpg.Connec
     weak = [
         ExtractedFact(
             subject="user",
-            predicate="preferred_database",
+            predicate="uses_database",
             object="PostgreSQL",
             confidence=0.30,  # below the 0.5 floor
             assertion_type="agent_inference",
@@ -193,7 +193,7 @@ async def test_extracted_provenance_and_trust(store: MnemoStore, db: asyncpg.Con
     row = await db.fetchrow(
         "SELECT mc.provenance, mc.trust_level, mc.actor, e.source_span "
         "FROM memory_current mc JOIN memory_event e ON e.event_id = mc.event_id "
-        "WHERE mc.predicate='preferred_database'"
+        "WHERE mc.predicate='uses_database'"
     )
     assert row["provenance"] == "agent_inference"
     assert row["trust_level"] == "low"
@@ -253,7 +253,7 @@ async def test_gate_stores_good_fact_durable_with_importance(
     )
     await worker.process_one()
     row = await db.fetchrow(
-        "SELECT tier, importance FROM memory_current WHERE predicate='preferred_database'"
+        "SELECT tier, importance FROM memory_current WHERE predicate='uses_database'"
     )
     assert row["tier"] == "durable"
     assert row["importance"] == 8

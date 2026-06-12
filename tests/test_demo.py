@@ -21,7 +21,7 @@ class _StubExtractor:
             return [
                 ExtractedFact(
                     subject="user",
-                    predicate="preferred_database",
+                    predicate="uses_database",
                     object="PostgreSQL",
                     confidence=0.97,
                     assertion_type="direct_user_statement",

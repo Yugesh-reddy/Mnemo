@@ -28,7 +28,7 @@ V = HeuristicVerifier()
 
 def test_negation_rejected() -> None:
     v = V.verify(
-        _candidate("user", "preferred_database", "MongoDB"), "I don't use MongoDB, never liked it."
+        _candidate("user", "uses_database", "MongoDB"), "I don't use MongoDB, never liked it."
     )
     assert not v.accepted
     assert v.label == "contradiction"
@@ -51,9 +51,7 @@ def test_hypothetical_rejected() -> None:
     ],
 )
 def test_plain_assertion_accepted(obj: str, src: str) -> None:
-    v = V.verify(
-        _candidate("user", "team_lead" if obj == "Priya" else "preferred_database", obj), src
-    )
+    v = V.verify(_candidate("user", "team_lead" if obj == "Priya" else "uses_database", obj), src)
     assert v.accepted
     assert v.label == "entailment"
 
@@ -86,7 +84,7 @@ def test_full_candidate_rejects_wrong_relation_and_subject() -> None:
 
 def test_multiple_negations_reject_matching_denial() -> None:
     verdict = V.verify(
-        _candidate("user", "preferred_database", "MongoDB"),
+        _candidate("user", "uses_database", "MongoDB"),
         "I don't use Redis and I never use MongoDB.",
     )
     assert not verdict.accepted
@@ -105,7 +103,7 @@ def test_unrelated_hypothetical_does_not_poison_factual_clause() -> None:
 @pytest.mark.parametrize(
     "candidate, source",
     [
-        (_candidate("user", "preferred_database", "PostgreSQL"), "I use Postgres."),
+        (_candidate("user", "uses_database", "PostgreSQL"), "I use Postgres."),
         (_candidate("user", "ship_day", "Friday"), "We ship on Fridays."),
         (_candidate("user", "timezone", "America/Chicago"), "My timezone is US Central."),
     ],
@@ -249,6 +247,8 @@ def test_nli_hypothesis_preserves_preference_and_subject():
     from mnemo.quality import _hypothesis
 
     assert _hypothesis(_candidate("Priya", "preferred_database", "MongoDB")) == (
-        "Priya prefers MongoDB."
+        "Priya's preferred database is MongoDB."
     )
-    assert _hypothesis(_candidate("user", "uses_database", "MongoDB")) == "I use MongoDB."
+    assert _hypothesis(_candidate("user", "uses_database", "MongoDB")) == (
+        "I use the database MongoDB."
+    )

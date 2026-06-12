@@ -102,10 +102,24 @@ _SMOKE_ROWS = (
 )
 
 
-def load_smoke_dataset() -> EvalDataset:
+def load_smoke_dataset(*, version: str = "2.0.0") -> EvalDataset:
+    if version not in {"1.0.0", "2.0.0"}:
+        raise ValueError("unknown smoke label version")
     base = datetime(2026, 1, 5, 15, tzinfo=UTC)
     turns = []
     for index, (turn_id, role, text, labels) in enumerate(_SMOKE_ROWS):
+        # Preserve the source fixture and legacy labels for old report audits.
+        # Use and primary language do not entail preference.
+        if version == "2.0.0":
+            replacements = {"t01": "uses_database", "t11": "primary_language"}
+            labels = tuple(
+                (
+                    (replacements.get(turn_id, predicate), value, disposition, importance)
+                    if predicate in {"preferred_database", "preferred_language"}
+                    else (predicate, value, disposition, importance)
+                )
+                for predicate, value, disposition, importance in labels
+            )
         turns.append(
             EvalTurn(
                 turn_id=turn_id,
@@ -119,7 +133,7 @@ def load_smoke_dataset() -> EvalDataset:
         )
     return EvalDataset(
         name="mnemo-synthetic-smoke",
-        version="1.0.0",
+        version=version,
         split="smoke",
         turns=tuple(turns),
         metadata={"synthetic": True, "license": "project-authored regression fixture"},

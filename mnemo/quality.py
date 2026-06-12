@@ -58,13 +58,13 @@ RELATIONS = {
     "location": (r"i (?:live|reside) in|i moved to|my location is|based in",),
     "timezone": (r"my timezone is|i am in|i'm in|timezone",),
     "preferred_database": (
-        r"i (?:(?:do not|don't|never) )?(?:use|prefer|like)|" r"my (?:database|db) is|we use",
+        r"(?:i|we) (?:(?:do not|don't|never) )?(?:prefer|like)|my preferred (?:database|db) is",
     ),
     "uses_database": (r"(?:i|we) (?:(?:do not|don't|never) )?use|my (?:database|db) is",),
     "preferred_language": (
-        r"i (?:(?:do not|don't|never) )?(?:use|prefer|like|code in)|"
-        r"my (?:main )?(?:language|stack) is",
+        r"i (?:(?:do not|don't|never) )?(?:prefer|like)|my preferred language is",
     ),
+    "primary_language": (r"my (?:main|primary) (?:programming )?language is",),
     "team_lead": (r"(?:my|our) team lead is",),
     "ship_day": (r"(?:i|we) (?:ship|deploy|release)(?: on)?",),
     "goal": (r"my goal is|i want to|i aim to|we need to",),
@@ -143,6 +143,20 @@ class HeuristicVerifier:
             return self._make(
                 "neutral", "heuristic has no rule for candidate relation", evidence[0]
             )
+        if candidate.predicate in {"uses_database", "preferred_database"}:
+            database_names = {
+                "postgresql",
+                "postgres",
+                "psql",
+                "mongodb",
+                "redis",
+                "mysql",
+                "sqlite",
+            }
+            if not (_forms(candidate.object) & database_names) and not any(
+                re.search(r"\b(?:database|db)\b", clause, re.I) for clause in evidence
+            ):
+                return self._make("neutral", "database type is unsupported", evidence[0])
         evidence = [c for c in evidence if _attached(c, patterns, _forms(candidate.object))]
         if not evidence:
             return self._make("neutral", "candidate relation is unsupported", None)
@@ -190,6 +204,31 @@ def _label(raw: Any) -> Label:
         raise ValueError(f"unknown NLI label {raw!r}") from exc
 
 
+def representation_error(candidate: ExtractedFact, source_text: str) -> str | None:
+    """A negated placeholder cannot replace an affirmative fact's HEAD.
+
+    This checks the extracted representation, not the truth of every negative
+    sentence. The source and rejected candidate remain available in decision history.
+    Explicitly negative relations (e.g. dislikes) are still verified normally.
+    """
+    value = candidate.object
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return "empty extracted value cannot establish an assertion"
+    negated = (
+        isinstance(value, dict) and set(value) & {"not", "is_not", "excluded", "negated"}
+    ) or (isinstance(value, str) and re.match(r"^(?:not|no|never)(?:\s|_)", value, re.I))
+    if negated and NEGATION.search(source_text):
+        return "negative value cannot overwrite an affirmative fact identity"
+    return None
+
+
+def _matching_denial(candidate: ExtractedFact, source_text: str) -> bool:
+    return any(
+        _has(clause, _forms(candidate.object)) and NEGATION.search(clause)
+        for clause in _clauses(source_text)
+    )
+
+
 def _hypothesis(candidate: ExtractedFact) -> str:
     speaker = candidate.subject.casefold() in {"user", "i", "me", "my"}
     subject = "I" if speaker else candidate.subject
@@ -197,10 +236,11 @@ def _hypothesis(candidate: ExtractedFact) -> str:
     relations = {
         "name": f"{possessive} name is",
         "location": f"{subject} {'live' if speaker else 'lives'} in",
-        "role": f"{subject} {'work' if speaker else 'works'} as",
-        "preferred_database": f"{subject} {'prefer' if speaker else 'prefers'}",
-        "uses_database": f"{subject} {'use' if speaker else 'uses'}",
+        "role": f"{possessive} job role is",
+        "preferred_database": f"{possessive} preferred database is",
+        "uses_database": f"{subject} {'use' if speaker else 'uses'} the database",
         "preferred_language": f"{possessive} preferred programming language is",
+        "primary_language": f"{possessive} primary programming language is",
         "team_lead": f"{possessive} team lead is",
         "timezone": f"{possessive} timezone is",
         "ship_day": f"{subject} {'ship' if speaker else 'ships'} on",
@@ -241,6 +281,20 @@ class CrossEncoderVerifier:
         probabilities = {self._labels[i]: float(score) for i, score in enumerate(scores)}
         label: Label = max(probabilities, key=probabilities.get)  # type: ignore[arg-type]
         probability = probabilities[label]
+        # Confidence is not a proof: matching denied evidence always needs a
+        # second semantic check, even when NLI assigns entailment > .99.
+        if label == "entailment" and _matching_denial(candidate, source_text):
+            if self.fallback is not None:
+                return self.fallback.verify(candidate, source_text)
+            return Verdict(
+                accepted=False,
+                label="neutral",
+                probability=probability,
+                reason="matching denial requires fallback verification",
+                backend=self.backend,
+                model=self.model_name,
+                evidence=source_text,
+            )
         if label == "entailment" and probability >= self.threshold:
             return Verdict(
                 accepted=True,

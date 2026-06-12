@@ -41,8 +41,9 @@ async def test_naive_baseline_stores_junk_and_false_facts(
     # The naive path must exhibit the disease: junk stored, forbidden facts asserted.
     assert m["false"] > 0
     assert m["precision"] < 1.0
-    # ...but it does capture the must-keep facts (recall is not the naive problem).
-    assert m["recall"] == 1.0
+    # The corrected labels expose a false update overwriting the earlier use fact.
+    assert ("uses_database", "PostgreSQL") not in stored
+    assert m["recall"] < 1.0
 
 
 async def test_gated_beats_naive_the_north_star(_disposable_test_db: str, clean_memory) -> None:
