@@ -1,0 +1,199 @@
+{
+  "policy_sha256": "cb2fafb6ae234ceb566fddc4f4c167080e99ffcdd5cb85c9ff64c392a5247ebb",
+  "verifier_dev": {
+    "before": {
+      "tp": 33,
+      "tn": 56,
+      "fp": 7,
+      "fn": 7
+    },
+    "after": {
+      "fn": 3,
+      "tn": 63,
+      "tp": 37
+    }
+  },
+  "cohorts": {
+    "6d550036": {
+      "naive": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 40,
+        "storage_bytes": 876544
+      },
+      "gated": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 17,
+        "storage_bytes": 1384448
+      }
+    },
+    "88432d0a": {
+      "naive": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 43,
+        "storage_bytes": 868352
+      },
+      "gated": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 18,
+        "storage_bytes": 1351680
+      }
+    },
+    "d23cf73b": {
+      "naive": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 29,
+        "storage_bytes": 712704
+      },
+      "gated": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "false_writes": 0,
+        "total_events": 12,
+        "storage_bytes": 1302528
+      }
+    },
+    "2ce6a0f2": {
+      "naive": {
+        "precision": 0.04,
+        "recall": 0.043478260869565216,
+        "must_keep_recall": 0.09090909090909091,
+        "historical_precision": 0.05263157894736842,
+        "historical_recall": 0.08695652173913043,
+        "false_writes": 0,
+        "total_events": 38,
+        "storage_bytes": 835584
+      },
+      "gated": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "must_keep_recall": 0.0,
+        "historical_precision": 0.05,
+        "historical_recall": 0.043478260869565216,
+        "false_writes": 0,
+        "total_events": 20,
+        "storage_bytes": 1409024
+      }
+    },
+    "synthetic-dev-saved-candidates": {
+      "gated": {
+        "precision": 0.6111111111111112,
+        "recall": 0.44,
+        "must_keep_recall": 0.625,
+        "historical_precision": 0.6818181818181818,
+        "historical_recall": 0.5,
+        "false_writes": 0,
+        "total_events": 22,
+        "storage_bytes": 1777664
+      }
+    }
+  },
+  "review_counts": {
+    "synthetic-dev": {
+      "ambiguous_source": 1,
+      "supported_equivalent": 16,
+      "supported_lossy": 3,
+      "ambiguous_scope": 1,
+      "unsupported_strengthening": 1
+    },
+    "external-dev": {
+      "supported_equivalent": 20,
+      "supported_partial": 6,
+      "supported_lossy": 11,
+      "ambiguous_modality": 2,
+      "ambiguous_subject": 2,
+      "unsupported_encoding": 1,
+      "unsupported_strengthening": 1,
+      "unsupported_type": 3,
+      "unsupported_event_binding": 1
+    },
+    "holdout": {
+      "ambiguous_encoding": 1,
+      "supported_equivalent": 12,
+      "supported_lossy": 5,
+      "ambiguous_scope": 1,
+      "unsupported_strengthening": 1
+    }
+  },
+  "benchmark": {
+    "measured_at": "2026-09-11T20:04:10.694006+00:00",
+    "samples": 25,
+    "warmup_samples": 2,
+    "latency": {
+      "p50_ms": 7494.737708009779,
+      "p95_ms": 12728.473709023092,
+      "mean_ms": 7749.704250005307,
+      "max_ms": 13337.072542024544
+    },
+    "observe_latency": {
+      "p50_ms": 36.16691697970964,
+      "p95_ms": 94.00945800007321,
+      "mean_ms": 49.74478508345783,
+      "max_ms": 179.38233399763703
+    },
+    "throughput_observations_per_second": 0.12901856891666652,
+    "usage": {
+      "extractor": {
+        "requests": 25,
+        "input_tokens": 22114,
+        "output_tokens": 1397,
+        "unmetered_requests": 0
+      },
+      "embedder": {
+        "requests": 45,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 45
+      },
+      "verifier": {
+        "requests": 18,
+        "input_tokens": 7031,
+        "output_tokens": 1611,
+        "unmetered_requests": 0,
+        "nli_requests": 7
+      }
+    },
+    "api_cost": {
+      "usd": null,
+      "reason": "No pricing supplied; measured usage is reported separately."
+    },
+    "local_compute_cost": {
+      "usd": null,
+      "reason": "No explicit local USD/hour rate supplied."
+    }
+  },
+  "limitations": [
+    "All labels/reviews are provisional single-reviewer judgments.",
+    "Explicit forbidden matches are not exhaustive false-write counts.",
+    "Synthetic final run reuses saved user candidates; external cases repeat real extraction.",
+    "Both holdouts are consumed; no further policy tuning followed current holdout inspection.",
+    "No independent gold, competitor comparison, production latency/cost or total storage saving established."
+  ]
+}

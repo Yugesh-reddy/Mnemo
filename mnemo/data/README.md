@@ -24,3 +24,18 @@ not a LongMemEval retrieval score or a competitor comparison.
 The project-authored 200-turn synthetic corpus is separate (`mnemo.eval_data`).
 Its development and held-out partitions use disjoint scenarios, and include
 corrections across sessions. Do not tune thresholds on held-out results.
+
+The versioned `quality-v2` suite adds three source-reviewed development records
+(140 turns) and a 42-turn holdout. The `quality-v3` suite reuses those development
+sources and reserves a different 46-turn holdout before policy changes. Each
+manifest pins source hashes, label hashes, disjoint session IDs and selection
+rules; v3 also records policy-freeze and label-freeze timestamps. The policy was
+frozen before its new holdout was read or labeled. After evaluation a holdout is
+consumed validation data, never a fresh target for tuning. Both suites use the
+same packaged upstream MIT license. These records broaden external coverage but
+do not constitute one continuous naturalistic 200-turn conversation.
+
+The v3 verifier case files are deliberately selected **development regressions**,
+including cached baseline verdicts. They are not random accuracy samples or
+held-out calibration data. Post-run source judgments live under `docs/quality-v3`
+and do not silently change the frozen sidecar labels or strict scores.

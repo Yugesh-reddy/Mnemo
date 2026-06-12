@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-11",
+  "implementation_commit": "b8997c5",
+  "policy_sha256": "cb2fafb6ae234ceb566fddc4f4c167080e99ffcdd5cb85c9ff64c392a5247ebb",
+  "tests": {
+    "passed": 180,
+    "skipped": 0,
+    "command": "MNEMO_REQUIRE_DB=1 MNEMO_EXTRACTOR_MODEL=qwen3.5:4b-mlx HF_HUB_OFFLINE=1 .venv/bin/pytest -q -rs",
+    "log": "tests-validated.log"
+  },
+  "lint": "passed",
+  "build": "passed",
+  "clean_wheel": "passed on retry after restoring Docker/Postgres; original failed log retained",
+  "temporary_evaluation_schemas_remaining": 0,
+  "holdout_complete": true,
+  "benchmark_complete": true,
+  "models": [
+    {
+      "name": "qwen3.5:4b-mlx",
+      "digest": "61aa3858e9d3022e8fca725550089addd9289c4446f33bd09dfd12f95f2a6792",
+      "details": {
+        "parent_model": "",
+        "format": "safetensors",
+        "family": "",
+        "families": null,
+        "parameter_size": "",
+        "quantization_level": "nvfp4"
+      }
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "nomic-bert",
+        "families": [
+          "nomic-bert"
+        ],
+        "parameter_size": "137M",
+        "quantization_level": "F16",
+        "context_length": 2048,
+        "embedding_length": 768
+      }
+    }
+  ],
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "canvas_validation": "TypeScript transpilation syntax check passed; no interactive render test",
+  "remote_merge_check": "Pending intended repository/branch; checkout has no remote; same-named account repository contains unrelated DSA submissions",
+  "monetary_prices": "Not supplied; costs unknown",
+  "measurement_limit": "Benchmark request load controlled; OS not isolated. Mid-run swap occupancy sampled separately; occupancy does not prove active paging."
+}

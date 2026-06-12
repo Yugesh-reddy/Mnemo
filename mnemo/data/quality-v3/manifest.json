@@ -1,0 +1,82 @@
+{
+  "version": "3.0.0",
+  "source_url": "https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned/resolve/98d7416/longmemeval_oracle.json",
+  "source_sha256": "821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c",
+  "selection_rule": "ascending sha256(mnemo-quality-v2:question_id), 40..54 turns, disjoint session IDs, exclude prior car sample; first three dev, fourth fresh holdout; next eligible record after all consumed records, excluding all used session IDs",
+  "excluded_prior_holdout": "gpt4_15e38248",
+  "records": [
+    {
+      "id": "6d550036",
+      "split": "dev",
+      "path": "../quality-v2/6d550036.json",
+      "turns": 44,
+      "session_ids": [
+        "answer_ec904b3c_4",
+        "answer_ec904b3c_2",
+        "answer_ec904b3c_1",
+        "answer_ec904b3c_3"
+      ],
+      "sha256": "1d2d11d80b923c30ed6f25f9b79e72df67bd84bb00f020f35a1b0234624e5943",
+      "labels": "../quality-v2/6d550036-labels.json",
+      "labels_sha256": "464e46de4f9efa6fedea4254aa17aec9778c47c1b8e000b3fd812e9e90da8777",
+      "reviewer": "Codex source review; single reviewer",
+      "annotation_scope": "memory-relevant user assertions and explicit plans; assistant assertions excluded; empty user rows reviewed as questions/acknowledgments"
+    },
+    {
+      "id": "88432d0a",
+      "split": "dev",
+      "path": "../quality-v2/88432d0a.json",
+      "turns": 48,
+      "session_ids": [
+        "answer_733e443a_3",
+        "answer_733e443a_1",
+        "answer_733e443a_2",
+        "answer_733e443a_4"
+      ],
+      "sha256": "2bf6eccac5ea6cc9b63df7ca84d32ff019569ff5def79b21e6ddf4da33c1450a",
+      "labels": "../quality-v2/88432d0a-labels.json",
+      "labels_sha256": "59a73dae0a4d2734fcf2e7599bfec29a87a0b86d9c6bae8d0df9e717d032c937",
+      "reviewer": "Codex source review; single reviewer",
+      "annotation_scope": "memory-relevant user assertions and explicit plans; assistant assertions excluded; empty user rows reviewed as questions/acknowledgments"
+    },
+    {
+      "id": "d23cf73b",
+      "split": "dev",
+      "path": "../quality-v2/d23cf73b.json",
+      "turns": 48,
+      "session_ids": [
+        "answer_5a0d28f8_4",
+        "answer_5a0d28f8_2",
+        "answer_5a0d28f8_1",
+        "answer_5a0d28f8_3"
+      ],
+      "sha256": "871c336652145c0129cf29d50065bdc04c90d6ac3c7caf8dd4a172521c84fcfa",
+      "labels": "../quality-v2/d23cf73b-labels.json",
+      "labels_sha256": "846a6aaff2e402d9ae8270a0b0cd5aa5dffb924ca35e2483b1486a66186fb3e2",
+      "reviewer": "Codex source review; single reviewer",
+      "annotation_scope": "memory-relevant user assertions and explicit plans; assistant assertions excluded; empty user rows reviewed as questions/acknowledgments"
+    },
+    {
+      "id": "2ce6a0f2",
+      "split": "holdout",
+      "path": "2ce6a0f2.json",
+      "turns": 46,
+      "session_ids": [
+        "answer_901a6763_3",
+        "answer_901a6763_4",
+        "answer_901a6763_1",
+        "answer_901a6763_2"
+      ],
+      "sha256": "4af0893aca756bc9885cf5a545f77c82754d4a43b85f370d9e65840438447403",
+      "annotation_status": "Source-reviewed after policy freeze and before model evaluation; provisional single-reviewer labels",
+      "labels": "2ce6a0f2-labels.json",
+      "labels_sha256": "c339aa8891570e05d7f4e86088ba2ba8df7e4311b6ec57bf35d0da1529546fa2",
+      "reviewer": "Codex source review; single reviewer",
+      "labels_frozen_at": "2026-09-11T19:54:08.145286+00:00",
+      "annotation_scope": "Every user turn reviewed for atomic memory targets, plans and explicit forbidden strengthenings; all assistant rows excluded by role. Event dates separated from event participation. Year not inferred in value; source supplies month/day. Questions do not establish completed actions. Compound target wording and exact predicate matching remain provisional."
+    }
+  ],
+  "frozen_policy_sha256": "cb2fafb6ae234ceb566fddc4f4c167080e99ffcdd5cb85c9ff64c392a5247ebb",
+  "policy_frozen_at": "2026-09-11T19:53:04.506957+00:00",
+  "freeze_scope": "Policy frozen after dev source review and before reading or labeling the reserved holdout. Known external dev source errors remain; freeze is validation, not acceptance."
+}

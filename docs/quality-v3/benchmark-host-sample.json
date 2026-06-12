@@ -1,0 +1,16 @@
+{
+  "sampled_at": "2026-09-11T20:06:40.248364+00:00",
+  "sampling_scope": "During benchmark; one observation, not a continuous pressure trace",
+  "hardware": [
+    "hw.model: Mac15,13",
+    "hw.memsize: 17179869184",
+    "hw.ncpu: 8"
+  ],
+  "swap": "vm.swapusage: total = 13312.00M  used = 12297.75M  free = 1014.25M  (encrypted)",
+  "database_container": "mnemo-db CPU=4.38% Memory=154MiB / 7.748GiB",
+  "limitations": [
+    "OS and unrelated application memory are not isolated.",
+    "Swap occupancy alone does not measure active paging or prove the cause of latency.",
+    "Controlled request concurrency does not make this a production capacity measurement."
+  ]
+}

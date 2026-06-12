@@ -4,7 +4,8 @@ The September 9, 2026 correctness amendment in §14 supersedes earlier wording
 where indicated. The implementation plan is in `docs/CORRECTNESS_PLAN.md`;
 executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
 The September 11 quality work follows `docs/QUALITY_RELIABILITY_PLAN.md`;
-`docs/quality-v2/README.md` records source review and frozen validation results.
+`docs/quality-v3/README.md` records the current structured-verification cycle;
+`docs/quality-v2/README.md` preserves earlier source review and frozen validation.
 
 > **Working name:** Mnemo · **One-liner:** *Agent memory that stores less and remembers what matters.*
 > A quality gate keeps junk out, provenance tells you where every fact came from, and one-click

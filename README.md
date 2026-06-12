@@ -120,16 +120,19 @@ The original real-model 200-turn synthetic run achieved **25% final precision an
 after including evidence and audit records. The broader evaluation exposes
 substantial remaining quality gaps; see [current status](PROJECT_STATUS.md).
 
-The [memory-quality milestone](docs/quality-v2/README.md) source-reviews all 38
-unmatched writes and eight missing must-keep targets. It adds three development
-conversations and a fresh 42-turn holdout, bringing external source coverage to
-218 turns across five conversations. Labels remain a single-reviewer provisional
-annotation. Extraction and denial handling improved, but strict recall is still
-insufficient; the milestone is not a reliability claim.
+The [memory-quality work](docs/quality-v3/README.md) source-reviews all 38 original
+unmatched writes and eight missed must-keep targets. External coverage now spans
+264 turns across six conversations, with separate development and consumed
+holdout records. Labels remain provisional single-reviewer annotations.
+On 103 selected dev assertions, structured verification records zero false accepts
+and three false rejects, but the new 46-turn holdout still misses all 11 exact
+must-keep targets. Source review finds one false assertion among its 20 writes.
+The **180 passing tests** establish regressions; memory reliability is not yet met.
 
 ```bash
 # Use the configured real extraction, embedding and verifier backends
-mnemo-eval-suite --split dev --output external-dev.json
+mnemo-eval-suite --manifest mnemo/data/quality-v3/manifest.json \
+  --split dev --output external-dev.json
 
 # Serial workload; warmup excluded. Supply actual rates for a monetary estimate.
 mnemo-benchmark --samples 25 --warmup 2 --output benchmark.json

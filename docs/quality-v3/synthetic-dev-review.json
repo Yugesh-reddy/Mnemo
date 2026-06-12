@@ -1,0 +1,322 @@
+{
+  "report_sha256": "873d57d3a44d1ab33b69dcad53bfc825ae215119bbd4884d2259f6db889b5c01",
+  "reviewer": "Codex; single reviewer, provisional",
+  "purpose": "Historical source review; does not replace strict metrics. Saved user candidates, no repeated extraction.",
+  "categories": {
+    "ambiguous_source": 1,
+    "supported_equivalent": 16,
+    "supported_lossy": 3,
+    "ambiguous_scope": 1,
+    "unsupported_strengthening": 1
+  },
+  "rows": [
+    {
+      "seq": 1,
+      "turn_id": "dev-001d",
+      "source": "Correction to what I said earlier: my name is Maya Chen revised.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "name",
+        "object_text": "Maya Chen",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "ambiguous_source",
+      "reason": "Maya Chen revised is an ambiguous synthetic correction; literal revised suffix is omitted."
+    },
+    {
+      "seq": 2,
+      "turn_id": "dev-002a",
+      "source": "I work as a site reliability engineer.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "role",
+        "object_text": "site reliability engineer",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit site reliability engineer role."
+    },
+    {
+      "seq": 3,
+      "turn_id": "dev-003a",
+      "source": "My home base is Portland.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "location",
+        "object_text": "Portland",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Home base supports the stated location."
+    },
+    {
+      "seq": 4,
+      "turn_id": "dev-005a",
+      "source": "TypeScript is my preferred programming language.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object_text": "TypeScript",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit programming-language preference."
+    },
+    {
+      "seq": 5,
+      "turn_id": "dev-006a",
+      "source": "For durable services I prefer PostgreSQL.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object_text": "PostgreSQL",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_lossy",
+      "reason": "Database preference supported; durable-services scope omitted."
+    },
+    {
+      "seq": 6,
+      "turn_id": "dev-006d",
+      "source": "Correction to what I said earlier: my preferred database is MongoDB.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object_text": "MongoDB",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit database preference correction."
+    },
+    {
+      "seq": 7,
+      "turn_id": "dev-007a",
+      "source": "I use Neovim as my everyday editor.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "editor",
+        "object_text": "Neovim",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit everyday editor use."
+    },
+    {
+      "seq": 8,
+      "turn_id": "dev-009a",
+      "source": "I belong to the Reliability Platform team.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "team",
+        "object_text": "Reliability Platform team",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit membership in this team; team suffix is a wording difference."
+    },
+    {
+      "seq": 9,
+      "turn_id": "dev-010a",
+      "source": "My manager is Elena Ruiz.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "manager",
+        "object_text": "Elena Ruiz",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit manager with correct direction."
+    },
+    {
+      "seq": 10,
+      "turn_id": "dev-011a",
+      "source": "My regular on-call handoff is Tuesday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object_text": "Tuesday",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "ambiguous_scope",
+      "reason": "Tuesday is the handoff day; a generic on-call day may imply duty timing rather than handoff timing."
+    },
+    {
+      "seq": 11,
+      "turn_id": "dev-011d",
+      "source": "Correction to what I said earlier: my on call day is Saturday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object_text": "Saturday",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit on-call day correction."
+    },
+    {
+      "seq": 12,
+      "turn_id": "dev-016a",
+      "source": "Wednesday is my meeting-free day.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object_text": "Wednesday",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit meeting-free Wednesday."
+    },
+    {
+      "seq": 13,
+      "turn_id": "dev-016d",
+      "source": "Correction to what I said earlier: my meeting free day is Monday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object_text": "Monday",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit meeting-free day correction."
+    },
+    {
+      "seq": 14,
+      "turn_id": "dev-017a",
+      "source": "I normally start work at 08:30.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "start_work_time",
+        "object_text": "08:30",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_lossy",
+      "reason": "Typical start time supported; normally qualifier omitted."
+    },
+    {
+      "seq": 15,
+      "turn_id": "dev-018a",
+      "source": "My pronouns are she/her.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object_text": "she/her",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit pronouns."
+    },
+    {
+      "seq": 16,
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object_text": "captions_enabled_for_video_calls",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Captions need and video-call scope preserved; label drops the scope."
+    },
+    {
+      "seq": 17,
+      "turn_id": "dev-021a",
+      "source": "I follow a vegetarian diet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "diet",
+        "object_text": "vegetarian",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit vegetarian diet."
+    },
+    {
+      "seq": 18,
+      "turn_id": "dev-021d",
+      "source": "Correction to what I said earlier: my diet is keto.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "diet",
+        "object_text": "keto",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit keto correction."
+    },
+    {
+      "seq": 19,
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object_text": "peanut",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Peanut allergy is explicit; peanuts label differs by grammatical number."
+    },
+    {
+      "seq": 20,
+      "turn_id": "dev-023a",
+      "source": "My emergency contact is Noah Chen.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object_text": "Noah Chen",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_equivalent",
+      "reason": "Explicit emergency contact; denied Alex does not overwrite Noah."
+    },
+    {
+      "seq": 21,
+      "turn_id": "dev-024a",
+      "source": "I have a cat named Pixel.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "pet_ownership",
+        "object_text": "Pixel",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "supported_lossy",
+      "reason": "Pet ownership and name supported; cat species omitted."
+    },
+    {
+      "seq": 22,
+      "turn_id": "dev-025a",
+      "source": "Jazz is the music I listen to most.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "preferred_music_genre",
+        "object_text": "Jazz",
+        "object_number": null,
+        "object_json": null
+      },
+      "category": "unsupported_strengthening",
+      "reason": "Listening most frequently to jazz does not establish a preference; the use/frequency-versus-preference distinction still fails outside databases."
+    }
+  ]
+}

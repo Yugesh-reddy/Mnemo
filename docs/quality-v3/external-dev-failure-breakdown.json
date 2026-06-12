@@ -1,0 +1,3297 @@
+{
+  "6d550036": {
+    "dataset": "longmemeval-adapter",
+    "original_metrics": {
+      "stored": 13,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false": 0,
+      "must_keep_recall": 0.0,
+      "false_writes": 0,
+      "historical_precision": 0.0,
+      "historical_recall": 0.0,
+      "unsupported_writes": 17,
+      "visible_facts": 13,
+      "total_events": 17,
+      "total_rows": 183,
+      "storage_bytes": 1384448,
+      "latency_ms": 374050.6902079942,
+      "usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 39,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 39
+        },
+        "verifier": {
+          "requests": 41,
+          "input_tokens": 18572,
+          "output_tokens": 4149,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      },
+      "cost": {
+        "usd": null,
+        "reason": "No pricing supplied; measured usage is reported separately."
+      },
+      "historical_by_split": {},
+      "retrieval_probes": [
+        {
+          "turn_id": "answer_ec904b3c_2:2",
+          "query": "user current_course_project solo Data Mining project",
+          "k": 5,
+          "session_id": "answer_ec904b3c_2",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 44.04508299194276,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "project_type",
+              "object": "Data Mining class project",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "goal",
+              "object": "identify patterns in customer purchase data",
+              "tier": "durable",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "planned_technique",
+              "object": "feature engineering",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "interest_area",
+              "object": "customer purchase data analysis",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:0",
+          "query": "user led_project Marketing Research data analysis team",
+          "k": 5,
+          "session_id": "answer_ec904b3c_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 39.791791001334786,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "goal",
+              "object": "identify patterns in customer purchase data",
+              "tier": "durable",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "considers_best_practices_for",
+              "object": "visualizing high-dimensional data using dimensionality reduction techniques",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:0",
+          "query": "user presented_research poster at an academic conference on consumer psychology",
+          "k": 5,
+          "session_id": "answer_ec904b3c_3",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 30.910083005437627,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "attended_conference",
+              "object": "academic conference on consumer psychology",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "presented_poster",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "research_topic",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "research_focus",
+              "object": "social identity in influencer marketing",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "research_interest",
+              "object": "consumer behavior",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:8",
+          "query": "user research_topic social media influencers and consumer purchasing decisions",
+          "k": 5,
+          "session_id": "answer_ec904b3c_3",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 27.07162500882987,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "research_topic",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "presented_poster",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "research_focus",
+              "object": "social identity in influencer marketing",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "research_interest",
+              "object": "consumer behavior",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "interests_in_topic",
+              "object": "authenticity in establishing credibility",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:0",
+          "query": "user uses_programming_languages Python and R",
+          "k": 5,
+          "session_id": "answer_ec904b3c_2",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 30.383332996279933,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "project_type",
+              "object": "Data Mining class project",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "goal",
+              "object": "identify patterns in customer purchase data",
+              "tier": "durable",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "planned_technique",
+              "object": "feature engineering",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        }
+      ],
+      "retrieval_probe_usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 5,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 5
+        },
+        "verifier": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      }
+    },
+    "unmatched_count": 17,
+    "reviewed_count": 0,
+    "review_categories": {},
+    "must_keep_targets": 5,
+    "strict_missing_must_keep": 5,
+    "missing_by_cause": {
+      "extraction_fidelity_or_label_mismatch": 5
+    },
+    "misses": [
+      {
+        "turn_id": "answer_ec904b3c_2:2",
+        "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+        "target": {
+          "subject": "user",
+          "predicate": "current_course_project",
+          "object": "solo Data Mining project"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_ec904b3c_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "student",
+              "subject": "user",
+              "predicate": "role",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user mentions being in a 'Data Mining class' and working on a project for it, which implies they are currently enrolled as a student. However, the assertion explicitly states 'My job role is student.' The source text does not use the word 'job' or define 'student' as a formal 'role' or 'function' in the professional sense implied by the predicate 'role'. While 'student' is a valid description of their status, equating it strictly to a 'job role' via the specific predicate 'role' is an interpretive leap not fully supported by the text, which only confirms participation in a class and project work. The text supports the fact that they are a student, but the specific framing as a 'job role' introduces a nuance (employment vs. academic status) not explicitly made.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user mentions being in a 'Data Mining class' and working on a project for it, which implies they are currently enrolled as a student. However, the assertion explicitly states 'My job role is student.' The source text does not use the word 'job' or define 'student' as a formal 'role' or 'function' in the professional sense implied by the predicate 'role'. While 'student' is a valid description of their status, equating it strictly to a 'job role' via the specific predicate 'role' is an interpretive leap not fully supported by the text, which only confirms participation in a class and project work. The text supports the fact that they are a student, but the specific framing as a 'job role' introduces a nuance (employment vs. academic status) not explicitly made.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been working on a solo project for my Data Mining class",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_ec904b3c_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "Data Mining class project",
+              "subject": "user",
+              "predicate": "project_type",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.47; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they have been working on a 'solo project for my Data Mining class', which fully entails the assertion that the subject (user) has a project_type of 'Data Mining class project'.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've been working on a solo project for my Data Mining class",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.47077316339168995, \"novelty\": 0.4359105446389667, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "customer purchase data analysis",
+              "subject": "user",
+              "predicate": "interest_area",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.42; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they are interested in applying techniques to 'customer purchase data' and identifies 'feature engineering' as a method to help with this goal, which directly entails the interest area of 'customer purchase data analysis'.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4223542237720958, \"novelty\": 0.40784741257365276, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "identify patterns and trends in customer purchase data",
+              "subject": "user",
+              "predicate": "goal",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "accepted",
+            "reason": "entailment; score=0.88; accepted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states their goal is to apply techniques to customer purchase data to identify patterns and trends, which directly matches the assertion's subject, predicate, and object.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "feature engineering",
+              "subject": "user",
+              "predicate": "planned_technique",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.41; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they are working on a project and believes feature engineering will help them identify patterns, which constitutes planning the use of that technique.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm trying to identify patterns and trends, and I think feature engineering will really help me with that.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.41453256902113755, \"novelty\": 0.38177523007045855, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "project_type",
+            "op": "ADD",
+            "object_text": "Data Mining class project",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"], \"cache_ids\": [\"4b3c837b-26d2-4206-98de-51a2d201f0b9\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "interest_area",
+            "op": "ADD",
+            "object_text": "customer purchase data analysis",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"], \"cache_ids\": [\"4b3c837b-26d2-4206-98de-51a2d201f0b9\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns and trends in customer purchase data",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"], \"cache_ids\": [\"4b3c837b-26d2-4206-98de-51a2d201f0b9\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_technique",
+            "op": "ADD",
+            "object_text": "feature engineering",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"], \"cache_ids\": [\"4b3c837b-26d2-4206-98de-51a2d201f0b9\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 6
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Solo ownership omitted; project_type is stored instead of current course project."
+        }
+      },
+      {
+        "turn_id": "answer_ec904b3c_1:0",
+        "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+        "target": {
+          "subject": "user",
+          "predicate": "led_project",
+          "object": "Marketing Research data analysis team"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_ec904b3c_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "data analysis",
+              "subject": "user",
+              "predicate": "editor_use",
+              "confidence": 0.85,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they are 'working on' a project and mentions having 'experience' from a past class project where they 'led' the team. These statements describe current activity and past experience, not an explicit completed action of editing data analysis itself. The predicate 'editor_use' implies a specific completed act of editing, which is not explicitly confirmed by the text.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they are 'working on' a project and mentions having 'experience' from a past class project where they 'led' the team. These statements describe current activity and past experience, not an explicit completed action of editing data analysis itself. The predicate 'editor_use' implies a specific completed act of editing, which is not explicitly confirmed by the text.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_ec904b3c_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "team leader",
+              "subject": "user",
+              "predicate": "role",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they 'led the data analysis team' in a past class project, which supports the role of team leader for that specific context, but does not establish it as their current or general job role without further confirmation.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they 'led the data analysis team' in a past class project, which supports the role of team leader for that specific context, but does not establish it as their current or general job role without further confirmation.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+              "probability": 0.5
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_relation_error",
+          "reason": "Past project leadership becomes a general job role; verification correctly rejects the stronger claim."
+        }
+      },
+      {
+        "turn_id": "answer_ec904b3c_3:0",
+        "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+        "target": {
+          "subject": "user",
+          "predicate": "presented_research",
+          "object": "poster at an academic conference on consumer psychology"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_ec904b3c_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "consumer behavior",
+              "subject": "user",
+              "predicate": "research_interest",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.41; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they are looking for research on consumer behavior and social media, which directly confirms the subject (user), predicate (research_interest), and object (consumer behavior). The additional context about presenting a poster on related topics reinforces this interest without contradicting it.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm looking for some research on consumer behavior and social media.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.41284175386463046, \"novelty\": 0.242805846215435, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "social media influencers on consumer purchasing decisions",
+              "subject": "user",
+              "predicate": "research_focus",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.45; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states their research focus is on 'the effects of social media influencers on consumer purchasing decisions' and describes presenting work on this exact topic.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.445397014291327, \"novelty\": 0.21799004763775653, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "subject": "user",
+              "predicate": "presented_poster",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.37; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently presented a poster' with the specific title 'on my research on the effects of social media influencers on consumer purchasing decisions', which fully matches the subject, predicate, and object in the assertion.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.37366264291911366, \"novelty\": 0.11220880973037906, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "academic conference on consumer psychology",
+              "subject": "user",
+              "predicate": "attended_conference",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.40; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'presented a poster' at an 'academic conference on consumer psychology', which confirms the action of attending and presenting at that specific event.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.3964842303467505, \"novelty\": 0.321614101155835, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "research_interest",
+            "op": "ADD",
+            "object_text": "consumer behavior",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:0\"], \"cache_ids\": [\"c6ce0da4-b8f1-43ba-a548-f7c527676ffe\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "research_focus",
+            "op": "ADD",
+            "object_text": "social media influencers on consumer purchasing decisions",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:0\"], \"cache_ids\": [\"c6ce0da4-b8f1-43ba-a548-f7c527676ffe\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "presented_poster",
+            "op": "ADD",
+            "object_text": "effects of social media influencers on consumer purchasing decisions",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:0\"], \"cache_ids\": [\"c6ce0da4-b8f1-43ba-a548-f7c527676ffe\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "attended_conference",
+            "op": "ADD",
+            "object_text": "academic conference on consumer psychology",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:0\"], \"cache_ids\": [\"c6ce0da4-b8f1-43ba-a548-f7c527676ffe\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 14
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "compound_label_mismatch",
+          "reason": "Presentation and attendance stored separately; full venue-to-poster binding is lost."
+        }
+      },
+      {
+        "turn_id": "answer_ec904b3c_3:8",
+        "source": "I'd like to explore more about the role of social identity in influencer marketing, particularly in the context of my research on the effects of social media influencers on consumer purchasing decisions. Can you provide more information on how influencers can use social identity to increase brand awareness and drive sales?",
+        "target": {
+          "subject": "user",
+          "predicate": "research_topic",
+          "object": "social media influencers and consumer purchasing decisions"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_ec904b3c_3:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "social identity in influencer marketing",
+              "subject": "user",
+              "predicate": "research_focus",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.68; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states their research focus is on the effects of social media influencers on consumer purchasing decisions and requests information on how influencers use social identity to increase brand awareness and drive sales, which directly entails that 'social identity in influencer marketing' is their research focus.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'd like to explore more about the role of social identity in influencer marketing, particularly in the context of my research on the effects of social media influencers on consumer purchasing decisions.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.68, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_ec904b3c_3:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "effects of social media influencers on consumer purchasing decisions",
+              "subject": "user",
+              "predicate": "research_topic",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.40; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they are conducting research on the effects of social media influencers on consumer purchasing decisions, which directly matches the assertion's subject (user), predicate (research_topic), and object.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "my research on the effects of social media influencers on consumer purchasing decisions",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4023657434863825, \"novelty\": 0.07455247828794143, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "research_focus",
+            "op": "UPDATE",
+            "object_text": "social identity in influencer marketing",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:8\"], \"cache_ids\": [\"c65fe6b9-96e7-4b2b-8fef-b098ed3ef6bc\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "research_topic",
+            "op": "ADD",
+            "object_text": "effects of social media influencers on consumer purchasing decisions",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:8\"], \"cache_ids\": [\"c65fe6b9-96e7-4b2b-8fef-b098ed3ef6bc\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 17
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "label_equivalence",
+          "reason": "Effects of versus and is supported paraphrase; exact matching misses it."
+        }
+      },
+      {
+        "turn_id": "answer_ec904b3c_2:0",
+        "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+        "target": {
+          "subject": "user",
+          "predicate": "uses_programming_languages",
+          "object": "Python and R"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_ec904b3c_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "Python",
+              "subject": "user",
+              "predicate": "editor",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they are using Python and R for building models, but the assertion claims the user is an editor of Python. Being a user of a programming language does not entail being its editor; the roles are distinct.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they are using Python and R for building models, but the assertion claims the user is an editor of Python. Being a user of a programming language does not entail being its editor; the roles are distinct.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm using Python and R to build predictive models",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_ec904b3c_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "R",
+              "subject": "user",
+              "predicate": "editor",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The source text states the user is using Python and R for building models, but it does not explicitly confirm that the user's role or function is 'editor'. While R is mentioned as a tool used, the specific predicate 'editor' linking the user to R is not entailed by the context of building predictive models.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The source text states the user is using Python and R for building models, but it does not explicitly confirm that the user's role or function is 'editor'. While R is mentioned as a tool used, the specific predicate 'editor' linking the user to R is not entailed by the context of building predictive models.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm using Python and R to build predictive models",
+              "probability": 0.5
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_type_error",
+          "reason": "Both programming languages become editors; the verifier rejects them."
+        }
+      }
+    ],
+    "limitations": [
+      "Source review is not independent human adjudication.",
+      "Original strict metrics are preserved. Source-scoped equivalences do not rewrite labels or inflate the published score.",
+      "Current report includes same-session retrieval probes, but no deliberate TTL or durable-retention measurement."
+    ],
+    "source_review_counts": {
+      "extraction_scope_loss": 1,
+      "extraction_relation_error": 1,
+      "compound_label_mismatch": 1,
+      "label_equivalence": 1,
+      "extraction_type_error": 1
+    }
+  },
+  "88432d0a": {
+    "dataset": "longmemeval-adapter",
+    "original_metrics": {
+      "stored": 16,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false": 0,
+      "must_keep_recall": 0.0,
+      "false_writes": 0,
+      "historical_precision": 0.0,
+      "historical_recall": 0.0,
+      "unsupported_writes": 18,
+      "visible_facts": 16,
+      "total_events": 18,
+      "total_rows": 198,
+      "storage_bytes": 1351680,
+      "latency_ms": 200654.94558299542,
+      "usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 42,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 42
+        },
+        "verifier": {
+          "requests": 41,
+          "input_tokens": 18640,
+          "output_tokens": 4180,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      },
+      "cost": {
+        "usd": null,
+        "reason": "No pricing supplied; measured usage is reported separately."
+      },
+      "historical_by_split": {},
+      "retrieval_probes": [
+        {
+          "turn_id": "answer_733e443a_1:0",
+          "query": "user baked_for_sister_birthday chocolate cake",
+          "k": 5,
+          "session_id": "answer_733e443a_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 22.70783399580978,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "baked",
+              "object": "chocolate cake",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "chocolate cake",
+              "predicate": "purpose",
+              "object": "sister's birthday party",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "hosting dinner party",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "likes_food_item",
+              "object": "fruit_tart",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_4:0",
+          "query": "user baked_last_saturday whole wheat baguette",
+          "k": 5,
+          "session_id": "answer_733e443a_4",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 20.969417004380375,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "completed_activity",
+              "object": "make_whole_wheat_baguette",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "attempted_bread_making",
+              "object": "Italian bread recipe using sourdough starter",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "experience_with",
+              "object": "sourdough starters",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "attempt_date",
+              "object": "Tuesday",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_4:4",
+          "query": "user baked_last_thursday cookies",
+          "k": 5,
+          "session_id": "answer_733e443a_4",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 21.00737500586547,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "completed_activity",
+              "object": "make_whole_wheat_baguette",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "attempted_bread_making",
+              "object": "Italian bread recipe using sourdough starter",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "attempt_date",
+              "object": "Tuesday",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_4:8",
+          "query": "user baked_tuesday sourdough bread",
+          "k": 5,
+          "session_id": "answer_733e443a_4",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 19.21629199932795,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "attempted_bread_making",
+              "object": "Italian bread recipe using sourdough starter",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "completed_activity",
+              "object": "make_whole_wheat_baguette",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "experience_with",
+              "object": "sourdough starters",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "attempt_date",
+              "object": "Tuesday",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_1:4",
+          "query": "user favorite_fruit strawberries",
+          "k": 5,
+          "session_id": "answer_733e443a_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 20.700916997157037,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "likes_food_item",
+              "object": "fruit_tart",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_2:2",
+          "query": "user first_convection_use cookies last Thursday",
+          "k": 5,
+          "session_id": "answer_733e443a_2",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 21.335666999220848,
+          "results": []
+        },
+        {
+          "turn_id": "answer_733e443a_1:8",
+          "query": "user owns_appliance stand mixer",
+          "k": 5,
+          "session_id": "answer_733e443a_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 20.813958006328903,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "hosting dinner party",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "baked",
+              "object": "chocolate cake",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "likes_food_item",
+              "object": "fruit_tart",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_733e443a_3:2",
+          "query": "user starter_feeding_frequency once a day",
+          "k": 5,
+          "session_id": "answer_733e443a_3",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 19.369208996067755,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "feeding_frequency",
+              "object": "once a day",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "created_sourdough_starter",
+              "object": "sourdough starter",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "recipe_used",
+              "object": "sourdough bread recipe with starter",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "uses_ingredient",
+              "object": "water",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "uses_flour",
+              "object": "all-purpose flour",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        }
+      ],
+      "retrieval_probe_usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 8,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 8
+        },
+        "verifier": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      }
+    },
+    "unmatched_count": 18,
+    "reviewed_count": 0,
+    "review_categories": {},
+    "must_keep_targets": 8,
+    "strict_missing_must_keep": 8,
+    "missing_by_cause": {
+      "extraction_fidelity_or_label_mismatch": 8
+    },
+    "misses": [
+      {
+        "turn_id": "answer_733e443a_1:0",
+        "source": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+        "target": {
+          "subject": "user",
+          "predicate": "baked_for_sister_birthday",
+          "object": "chocolate cake"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "hosting dinner party",
+              "subject": "user",
+              "predicate": "activity",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.49; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they are hosting a dinner party next weekend, which confirms the activity of hosting a dinner party.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4899999999999999, \"novelty\": 1.0, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "chocolate cake",
+              "subject": "user",
+              "predicate": "baked",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.26; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'just baked a chocolate cake' for their sister's birthday party last weekend, which directly confirms the subject (user), predicate (baked), and object (chocolate cake) in the assertion.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I just baked a chocolate cake for my sister's birthday party last weekend",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.261928084680619, \"novelty\": 0.37309361560206356, \"transient\": true, \"importance\": 6, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "sister's birthday party",
+              "subject": "chocolate cake",
+              "predicate": "purpose",
+              "confidence": 0.9,
+              "importance": 4,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.16; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The speaker explicitly states they baked the chocolate cake for their sister's birthday party last weekend, which directly supports the assertion that the purpose of the chocolate cake was the sister's birthday party.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "\"I just baked a chocolate cake for my sister's birthday party last weekend\"",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.1559226164184412, \"novelty\": 0.2864087213948039, \"transient\": true, \"importance\": 4, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_1:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "last weekend",
+              "subject": "user",
+              "predicate": "time_reference",
+              "confidence": 0.85,
+              "importance": 2,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user mentions 'last weekend' as a time reference for a past event (baking a cake), but the assertion only specifies the subject and predicate without an object value. Entailment requires the complete subject, relation, and value. The source text does not explicitly state that 'last weekend' is the sole or defining time reference for the user's identity or general existence, nor does it confirm any specific action taken by the user on 'last weekend' beyond the baking event described. The assertion lacks the necessary object component to be fully evaluated as entailed.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user mentions 'last weekend' as a time reference for a past event (baking a cake), but the assertion only specifies the subject and predicate without an object value. Entailment requires the complete subject, relation, and value. The source text does not explicitly state that 'last weekend' is the sole or defining time reference for the user's identity or general existence, nor does it confirm any specific action taken by the user on 'last weekend' beyond the baking event described. The assertion lacks the necessary object component to be fully evaluated as entailed.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+              "probability": 0.5
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "UPDATE",
+            "object_text": "hosting dinner party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:0\"], \"cache_ids\": [\"583320d1-384f-4208-a72d-f921c994330c\"], \"session_id\": \"answer_733e443a_1\"}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "baked",
+            "op": "ADD",
+            "object_text": "chocolate cake",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:0\"], \"cache_ids\": [\"583320d1-384f-4208-a72d-f921c994330c\"], \"session_id\": \"answer_733e443a_1\"}",
+            "seq": 10
+          },
+          {
+            "subject": "chocolate cake",
+            "predicate": "purpose",
+            "op": "ADD",
+            "object_text": "sister's birthday party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:0\"], \"cache_ids\": [\"583320d1-384f-4208-a72d-f921c994330c\"], \"session_id\": \"answer_733e443a_1\"}",
+            "seq": 11
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "compound_label_mismatch",
+          "reason": "Cake action and purpose are stored separately; frozen scorer cannot join them."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_4:0",
+        "source": "I'm thinking of trying out a new recipe for a rustic Italian bread this weekend. Do you have any tips on how to achieve a crispy crust? By the way, I made a delicious whole wheat baguette last Saturday, and I'm considering using the same flour for this recipe.",
+        "target": {
+          "subject": "user",
+          "predicate": "baked_last_saturday",
+          "object": "whole wheat baguette"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_4:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "cook_rustic_italian_bread",
+              "subject": "user",
+              "predicate": "planned_activity",
+              "confidence": 0.85,
+              "importance": 4,
+              "assertion_type": "agent_inference"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they are 'thinking of trying out' the recipe, which indicates consideration rather than a definite plan or completed action. The subsequent mention of making a baguette last Saturday is a past fact unrelated to the current intent regarding the Italian bread.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they are 'thinking of trying out' the recipe, which indicates consideration rather than a definite plan or completed action. The subsequent mention of making a baguette last Saturday is a past fact unrelated to the current intent regarding the Italian bread.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm thinking of trying out a new recipe for a rustic Italian bread this weekend.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_733e443a_4:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "make_whole_wheat_baguette",
+              "subject": "user",
+              "predicate": "completed_activity",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.40; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I made a delicious whole wheat baguette last Saturday,' which confirms the completed activity of making a whole wheat baguette.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I made a delicious whole wheat baguette last Saturday",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.401346682357962, \"novelty\": 0.3378222745265401, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "completed_activity",
+            "op": "ADD",
+            "object_text": "make_whole_wheat_baguette",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:0\"], \"cache_ids\": [\"723f8a51-340d-425a-b922-8208577f56b7\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 13
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Completed baguette baking stored without date."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_4:4",
+        "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+        "target": {
+          "subject": "user",
+          "predicate": "baked_last_thursday",
+          "object": "cookies"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_4:4",
+            "candidate": {
+              "kind": "triple",
+              "object": "convection setting",
+              "subject": "user",
+              "predicate": "editor_use",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.44; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they have used the convection setting on their oven to bake cookies last Thursday and reports good results, which confirms the fact of editor_use.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4392815708092376, \"novelty\": 0.46427190269745866, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "editor_use",
+            "op": "ADD",
+            "object_text": "convection setting",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:4\"], \"cache_ids\": [\"71f9576d-5efe-4497-847a-e8abf0837d53\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 14
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_type_error",
+          "reason": "Only oven-setting editor_use extracted; cookie event lost and wrong type accepted."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_4:8",
+        "source": "I've had some experience with sourdough starters, although my last attempt at making bread with it didn't turn out so well. I tried out a new bread recipe using sourdough starter on Tuesday, but the dough didn't rise as much as I expected, and the bread came out dense and heavy. I think I need to work on my sourdough starter's health and maybe adjust the recipe. But I'm willing to give it another try for this Italian bread recipe. Do you have any tips on how to create a preferment using my sourdough starter?",
+        "target": {
+          "subject": "user",
+          "predicate": "baked_tuesday",
+          "object": "sourdough bread"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_4:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "sourdough starters",
+              "subject": "user",
+              "predicate": "experience_with",
+              "confidence": 0.85,
+              "importance": 4,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.27; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I've had some experience with sourdough starters' in the source text, which directly matches the assertion's subject (user), predicate (experience_with), and object (sourdough starters).",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've had some experience with sourdough starters",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.2693274557379735, \"novelty\": 0.16442485245991156, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_4:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "Italian bread recipe using sourdough starter",
+              "subject": "user",
+              "predicate": "attempted_bread_making",
+              "confidence": 0.9,
+              "importance": 5,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.30; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'tried out a new bread recipe using sourdough starter on Tuesday,' which directly confirms the subject (user) performed the action of attempting to make Italian bread using that specific method.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I tried out a new bread recipe using sourdough starter on Tuesday",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.2970008669426462, \"novelty\": 0.12333622314215409, \"transient\": false, \"importance\": 5, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_4:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "Tuesday",
+              "subject": "user",
+              "predicate": "attempt_date",
+              "confidence": 0.9,
+              "importance": 3,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.27; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they tried out a new bread recipe using sourdough starter on Tuesday, which directly supports the assertion that the subject (user) performed an attempt_date of Tuesday.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I tried out a new bread recipe using sourdough starter on Tuesday",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.2680227734165142, \"novelty\": 0.29340924472171404, \"transient\": false, \"importance\": 3, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "experience_with",
+            "op": "ADD",
+            "object_text": "sourdough starters",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:8\"], \"cache_ids\": [\"043c05cb-453e-4380-9800-626bb2a63266\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "attempted_bread_making",
+            "op": "ADD",
+            "object_text": "Italian bread recipe using sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:8\"], \"cache_ids\": [\"043c05cb-453e-4380-9800-626bb2a63266\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "attempt_date",
+            "op": "ADD",
+            "object_text": "Tuesday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:8\"], \"cache_ids\": [\"043c05cb-453e-4380-9800-626bb2a63266\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 18
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_event_binding_error",
+          "reason": "Previous failed sourdough baking is incorrectly attached to a future Italian recipe."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_1:4",
+        "source": "I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.",
+        "target": {
+          "subject": "user",
+          "predicate": "favorite_fruit",
+          "object": "strawberries"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_1:4",
+            "candidate": {
+              "kind": "triple",
+              "object": "strawberries",
+              "subject": "user",
+              "predicate": "allergy",
+              "confidence": 0.85,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The source text expresses a preference for strawberries and notes them as a favorite, but it does not state that the user has an allergy to them. The assertion claims an allergy relationship which is not supported by the text.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The source text expresses a preference for strawberries and notes them as a favorite, but it does not state that the user has an allergy to them. The assertion claims an allergy relationship which is not supported by the text.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I think I'll go with strawberries, they're my favorite.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_733e443a_1:4",
+            "candidate": {
+              "kind": "triple",
+              "object": "low-sugar",
+              "subject": "user",
+              "predicate": "diet",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user explicitly states they have been eating 'a lot of sweet treats' and 'leftover birthday cake,' which directly contradicts the assertion that their diet is 'low-sugar.' The speaker also identifies strawberries as their favorite, further indicating a preference for sugar-rich foods over low-sugar options.",
+            "verification": {
+              "label": "contradiction",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they have been eating 'a lot of sweet treats' and 'leftover birthday cake,' which directly contradicts the assertion that their diet is 'low-sugar.' The speaker also identifies strawberries as their favorite, further indicating a preference for sugar-rich foods over low-sugar options.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "\"I've been eating a lot of sweet treats lately, including leftover birthday cake\"",
+              "probability": 0.95
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_relation_error",
+          "reason": "Strawberry preference becomes an allergy; verifier rejects it."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_2:2",
+        "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+        "target": {
+          "subject": "user",
+          "predicate": "first_convection_use",
+          "object": "cookies last Thursday"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_2:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "convection_setting",
+              "subject": "user",
+              "predicate": "editor_use",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user reports using the convection setting once last Thursday for cookies and plans to try it for vegetables, but does not explicitly state they have used it as an editor or that this is their established role.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user reports using the convection setting once last Thursday for cookies and plans to try it for vegetables, but does not explicitly state they have used it as an editor or that this is their established role.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet. By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+              "probability": 0.5
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Convection-use candidate drops first-use event and time, then is rejected."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_1:8",
+        "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+        "target": {
+          "subject": "user",
+          "predicate": "owns_appliance",
+          "object": "stand mixer"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "stand_mixer",
+              "subject": "user",
+              "predicate": "editor_use",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they have been using the stand mixer 'nonstop' for a few weeks and expects it to be useful in the future, but does not explicitly confirm that they are currently performing the action of editing with it or that this specific use is an established habit/fact independent of the cooking context. The predicate 'editor_use' implies a specific function (editing) which is not mentioned; the user only mentions using it for making tart crusts.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they have been using the stand mixer 'nonstop' for a few weeks and expects it to be useful in the future, but does not explicitly confirm that they are currently performing the action of editing with it or that this specific use is an established habit/fact independent of the cooking context. The predicate 'editor_use' implies a specific function (editing) which is not mentioned; the user only mentions using it for making tart crusts.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+              "probability": 0.3
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_733e443a_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "nonstop_since_few_weeks_ago",
+              "subject": "user",
+              "predicate": "activity_duration",
+              "confidence": 0.9,
+              "importance": 4,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user explicitly states they have been using the stand mixer 'nonstop since I got it a few weeks ago', which directly supports the activity duration claim.",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they have been using the stand mixer 'nonstop since I got it a few weeks ago', which directly supports the activity duration claim.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "\"I've been using my new stand mixer nonstop since I got it a few weeks ago\"",
+              "probability": 0.95
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_relation_error",
+          "reason": "Stand-mixer ownership becomes editor_use and is rejected."
+        }
+      },
+      {
+        "turn_id": "answer_733e443a_3:2",
+        "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+        "target": {
+          "subject": "user",
+          "predicate": "starter_feeding_frequency",
+          "object": "once a day"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "sourdough starter",
+              "subject": "user",
+              "predicate": "created_sourdough_starter",
+              "confidence": 0.95,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.35; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The speaker explicitly states they created the sourdough starter about a month ago, which directly supports the assertion that the user created a sourdough starter.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I actually created my sourdough starter about a month ago",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.34937858634730606, \"novelty\": 0.1645952878243535, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "once a day",
+              "subject": "user",
+              "predicate": "feeding_frequency",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.50; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The speaker explicitly states they have been feeding the starter 'once a day' and describes this as their usual routine ('usually 1:1:1'), which directly supports the assertion of the user's feeding frequency.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've been feeding it once a day with all-purpose flour and water.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.502623340467471, \"novelty\": 0.5420778015582368, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "all-purpose flour",
+              "subject": "user",
+              "predicate": "uses_flour",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.47; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they have been feeding their sourdough starter with all-purpose flour and water, which confirms the action of using that specific type of flour.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've been feeding it once a day with all-purpose flour and water.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.47054239636151884, \"novelty\": 0.4351413212050629, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "water",
+              "subject": "user",
+              "predicate": "uses_ingredient",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.45; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The speaker explicitly states they have been feeding their sourdough starter with all-purpose flour and water, confirming the use of water as an ingredient.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've been feeding it once a day with all-purpose flour and water.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.45352270206408835, \"novelty\": 0.37840900688029455, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "1:1:1 (flour:water:starter)",
+              "subject": "sourdough starter",
+              "predicate": "ratio",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The source text states the ratio is 'usually' 1:1:1, indicating a recurring pattern rather than an absolute fact for every instance. The assertion presents this as a definitive property without the qualifier 'usually', which creates a slight modality mismatch, though the core information aligns.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The source text states the ratio is 'usually' 1:1:1, indicating a recurring pattern rather than an absolute fact for every instance. The assertion presents this as a definitive property without the qualifier 'usually', which creates a slight modality mismatch, though the core information aligns.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "\"The ratio is usually 1:1:1 (flour:water:starter).\"",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_733e443a_3:2",
+            "candidate": {
+              "kind": "triple",
+              "object": "on Tuesday",
+              "subject": "user",
+              "predicate": "baked_bread",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.39; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The speaker explicitly states they used the starter in a recipe on Tuesday, which constitutes baking bread.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "On Tuesday, I used it in a recipe and the bread came out dense and heavy",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.3899214085778213, \"novelty\": 0.2997380285927378, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "created_sourdough_starter",
+            "op": "ADD",
+            "object_text": "sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"], \"cache_ids\": [\"2b17a513-59f2-4cd6-b1aa-7c7b43a90c12\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "feeding_frequency",
+            "op": "ADD",
+            "object_text": "once a day",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"], \"cache_ids\": [\"2b17a513-59f2-4cd6-b1aa-7c7b43a90c12\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_flour",
+            "op": "ADD",
+            "object_text": "all-purpose flour",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"], \"cache_ids\": [\"2b17a513-59f2-4cd6-b1aa-7c7b43a90c12\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_ingredient",
+            "op": "ADD",
+            "object_text": "water",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"], \"cache_ids\": [\"2b17a513-59f2-4cd6-b1aa-7c7b43a90c12\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "baked_bread",
+            "op": "ADD",
+            "object_text": "on Tuesday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"], \"cache_ids\": [\"2b17a513-59f2-4cd6-b1aa-7c7b43a90c12\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 6
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Frequency retained under the user without explicit starter target."
+        }
+      }
+    ],
+    "limitations": [
+      "Source review is not independent human adjudication.",
+      "Original strict metrics are preserved. Source-scoped equivalences do not rewrite labels or inflate the published score.",
+      "Current report includes same-session retrieval probes, but no deliberate TTL or durable-retention measurement."
+    ],
+    "source_review_counts": {
+      "compound_label_mismatch": 1,
+      "extraction_scope_loss": 3,
+      "extraction_type_error": 1,
+      "extraction_event_binding_error": 1,
+      "extraction_relation_error": 2
+    }
+  },
+  "d23cf73b": {
+    "dataset": "longmemeval-adapter",
+    "original_metrics": {
+      "stored": 10,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false": 0,
+      "must_keep_recall": 0.0,
+      "false_writes": 0,
+      "historical_precision": 0.0,
+      "historical_recall": 0.0,
+      "unsupported_writes": 12,
+      "visible_facts": 10,
+      "total_events": 12,
+      "total_rows": 176,
+      "storage_bytes": 1302528,
+      "latency_ms": 157398.05566699943,
+      "usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 36,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 36
+        },
+        "verifier": {
+          "requests": 31,
+          "input_tokens": 13609,
+          "output_tokens": 2680,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      },
+      "cost": {
+        "usd": null,
+        "reason": "No pricing supplied; measured usage is reported separately."
+      },
+      "historical_by_split": {},
+      "retrieval_probes": [
+        {
+          "turn_id": "answer_5a0d28f8_1:6",
+          "query": "user attended_fermentation_workshop local food co-op fermentation workshop",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 37.85266699560452,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "object": "fermentation workshop at local food co-op",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in",
+              "object": "vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "attended vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "learned_skill",
+              "object": "making sauerkraut and kimchi",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:0",
+          "query": "user attended_indian_class Indian cuisine class",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_2",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 33.6298330075806,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "planned_food_item",
+              "object": "saag paneer",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "learning_experience",
+              "object": "chicken tikka masala",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:8",
+          "query": "user attended_vegan_class vegan cuisine class",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 39.48833400500007,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "participated_in",
+              "object": "vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "attended vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "object": "fermentation workshop at local food co-op",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "learned_skill",
+              "object": "making sauerkraut and kimchi",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:0",
+          "query": "user cooked_korean_dish bibimbap from cooking class online recipe library",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_3",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 37.11904199735727,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "experience",
+              "object": "Korean bibimbap recipe from cooking class's online recipe library",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "goal",
+              "object": "use up all ingredients bought",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:8",
+          "query": "user diet_goal incorporate more fermented foods",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 30.751290993066505,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "object": "fermentation workshop at local food co-op",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "learned_skill",
+              "object": "making sauerkraut and kimchi",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in",
+              "object": "vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "attended vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "interest",
+              "object": "cashew-based cheese substitutes",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:6",
+          "query": "user learned_fermented_foods sauerkraut and kimchi",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 38.46549999434501,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "learned_skill",
+              "object": "making sauerkraut and kimchi",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "object": "fermentation workshop at local food co-op",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in",
+              "object": "vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "attended vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:0",
+          "query": "user learned_indian_dish chicken tikka masala",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_2",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 36.58416600956116,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "learning_experience",
+              "object": "chicken tikka masala",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "planned_food_item",
+              "object": "saag paneer",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:8",
+          "query": "user learned_vegan_dish vegan lasagna with cashew ricotta",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_1",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 33.976417005760595,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "participated_in",
+              "object": "vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "activity",
+              "object": "attended vegan cuisine class",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "learned_skill",
+              "object": "making sauerkraut and kimchi",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "object": "fermentation workshop at local food co-op",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "interest",
+              "object": "cashew-based cheese substitutes",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:6",
+          "query": "user made_fermented_food kimchi at a fermentation workshop",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_3",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 28.792167009669356,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "experience",
+              "object": "Korean bibimbap recipe from cooking class's online recipe library",
+              "tier": "session",
+              "source": "semantic"
+            },
+            {
+              "subject": "user",
+              "predicate": "goal",
+              "object": "use up all ingredients bought",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:0",
+          "query": "user tried_restaurant Ethiopian restaurant last week",
+          "k": 5,
+          "session_id": "answer_5a0d28f8_4",
+          "in_current": false,
+          "retrieved": false,
+          "stage": "upstream_or_label_mismatch",
+          "latency_ms": 27.41312500438653,
+          "results": [
+            {
+              "subject": "user",
+              "predicate": "consumed_food",
+              "object": "Ethiopian restaurant",
+              "tier": "session",
+              "source": "semantic"
+            }
+          ]
+        }
+      ],
+      "retrieval_probe_usage": {
+        "extractor": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0
+        },
+        "embedder": {
+          "requests": 10,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 10
+        },
+        "verifier": {
+          "requests": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unmetered_requests": 0,
+          "nli_requests": 0
+        }
+      }
+    },
+    "unmatched_count": 12,
+    "reviewed_count": 0,
+    "review_categories": {},
+    "must_keep_targets": 10,
+    "strict_missing_must_keep": 10,
+    "missing_by_cause": {
+      "extraction_fidelity_or_label_mismatch": 10
+    },
+    "misses": [
+      {
+        "turn_id": "answer_5a0d28f8_1:6",
+        "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+        "target": {
+          "subject": "user",
+          "predicate": "attended_fermentation_workshop",
+          "object": "local food co-op fermentation workshop"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "tempeh",
+              "subject": "user",
+              "predicate": "dietary_interest",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user explicitly states 'I've been meaning to try tempeh', indicating an interest in the food item.",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I've been meaning to try tempeh', indicating an interest in the food item.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been meaning to try tempeh for a while now",
+              "probability": 0.95
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "fermentation workshop at local food co-op",
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.42; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a workshop on fermentation at a local food co-op', which directly supports the assertion that the user participated in a fermentation workshop at a local food co-op.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently attended a workshop on fermentation at a local food co-op",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4244300027760738, \"novelty\": 0.28143334258691266, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "making sauerkraut and kimchi",
+              "subject": "user",
+              "predicate": "learned_skill",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.45; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a workshop... where I learned how to make my own sauerkraut and kimchi,' which directly supports the assertion that the user learned the skill of making these foods.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "where I learned how to make my own sauerkraut and kimchi",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.45445635388505606, \"novelty\": 0.3815211796168536, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "participated_in_workshop",
+            "op": "ADD",
+            "object_text": "fermentation workshop at local food co-op",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:6\"], \"cache_ids\": [\"24928b6f-79b0-47d1-8afe-a26164cc00bc\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "learned_skill",
+            "op": "ADD",
+            "object_text": "making sauerkraut and kimchi",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:6\"], \"cache_ids\": [\"24928b6f-79b0-47d1-8afe-a26164cc00bc\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 7
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "label_equivalence",
+          "reason": "Participation in the same workshop is stored with reordered wording."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_2:0",
+        "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+        "target": {
+          "subject": "user",
+          "predicate": "attended_indian_class",
+          "object": "Indian cuisine class"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "dinner party",
+              "subject": "user",
+              "predicate": "planned_event",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The source text states the user is 'planning' a dinner party and 'thinking of serving' an Indian dish, which indicates intent or consideration rather than a completed event. The assertion claims the user has already 'planned_event', which requires a completed action. While the user mentions learning to make chicken tikka masala in a class, this does not confirm the entire dinner party event is finalized.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The source text states the user is 'planning' a dinner party and 'thinking of serving' an Indian dish, which indicates intent or consideration rather than a completed event. The assertion claims the user has already 'planned_event', which requires a completed action. While the user mentions learning to make chicken tikka masala in a class, this does not confirm the entire dinner party event is finalized.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "chicken tikka masala",
+              "subject": "user",
+              "predicate": "learning_experience",
+              "confidence": 1.0,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.42; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'learned how to make a perfect chicken tikka masala in a class on Indian cuisine' and confirms it is 'definitely on the menu', which fully supports the assertion of learning experience regarding chicken tikka masala.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.42278365249499905, \"novelty\": 0.40927884164999695, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "learning_experience",
+            "op": "ADD",
+            "object_text": "chicken tikka masala",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:0\"], \"cache_ids\": [\"c6e563a5-2262-4142-8dfe-f0823634ef76\"], \"session_id\": \"answer_5a0d28f8_2\"}",
+            "seq": 2
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_omission",
+          "reason": "Dish learning extracted but Indian-class attendance omitted."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_1:8",
+        "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+        "target": {
+          "subject": "user",
+          "predicate": "attended_vegan_class",
+          "object": "vegan cuisine class"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "vegan",
+              "subject": "user",
+              "predicate": "diet",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "attended vegan cuisine class",
+              "subject": "user",
+              "predicate": "activity",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.32; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a class on vegan cuisine' in the source text, which directly matches the subject (user), predicate (activity), and object (attended vegan cuisine class) in the assertion.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently attended a class on vegan cuisine",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.31593169677818855, \"novelty\": 0.053105655927295214, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "attended vegan cuisine class",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:8\"], \"cache_ids\": [\"02e4d3c5-05fc-4759-81a3-99018411239a\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 8
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "label_equivalence",
+          "reason": "The explicit class attendance is stored as an activity."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_3:0",
+        "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+        "target": {
+          "subject": "user",
+          "predicate": "cooked_korean_dish",
+          "object": "bibimbap from cooking class online recipe library"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "cook more at home",
+              "subject": "user",
+              "predicate": "goal",
+              "confidence": 0.9,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.55; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I've been trying to cook more at home', which directly confirms the goal of cooking more at home.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I've been trying to cook more at home",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 1.0, \"score\": 0.5529992308211445, \"novelty\": 0.4099974360704822, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_5a0d28f8_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "use up all ingredients bought",
+              "subject": "user",
+              "predicate": "goal",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.69; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I want to make sure I'm using up all the ingredients I buy,' which directly affirms the goal of using up all ingredients bought.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I want to make sure I'm using up all the ingredients I buy.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 1.0, \"score\": 0.6900000000000001, \"novelty\": 1.0, \"transient\": true, \"importance\": 6, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_5a0d28f8_3:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "Korean bibimbap recipe from cooking class's online recipe library",
+              "subject": "user",
+              "predicate": "experience",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.35; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'just tried out' the Korean bibimbap recipe, which confirms the experience of that specific recipe.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.3498497107837555, \"novelty\": 0.39949903594585157, \"transient\": true, \"importance\": 8, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "cook more at home",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"], \"cache_ids\": [\"3e9dd12b-f3c5-4969-9b87-009186a40b7f\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "use up all ingredients bought",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"], \"cache_ids\": [\"3e9dd12b-f3c5-4969-9b87-009186a40b7f\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "experience",
+            "op": "ADD",
+            "object_text": "Korean bibimbap recipe from cooking class's online recipe library",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"], \"cache_ids\": [\"3e9dd12b-f3c5-4969-9b87-009186a40b7f\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 12
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Recipe experience retained but explicit completed cooking relation is lost."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_1:8",
+        "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+        "target": {
+          "subject": "user",
+          "predicate": "diet_goal",
+          "object": "incorporate more fermented foods"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "vegan",
+              "subject": "user",
+              "predicate": "diet",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "attended vegan cuisine class",
+              "subject": "user",
+              "predicate": "activity",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.32; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a class on vegan cuisine' in the source text, which directly matches the subject (user), predicate (activity), and object (attended vegan cuisine class) in the assertion.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently attended a class on vegan cuisine",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.31593169677818855, \"novelty\": 0.053105655927295214, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "attended vegan cuisine class",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:8\"], \"cache_ids\": [\"02e4d3c5-05fc-4759-81a3-99018411239a\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 8
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_relation_error",
+          "reason": "Desired fermented-food changes become an unsupported vegan diet."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_1:6",
+        "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+        "target": {
+          "subject": "user",
+          "predicate": "learned_fermented_foods",
+          "object": "sauerkraut and kimchi"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "tempeh",
+              "subject": "user",
+              "predicate": "dietary_interest",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user explicitly states 'I've been meaning to try tempeh', indicating an interest in the food item.",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states 'I've been meaning to try tempeh', indicating an interest in the food item.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been meaning to try tempeh for a while now",
+              "probability": 0.95
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "fermentation workshop at local food co-op",
+              "subject": "user",
+              "predicate": "participated_in_workshop",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.42; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a workshop on fermentation at a local food co-op', which directly supports the assertion that the user participated in a fermentation workshop at a local food co-op.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently attended a workshop on fermentation at a local food co-op",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.4244300027760738, \"novelty\": 0.28143334258691266, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "making sauerkraut and kimchi",
+              "subject": "user",
+              "predicate": "learned_skill",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.45; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a workshop... where I learned how to make my own sauerkraut and kimchi,' which directly supports the assertion that the user learned the skill of making these foods.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "where I learned how to make my own sauerkraut and kimchi",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.45445635388505606, \"novelty\": 0.3815211796168536, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "participated_in_workshop",
+            "op": "ADD",
+            "object_text": "fermentation workshop at local food co-op",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:6\"], \"cache_ids\": [\"24928b6f-79b0-47d1-8afe-a26164cc00bc\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "learned_skill",
+            "op": "ADD",
+            "object_text": "making sauerkraut and kimchi",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:6\"], \"cache_ids\": [\"24928b6f-79b0-47d1-8afe-a26164cc00bc\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 7
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "label_equivalence",
+          "reason": "The same two foods are retained in learned_skill as making sauerkraut and kimchi."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_2:0",
+        "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+        "target": {
+          "subject": "user",
+          "predicate": "learned_indian_dish",
+          "object": "chicken tikka masala"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "dinner party",
+              "subject": "user",
+              "predicate": "planned_event",
+              "confidence": 0.95,
+              "importance": 7,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The source text states the user is 'planning' a dinner party and 'thinking of serving' an Indian dish, which indicates intent or consideration rather than a completed event. The assertion claims the user has already 'planned_event', which requires a completed action. While the user mentions learning to make chicken tikka masala in a class, this does not confirm the entire dinner party event is finalized.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The source text states the user is 'planning' a dinner party and 'thinking of serving' an Indian dish, which indicates intent or consideration rather than a completed event. The assertion claims the user has already 'planned_event', which requires a completed action. While the user mentions learning to make chicken tikka masala in a class, this does not confirm the entire dinner party event is finalized.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_2:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "chicken tikka masala",
+              "subject": "user",
+              "predicate": "learning_experience",
+              "confidence": 1.0,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.42; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'learned how to make a perfect chicken tikka masala in a class on Indian cuisine' and confirms it is 'definitely on the menu', which fully supports the assertion of learning experience regarding chicken tikka masala.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.42278365249499905, \"novelty\": 0.40927884164999695, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "learning_experience",
+            "op": "ADD",
+            "object_text": "chicken tikka masala",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:0\"], \"cache_ids\": [\"c6e563a5-2262-4142-8dfe-f0823634ef76\"], \"session_id\": \"answer_5a0d28f8_2\"}",
+            "seq": 2
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_scope_loss",
+          "reason": "Learning experience retained with the dish, but the making skill is unspecified."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_1:8",
+        "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+        "target": {
+          "subject": "user",
+          "predicate": "learned_vegan_dish",
+          "object": "vegan lasagna with cashew ricotta"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "vegan",
+              "subject": "user",
+              "predicate": "diet",
+              "confidence": 0.95,
+              "importance": 8,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user expresses interest in incorporating fermented foods and attended a class on vegan cuisine, but did not explicitly state they have adopted a vegan diet as a fact.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_1:8",
+            "candidate": {
+              "kind": "triple",
+              "object": "attended vegan cuisine class",
+              "subject": "user",
+              "predicate": "activity",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.32; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they 'recently attended a class on vegan cuisine' in the source text, which directly matches the subject (user), predicate (activity), and object (attended vegan cuisine class) in the assertion.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I recently attended a class on vegan cuisine",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.31593169677818855, \"novelty\": 0.053105655927295214, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "attended vegan cuisine class",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:8\"], \"cache_ids\": [\"02e4d3c5-05fc-4759-81a3-99018411239a\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 8
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_omission",
+          "reason": "Class attendance extracted; the learned lasagna dish omitted."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_3:6",
+        "source": "That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out.",
+        "target": {
+          "subject": "user",
+          "predicate": "made_fermented_food",
+          "object": "kimchi at a fermentation workshop"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_3:6",
+            "candidate": {
+              "kind": "triple",
+              "object": "none stated",
+              "subject": "user",
+              "predicate": "allergy",
+              "confidence": 0.5,
+              "importance": 1,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user mentions making kimchi from a workshop but does not state any allergies or restrictions regarding ingredients; the assertion about 'allergy' is unsupported by the text.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user mentions making kimchi from a workshop but does not state any allergies or restrictions regarding ingredients; the assertion about 'allergy' is unsupported by the text.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I've actually made kimchi before from a workshop I attended on fermentation.",
+              "probability": 0.5
+            },
+            "score_components": null
+          }
+        ],
+        "source_writes": [],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_omission",
+          "reason": "Kimchi experience omitted; only an unsupported none-stated allergy placeholder extracted."
+        }
+      },
+      {
+        "turn_id": "answer_5a0d28f8_4:0",
+        "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+        "target": {
+          "subject": "user",
+          "predicate": "tried_restaurant",
+          "object": "Ethiopian restaurant last week"
+        },
+        "cause": "extraction_fidelity_or_label_mismatch",
+        "decisions": [
+          {
+            "turn_id": "answer_5a0d28f8_4:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "meal prep",
+              "subject": "user",
+              "predicate": "activity",
+              "confidence": 0.85,
+              "importance": 4,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "rejected",
+            "reason": "The user states they are 'looking for' recipe ideas and mentions past activities ('been doing'), but does not explicitly state that the activity of meal prep is currently happening or a general habit in the present tense required by the assertion.",
+            "verification": {
+              "label": "neutral",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user states they are 'looking for' recipe ideas and mentions past activities ('been doing'), but does not explicitly state that the activity of meal prep is currently happening or a general habit in the present tense required by the assertion.",
+              "backend": "ollama",
+              "accepted": false,
+              "evidence": "I'm looking for some recipe ideas for meal prep.",
+              "probability": 0.5
+            },
+            "score_components": null
+          },
+          {
+            "turn_id": "answer_5a0d28f8_4:0",
+            "candidate": {
+              "kind": "triple",
+              "object": "Ethiopian restaurant",
+              "subject": "user",
+              "predicate": "consumed_food",
+              "confidence": 0.9,
+              "importance": 6,
+              "assertion_type": "direct_user_statement"
+            },
+            "outcome": "demoted",
+            "reason": "entailment; score=0.60; demoted",
+            "verification": {
+              "label": "entailment",
+              "model": "qwen3.5:4b-mlx",
+              "reason": "The user explicitly states they tried out the Ethiopian restaurant last week and loved it, which confirms the consumption of food at that location.",
+              "backend": "ollama",
+              "accepted": true,
+              "evidence": "I tried out a new Ethiopian restaurant in town last week and loved it!",
+              "probability": 1.0
+            },
+            "score_components": "{\"spec\": 0.2, \"score\": 0.6, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+          }
+        ],
+        "source_writes": [
+          {
+            "subject": "user",
+            "predicate": "consumed_food",
+            "op": "ADD",
+            "object_text": "Ethiopian restaurant",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:0\"], \"cache_ids\": [\"9ac60706-42e6-4e16-afe1-ca7faa11657a\"], \"session_id\": \"answer_5a0d28f8_4\"}",
+            "seq": 1
+          }
+        ],
+        "later_same_identity_writes": [],
+        "review": [],
+        "source_review": {
+          "reviewer": "Codex; single reviewer, provisional",
+          "primary_cause": "extraction_type_error",
+          "reason": "Restaurant experience becomes consumption of a restaurant; verifier accepts wrong type."
+        }
+      }
+    ],
+    "limitations": [
+      "Source review is not independent human adjudication.",
+      "Original strict metrics are preserved. Source-scoped equivalences do not rewrite labels or inflate the published score.",
+      "Current report includes same-session retrieval probes, but no deliberate TTL or durable-retention measurement."
+    ],
+    "source_review_counts": {
+      "label_equivalence": 3,
+      "extraction_omission": 3,
+      "extraction_scope_loss": 2,
+      "extraction_relation_error": 1,
+      "extraction_type_error": 1
+    }
+  }
+}

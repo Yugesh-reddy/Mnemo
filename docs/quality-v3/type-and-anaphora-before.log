@@ -1,0 +1,186 @@
+........FFFF...F                                                         [100%]
+=================================== FAILURES ===================================
+_ test_consideration_cannot_be_strengthened_into_a_definite_plan[planned_meal-I was considering kimchi fried rice. I've decided to make it tonight.-True] _
+
+predicate = 'planned_meal'
+source = "I was considering kimchi fried rice. I've decided to make it tonight."
+accepted = True
+
+    @pytest.mark.parametrize(
+        ("predicate", "source", "accepted"),
+        [
+            ("intends_to_cook", "I'm thinking of making kimchi fried rice.", False),
+            ("planned_meal", "I'm considering kimchi fried rice for dinner.", False),
+            ("considered_meal", "I'm considering kimchi fried rice for dinner.", True),
+            (
+                "planned_meal",
+                "I'm considering lasagna. I will make kimchi fried rice for dinner.",
+                True,
+            ),
+            (
+                "planned_meal",
+                "I was thinking of kimchi fried rice, but I will make kimchi fried rice tonight.",
+                True,
+            ),
+            (
+                "planned_meal",
+                "I was considering kimchi fried rice. I've decided to make it tonight.",
+                True,
+            ),
+        ],
+    )
+    def test_consideration_cannot_be_strengthened_into_a_definite_plan(predicate, source, accepted):
+        verifier = LLMVerifier(backend="ollama", model="stub", base_url="http://unused")
+        verifier._request = lambda _: {
+            "label": "entailment",
+            "probability": 1,
+            "reason": "Confident model answer",
+        }
+        fact = ExtractedFact(subject="user", predicate=predicate, object="kimchi fried rice")
+        try:
+>           assert verifier.verify(fact, source).accepted is accepted
+E           assert False is True
+E            +  where False = Verdict(accepted=False, label='neutral', reason='tentative consideration does not establish a definite plan or intenti...d='representation_guard', model=None, evidence="I was considering kimchi fried rice. I've decided to make it tonight.").accepted
+E            +    where Verdict(accepted=False, label='neutral', reason='tentative consideration does not establish a definite plan or intenti...d='representation_guard', model=None, evidence="I was considering kimchi fried rice. I've decided to make it tonight.") = verify(ExtractedFact(subject='user', predicate='planned_meal', object='kimchi fried rice', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference'), "I was considering kimchi fried rice. I've decided to make it tonight.")
+E            +      where verify = <mnemo.quality.LLMVerifier object at 0x106206300>.verify
+
+tests/test_verifier_assertions.py:136: AssertionError
+_ test_typed_relations_require_type_evidence[uses_database-Linear-Our team tracks issues in Linear.-False] _
+
+predicate = 'uses_database', value = 'Linear'
+source = 'Our team tracks issues in Linear.', accepted = False
+
+    @pytest.mark.parametrize(
+        ("predicate", "value", "source", "accepted"),
+        [
+            ("uses_database", "Linear", "Our team tracks issues in Linear.", False),
+            ("editor", "fish", "My interactive shell is fish.", False),
+            ("shell", "Neovim", "I use Neovim as my text editor.", False),
+            ("uses_database", "QuasarStore", "My production database is QuasarStore.", True),
+            ("uses_database", "MongoDB", "I use MongoDB.", True),
+            ("editor", "Emacs", "Emacs is both my editor and interactive shell.", True),
+            ("role", "Reliability Platform team", "I belong to the Reliability Platform team.", False),
+        ],
+    )
+    def test_typed_relations_require_type_evidence(predicate, value, source, accepted):
+        verifier = LLMVerifier(backend="ollama", model="stub", base_url="http://unused")
+        verifier._request = lambda _: {
+            "label": "entailment",
+            "probability": 1,
+            "reason": "Confident model answer",
+        }
+        fact = ExtractedFact(subject="user", predicate=predicate, object=value)
+        try:
+>           assert verifier.verify(fact, source).accepted is accepted
+E           AssertionError: assert True is False
+E            +  where True = Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None).accepted
+E            +    where Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None) = verify(ExtractedFact(subject='user', predicate='uses_database', object='Linear', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference'), 'Our team tracks issues in Linear.')
+E            +      where verify = <mnemo.quality.LLMVerifier object at 0x106206b70>.verify
+
+tests/test_verifier_assertions.py:162: AssertionError
+_ test_typed_relations_require_type_evidence[editor-fish-My interactive shell is fish.-False] _
+
+predicate = 'editor', value = 'fish', source = 'My interactive shell is fish.'
+accepted = False
+
+    @pytest.mark.parametrize(
+        ("predicate", "value", "source", "accepted"),
+        [
+            ("uses_database", "Linear", "Our team tracks issues in Linear.", False),
+            ("editor", "fish", "My interactive shell is fish.", False),
+            ("shell", "Neovim", "I use Neovim as my text editor.", False),
+            ("uses_database", "QuasarStore", "My production database is QuasarStore.", True),
+            ("uses_database", "MongoDB", "I use MongoDB.", True),
+            ("editor", "Emacs", "Emacs is both my editor and interactive shell.", True),
+            ("role", "Reliability Platform team", "I belong to the Reliability Platform team.", False),
+        ],
+    )
+    def test_typed_relations_require_type_evidence(predicate, value, source, accepted):
+        verifier = LLMVerifier(backend="ollama", model="stub", base_url="http://unused")
+        verifier._request = lambda _: {
+            "label": "entailment",
+            "probability": 1,
+            "reason": "Confident model answer",
+        }
+        fact = ExtractedFact(subject="user", predicate=predicate, object=value)
+        try:
+>           assert verifier.verify(fact, source).accepted is accepted
+E           AssertionError: assert True is False
+E            +  where True = Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None).accepted
+E            +    where Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None) = verify(ExtractedFact(subject='user', predicate='editor', object='fish', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference'), 'My interactive shell is fish.')
+E            +      where verify = <mnemo.quality.LLMVerifier object at 0x106207a10>.verify
+
+tests/test_verifier_assertions.py:162: AssertionError
+_ test_typed_relations_require_type_evidence[shell-Neovim-I use Neovim as my text editor.-False] _
+
+predicate = 'shell', value = 'Neovim'
+source = 'I use Neovim as my text editor.', accepted = False
+
+    @pytest.mark.parametrize(
+        ("predicate", "value", "source", "accepted"),
+        [
+            ("uses_database", "Linear", "Our team tracks issues in Linear.", False),
+            ("editor", "fish", "My interactive shell is fish.", False),
+            ("shell", "Neovim", "I use Neovim as my text editor.", False),
+            ("uses_database", "QuasarStore", "My production database is QuasarStore.", True),
+            ("uses_database", "MongoDB", "I use MongoDB.", True),
+            ("editor", "Emacs", "Emacs is both my editor and interactive shell.", True),
+            ("role", "Reliability Platform team", "I belong to the Reliability Platform team.", False),
+        ],
+    )
+    def test_typed_relations_require_type_evidence(predicate, value, source, accepted):
+        verifier = LLMVerifier(backend="ollama", model="stub", base_url="http://unused")
+        verifier._request = lambda _: {
+            "label": "entailment",
+            "probability": 1,
+            "reason": "Confident model answer",
+        }
+        fact = ExtractedFact(subject="user", predicate=predicate, object=value)
+        try:
+>           assert verifier.verify(fact, source).accepted is accepted
+E           AssertionError: assert True is False
+E            +  where True = Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None).accepted
+E            +    where Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None) = verify(ExtractedFact(subject='user', predicate='shell', object='Neovim', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference'), 'I use Neovim as my text editor.')
+E            +      where verify = <mnemo.quality.LLMVerifier object at 0x106246390>.verify
+
+tests/test_verifier_assertions.py:162: AssertionError
+_ test_typed_relations_require_type_evidence[role-Reliability Platform team-I belong to the Reliability Platform team.-False] _
+
+predicate = 'role', value = 'Reliability Platform team'
+source = 'I belong to the Reliability Platform team.', accepted = False
+
+    @pytest.mark.parametrize(
+        ("predicate", "value", "source", "accepted"),
+        [
+            ("uses_database", "Linear", "Our team tracks issues in Linear.", False),
+            ("editor", "fish", "My interactive shell is fish.", False),
+            ("shell", "Neovim", "I use Neovim as my text editor.", False),
+            ("uses_database", "QuasarStore", "My production database is QuasarStore.", True),
+            ("uses_database", "MongoDB", "I use MongoDB.", True),
+            ("editor", "Emacs", "Emacs is both my editor and interactive shell.", True),
+            ("role", "Reliability Platform team", "I belong to the Reliability Platform team.", False),
+        ],
+    )
+    def test_typed_relations_require_type_evidence(predicate, value, source, accepted):
+        verifier = LLMVerifier(backend="ollama", model="stub", base_url="http://unused")
+        verifier._request = lambda _: {
+            "label": "entailment",
+            "probability": 1,
+            "reason": "Confident model answer",
+        }
+        fact = ExtractedFact(subject="user", predicate=predicate, object=value)
+        try:
+>           assert verifier.verify(fact, source).accepted is accepted
+E           AssertionError: assert True is False
+E            +  where True = Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None).accepted
+E            +    where Verdict(accepted=True, label='entailment', reason='Confident model answer', probability=1.0, backend='ollama', model='stub', evidence=None) = verify(ExtractedFact(subject='user', predicate='role', object='Reliability Platform team', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference'), 'I belong to the Reliability Platform team.')
+E            +      where verify = <mnemo.quality.LLMVerifier object at 0x106245070>.verify
+
+tests/test_verifier_assertions.py:162: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_verifier_assertions.py::test_consideration_cannot_be_strengthened_into_a_definite_plan[planned_meal-I was considering kimchi fried rice. I've decided to make it tonight.-True]
+FAILED tests/test_verifier_assertions.py::test_typed_relations_require_type_evidence[uses_database-Linear-Our team tracks issues in Linear.-False]
+FAILED tests/test_verifier_assertions.py::test_typed_relations_require_type_evidence[editor-fish-My interactive shell is fish.-False]
+FAILED tests/test_verifier_assertions.py::test_typed_relations_require_type_evidence[shell-Neovim-I use Neovim as my text editor.-False]
+FAILED tests/test_verifier_assertions.py::test_typed_relations_require_type_evidence[role-Reliability Platform team-I belong to the Reliability Platform team.-False]
+5 failed, 11 passed in 0.15s

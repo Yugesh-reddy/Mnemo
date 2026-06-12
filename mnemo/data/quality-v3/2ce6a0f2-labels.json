@@ -1,0 +1,379 @@
+{
+  "answer_901a6763_3:0": [
+    {
+      "subject": "user",
+      "predicate": "attended_tour",
+      "value": "History Museum guided tour",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "history_museum_tour_date",
+      "value": "February 24",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "interest",
+      "value": "ancient history and art",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:1": [],
+  "answer_901a6763_3:2": [
+    {
+      "subject": "user",
+      "predicate": "museum_interest",
+      "value": "The Metropolitan Museum of Art",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "art_interest",
+      "value": "ancient pottery",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:3": [],
+  "answer_901a6763_3:4": [
+    {
+      "subject": "user",
+      "predicate": "artwork_interest",
+      "value": "Euphiletos Cup",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "seen_up_close",
+      "value": "red-figure kylix",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:5": [],
+  "answer_901a6763_3:6": [
+    {
+      "subject": "user",
+      "predicate": "seen_up_close",
+      "value": "red-figure kylix",
+      "disposition": "forbidden",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_artwork_viewing",
+      "value": "Euphiletos Cup",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:7": [],
+  "answer_901a6763_3:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_museum_visit",
+      "value": "Metropolitan Museum of Art",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_visit_duration",
+      "value": "whole day",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_galleries",
+      "value": "Greek and Roman Galleries",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "considered_visit",
+      "value": "Temple of Dendur",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:9": [],
+  "answer_901a6763_3:10": [
+    {
+      "subject": "user",
+      "predicate": "research_interest",
+      "value": "mythology and symbolism of Isis",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_3:11": [],
+  "answer_901a6763_4:0": [
+    {
+      "subject": "user",
+      "predicate": "street_art_interest",
+      "value": "role in urban communities",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "attended_lecture",
+      "value": "The Evolution of Street Art at the Art Gallery",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "street_art_lecture_date",
+      "value": "March 3",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_901a6763_4:1": [],
+  "answer_901a6763_4:2": [
+    {
+      "subject": "user",
+      "predicate": "street_art_style_interest",
+      "value": "stencil art",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_4:3": [],
+  "answer_901a6763_4:4": [
+    {
+      "subject": "user",
+      "predicate": "location",
+      "value": "Los Angeles",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_901a6763_4:5": [],
+  "answer_901a6763_4:6": [
+    {
+      "subject": "user",
+      "predicate": "considered_art_viewing",
+      "value": "local artists including Shepard Fairey and Retna",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_4:7": [],
+  "answer_901a6763_4:8": [
+    {
+      "subject": "user",
+      "predicate": "art_discovery_goal",
+      "value": "local LA artists",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_4:9": [],
+  "answer_901a6763_4:10": [
+    {
+      "subject": "user",
+      "predicate": "street_art_research_interest",
+      "value": "history of street art in LA",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_4:11": [],
+  "answer_901a6763_1:0": [
+    {
+      "subject": "user",
+      "predicate": "art_discovery_goal",
+      "value": "local upcoming art events and exhibitions",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:1": [],
+  "answer_901a6763_1:2": [
+    {
+      "subject": "user",
+      "predicate": "attended_exhibition",
+      "value": "Women in Art",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "women_in_art_exhibition_date",
+      "value": "February 10",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "artist_interest",
+      "value": "Rachel Lee",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_information_source",
+      "value": "social media for local art events",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:3": [],
+  "answer_901a6763_1:4": [
+    {
+      "subject": "user",
+      "predicate": "planned_artist_research",
+      "value": "Rachel Lee and other local artists",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "museum_hosting_confirmed",
+      "value": "more local-artist events at Modern Art Museum",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:5": [],
+  "answer_901a6763_1:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_information_source",
+      "value": "Modern Art Museum website and social media",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:7": [],
+  "answer_901a6763_1:8": [
+    {
+      "subject": "user",
+      "predicate": "considered_weekend_activity",
+      "value": "visiting local art studios and galleries",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "visited_art_studios",
+      "value": "local art studios this weekend",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:9": [],
+  "answer_901a6763_1:10": [
+    {
+      "subject": "user",
+      "predicate": "planned_art_search",
+      "value": "local studios and galleries featuring Rachel Lee or similar art",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_1:11": [],
+  "answer_901a6763_2:0": [
+    {
+      "subject": "user",
+      "predicate": "current_project",
+      "value": "art project",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "volunteered_event",
+      "value": "Art Afternoon at the Children's Museum",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "art_afternoon_volunteering_date",
+      "value": "February 17",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "shopping_need",
+      "value": "good quality paints and brushes",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_2:1": [],
+  "answer_901a6763_2:2": [
+    {
+      "subject": "user",
+      "predicate": "art_inspiration_interest",
+      "value": "mixed media or feminist art",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "artist_interest",
+      "value": "Rachel Lee",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_2:3": [],
+  "answer_901a6763_2:4": [
+    {
+      "subject": "user",
+      "predicate": "art_history_interest",
+      "value": "history of feminist art",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_2:5": [],
+  "answer_901a6763_2:6": [
+    {
+      "subject": "user",
+      "predicate": "current_course",
+      "value": "online art history course",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "learning_format_interest",
+      "value": "online courses",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_2:7": [],
+  "answer_901a6763_2:8": [
+    {
+      "subject": "user",
+      "predicate": "considered_workshop",
+      "value": "street art workshop for kids at the Children's Museum",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "organized_workshop",
+      "value": "street art workshop for kids at the Children's Museum",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_901a6763_2:9": []
+}

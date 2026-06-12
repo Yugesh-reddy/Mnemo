@@ -4,6 +4,7 @@ September 11, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
 Executed measurements and source-review qualifications live in
+[quality-v3/README.md](quality-v3/README.md); the prior cycle remains in
 [quality-v2/README.md](quality-v2/README.md).
 
 ## 1. Establish attributable labels before policy changes
@@ -22,7 +23,8 @@ the final code/settings policy before labeling and evaluating the fresh holdout.
 Acceptance limitation: this is one Codex source review, not independent human
 adjudication. The expanded external corpus totals 218 turns across five records,
 including the earlier 36-turn record. It does not satisfy the separate target of
-one naturalistic 200-turn conversation. Labels are provisional and are not an
+one naturalistic 200-turn conversation. A subsequent 46-turn holdout was reserved
+before v5.1 policy work and labeled only after its policy freeze. Labels are provisional and are not an
 exhaustive catalog of every entailed paraphrase, plan or compound fact.
 
 ## 2. Repair extraction fidelity and denied-value overwrites
@@ -49,10 +51,14 @@ confidence alone.
 
 Acceptance: rerun both historical false writes and must-keep coverage. A small
 verifier-only improvement is insufficient to claim pipeline improvement. The
-current development calibration reduces false accepts from 11 to one, but still
-accepts a reversed manager relationship. The broader pipeline also exposes valid
-past actions rejected because generic hypothesis rendering turns verbs into
-possessive identities, for example `My presented poster is ...`.
+v5.1 development probe covers 103 assertions: false accepts fall from seven to
+zero and false rejects from seven to three relative to cached v4 verdicts. Unknown
+relations now use structured fallback, which excludes extractor confidence and
+claimed authority. Role direction, type and tentative-plan regressions pass.
+The full external pipeline still produces six source-reviewed false assertions
+among 47 writes, including an oven setting as editor use and a restaurant as food.
+Its 23 exact must-keep targets all miss; source review attributes four to equivalent
+wording, two to compound labels and the remainder to extraction errors or omissions.
 
 ## 4. Freeze, validate, and preserve the holdout
 
@@ -94,11 +100,15 @@ repository/branch and actual compute prices have been requested from the user.
 1. Independently review the provisional atomic labels and equivalence judgments.
    Define canonical relation aliases and compound-fact matching using development
    sources before rerunning scores. Keep original strict metrics separately.
-2. Repair generic verb-hypothesis rendering and make the complete structured
-   assertion authoritative in fallback, without relying on malformed possessive sentences.
-   Add regressions for completed class/workshop participation and poster
-   presentations, reversed manager roles, and consideration versus definite plans.
-   Compare on development data at fixed thresholds before considering calibration.
+2. Fix extraction coverage using the recorded development failures: Python/R
+   become editors; strawberry preference becomes allergy; class attendance and
+   kimchi-making experience are omitted; dates attach to the wrong bread attempt.
+   Generic verb rendering and structured fallback are implemented, but a
+   predicate-specific guard alone cannot cover arbitrary wrong relation names.
+   Evaluate a relation-faithful candidate representation and source-span binding
+   before changing thresholds. Preserve useful role/scope qualifiers rather than
+   generating stronger assertions that the verifier must reject. Add the frequency
+   versus preference case (listening most often to jazz) to the development audit.
 3. Preserve identity across corrections (`meeting_free_day` must not become
    `free_day`) and distinguish simultaneously true values from replacements.
    Trace Python/R, naan/saag paneer and sauerkraut/kimchi losses. Prepare a concrete
@@ -107,9 +117,13 @@ repository/branch and actual compute prices have been requested from the user.
 4. Evaluate long-term retention separately: most unfamiliar relations are demoted
    to session tier. Test later-session must-keep access and expiry deliberately;
    final same-session probes alone cannot establish durable recall.
-5. Add the separately requested naturalistic single 200-turn conversation and a
-   new, unopened holdout. Require source-reviewed false-write accounting and
-   must-keep non-regression before calling memory quality reliable.
+5. Add the separately requested naturalistic single 200-turn conversation. The
+   upstream oracle file has no 180–220-turn record; use an appropriately attributed
+   larger-source conversation or clearly label a project-authored naturalistic
+   fixture. Do not relabel a collection of short records as one long conversation.
+   Reserve another unopened holdout before the next policy cycle. Require
+   source-reviewed false-write accounting and must-keep non-regression before
+   calling memory quality reliable.
 
 Consolidation remains deferred. Reflection requires measured benefit, complete
 source lineage, verification against those sources and source-capped trust.

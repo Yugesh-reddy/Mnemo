@@ -1,0 +1,3020 @@
+{
+  "decisions": [
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text is a request to be addressed by a specific name in project notes, which expresses an intention or preference for future communication rather than stating a completed fact about the user's current identity. The assertion claims the user's name is 'Maya Chen' as a definite fact. While the names match, the source does not establish the complete structured assertion of the user's actual name because it frames the information as a request for usage in notes (modal/intentional) rather than a declarative statement of identity (factual). The instruction requires preserving tense and modality; the source lacks the completed fact status required to entail the assertion.",
+      "score_components": null,
+      "turn_id": "dev-001a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text is a request to be addressed by a specific name in project notes, which expresses an intention or preference for future communication rather than stating a completed fact about the user's current identity. The assertion claims the user's name is 'Maya Chen' as a definite fact. While the names match, the source does not establish the complete structured assertion of the user's actual name because it frames the information as a request for usage in notes (modal/intentional) rather than a declarative statement of identity (factual). The instruction requires preserving tense and modality; the source lacks the completed fact status required to entail the assertion.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Call me Maya Chen in project notes.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-001b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-001c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 10, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=1.00; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 1.0, \"novelty\": 1.0, \"transient\": false, \"importance\": 10, \"from_assistant\": false}",
+      "turn_id": "dev-001d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"Correction to what I said earlier: my name is Maya Chen revised.\", \"probability\": 0.9919041991233826}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"site reliability engineer\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.84; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8441229520552768, \"novelty\": 0.6137431735175892, \"transient\": false, \"importance\": 9, \"from_assistant\": false}",
+      "turn_id": "dev-002a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I work as a site reliability engineer.\", \"probability\": 0.9961662292480469}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-002b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-002c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"product designer\", \"subject\": \"user\", \"predicate\": \"considered_role\", \"confidence\": 0.9, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the role change is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite consideration required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-002d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the role change is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite consideration required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Portland\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.74; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.7387522215953678, \"novelty\": 0.5291740719845593, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-003a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"My home base is Portland.\", \"probability\": 0.9925453066825867}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-003b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-003c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Seattle\", \"subject\": \"user\", \"predicate\": \"hypothetical_location\", \"confidence\": 0.8, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite plan required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-003d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite plan required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Pacific Time\", \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text is a request to schedule the user in Pacific Time, which implies an intention or future action rather than a completed fact. The assertion treats 'timezone' as a completed state ('Pacific Time'), but the source only expresses a desire for this state to be set. Without explicit confirmation that the scheduling has occurred or that the user's timezone is definitively Pacific Time now, the relationship between the request and the asserted fact is not entailed.",
+      "score_components": null,
+      "turn_id": "dev-004a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text is a request to schedule the user in Pacific Time, which implies an intention or future action rather than a completed fact. The assertion treats 'timezone' as a completed state ('Pacific Time'), but the source only expresses a desire for this state to be set. Without explicit confirmation that the scheduling has occurred or that the user's timezone is definitively Pacific Time now, the relationship between the request and the asserted fact is not entailed.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Please schedule me in Pacific Time.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-004b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-004c",
+      "verification": null
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "extractor found no atomic facts",
+      "score_components": null,
+      "turn_id": "dev-004d",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"TypeScript\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.98, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.83; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8287109851537353, \"novelty\": 0.5623699505124509, \"transient\": false, \"importance\": 9, \"from_assistant\": false}",
+      "turn_id": "dev-005a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"TypeScript is my preferred programming language.\", \"probability\": 0.9983976483345032}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-005b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-005c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-005d",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PostgreSQL\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.75; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.7458876077353541, \"novelty\": 0.4196253591178467, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-006a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"For durable services I prefer PostgreSQL.\", \"probability\": 0.992779552936554}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-006b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-006c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MongoDB\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.92; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.9200000000000002, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-006d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"Correction to what I said earlier: my preferred database is MongoDB.\", \"probability\": 0.9970295429229736}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Neovim\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.50; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.49888912935702434, \"novelty\": 0.5296304311900811, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-007a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user uses Neovim as their everyday editor, which fully entails the assertion that the user's editor is Neovim.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I use Neovim as my everyday editor.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-007b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-007c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Emacs\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-007d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"fish\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user's interactive shell is 'fish', but it does not assert that the user is an 'editor' of 'fish'. The predicate 'editor' implies a role or action regarding the object 'fish' (likely meaning the user edits the fish shell), which is not supported by the source statement about the shell being fish. There is no entailment for the complete structured assertion.",
+      "score_components": null,
+      "turn_id": "dev-008a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user's interactive shell is 'fish', but it does not assert that the user is an 'editor' of 'fish'. The predicate 'editor' implies a role or action regarding the object 'fish' (likely meaning the user edits the fish shell), which is not supported by the source statement about the shell being fish. There is no entailment for the complete structured assertion.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"My interactive shell is fish.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-008b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_shell\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-008c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PowerShell\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-008d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Reliability Platform team\", \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.45; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.45247226327791346, \"novelty\": 0.2415742109263781, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-009a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's membership in the Reliability Platform team, which directly matches the subject (user), predicate (team), and object (Reliability Platform team) in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I belong to the Reliability Platform team.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-009b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-009c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-009d",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Elena Ruiz\", \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.56; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.5621262007435486, \"novelty\": 0.4737540024784952, \"transient\": false, \"importance\": 9, \"from_assistant\": false}",
+      "turn_id": "dev-010a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's manager is Elena Ruiz, which directly matches the assertion's subject (user), predicate (manager), and object (Elena Ruiz). The interpretation of 'manager' as a relationship/action aligns with the stated fact.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My manager is Elena Ruiz.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-010b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-010c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.5, \"importance\": 1, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-010d",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Tuesday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user's 'regular on-call handoff' is Tuesday, implying a recurring schedule rather than a single completed event. The assertion incorrectly frames this as a specific instance of 'on_call_day' being Tuesday without capturing the modal aspect of regularity or the potential for other days.",
+      "score_components": null,
+      "turn_id": "dev-011a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user's 'regular on-call handoff' is Tuesday, implying a recurring schedule rather than a single completed event. The assertion incorrectly frames this as a specific instance of 'on_call_day' being Tuesday without capturing the modal aspect of regularity or the potential for other days.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"My regular on-call handoff is Tuesday.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-011b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the user does not use Saturday and requests no inference regarding it as an on-call day. However, this statement concerns 'on call' status, which is a specific type of work obligation, whereas the assertion claims 'meeting_free_day'. While the user implies they are free from on-call duties on Saturday, the source text does not explicitly confirm that Saturday is a general meeting-free day; it only restricts the inference about on-call status. The distinction between 'on call' and 'meeting free' means the complete structured assertion cannot be fully entailed.",
+      "score_components": null,
+      "turn_id": "dev-011c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user does not use Saturday and requests no inference regarding it as an on-call day. However, this statement concerns 'on call' status, which is a specific type of work obligation, whereas the assertion claims 'meeting_free_day'. While the user implies they are free from on-call duties on Saturday, the source text does not explicitly confirm that Saturday is a general meeting-free day; it only restricts the inference about on-call status. The distinction between 'on call' and 'meeting free' means the complete structured assertion cannot be fully entailed.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I do not use Saturday; please don't infer that as my on call day.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.48; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.47998903502423274, \"novelty\": 0.4666301167474426, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-011d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly corrects a previous statement to assert that the user's on-call day is Saturday, which fully matches the subject, predicate, and object in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my on call day is Saturday\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Kubernetes\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user 'deployed' an API on Kubernetes, implying a deployment action rather than database usage. The assertion claims the user 'uses_database' with 'Kubernetes' as the object, which contradicts the specific action (deployment vs usage) and misidentifies the target entity (API vs database).",
+      "score_components": null,
+      "turn_id": "dev-012a",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user 'deployed' an API on Kubernetes, implying a deployment action rather than database usage. The assertion claims the user 'uses_database' with 'Kubernetes' as the object, which contradicts the specific action (deployment vs usage) and misidentifies the target entity (API vs database).\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"We deploy the API on Kubernetes.\", \"probability\": 0.95}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-012b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not_bare_metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "score_components": null,
+      "turn_id": "dev-012c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"bare metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-012d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Cloud\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "score_components": null,
+      "turn_id": "dev-013a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"Our production account is on Google Cloud.\", \"probability\": 0.9941852688789368}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-013b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-013c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Azure\", \"subject\": \"user\", \"predicate\": \"cloud_provider\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-013d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Linear\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the team 'tracks issues' in Linear, which describes a specific activity (issue tracking). The assertion claims the user 'uses_database' with the object 'Linear'. While tracking issues implies some interaction, it does not confirm the general act of using the database itself; the activities are distinct and do not guarantee each other.",
+      "score_components": null,
+      "turn_id": "dev-014a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the team 'tracks issues' in Linear, which describes a specific activity (issue tracking). The assertion claims the user 'uses_database' with the object 'Linear'. While tracking issues implies some interaction, it does not confirm the general act of using the database itself; the activities are distinct and do not guarantee each other.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Our team tracks issues in Linear.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-014b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-014c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-014d",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Docs\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user writes design proposals in Google Docs (a document creation activity), while the assertion claims the user uses a database. Writing documents does not entail using a database; they are distinct tools with different functions.",
+      "score_components": null,
+      "turn_id": "dev-015a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user writes design proposals in Google Docs (a document creation activity), while the assertion claims the user uses a database. Writing documents does not entail using a database; they are distinct tools with different functions.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"We write design proposals in Google Docs.\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-015b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-015c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Notion\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-015d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Wednesday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.48; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.47507411973881836, \"novelty\": 0.3169137324627277, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-016a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states that Wednesday is the day without meetings for the user, which directly matches the assertion's subject (user), predicate (meeting_free_day), and object (Wednesday). The interpretation of 'meeting-free' as 'not having meetings' aligns with the semantic meaning of the predicate.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Wednesday is my meeting-free day.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-016b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-016c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Monday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.64; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-016d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly corrects a previous statement to assert that the user's meeting-free day is Monday, which fully matches the subject (user), predicate (meeting_free_day), and object (Monday) in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my meeting free day is Monday\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"08:30\", \"subject\": \"user\", \"predicate\": \"start_work_time\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.45; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4527695068729291, \"novelty\": 0.3758983562430972, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-017a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's normal start time as 08:30, which fully matches the subject (user), predicate (start_work_time), and object (08:30) in the assertion without contradiction or missing information.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I normally start work at 08:30.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-017b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"work_start_time\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-017c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"06:00\", \"subject\": \"user\", \"predicate\": \"work_start_time\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or definite plan required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-017d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or definite plan required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"she/her\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 1.0, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.41; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4073057524610786, \"novelty\": 0.4910191748702618, \"transient\": false, \"importance\": 5, \"from_assistant\": false}",
+      "turn_id": "dev-018a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's pronouns as 'she/her', which directly matches the subject (user), predicate (pronouns), and object (she/her) in the assertion without any negation or hypothetical condition.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My pronouns are she/her.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-018b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not they/them\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 1.0, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "score_components": null,
+      "turn_id": "dev-018c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"they/them\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "score_components": null,
+      "turn_id": "dev-018d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"What if someday I changed my pronouns to they/them? For now this is only hypothetical.\", \"probability\": 0.9932843446731567}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Mandarin\", \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "score_components": null,
+      "turn_id": "dev-019a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I can speak Mandarin fluently.\", \"probability\": 0.9949894547462463}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-019b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-019c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"German\", \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and conditional ('What if someday'), whereas the assertion claims a definitive current state ('primary_language'). The source denies the certainty required for the assertion's value.",
+      "score_components": null,
+      "turn_id": "dev-019d",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and conditional ('What if someday'), whereas the assertion claims a definitive current state ('primary_language'). The source denies the certainty required for the assertion's value.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical\\\".\", \"probability\": 0.95}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"captions_enabled_for_video_calls\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text expresses a current need or desire ('I need...'), which indicates an intention or request but does not confirm that the action has been completed or is currently in effect. The assertion requires the object 'captions_enabled_for_video_calls' to be a fact (completed state), whereas the source only states a requirement.",
+      "score_components": null,
+      "turn_id": "dev-020a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a current need or desire ('I need...'), which indicates an intention or request but does not confirm that the action has been completed or is currently in effect. The assertion requires the object 'captions_enabled_for_video_calls' to be a fact (completed state), whereas the source only states a requirement.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I need captions enabled for video calls.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-020b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-020c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"screen magnification\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-020d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change is 'only hypothetical' and asks 'What if', which does not establish a completed fact or definite state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"vegetarian\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.54; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.5421875018359777, \"novelty\": 0.5406250061199256, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-021a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's current diet is vegetarian, which fully matches the subject (user), predicate (diet), and object (vegetarian) in the assertion without contradiction or missing information.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I follow a vegetarian diet.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-021b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not_keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "score_components": null,
+      "turn_id": "dev-021c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.64; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-021d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly corrects a previous statement to assert that the user's diet is keto, which fully matches the subject (user), predicate (diet), and object (keto) in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my diet is keto\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"peanut\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.59; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.5890870677671814, \"novelty\": 0.563623559223938, \"transient\": false, \"importance\": 9, \"from_assistant\": false}",
+      "turn_id": "dev-022a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user has a peanut allergy using present tense ('have'), which fully matches the subject (user), predicate (allergy), and object (peanut) in the assertion without any negation or hypothetical condition.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I have a peanut allergy.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-022b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the user does not use shellfish and warns against inferring an allergy, indicating the speaker denies having a confirmed allergy to shellfish. The assertion claims the user has an allergy to shellfish, which contradicts the explicit denial in the source text.",
+      "score_components": null,
+      "turn_id": "dev-022c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user does not use shellfish and warns against inferring an allergy, indicating the speaker denies having a confirmed allergy to shellfish. The assertion claims the user has an allergy to shellfish, which contradicts the explicit denial in the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I do not use shellfish; please don't infer that as my allergy.\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the situation is 'only hypothetical' and asks a question ('What if...'), which does not establish a completed fact or current state of allergy as asserted in the structured claim.",
+      "score_components": null,
+      "turn_id": "dev-022d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the situation is 'only hypothetical' and asks a question ('What if...'), which does not establish a completed fact or current state of allergy as asserted in the structured claim.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Noah Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.52; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.519733354970095, \"novelty\": 0.33244451656698326, \"transient\": false, \"importance\": 9, \"from_assistant\": false}",
+      "turn_id": "dev-023a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's emergency contact is Noah Chen, which fully matches the subject (user), predicate (emergency_contact), and object (Noah Chen) in the assertion without any negation or uncertainty.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My emergency contact is Noah Chen.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-023b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-023c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Alex Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion of a completed fact that the user has changed their emergency contact to Alex Chen.",
+      "score_components": null,
+      "turn_id": "dev-023d",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the action is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion of a completed fact that the user has changed their emergency contact to Alex Chen.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.95}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Pixel\", \"subject\": \"user\", \"predicate\": \"pet_ownership\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.37; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.37079326315649586, \"novelty\": 0.5026442105216529, \"transient\": false, \"importance\": 4, \"from_assistant\": false}",
+      "turn_id": "dev-024a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user possesses a cat named Pixel, which directly maps to the structured assertion of pet_ownership by the user over the object Pixel.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I have a cat named Pixel.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-024b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"has_pet\", \"confidence\": 0.95, \"importance\": 3, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-024c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Luna\", \"subject\": \"user\", \"predicate\": \"pet_name\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.",
+      "score_components": null,
+      "turn_id": "dev-024d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jazz\", \"subject\": \"user\", \"predicate\": \"preferred_music_genre\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.41; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4072802278842056, \"novelty\": 0.3576007596140186, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+      "turn_id": "dev-025a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user listens to Jazz 'most', which semantically defines it as their preferred genre.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Jazz is the music I listen to most.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-025b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "score_components": null,
+      "turn_id": "dev-025c",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"unknown\", \"subject\": \"user\", \"predicate\": \"favorite_music_genre\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change is 'only hypothetical' and does not confirm it has occurred or been decided as a fact. The assertion requires a definite value for favorite_music_genre, which cannot be derived from the speculative nature of the source.",
+      "score_components": null,
+      "turn_id": "dev-025d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change is 'only hypothetical' and does not confirm it has occurred or been decided as a fact. The assertion requires a definite value for favorite_music_genre, which cannot be derived from the speculative nature of the source.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical.\\\"\", \"probability\": 0.5}"
+    }
+  ],
+  "gated": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "current_assertions": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "peanut",
+        "predicate": "allergy",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "predicate": "diet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Neovim",
+        "predicate": "editor",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Noah Chen",
+        "predicate": "emergency_contact",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Portland",
+        "predicate": "location",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Elena Ruiz",
+        "predicate": "manager",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "predicate": "meeting_free_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "predicate": "name",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "predicate": "on_call_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pixel",
+        "predicate": "pet_ownership",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MongoDB",
+        "predicate": "preferred_database",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "TypeScript",
+        "predicate": "preferred_language",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jazz",
+        "predicate": "preferred_music_genre",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "she/her",
+        "predicate": "pronouns",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "predicate": "role",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "08:30",
+        "predicate": "start_work_time",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Reliability Platform team",
+        "predicate": "team",
+        "subject": "user"
+      }
+    ],
+    "f1": 0.5238095238095238,
+    "false": 0,
+    "false_writes": 0,
+    "historical_by_split": {
+      "dev": {
+        "false_writes": 0,
+        "precision": 0.7,
+        "recall": 0.4666666666666667,
+        "unsupported_writes": 6
+      }
+    },
+    "historical_precision": 0.7,
+    "historical_recall": 0.4666666666666667,
+    "latency_ms": 260495.1775829977,
+    "must_keep_recall": 0.625,
+    "precision": 0.6470588235294118,
+    "recall": 0.44,
+    "retrieval_probe_usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 8,
+        "unmetered_requests": 8
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 0,
+        "nli_requests": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      }
+    },
+    "retrieval_probes": [
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 26.638916999218054,
+        "query": "user accessibility_need captions",
+        "results": [],
+        "retrieved": false,
+        "session_id": "dev-session-04",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-020a"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 17.980167001951486,
+        "query": "user allergy peanuts",
+        "results": [
+          {
+            "object": "peanut",
+            "predicate": "allergy",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-05",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-022a"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 15.648332991986535,
+        "query": "user diet keto",
+        "results": [
+          {
+            "object": "keto",
+            "predicate": "diet",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-05-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-021d"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 19.942375001846813,
+        "query": "user emergency_contact Noah Chen",
+        "results": [
+          {
+            "object": "Noah Chen",
+            "predicate": "emergency_contact",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-05",
+        "stage": "retrieved",
+        "turn_id": "dev-023a"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 18.624292002641596,
+        "query": "user meeting_free_day Monday",
+        "results": [
+          {
+            "object": "Monday",
+            "predicate": "meeting_free_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "MongoDB",
+            "predicate": "preferred_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-04-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-016d"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 16.95104099053424,
+        "query": "user name Maya Chen revised",
+        "results": [
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "MongoDB",
+            "predicate": "preferred_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-01-followup",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-001d"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 17.63474999461323,
+        "query": "user on_call_day Saturday",
+        "results": [
+          {
+            "object": "Saturday",
+            "predicate": "on_call_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "MongoDB",
+            "predicate": "preferred_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-03-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-011d"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 15.490458012209274,
+        "query": "user preferred_database MongoDB",
+        "results": [
+          {
+            "object": "MongoDB",
+            "predicate": "preferred_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "TypeScript",
+            "predicate": "preferred_language",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-02-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-006d"
+      }
+    ],
+    "storage_bytes": 1753088,
+    "stored": 17,
+    "total_events": 20,
+    "total_rows": 337,
+    "unsupported_writes": 6,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 95,
+        "unmetered_requests": 95
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 10103,
+        "nli_requests": 15,
+        "output_tokens": 3508,
+        "requests": 38,
+        "unmetered_requests": 0
+      }
+    },
+    "visible_facts": 17,
+    "writes": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "op": "ADD",
+        "predicate": "name",
+        "seq": 1,
+        "source_span": "{\"turn_ids\": [\"dev-001d\"], \"cache_ids\": [\"68019629-4167-4bb9-a364-146048209eb4\"], \"session_id\": \"dev-session-01-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "op": "ADD",
+        "predicate": "role",
+        "seq": 2,
+        "source_span": "{\"turn_ids\": [\"dev-002a\"], \"cache_ids\": [\"fdc92e48-c2f1-48c5-a4f4-a56258a94db3\"], \"session_id\": \"dev-session-01\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Portland",
+        "op": "ADD",
+        "predicate": "location",
+        "seq": 3,
+        "source_span": "{\"turn_ids\": [\"dev-003a\"], \"cache_ids\": [\"fdc42561-bd21-4771-be14-a9b25036a861\"], \"session_id\": \"dev-session-01\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "TypeScript",
+        "op": "ADD",
+        "predicate": "preferred_language",
+        "seq": 4,
+        "source_span": "{\"turn_ids\": [\"dev-005a\"], \"cache_ids\": [\"dc5b9cd8-c5cb-41c5-929d-ce742a0693b5\"], \"session_id\": \"dev-session-01\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PostgreSQL",
+        "op": "ADD",
+        "predicate": "preferred_database",
+        "seq": 5,
+        "source_span": "{\"turn_ids\": [\"dev-006a\"], \"cache_ids\": [\"472aee98-afb4-4d14-ab94-b62f0628949c\"], \"session_id\": \"dev-session-02\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MongoDB",
+        "op": "UPDATE",
+        "predicate": "preferred_database",
+        "seq": 6,
+        "source_span": "{\"turn_ids\": [\"dev-006d\"], \"cache_ids\": [\"9b46c3ca-3f36-4ccd-8294-ab4401a10880\"], \"session_id\": \"dev-session-02-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Neovim",
+        "op": "ADD",
+        "predicate": "editor",
+        "seq": 7,
+        "source_span": "{\"turn_ids\": [\"dev-007a\"], \"cache_ids\": [\"430e8569-b254-48a2-99ac-7083c774b3b2\"], \"session_id\": \"dev-session-02\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Reliability Platform team",
+        "op": "ADD",
+        "predicate": "team",
+        "seq": 8,
+        "source_span": "{\"turn_ids\": [\"dev-009a\"], \"cache_ids\": [\"db156d3a-9819-4e65-beba-88a536ff0ff1\"], \"session_id\": \"dev-session-02\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Elena Ruiz",
+        "op": "ADD",
+        "predicate": "manager",
+        "seq": 9,
+        "source_span": "{\"turn_ids\": [\"dev-010a\"], \"cache_ids\": [\"8038b1ec-1cf9-4798-b9f5-9c3b2bae1e79\"], \"session_id\": \"dev-session-02\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "op": "ADD",
+        "predicate": "on_call_day",
+        "seq": 10,
+        "source_span": "{\"turn_ids\": [\"dev-011d\"], \"cache_ids\": [\"727766c1-5a68-4644-ae98-c46b08f7801e\"], \"session_id\": \"dev-session-03-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Wednesday",
+        "op": "ADD",
+        "predicate": "meeting_free_day",
+        "seq": 11,
+        "source_span": "{\"turn_ids\": [\"dev-016a\"], \"cache_ids\": [\"12cf10c0-cd3c-41a9-9974-879aac33a8ce\"], \"session_id\": \"dev-session-04\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 12,
+        "source_span": "{\"turn_ids\": [\"dev-016d\"], \"cache_ids\": [\"3e5f75ac-42dc-4b95-b8cc-cdd4161c53d7\"], \"session_id\": \"dev-session-04-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "08:30",
+        "op": "ADD",
+        "predicate": "start_work_time",
+        "seq": 13,
+        "source_span": "{\"turn_ids\": [\"dev-017a\"], \"cache_ids\": [\"9ffbd13b-041b-4dea-b3e7-3d8c24e939a6\"], \"session_id\": \"dev-session-04\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "she/her",
+        "op": "ADD",
+        "predicate": "pronouns",
+        "seq": 14,
+        "source_span": "{\"turn_ids\": [\"dev-018a\"], \"cache_ids\": [\"42fdb678-66c2-4de6-9cad-e43e501f87f3\"], \"session_id\": \"dev-session-04\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "vegetarian",
+        "op": "ADD",
+        "predicate": "diet",
+        "seq": 15,
+        "source_span": "{\"turn_ids\": [\"dev-021a\"], \"cache_ids\": [\"d3513140-561e-4c38-a698-fbb2e5d23067\"], \"session_id\": \"dev-session-05\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "op": "UPDATE",
+        "predicate": "diet",
+        "seq": 16,
+        "source_span": "{\"turn_ids\": [\"dev-021d\"], \"cache_ids\": [\"1f29b4be-caaf-492f-a275-d048ff47f3a8\"], \"session_id\": \"dev-session-05-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "peanut",
+        "op": "ADD",
+        "predicate": "allergy",
+        "seq": 17,
+        "source_span": "{\"turn_ids\": [\"dev-022a\"], \"cache_ids\": [\"46babd55-4451-4fae-ab5b-1677d029885c\"], \"session_id\": \"dev-session-05\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Noah Chen",
+        "op": "ADD",
+        "predicate": "emergency_contact",
+        "seq": 18,
+        "source_span": "{\"turn_ids\": [\"dev-023a\"], \"cache_ids\": [\"2776669b-a161-4088-a09a-7b039c48cc3e\"], \"session_id\": \"dev-session-05\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pixel",
+        "op": "ADD",
+        "predicate": "pet_ownership",
+        "seq": 19,
+        "source_span": "{\"turn_ids\": [\"dev-024a\"], \"cache_ids\": [\"9465bccd-a6b3-4668-941c-55cea7afdff5\"], \"session_id\": \"dev-session-05\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jazz",
+        "op": "ADD",
+        "predicate": "preferred_music_genre",
+        "seq": 20,
+        "source_span": "{\"turn_ids\": [\"dev-025a\"], \"cache_ids\": [\"ad8d2e4d-ba3d-40a4-9118-54da912ed25b\"], \"session_id\": \"dev-session-05\"}",
+        "subject": "user"
+      }
+    ]
+  },
+  "metadata": {
+    "candidate_preparation_ms": 695109.5014160092,
+    "cleanup_errors": [],
+    "dataset": "mnemo-synthetic-quality-corpus",
+    "dataset_version": "1.0.0",
+    "fingerprints": {
+      "config": "c24dabe90272b645f1ae5173a8ad1bf407a87a5228cbbd23f9ddabe7b931a709",
+      "dataset": "214bbc3d0cd7b6a1a87d0d1bd2274e445d6d264b6e9bde368ea42ee3461efcc7",
+      "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+      "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+      "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6"
+    },
+    "gate_config": {
+      "backend": "ollama",
+      "confidence_floor": 0.5,
+      "dedup_sim": 0.92,
+      "durable_cutoff": 0.7,
+      "embed_dim": 768,
+      "embed_model": "nomic-embed-text",
+      "ephemeral_floor": 0.45,
+      "extractor_max_retries": 2,
+      "extractor_model": "qwen3.5:4b-mlx",
+      "extractor_timeout_seconds": 120.0,
+      "fingerprint": "c24dabe90272b645f1ae5173a8ad1bf407a87a5228cbbd23f9ddabe7b931a709",
+      "pipeline_version": "2026-09-11-v5-dev",
+      "predicate_vocab": [
+        "name",
+        "role",
+        "preferred_database",
+        "uses_database",
+        "preferred_language",
+        "primary_language",
+        "team_lead",
+        "ship_day",
+        "location",
+        "timezone",
+        "deploy_method",
+        "goal",
+        "currently_debugging",
+        "dislikes"
+      ],
+      "session_ttl_seconds": 86400.0,
+      "transient_penalty": 0.15,
+      "update_sim": 0.9,
+      "verifier_backend": "cross_encoder",
+      "verifier_entailment_threshold": 0.99,
+      "verifier_fallback_backend": "ollama",
+      "verifier_fallback_model": null,
+      "verifier_max_retries": 1,
+      "verifier_model": "cross-encoder/nli-deberta-v3-small",
+      "verifier_timeout_seconds": 20.0,
+      "w_imp": 0.4,
+      "w_nov": 0.3,
+      "w_spec": 0.3,
+      "w_src": 0.4
+    },
+    "mode": "candidate_replay",
+    "model_names": {
+      "embedder": "nomic-embed-text",
+      "extractor": "qwen3.5:4b-mlx",
+      "verifier": "cross-encoder/nli-deberta-v3-small"
+    },
+    "shared_candidate_cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "shared_candidate_usage": {
+      "input_tokens": 82848,
+      "output_tokens": 5419,
+      "requests": 100,
+      "unmetered_requests": 0
+    },
+    "split": "dev",
+    "synthetic": true,
+    "turns": 100
+  },
+  "naive": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "current_assertions": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "country",
+        "predicate": "recorded_country_as_favorite_music",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jira",
+        "predicate": "recorded_issue_tracker",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Mina Chen",
+        "predicate": "recorded_name",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Java",
+        "predicate": "recorded_preferred_language",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "predicate": "recorded_spoken_language",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Payments",
+        "predicate": "recorded_team",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "predicate": "recorded_tool",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Eastern Time",
+        "predicate": "timezone",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "screen magnification",
+        "predicate": "accessibility_need",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "shellfish",
+        "predicate": "allergy",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Azure",
+        "predicate": "cloud_provider",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "predicate": "considered_role",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "bare metal",
+        "predicate": "deploy_method",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "predicate": "diet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "predicate": "editor",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Alex Chen",
+        "predicate": "emergency_contact",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "unknown",
+        "predicate": "favorite_music_genre",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "has_pet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Seattle",
+        "predicate": "hypothetical_location",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "location",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "manager",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "predicate": "meeting_free_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "predicate": "name",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "predicate": "on_call_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Luna",
+        "predicate": "pet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Luna",
+        "predicate": "pet_name",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pixel",
+        "predicate": "pet_ownership",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "preferred_database",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "they/them",
+        "predicate": "preferred_language",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jazz",
+        "predicate": "preferred_music_genre",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "predicate": "primary_language",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "not they/them",
+        "predicate": "pronouns",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "predicate": "role",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PowerShell",
+        "predicate": "shell",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "08:30",
+        "predicate": "start_work_time",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "team",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "timezone",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "uses_database",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "predicate": "uses_shell",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "06:00",
+        "predicate": "work_start_time",
+        "subject": "user"
+      }
+    ],
+    "f1": 0.0923076923076923,
+    "false": 7,
+    "false_writes": 29,
+    "historical_by_split": {
+      "dev": {
+        "false_writes": 29,
+        "precision": 0.17391304347826086,
+        "recall": 0.5333333333333333,
+        "unsupported_writes": 47
+      }
+    },
+    "historical_precision": 0.17391304347826086,
+    "historical_recall": 0.5333333333333333,
+    "latency_ms": 9426.01745799766,
+    "must_keep_recall": 0.375,
+    "precision": 0.075,
+    "recall": 0.12,
+    "retrieval_probe_usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 8,
+        "unmetered_requests": 8
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 0,
+        "nli_requests": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      }
+    },
+    "retrieval_probes": [
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 72.10933300666511,
+        "query": "user accessibility_need captions",
+        "results": [
+          {
+            "object": "screen magnification",
+            "predicate": "accessibility_need",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Notion",
+            "predicate": "editor",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-04",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-020a"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 25.753625013749115,
+        "query": "user allergy peanuts",
+        "results": [
+          {
+            "object": "shellfish",
+            "predicate": "allergy",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-05",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-022a"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 24.895666996599175,
+        "query": "user diet keto",
+        "results": [
+          {
+            "object": "keto",
+            "predicate": "diet",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-05-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-021d"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 30.62941700045485,
+        "query": "user emergency_contact Noah Chen",
+        "results": [
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Alex Chen",
+            "predicate": "emergency_contact",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Saturday",
+            "predicate": "on_call_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "08:30",
+            "predicate": "start_work_time",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Mina Chen",
+            "predicate": "recorded_name",
+            "source": "semantic",
+            "subject": "assistant",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-05",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-023a"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 29.213834000984207,
+        "query": "user meeting_free_day Monday",
+        "results": [
+          {
+            "object": "Monday",
+            "predicate": "meeting_free_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Saturday",
+            "predicate": "on_call_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "08:30",
+            "predicate": "start_work_time",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": null,
+            "predicate": "manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": null,
+            "predicate": "timezone",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-04-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-016d"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 21.42945901141502,
+        "query": "user name Maya Chen revised",
+        "results": [
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Mina Chen",
+            "predicate": "recorded_name",
+            "source": "semantic",
+            "subject": "assistant",
+            "tier": "durable"
+          },
+          {
+            "object": "Alex Chen",
+            "predicate": "emergency_contact",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-01-followup",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-001d"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 29.561582996393554,
+        "query": "user on_call_day Saturday",
+        "results": [
+          {
+            "object": "Saturday",
+            "predicate": "on_call_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Monday",
+            "predicate": "meeting_free_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "08:30",
+            "predicate": "start_work_time",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": null,
+            "predicate": "timezone",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": null,
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "dev-session-03-followup",
+        "stage": "retrieved",
+        "turn_id": "dev-011d"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 34.91158300312236,
+        "query": "user preferred_database MongoDB",
+        "results": [
+          {
+            "object": "Maya Chen",
+            "predicate": "name",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": null,
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Saturday",
+            "predicate": "on_call_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Jazz",
+            "predicate": "preferred_music_genre",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Monday",
+            "predicate": "meeting_free_day",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "dev-session-02-followup",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "dev-006d"
+      }
+    ],
+    "storage_bytes": 1384448,
+    "stored": 40,
+    "total_events": 92,
+    "total_rows": 132,
+    "unsupported_writes": 47,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 98,
+        "unmetered_requests": 98
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "nli_requests": 0
+      }
+    },
+    "visible_facts": 40,
+    "writes": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "op": "ADD",
+        "predicate": "name",
+        "seq": 1,
+        "source_span": "{\"turn_ids\": [\"dev-001a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Mina Chen",
+        "op": "ADD",
+        "predicate": "recorded_name",
+        "seq": 2,
+        "source_span": "{\"turn_ids\": [\"dev-001b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "name",
+        "seq": 3,
+        "source_span": "{\"turn_ids\": [\"dev-001c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "op": "UPDATE",
+        "predicate": "name",
+        "seq": 4,
+        "source_span": "{\"turn_ids\": [\"dev-001d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "op": "ADD",
+        "predicate": "role",
+        "seq": 5,
+        "source_span": "{\"turn_ids\": [\"dev-002a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "op": "UPDATE",
+        "predicate": "role",
+        "seq": 6,
+        "source_span": "{\"turn_ids\": [\"dev-002b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "ADD",
+        "predicate": "editor",
+        "seq": 7,
+        "source_span": "{\"turn_ids\": [\"dev-002c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "op": "ADD",
+        "predicate": "considered_role",
+        "seq": 8,
+        "source_span": "{\"turn_ids\": [\"dev-002d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Portland",
+        "op": "ADD",
+        "predicate": "location",
+        "seq": 9,
+        "source_span": "{\"turn_ids\": [\"dev-003a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Seattle",
+        "op": "UPDATE",
+        "predicate": "location",
+        "seq": 10,
+        "source_span": "{\"turn_ids\": [\"dev-003b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "location",
+        "seq": 11,
+        "source_span": "{\"turn_ids\": [\"dev-003c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Seattle",
+        "op": "ADD",
+        "predicate": "hypothetical_location",
+        "seq": 12,
+        "source_span": "{\"turn_ids\": [\"dev-003d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pacific Time",
+        "op": "ADD",
+        "predicate": "timezone",
+        "seq": 13,
+        "source_span": "{\"turn_ids\": [\"dev-004a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Eastern Time",
+        "op": "ADD",
+        "predicate": "timezone",
+        "seq": 14,
+        "source_span": "{\"turn_ids\": [\"dev-004b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "timezone",
+        "seq": 15,
+        "source_span": "{\"turn_ids\": [\"dev-004c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "TypeScript",
+        "op": "ADD",
+        "predicate": "preferred_language",
+        "seq": 16,
+        "source_span": "{\"turn_ids\": [\"dev-005a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Java",
+        "op": "ADD",
+        "predicate": "recorded_preferred_language",
+        "seq": 17,
+        "source_span": "{\"turn_ids\": [\"dev-005b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "ADD",
+        "predicate": "primary_language",
+        "seq": 18,
+        "source_span": "{\"turn_ids\": [\"dev-005c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "preferred_language",
+        "seq": 19,
+        "source_span": "{\"turn_ids\": [\"dev-005d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PostgreSQL",
+        "op": "ADD",
+        "predicate": "preferred_database",
+        "seq": 20,
+        "source_span": "{\"turn_ids\": [\"dev-006a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "ADD",
+        "predicate": "uses_database",
+        "seq": 21,
+        "source_span": "{\"turn_ids\": [\"dev-006c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MongoDB",
+        "op": "UPDATE",
+        "predicate": "preferred_database",
+        "seq": 22,
+        "source_span": "{\"turn_ids\": [\"dev-006d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Neovim",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 23,
+        "source_span": "{\"turn_ids\": [\"dev-007a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Emacs",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 24,
+        "source_span": "{\"turn_ids\": [\"dev-007b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 25,
+        "source_span": "{\"turn_ids\": [\"dev-007c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Emacs",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 26,
+        "source_span": "{\"turn_ids\": [\"dev-007d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "fish",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 27,
+        "source_span": "{\"turn_ids\": [\"dev-008a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PowerShell",
+        "op": "ADD",
+        "predicate": "shell",
+        "seq": 28,
+        "source_span": "{\"turn_ids\": [\"dev-008b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "ADD",
+        "predicate": "uses_shell",
+        "seq": 29,
+        "source_span": "{\"turn_ids\": [\"dev-008c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PowerShell",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 30,
+        "source_span": "{\"turn_ids\": [\"dev-008d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Reliability Platform team",
+        "op": "ADD",
+        "predicate": "team",
+        "seq": 31,
+        "source_span": "{\"turn_ids\": [\"dev-009a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Payments",
+        "op": "ADD",
+        "predicate": "recorded_team",
+        "seq": 32,
+        "source_span": "{\"turn_ids\": [\"dev-009b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "team",
+        "seq": 33,
+        "source_span": "{\"turn_ids\": [\"dev-009d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Elena Ruiz",
+        "op": "ADD",
+        "predicate": "manager",
+        "seq": 34,
+        "source_span": "{\"turn_ids\": [\"dev-010a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jordan Lee",
+        "op": "UPDATE",
+        "predicate": "manager",
+        "seq": 35,
+        "source_span": "{\"turn_ids\": [\"dev-010b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "manager",
+        "seq": 36,
+        "source_span": "{\"turn_ids\": [\"dev-010c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Tuesday",
+        "op": "ADD",
+        "predicate": "on_call_day",
+        "seq": 37,
+        "source_span": "{\"turn_ids\": [\"dev-011a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "op": "UPDATE",
+        "predicate": "on_call_day",
+        "seq": 38,
+        "source_span": "{\"turn_ids\": [\"dev-011b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "op": "ADD",
+        "predicate": "meeting_free_day",
+        "seq": 39,
+        "source_span": "{\"turn_ids\": [\"dev-011c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Kubernetes",
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 40,
+        "source_span": "{\"turn_ids\": [\"dev-012a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "bare metal",
+        "op": "ADD",
+        "predicate": "deploy_method",
+        "seq": 41,
+        "source_span": "{\"turn_ids\": [\"dev-012b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "not_bare_metal",
+        "op": "UPDATE",
+        "predicate": "deploy_method",
+        "seq": 42,
+        "source_span": "{\"turn_ids\": [\"dev-012c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "bare metal",
+        "op": "UPDATE",
+        "predicate": "deploy_method",
+        "seq": 43,
+        "source_span": "{\"turn_ids\": [\"dev-012d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Google Cloud",
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 44,
+        "source_span": "{\"turn_ids\": [\"dev-013a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Azure",
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 45,
+        "source_span": "{\"turn_ids\": [\"dev-013b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 46,
+        "source_span": "{\"turn_ids\": [\"dev-013c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Azure",
+        "op": "ADD",
+        "predicate": "cloud_provider",
+        "seq": 47,
+        "source_span": "{\"turn_ids\": [\"dev-013d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Linear",
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 48,
+        "source_span": "{\"turn_ids\": [\"dev-014a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jira",
+        "op": "ADD",
+        "predicate": "recorded_issue_tracker",
+        "seq": 49,
+        "source_span": "{\"turn_ids\": [\"dev-014b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 50,
+        "source_span": "{\"turn_ids\": [\"dev-014c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "preferred_database",
+        "seq": 51,
+        "source_span": "{\"turn_ids\": [\"dev-014d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Google Docs",
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 52,
+        "source_span": "{\"turn_ids\": [\"dev-015a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "op": "ADD",
+        "predicate": "recorded_tool",
+        "seq": 53,
+        "source_span": "{\"turn_ids\": [\"dev-015b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "uses_database",
+        "seq": 54,
+        "source_span": "{\"turn_ids\": [\"dev-015c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 55,
+        "source_span": "{\"turn_ids\": [\"dev-015d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Wednesday",
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 56,
+        "source_span": "{\"turn_ids\": [\"dev-016a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 57,
+        "source_span": "{\"turn_ids\": [\"dev-016b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 58,
+        "source_span": "{\"turn_ids\": [\"dev-016c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 59,
+        "source_span": "{\"turn_ids\": [\"dev-016d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "08:30",
+        "op": "ADD",
+        "predicate": "start_work_time",
+        "seq": 60,
+        "source_span": "{\"turn_ids\": [\"dev-017a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "06:00",
+        "op": "ADD",
+        "predicate": "work_start_time",
+        "seq": 61,
+        "source_span": "{\"turn_ids\": [\"dev-017b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "work_start_time",
+        "seq": 62,
+        "source_span": "{\"turn_ids\": [\"dev-017c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "06:00",
+        "op": "UPDATE",
+        "predicate": "work_start_time",
+        "seq": 63,
+        "source_span": "{\"turn_ids\": [\"dev-017d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "she/her",
+        "op": "ADD",
+        "predicate": "pronouns",
+        "seq": 64,
+        "source_span": "{\"turn_ids\": [\"dev-018a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "they/them",
+        "op": "UPDATE",
+        "predicate": "pronouns",
+        "seq": 65,
+        "source_span": "{\"turn_ids\": [\"dev-018b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "not they/them",
+        "op": "UPDATE",
+        "predicate": "pronouns",
+        "seq": 66,
+        "source_span": "{\"turn_ids\": [\"dev-018c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "they/them",
+        "op": "UPDATE",
+        "predicate": "preferred_language",
+        "seq": 67,
+        "source_span": "{\"turn_ids\": [\"dev-018d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Mandarin",
+        "op": "UPDATE",
+        "predicate": "primary_language",
+        "seq": 68,
+        "source_span": "{\"turn_ids\": [\"dev-019a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "op": "ADD",
+        "predicate": "recorded_spoken_language",
+        "seq": 69,
+        "source_span": "{\"turn_ids\": [\"dev-019b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "primary_language",
+        "seq": 70,
+        "source_span": "{\"turn_ids\": [\"dev-019c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "op": "UPDATE",
+        "predicate": "primary_language",
+        "seq": 71,
+        "source_span": "{\"turn_ids\": [\"dev-019d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "captions_enabled_for_video_calls",
+        "op": "ADD",
+        "predicate": "accessibility_need",
+        "seq": 72,
+        "source_span": "{\"turn_ids\": [\"dev-020a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "screen_magnification",
+        "op": "UPDATE",
+        "predicate": "accessibility_need",
+        "seq": 73,
+        "source_span": "{\"turn_ids\": [\"dev-020b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "accessibility_need",
+        "seq": 74,
+        "source_span": "{\"turn_ids\": [\"dev-020c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "screen magnification",
+        "op": "UPDATE",
+        "predicate": "accessibility_need",
+        "seq": 75,
+        "source_span": "{\"turn_ids\": [\"dev-020d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "vegetarian",
+        "op": "ADD",
+        "predicate": "diet",
+        "seq": 76,
+        "source_span": "{\"turn_ids\": [\"dev-021a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "op": "UPDATE",
+        "predicate": "diet",
+        "seq": 77,
+        "source_span": "{\"turn_ids\": [\"dev-021b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "not_keto",
+        "op": "UPDATE",
+        "predicate": "diet",
+        "seq": 78,
+        "source_span": "{\"turn_ids\": [\"dev-021c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "op": "UPDATE",
+        "predicate": "diet",
+        "seq": 79,
+        "source_span": "{\"turn_ids\": [\"dev-021d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "peanut",
+        "op": "ADD",
+        "predicate": "allergy",
+        "seq": 80,
+        "source_span": "{\"turn_ids\": [\"dev-022a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "shellfish",
+        "op": "UPDATE",
+        "predicate": "allergy",
+        "seq": 81,
+        "source_span": "{\"turn_ids\": [\"dev-022b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Noah Chen",
+        "op": "ADD",
+        "predicate": "emergency_contact",
+        "seq": 82,
+        "source_span": "{\"turn_ids\": [\"dev-023a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Alex Chen",
+        "op": "UPDATE",
+        "predicate": "emergency_contact",
+        "seq": 83,
+        "source_span": "{\"turn_ids\": [\"dev-023b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "UPDATE",
+        "predicate": "emergency_contact",
+        "seq": 84,
+        "source_span": "{\"turn_ids\": [\"dev-023c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Alex Chen",
+        "op": "UPDATE",
+        "predicate": "emergency_contact",
+        "seq": 85,
+        "source_span": "{\"turn_ids\": [\"dev-023d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pixel",
+        "op": "ADD",
+        "predicate": "pet_ownership",
+        "seq": 86,
+        "source_span": "{\"turn_ids\": [\"dev-024a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Luna",
+        "op": "ADD",
+        "predicate": "pet",
+        "seq": 87,
+        "source_span": "{\"turn_ids\": [\"dev-024b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": null,
+        "op": "ADD",
+        "predicate": "has_pet",
+        "seq": 88,
+        "source_span": "{\"turn_ids\": [\"dev-024c\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Luna",
+        "op": "ADD",
+        "predicate": "pet_name",
+        "seq": 89,
+        "source_span": "{\"turn_ids\": [\"dev-024d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jazz",
+        "op": "ADD",
+        "predicate": "preferred_music_genre",
+        "seq": 90,
+        "source_span": "{\"turn_ids\": [\"dev-025a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "country",
+        "op": "ADD",
+        "predicate": "recorded_country_as_favorite_music",
+        "seq": 91,
+        "source_span": "{\"turn_ids\": [\"dev-025b\"]}",
+        "subject": "assistant"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "unknown",
+        "op": "ADD",
+        "predicate": "favorite_music_genre",
+        "seq": 92,
+        "source_span": "{\"turn_ids\": [\"dev-025d\"]}",
+        "subject": "user"
+      }
+    ]
+  }
+}
