@@ -1,0 +1,274 @@
+{
+  "answer_ec904b3c_4:0": [
+    {
+      "subject": "user",
+      "predicate": "participated_in",
+      "value": "consulting-firm case competition",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_presentation_tool",
+      "value": "data visualization tools",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_4:1": [],
+  "answer_ec904b3c_4:2": [
+    {
+      "subject": "user",
+      "predicate": "planned_visualization_tool",
+      "value": "Tableau and Power BI",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_4:3": [],
+  "answer_ec904b3c_4:4": [
+    {
+      "subject": "user",
+      "predicate": "planned_visualization_tool",
+      "value": "Tableau",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_4:5": [],
+  "answer_ec904b3c_4:6": [
+    {
+      "subject": "user",
+      "predicate": "current_project",
+      "value": "case competition dashboard",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_4:7": [],
+  "answer_ec904b3c_4:8": [],
+  "answer_ec904b3c_4:9": [],
+  "answer_ec904b3c_2:0": [
+    {
+      "subject": "user",
+      "predicate": "uses_programming_languages",
+      "value": "Python and R",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "modeling_activity",
+      "value": "building predictive models",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "learning_need",
+      "value": "feature engineering",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_2:1": [],
+  "answer_ec904b3c_2:2": [
+    {
+      "subject": "user",
+      "predicate": "current_course_project",
+      "value": "solo Data Mining project",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "project_data",
+      "value": "customer purchase data",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_2:3": [],
+  "answer_ec904b3c_2:4": [
+    {
+      "subject": "user",
+      "predicate": "planned_feature_engineering_method",
+      "value": "grouping and binning",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "presentation_audience",
+      "value": "professor and classmates",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_2:5": [],
+  "answer_ec904b3c_2:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_visualizations",
+      "value": "bar charts, scatter plots and heatmaps",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "visualization_preference",
+      "value": "interactive visualizations",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_2:7": [],
+  "answer_ec904b3c_2:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_presentation_format",
+      "value": "formal presentation",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_2:9": [],
+  "answer_ec904b3c_2:10": [],
+  "answer_ec904b3c_2:11": [],
+  "answer_ec904b3c_1:0": [
+    {
+      "subject": "user",
+      "predicate": "current_project",
+      "value": "customer data analysis",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "led_project",
+      "value": "Marketing Research data analysis team",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "marketing_project_topic",
+      "value": "market analysis for a new product launch",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_1:1": [],
+  "answer_ec904b3c_1:2": [
+    {
+      "subject": "user",
+      "predicate": "considered_clustering_method",
+      "value": "k-means",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "uses_clustering_method",
+      "value": "k-means",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_1:3": [],
+  "answer_ec904b3c_1:4": [
+    {
+      "subject": "user",
+      "predicate": "planned_clustering_evaluation",
+      "value": "elbow method and silhouette analysis",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_1:5": [],
+  "answer_ec904b3c_1:6": [],
+  "answer_ec904b3c_1:7": [],
+  "answer_ec904b3c_1:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_visualizations",
+      "value": "scatter plots and heatmaps",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_dimensionality_reduction",
+      "value": "PCA or t-SNE",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "visualization_experience",
+      "value": "reports and presentations for Marketing Research project",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_1:9": [],
+  "answer_ec904b3c_1:10": [],
+  "answer_ec904b3c_1:11": [],
+  "answer_ec904b3c_3:0": [
+    {
+      "subject": "user",
+      "predicate": "research_topic",
+      "value": "social media influencers and consumer purchasing decisions",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "presented_research",
+      "value": "poster at an academic conference on consumer psychology",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_ec904b3c_3:1": [],
+  "answer_ec904b3c_3:2": [
+    {
+      "subject": "user",
+      "predicate": "research_interest",
+      "value": "influencer credibility and trust",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_3:3": [],
+  "answer_ec904b3c_3:4": [
+    {
+      "subject": "user",
+      "predicate": "research_interest",
+      "value": "authenticity in influencer marketing",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_3:5": [],
+  "answer_ec904b3c_3:6": [
+    {
+      "subject": "user",
+      "predicate": "research_interest",
+      "value": "social identity in influencer marketing",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_3:7": [],
+  "answer_ec904b3c_3:8": [
+    {
+      "subject": "user",
+      "predicate": "research_topic",
+      "value": "social media influencers and consumer purchasing decisions",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_ec904b3c_3:9": []
+}

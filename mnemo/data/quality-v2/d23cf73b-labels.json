@@ -1,0 +1,302 @@
+{
+  "answer_5a0d28f8_4:0": [
+    {
+      "subject": "user",
+      "predicate": "recent_meal_prep",
+      "value": "rice and roasted vegetables",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "tried_restaurant",
+      "value": "Ethiopian restaurant last week",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "restaurant_preference",
+      "value": "liked the Ethiopian restaurant",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:1": [],
+  "answer_5a0d28f8_4:2": [
+    {
+      "subject": "user",
+      "predicate": "planned_dish",
+      "value": "misir wot",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:3": [],
+  "answer_5a0d28f8_4:4": [
+    {
+      "subject": "user",
+      "predicate": "cooking_interest",
+      "value": "homemade injera",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:5": [],
+  "answer_5a0d28f8_4:6": [
+    {
+      "subject": "user",
+      "predicate": "teff_flour_experience",
+      "value": "never worked with it",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "used_teff_flour",
+      "value": "yes",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:7": [],
+  "answer_5a0d28f8_4:8": [
+    {
+      "subject": "user",
+      "predicate": "teff_flour_experience",
+      "value": "never used it",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:9": [],
+  "answer_5a0d28f8_4:10": [
+    {
+      "subject": "user",
+      "predicate": "planned_cooking_experiment",
+      "value": "adjust recipe ratios and ingredients",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_4:11": [],
+  "answer_5a0d28f8_2:0": [
+    {
+      "subject": "user",
+      "predicate": "planned_event",
+      "value": "dinner party this weekend",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "learned_indian_dish",
+      "value": "chicken tikka masala",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "attended_indian_class",
+      "value": "Indian cuisine class",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_menu",
+      "value": "chicken tikka masala",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_2:1": [],
+  "answer_5a0d28f8_2:2": [],
+  "answer_5a0d28f8_2:3": [],
+  "answer_5a0d28f8_2:4": [
+    {
+      "subject": "user",
+      "predicate": "cocktail_interest",
+      "value": "Saffron Gin Fizz and Mumbai Mule",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_2:5": [],
+  "answer_5a0d28f8_2:6": [],
+  "answer_5a0d28f8_2:7": [],
+  "answer_5a0d28f8_2:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_party_preparation",
+      "value": "large batch of saffron-infused simple syrup",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_2:9": [],
+  "answer_5a0d28f8_2:10": [
+    {
+      "subject": "user",
+      "predicate": "planned_menu",
+      "value": "naan bread and saag paneer",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_2:11": [],
+  "answer_5a0d28f8_1:0": [
+    {
+      "subject": "user",
+      "predicate": "diet_goal",
+      "value": "eat more plant-based food",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "attended_vegan_class",
+      "value": "vegan cuisine class",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_5a0d28f8_1:1": [],
+  "answer_5a0d28f8_1:2": [
+    {
+      "subject": "user",
+      "predicate": "recipe_interest",
+      "value": "vegan stir-fry",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_1:3": [],
+  "answer_5a0d28f8_1:4": [],
+  "answer_5a0d28f8_1:5": [],
+  "answer_5a0d28f8_1:6": [
+    {
+      "subject": "user",
+      "predicate": "food_interest",
+      "value": "tempeh",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "attended_fermentation_workshop",
+      "value": "local food co-op fermentation workshop",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "learned_fermented_foods",
+      "value": "sauerkraut and kimchi",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_5a0d28f8_1:7": [],
+  "answer_5a0d28f8_1:8": [
+    {
+      "subject": "user",
+      "predicate": "diet_goal",
+      "value": "incorporate more fermented foods",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "learned_vegan_dish",
+      "value": "vegan lasagna with cashew ricotta",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "attended_vegan_class",
+      "value": "vegan cuisine class",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_1:9": [],
+  "answer_5a0d28f8_1:10": [
+    {
+      "subject": "user",
+      "predicate": "recipe_interest",
+      "value": "cashew-based cheese substitutes",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_1:11": [],
+  "answer_5a0d28f8_3:0": [
+    {
+      "subject": "user",
+      "predicate": "cooking_goal",
+      "value": "cook more at home and use purchased ingredients",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "cooked_korean_dish",
+      "value": "bibimbap from cooking class online recipe library",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_5a0d28f8_3:1": [],
+  "answer_5a0d28f8_3:2": [
+    {
+      "subject": "user",
+      "predicate": "considered_weekly_meal",
+      "value": "chicken and mixed vegetable stir-fry",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_3:3": [],
+  "answer_5a0d28f8_3:4": [
+    {
+      "subject": "user",
+      "predicate": "considered_stir_fry_addition",
+      "value": "kimchi",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_3:5": [],
+  "answer_5a0d28f8_3:6": [
+    {
+      "subject": "user",
+      "predicate": "made_fermented_food",
+      "value": "kimchi at a fermentation workshop",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_5a0d28f8_3:7": [],
+  "answer_5a0d28f8_3:8": [
+    {
+      "subject": "user",
+      "predicate": "considered_weekend_cooking",
+      "value": "large batch of kimchi with different flavors",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_3:9": [],
+  "answer_5a0d28f8_3:10": [
+    {
+      "subject": "user",
+      "predicate": "considered_dish",
+      "value": "kimchi fried rice",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_5a0d28f8_3:11": []
+}
