@@ -3,10 +3,10 @@
 Two principles for the suite:
 - **Hermetic by default.** Embeddings use a deterministic FakeEmbedder — no model,
   no network — so the canonical lifecycle/diff tests are fast and free.
-- **Disposable DB.** The test database is dropped + recreated and migrated fresh at
-  the start of each session, so it always reflects the current migration files. Each
-  test runs inside a transaction that is rolled back, for isolation. If Postgres
-  isn't reachable, DB tests skip cleanly so `make test` is green on a bare checkout.
+- **Disposable DB.** Each invocation creates, migrates and later drops its own
+  uniquely named database; it never drops the configured database. Each test uses
+  a rolled-back transaction where possible. Unavailable Postgres fails CI and
+  MNEMO_REQUIRE_DB=1 runs; optional local runs may skip database tests.
 """
 
 from __future__ import annotations
@@ -66,10 +66,10 @@ def _split_dsn(dsn: str) -> tuple[str, str]:
 
 @pytest.fixture(scope="session")
 def _disposable_test_db() -> Iterator[str]:
-    """Drop + recreate the test DB and apply all migrations, once per session.
+    """Create an invocation-owned test DB and apply migrations once per session.
 
     Runs its own event loop so it composes with function-scoped async fixtures.
-    Skips the whole DB-backed suite if Postgres isn't reachable.
+    Fails required database runs, or skips optional local runs, if unavailable.
     """
 
     async def _setup() -> str:

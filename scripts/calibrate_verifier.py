@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import sys
@@ -12,6 +13,7 @@ from pathlib import Path
 from mnemo.config import get_settings
 from mnemo.eval import assertion_key
 from mnemo.eval_data import load_benchmark_dataset
+from mnemo.eval_suite import policy_fingerprint
 from mnemo.models import ExtractedFact
 from mnemo.quality import build_verifier, representation_error
 
@@ -62,7 +64,18 @@ def main() -> None:
     rows = []
     try:
         for turn, fact, expected, category in cases.values():
-            before = baseline.verify(fact, turn.text).model_dump(mode="json")
+            baseline_guard = getattr(baseline_module, "representation_error", None)
+            baseline_error = baseline_guard(fact, turn.text) if baseline_guard else None
+            before = (
+                {
+                    "accepted": False,
+                    "label": "neutral",
+                    "reason": baseline_error,
+                    "backend": "representation_guard",
+                }
+                if baseline_error
+                else baseline.verify(fact, turn.text).model_dump(mode="json")
+            )
             error = representation_error(fact, turn.text)
             after = (
                 {
@@ -108,6 +121,11 @@ def main() -> None:
                 "split": "dev",
                 "complete": True,
                 "threshold": settings.verifier_entailment_threshold,
+                "baseline_quality_sha256": hashlib.sha256(
+                    args.baseline_quality.read_bytes()
+                ).hexdigest(),
+                "current_policy_sha256": policy_fingerprint(settings),
+                "dataset_sha256": dataset.fingerprint(),
                 "counts": totals,
                 "rows": rows,
             },

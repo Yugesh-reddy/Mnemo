@@ -60,11 +60,24 @@ Rules:
   for database use, and preferred_database only for an explicit database preference.
 - Preserve numbers, times and complete corrected values. Keep independent facts
   separate, including accessibility needs, allergies and emergency contacts.
+- Keep the same attribute name in corrections. Use these standard names when
+  they exactly describe the stated relation: role, team, location, timezone,
+  preferred_database, uses_database, preferred_language, primary_language, editor,
+  shell, issue_tracker, documentation_tool,
+  manager, accessibility_need, allergy, emergency_contact, on_call_day,
+  meeting_free_day, diet. In particular a meeting-free day is meeting_free_day,
+  not a generic free_day; changing a diet does not create a separate diet_type.
+  Keep an unfamiliar relation precise instead of forcing it into this list.
+  These examples are not a menu: copy a newly stated attribute's meaning into a
+  new predicate. An interactive shell is shell, and an issue tracker is issue_tracker;
+  neither is an editor or database merely because it is software.
 - Never encode an excluded value as a positive attribute: do not write name="not
   Dana", timezone="not UTC", object=null, or object={"not":...}. A denial supplies
   no positive replacement value. Leave its positive candidate out. A factual clause
   beside a denial or hypothetical still supports its own assertion.
 - Distinguish plans from completed actions using planned_ or considered_ predicates.
+  "I'm thinking of" or "I'm considering" is considered_, not a definite plan.
+  Use planned_ only for an explicit decision/intention; it does not assert completion.
   Do not turn a question into a fact. Extract all clearly stated, memory-relevant
   facts from multi-clause turns, even when the turn also asks for advice.
 - importance: 1 (trivia/transient) to 10 (identity-defining durable fact).
