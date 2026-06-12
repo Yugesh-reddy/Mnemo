@@ -1,0 +1,457 @@
+{
+  "answer_8858d9dc_3:0": [
+    {
+      "subject": "user",
+      "predicate": "coffee_table_status",
+      "value": "new coffee table",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "living_room_change",
+      "value": "rearranged furniture",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "mattress_order_brand",
+      "value": "Casper",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "mattress_order_time",
+      "value": "last week",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "expected_mattress_arrival",
+      "value": "next Wednesday",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "mattress_received",
+      "value": "Casper",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_3:1": [],
+  "answer_8858d9dc_3:2": [
+    {
+      "subject": "user",
+      "predicate": "considered_pillow_colors",
+      "value": "light gray or beige",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_sofa",
+      "value": "sectional sofa",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_3:3": [],
+  "answer_8858d9dc_3:4": [
+    {
+      "subject": "user",
+      "predicate": "considered_lamp",
+      "value": "modern table lamp with metallic accent",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_legs",
+      "value": "metal",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_8858d9dc_3:5": [],
+  "answer_8858d9dc_3:6": [
+    {
+      "subject": "user",
+      "predicate": "bedroom_style",
+      "value": "modern",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "bedside_table_interest",
+      "value": "metal or glass accents",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_3:7": [],
+  "answer_8858d9dc_2:0": [
+    {
+      "subject": "user",
+      "predicate": "assembled_bookshelf",
+      "value": "IKEA bookshelf for home office",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "bookshelf_assembly_time",
+      "value": "about two months ago",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_2:1": [],
+  "answer_8858d9dc_2:2": [
+    {
+      "subject": "user",
+      "predicate": "coffee_table_brand",
+      "value": "West Elm",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "store_experience",
+      "value": "good experience with West Elm",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_2:3": [],
+  "answer_8858d9dc_2:4": [
+    {
+      "subject": "user",
+      "predicate": "couch_size",
+      "value": "standard three-seater",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_8858d9dc_2:5": [],
+  "answer_8858d9dc_2:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_size",
+      "value": "20 by 20 inches",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_count",
+      "value": "two",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_brand",
+      "value": "West Elm",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_material",
+      "value": "wood",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_legs",
+      "value": "metal",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "bookshelf_location",
+      "value": "home office",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_2:7": [],
+  "answer_8858d9dc_2:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_store",
+      "value": "West Elm",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "store_experience",
+      "value": "good experience with West Elm",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_2:9": [],
+  "answer_8858d9dc_2:10": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_store",
+      "value": "West Elm",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_legs",
+      "value": "metal",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_8858d9dc_2:11": [],
+  "answer_8858d9dc_1:0": [
+    {
+      "subject": "user",
+      "predicate": "coffee_table_brand",
+      "value": "West Elm",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_acquisition_time",
+      "value": "about three weeks ago",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "living_room_style",
+      "value": "modern",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_1:1": [],
+  "answer_8858d9dc_1:2": [
+    {
+      "subject": "user",
+      "predicate": "coffee_table_brand",
+      "value": "West Elm",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_material",
+      "value": "wood",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_legs",
+      "value": "metal",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_delivery_time",
+      "value": "last Thursday",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "pillow_style_preference",
+      "value": "modern",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_1:3": [],
+  "answer_8858d9dc_1:4": [
+    {
+      "subject": "user",
+      "predicate": "pillow_interest",
+      "value": "Navy Grid Velvet Pillow Cover",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "considered_room_accents",
+      "value": "navy",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_1:5": [],
+  "answer_8858d9dc_1:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow",
+      "value": "Navy Grid Velvet Pillow Cover",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "purchased_pillow",
+      "value": "Navy Grid Velvet Pillow Cover",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_1:7": [],
+  "answer_8858d9dc_1:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_color_trial",
+      "value": "navy throw blanket",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "purchased_rug",
+      "value": "navy area rug",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_1:9": [],
+  "answer_8858d9dc_4:0": [
+    {
+      "subject": "user",
+      "predicate": "coffee_table_status",
+      "value": "new coffee table",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "living_room_change",
+      "value": "rearranged furniture",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:1": [],
+  "answer_8858d9dc_4:2": [
+    {
+      "subject": "user",
+      "predicate": "living_room_style",
+      "value": "modern",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "living_room_colors",
+      "value": "beige, gray and white",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_material",
+      "value": "wood",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coffee_table_legs",
+      "value": "metal",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "completed_home_repair",
+      "value": "tightened wobbly kitchen-table leg screw",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "home_repair_time",
+      "value": "last weekend",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "pillow_style_preference",
+      "value": "modern with a pop of color",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:3": [],
+  "answer_8858d9dc_4:4": [
+    {
+      "subject": "user",
+      "predicate": "pillow_interest",
+      "value": "velvet pillows in mustard or teal",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:5": [],
+  "answer_8858d9dc_4:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_stores",
+      "value": "West Elm and CB2",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:7": [],
+  "answer_8858d9dc_4:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_pillow_count",
+      "value": "one",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "considered_pillow_samples",
+      "value": "swatches in bold rich colors",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:9": [],
+  "answer_8858d9dc_4:10": [
+    {
+      "subject": "user",
+      "predicate": "considered_home_project",
+      "value": "reorganize kitchen cabinets",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "completed_home_project",
+      "value": "reorganized kitchen cabinets",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_8858d9dc_4:11": []
+}

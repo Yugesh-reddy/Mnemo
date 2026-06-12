@@ -1,0 +1,5 @@
+uv run ruff check .
+All checks passed!
+uv run black --check .
+All done! ✨ 🍰 ✨
+54 files would be left unchanged.

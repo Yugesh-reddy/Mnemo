@@ -44,3 +44,21 @@ def test_external_split_has_distinct_sessions_and_verified_source_hashes(tmp_pat
     altered.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="leakage"):
         load_cases(altered, "dev")
+
+
+def test_frozen_policy_includes_runtime_threshold_and_model_settings():
+    from mnemo.config import Settings
+    from mnemo.eval_suite import policy_fingerprint
+
+    base = Settings(_env_file=None)
+    before = policy_fingerprint(base)
+    assert before != policy_fingerprint(
+        base.model_copy(update={"verifier_entailment_threshold": 0.9})
+    )
+    assert before != policy_fingerprint(
+        base.model_copy(update={"extractor_model": "another-model"})
+    )
+    # Secrets are intentionally excluded from the policy record.
+    assert before == policy_fingerprint(
+        base.model_copy(update={"openai_api_key": "not-a-real-key"})
+    )

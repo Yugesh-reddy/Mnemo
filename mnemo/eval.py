@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import json
 import logging
+import math
 import time
 import uuid
 from collections.abc import Iterable
@@ -208,6 +209,79 @@ async def assertion_snapshot(conn: asyncpg.Connection) -> dict[str, Any]:
     }
 
 
+async def retrieval_probes(
+    conn: asyncpg.Connection,
+    embedder: Any,
+    dataset: EvalDataset,
+    *,
+    namespace: str,
+    settings: Settings,
+    k: int = 5,
+) -> list[dict[str, Any]]:
+    """Separate absent assertions from failed retrieval of stored assertions."""
+    latest, required = {}, set()
+    for turn in dataset.turns:
+        for label in turn.labels:
+            key = assertion_key(label.subject, label.predicate, label.value)
+            if label.disposition in {"truth", "must_keep"}:
+                latest[key[0]] = (turn, label)
+            if label.disposition == "must_keep":
+                required.add(key[0])
+    current = (await assertion_snapshot(conn))["current_assertions"]
+    present = {
+        assertion_key(
+            r["subject"],
+            r["predicate"],
+            (
+                r["object_text"]
+                if r["object_text"] is not None
+                else r["object_number"] if r["object_number"] is not None else r["object_json"]
+            ),
+        )
+        for r in current
+    }
+    store = MnemoStore(conn, embedder, namespace=namespace, settings=settings)
+    results = []
+    for identity in sorted(required):
+        turn, label = latest[identity]
+        target = assertion_key(label.subject, label.predicate, label.value)
+        query = f"{label.subject} {label.predicate} {label.value}"
+        started = time.perf_counter()
+        found = await store.search(query, k=k, session_id=turn.session_id, reinforce=False)
+        hit = any(assertion_key(f.subject, f.predicate, f.value) == target for f in found)
+        results.append(
+            {
+                "turn_id": turn.turn_id,
+                "query": query,
+                "k": k,
+                "session_id": turn.session_id,
+                "in_current": target in present,
+                "retrieved": hit,
+                "stage": (
+                    "retrieved"
+                    if hit
+                    else (
+                        "retrieval_or_session_filter"
+                        if target in present
+                        else "upstream_or_label_mismatch"
+                    )
+                ),
+                "latency_ms": (time.perf_counter() - started) * 1000,
+                "results": [
+                    {
+                        "subject": f.subject,
+                        "predicate": f.predicate,
+                        "object": f.value,
+                        "tier": f.tier,
+                        "source": f.source,
+                    }
+                    for f in found
+                ],
+            }
+        )
+    return results
+
+
 def _telemetry(component: Any) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     usage, cost = getattr(component, "usage", None), getattr(component, "cost", None)
     return (
@@ -373,9 +447,11 @@ def estimate_cost(usage: dict[str, Any], prices: dict[str, Any] | None) -> dict[
         if rates is None or counters.get("unmetered_requests", 0):
             return {"usd": None, "reason": f"Missing pricing or token usage for {name}"}
         for side in ("input", "output"):
-            rate = float(rates.get(side, 0))
-            if rate < 0:
-                raise ValueError("token prices cannot be negative")
+            if side not in rates:
+                return {"usd": None, "reason": f"Missing explicit {side} price for {name}"}
+            rate = float(rates[side])
+            if rate < 0 or not math.isfinite(rate):
+                raise ValueError("token prices must be finite and non-negative")
             total += counters.get(side + "_tokens", 0) * rate / 1_000_000
     return {
         "usd": total,
@@ -394,6 +470,7 @@ async def evaluate(
     mode: str = "candidate_replay",
     settings: Settings | None = None,
     prices: dict[str, Any] | None = None,
+    probe_retrieval: bool = False,
 ) -> dict[str, Any]:
     """Run isolated comparison arms; never truncate or reuse application tables."""
     if mode not in {"candidate_replay", "pipeline"}:
@@ -467,6 +544,18 @@ async def evaluate(
                     )
             data["historical_by_split"] = split_results
             data.update(await assertion_snapshot(conn))
+        if probe_retrieval:
+            for conn, data, namespace in (
+                (connections[0], naive_data, "eval-naive"),
+                (connections[1], gated_data, "eval-gated"),
+            ):
+                before = usage_snapshot(original_extractor, selected_embedder, verifier)
+                data["retrieval_probes"] = await retrieval_probes(
+                    conn, selected_embedder, selected, namespace=namespace, settings=settings
+                )
+                data["retrieval_probe_usage"] = usage_delta(
+                    before, usage_snapshot(original_extractor, selected_embedder, verifier)
+                )
         result = {
             "naive": naive_data,
             "gated": gated_data,
@@ -570,6 +659,7 @@ def main() -> None:
     )
     parser.add_argument("--output", help="Write the complete JSON report")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--probe-retrieval", action="store_true")
     args = parser.parse_args()
     dataset = (
         load_smoke_dataset() if args.dataset == "smoke" else load_benchmark_dataset(args.split)
@@ -608,6 +698,7 @@ def main() -> None:
                 verifier=verifier,
                 settings=settings,
                 prices=json.loads(Path(args.prices).read_text()) if args.prices else None,
+                probe_retrieval=args.probe_retrieval,
             )
         )
     finally:

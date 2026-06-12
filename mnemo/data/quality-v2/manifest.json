@@ -3,7 +3,7 @@
   "selection_rule": "ascending sha256(mnemo-quality-v2:question_id), 40..54 turns, disjoint session IDs, exclude prior car sample; first three dev, fourth fresh holdout",
   "source_url": "https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned/resolve/98d7416/longmemeval_oracle.json",
   "source_sha256": "821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c",
-  "annotation_status": "Development labels source-reviewed before policy changes; holdout content and labels not used for tuning",
+  "annotation_status": "All source turns reviewed; holdout labels frozen after code/settings policy freeze, before model evaluation",
   "records": [
     {
       "id": "6d550036",
@@ -67,7 +67,12 @@
         "answer_8858d9dc_1",
         "answer_8858d9dc_4"
       ],
-      "sha256": "1b7fac7766fcc085414cca0aed975487daa6a47c4c9e3269ebbb0cad63989748"
+      "sha256": "1b7fac7766fcc085414cca0aed975487daa6a47c4c9e3269ebbb0cad63989748",
+      "labels": "gpt4_15e38248-labels.json",
+      "labels_sha256": "3e95c7653c92ce90ff1399ea465c7cd4cf3f97e2a4ae0c283d78443ea541ffff",
+      "reviewer": "Codex source review; one reviewer, after policy freeze and before holdout model outputs",
+      "annotation_scope": "memory-relevant assertions and explicit plans; source acquisition/delivery dates remain distinct; assistant and non-assertion turns explicitly empty"
     }
-  ]
+  ],
+  "frozen_policy_sha256": "77bbf4e83088a4a740bc4b6da38a38bd214dc9528551f424eeada7f54280708a"
 }

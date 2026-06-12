@@ -8,7 +8,8 @@ import hashlib
 import json
 from pathlib import Path
 
-from mnemo.config import get_settings
+from mnemo.audit import gate_snapshot
+from mnemo.config import Settings, get_settings
 from mnemo.embedder import build_embedder
 from mnemo.eval import evaluate
 from mnemo.eval_data import load_longmemeval
@@ -44,29 +45,46 @@ def load_cases(manifest_path: Path, split: str) -> list[tuple[str, EvalDataset]]
     return cases
 
 
-def policy_fingerprint() -> str:
+def policy_fingerprint(settings: Settings | None = None) -> str:
     digest = hashlib.sha256()
     for name in ("extraction.py", "quality.py", "core.py", "config.py"):
         digest.update(name.encode())
         digest.update(Path(__file__).with_name(name).read_bytes())
+    digest.update(json.dumps(gate_snapshot(settings or get_settings()), sort_keys=True).encode())
     return digest.hexdigest()
 
 
 async def run(args: argparse.Namespace) -> None:
     cases = load_cases(args.manifest, args.split)
-    fingerprint = policy_fingerprint()
+    settings = get_settings()
+    fingerprint = policy_fingerprint(settings)
     if args.split == "holdout":
         if not args.frozen_policy or args.frozen_policy.read_text().strip() != fingerprint:
             raise ValueError("holdout requires a policy hash frozen after dev work")
-    settings = get_settings()
+    results = {}
+    if args.output.exists():
+        if not args.resume:
+            raise ValueError("output already exists; use --resume for the same frozen policy")
+        saved = json.loads(args.output.read_text())
+        if saved["policy_sha256"] != fingerprint or saved["split"] != args.split:
+            raise ValueError("cannot resume results from a different policy or split")
+        results = saved["cases"]
+        if any(r["metadata"]["cleanup_errors"] for r in results.values()):
+            raise ValueError("cannot resume a report with unresolved cleanup errors")
+        for identity, dataset in cases:
+            if identity in results and (
+                results[identity]["metadata"]["fingerprints"]["dataset"] != dataset.fingerprint()
+            ):
+                raise ValueError("cannot resume results with changed data or labels")
     extractor, embedder, verifier = (
         build_extractor(settings),
         build_embedder(settings),
         build_verifier(settings),
     )
-    results = {}
     try:
         for identity, dataset in cases:
+            if identity in results:
+                continue
             print(f"Evaluating {args.split}/{identity}: {len(dataset.turns)} turns", flush=True)
             results[identity] = await evaluate(
                 dataset=dataset,
@@ -74,6 +92,7 @@ async def run(args: argparse.Namespace) -> None:
                 embedder=embedder,
                 verifier=verifier,
                 settings=settings,
+                probe_retrieval=True,
             )
             # Preserve completed cases even if a later model call fails.
             args.output.write_text(
@@ -89,6 +108,8 @@ async def run(args: argparse.Namespace) -> None:
                 )
                 + "\n"
             )
+            if results[identity]["metadata"]["cleanup_errors"]:
+                raise RuntimeError("evaluation cleanup failed; partial report retained")
     finally:
         for component in (extractor, embedder, verifier):
             if hasattr(component, "close"):
@@ -111,6 +132,7 @@ def main() -> None:
     parser.add_argument("--split", choices=("dev", "holdout"), default="dev")
     parser.add_argument("--frozen-policy", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--resume", action="store_true")
     asyncio.run(run(parser.parse_args()))
 
 

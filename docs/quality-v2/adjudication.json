@@ -115,7 +115,7 @@
       },
       "source": "I do not use Payments; please don't infer that as my team.",
       "category": "unsupported_encoding",
-      "reason": "A JSON negation under uses_database neither represents the stated team exclusion nor a positive database choice.",
+      "reason": "A null placeholder under uses_database neither represents the stated team exclusion nor a positive database choice.",
       "label_assertions": [
         {
           "subject": "user",

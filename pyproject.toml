@@ -45,6 +45,9 @@ mnemo-migrate = "mnemo.db:main"
 mnemo-mcp = "mnemo.mcp_server:main"
 mnemo-worker = "mnemo.worker:main"
 mnemo-eval = "mnemo.eval:main"
+mnemo-audit-eval = "mnemo.eval_audit:main"
+mnemo-eval-suite = "mnemo.eval_suite:main"
+mnemo-benchmark = "mnemo.benchmark:main"
 mnemo-demo = "examples.agent:app"
 
 [tool.ruff]

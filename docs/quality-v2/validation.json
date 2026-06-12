@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-11",
+  "policy_sha256": "77bbf4e83088a4a740bc4b6da38a38bd214dc9528551f424eeada7f54280708a",
+  "tests": {
+    "passed": 162,
+    "skipped": 0,
+    "command": "MNEMO_REQUIRE_DB=1 MNEMO_EXTRACTOR_MODEL=qwen3.5:4b-mlx HF_HUB_OFFLINE=1 .venv/bin/pytest -q -rs"
+  },
+  "lint": "passed",
+  "build": "passed",
+  "clean_wheel": "passed",
+  "temporary_evaluation_schemas_remaining": 0,
+  "holdout_exit_code": 0,
+  "benchmark_exit_code": 0,
+  "model_tags_at_validation": [
+    {
+      "name": "qwen3.5:4b-mlx",
+      "digest": "61aa3858e9d3022e8fca725550089addd9289c4446f33bd09dfd12f95f2a6792",
+      "details": {
+        "parent_model": "",
+        "format": "safetensors",
+        "family": "",
+        "families": null,
+        "parameter_size": "",
+        "quantization_level": "nvfp4"
+      }
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "nomic-bert",
+        "families": [
+          "nomic-bert"
+        ],
+        "parameter_size": "137M",
+        "quantization_level": "F16",
+        "context_length": 2048,
+        "embedding_length": 768
+      }
+    }
+  ],
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "canvas_validation": "TypeScript transpilation syntax check passed; no interactive render test",
+  "remote_merge_check": "Pending intended repository/branch; checkout has no remote; same-named account repository contains unrelated DSA submissions",
+  "monetary_prices": "Not supplied; costs unknown"
+}

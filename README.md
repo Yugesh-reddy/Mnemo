@@ -42,7 +42,7 @@ and may finish after cancellation before Python exits.
 ## Verification
 
 The default `heuristic` verifier is a conservative **regression mode**, with limited
-predicate coverage. For full semantic entailment, install the optional NLI extra:
+predicate coverage. For model-based assertion verification, install the optional NLI extra:
 
 ```bash
 uv sync --extra dev --extra nli
@@ -54,7 +54,8 @@ make mcp
 ```
 
 NLI checks the complete subject/relation/value assertion. High-confidence
-entailment is accepted; ambiguous results can use the bounded JSON LLM fallback.
+entailment is accepted; matching denied evidence and ambiguous results can use the
+bounded JSON LLM fallback. Confidence does not guarantee entailment.
 Unknown labels, malformed responses and model failures do not become accepted
 facts. `ollama` and `openai` verifier modes are also available. The OpenAI backend
 uses the configured API key and model; embedding dimensions must match storage.
@@ -67,9 +68,12 @@ the observation quality pipeline.
 
 ## Evaluation and its limits
 
-The familiar **90% precision / 100% recall** is the 18-turn scripted regression
-with deterministic embeddings, not measured real-model accuracy. Its naive arm
-has 60% precision and 100% recall. Neither arm is a competitor implementation.
+The current 18-turn scripted regression has **90.9% precision / 100% recall**,
+versus naive **60% / 90%**, with deterministic embeddings. Version 2 corrects two
+labels that conflated database use with preference and primary with preferred
+language; the source turns are unchanged. The legacy 90%/100% result and its
+version-1 labels remain available. Neither version measures real-model accuracy
+or a competitor implementation.
 
 ```bash
 # Broader, project-authored synthetic data: 100 dev + 100 held-out turns
@@ -101,7 +105,7 @@ Candidate preparation time and shared extraction tokens are separate from the
 comparison-arm latency/cost in replay mode. `--prices prices.json` estimates API
 cost from supplied USD-per-million `input` and `output` rates keyed by `extractor`,
 `embedder`, and `verifier`. Cost is null when pricing or token usage is missing;
-local compute cost is not estimated. Ollama's legacy embedding endpoint does not
+the evaluation CLI does not estimate local compute cost. Ollama's legacy embedding endpoint does not
 report tokens. Evaluation creates private temporary schemas and never truncates
 application tables.
 Reports retain the actual assertion history for review. Cleanup lock conflicts
@@ -111,10 +115,35 @@ CLI exits unsuccessfully instead of losing the report.
 See [recorded evidence](docs/evaluation), [annotation scope and attribution](mnemo/data/README.md),
 and [the detailed implementation plan](docs/CORRECTNESS_PLAN.md).
 
-The recorded real-model 200-turn synthetic run achieved **25% final precision and
+The original real-model 200-turn synthetic run achieved **25% final precision and
 16% recall**, with **one explicitly false historical write**. Total storage grew
 after including evidence and audit records. The broader evaluation exposes
 substantial remaining quality gaps; see [current status](PROJECT_STATUS.md).
+
+The [memory-quality milestone](docs/quality-v2/README.md) source-reviews all 38
+unmatched writes and eight missing must-keep targets. It adds three development
+conversations and a fresh 42-turn holdout, bringing external source coverage to
+218 turns across five conversations. Labels remain a single-reviewer provisional
+annotation. Extraction and denial handling improved, but strict recall is still
+insufficient; the milestone is not a reliability claim.
+
+```bash
+# Use the configured real extraction, embedding and verifier backends
+mnemo-eval-suite --split dev --output external-dev.json
+
+# Serial workload; warmup excluded. Supply actual rates for a monetary estimate.
+mnemo-benchmark --samples 25 --warmup 2 --output benchmark.json
+# Optional: --prices prices.json or --local-usd-per-hour YOUR_RATE
+```
+
+Holdout evaluation requires a matching `--frozen-policy` fingerprint. The saved
+holdout is now consumed validation data and cannot be reused as fresh evidence
+after further development. `--probe-retrieval` in the evaluation CLI distinguishes
+missing current assertions from failures to retrieve stored assertions, without
+reinforcing memory. The benchmark reports separate API and local-compute
+estimates; prices that have not been supplied remain unknown.
+The [detailed quality plan](docs/QUALITY_RELIABILITY_PLAN.md) records acceptance
+gaps and the next development cycle.
 
 ## Memory semantics
 

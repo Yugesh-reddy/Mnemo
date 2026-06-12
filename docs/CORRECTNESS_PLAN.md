@@ -148,3 +148,12 @@ References: [project spec](../PROJECT_SPEC.md),
   bounded retries, always closes both connections, retains scores/history with
   cleanup error metadata, and makes the CLI exit unsuccessfully if cleanup fails.
   Future reports contain their own assertion evidence, eliminating that reader.
+
+
+## September 11 quality follow-up
+
+The [quality reliability plan](QUALITY_RELIABILITY_PLAN.md) now records the next
+milestone and its unmet acceptance targets. Source review, predicate/denial fixes,
+frozen external validation and controlled serial measurement are implemented;
+162 tests pass. The holdout exposes remaining semantic and recall failures, so
+this does not mark memory quality complete. See [the saved results](quality-v2/README.md).

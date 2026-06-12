@@ -1,0 +1,2215 @@
+{
+  "report_sha256": "75f35e7131e7ff58c0fe46b4c5a69e573616c78fe81d2deb7a2f93b3cb234357",
+  "policy_sha256": "9aff6a868e6a23df232368458bcaf9cefea869400cd7059d42d2b1fcf7131266",
+  "reviewer": "Codex source review, single reviewer",
+  "purpose": "Post-run diagnosis only; strict frozen-label metrics are not replaced. Supported means entailed content, not necessarily worth retaining. Candidate-plan labels do not count toward strict truth precision.",
+  "categories": {
+    "supported_equivalent": 31,
+    "supported_lossy": 16,
+    "supported_partial": 17,
+    "unsupported_strengthening": 8,
+    "ambiguous_relation": 3
+  },
+  "rows": [
+    {
+      "case": "6d550036",
+      "seq": 1,
+      "turn_id": "answer_ec904b3c_4:2",
+      "source": "I think I'll start with Tableau and Power BI, they seem like great options. Can you give me some tips on how to create effective dashboards in these tools?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_tools_for_dashboard_creation",
+        "object": [
+          "Tableau",
+          "Power BI"
+        ]
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_visualization_tool",
+          "value": "Tableau and Power BI",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Tentative Tableau/Power BI selection is preserved as considered tools, with a list representation."
+    },
+    {
+      "case": "6d550036",
+      "seq": 2,
+      "turn_id": "answer_ec904b3c_4:4",
+      "source": "I'll start with Tableau first since it seems to be more user-friendly. Can you walk me through the process of connecting to a data source, creating a dashboard, and publishing it online?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_tool_usage_order",
+        "object": "Tableau"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_visualization_tool",
+          "value": "Tableau",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Choosing Tableau first is supported; the value drops the explicit first-in-order qualifier."
+    },
+    {
+      "case": "6d550036",
+      "seq": 3,
+      "turn_id": "answer_ec904b3c_4:6",
+      "source": "I'm trying to create a dashboard for my case competition presentation, and I think I can use Tableau to visualize some key metrics. I was wondering if you could help me brainstorm some ideas for the types of charts and visualizations I could use to showcase our team's analysis and recommendations.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "create a dashboard for case competition presentation"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_project",
+          "value": "case competition dashboard",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Dashboard goal is supported but does not preserve the current-project identity."
+    },
+    {
+      "case": "6d550036",
+      "seq": 4,
+      "turn_id": "answer_ec904b3c_4:6",
+      "source": "I'm trying to create a dashboard for my case competition presentation, and I think I can use Tableau to visualize some key metrics. I was wondering if you could help me brainstorm some ideas for the types of charts and visualizations I could use to showcase our team's analysis and recommendations.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_tool",
+        "object": "Tableau"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_project",
+          "value": "case competition dashboard",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The source explicitly considers Tableau."
+    },
+    {
+      "case": "6d550036",
+      "seq": 5,
+      "turn_id": "answer_ec904b3c_2:0",
+      "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_language",
+        "object": "Python"
+      },
+      "source_labels": [
+        {
+          "predicate": "uses_programming_languages",
+          "value": "Python and R",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "modeling_activity",
+          "value": "building predictive models",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learning_need",
+          "value": "feature engineering",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Python use is supported; Python and R share one fact identity so R replaces Python in HEAD."
+    },
+    {
+      "case": "6d550036",
+      "seq": 6,
+      "turn_id": "answer_ec904b3c_2:0",
+      "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_language",
+        "object": "R"
+      },
+      "source_labels": [
+        {
+          "predicate": "uses_programming_languages",
+          "value": "Python and R",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "modeling_activity",
+          "value": "building predictive models",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learning_need",
+          "value": "feature engineering",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "R use is supported; this update leaves only R visible under uses_language."
+    },
+    {
+      "case": "6d550036",
+      "seq": 7,
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "project_type",
+        "object": "Data Mining class project"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_course_project",
+          "value": "solo Data Mining project",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "project_data",
+          "value": "customer purchase data",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "The Data Mining class project is supported, but its solo qualifier is stored separately."
+    },
+    {
+      "case": "6d550036",
+      "seq": 8,
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "project_role",
+        "object": "solo"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_course_project",
+          "value": "solo Data Mining project",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "project_data",
+          "value": "customer purchase data",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "The project is solo; the project context is not part of this identity."
+    },
+    {
+      "case": "6d550036",
+      "seq": 9,
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_technique",
+        "object": "feature engineering"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_course_project",
+          "value": "solo Data Mining project",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "project_data",
+          "value": "customer purchase data",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Intended feature engineering is supported; the customer-purchase dataset context is lost."
+    },
+    {
+      "case": "6d550036",
+      "seq": 10,
+      "turn_id": "answer_ec904b3c_2:4",
+      "source": "These tips are really helpful, thanks! I'm going to try out a few of them, especially the grouping and binning method. I think it'll really help me to identify patterns in my customer purchase data. By the way, do you have any suggestions on how to visualize the results of my analysis? I want to present my findings in a way that's easy to understand for my professor and classmates.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal_analysis",
+        "object": "identify patterns in customer purchase data"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_feature_engineering_method",
+          "value": "grouping and binning",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "presentation_audience",
+          "value": "professor and classmates",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "The desired pattern analysis is explicit but is stored as a broad goal."
+    },
+    {
+      "case": "6d550036",
+      "seq": 11,
+      "turn_id": "answer_ec904b3c_2:8",
+      "source": "These tips are really helpful! I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis. I'll also make sure to practice my presentation to ensure I stay within the time limit and deliver my message confidently. Additionally, I'll consider using interactive visualizations to make it easier for my audience to explore the data. One question I have is, how can I ensure that my presentation is engaging and holds the audience's attention throughout?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "create_formal_presentation"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_presentation_format",
+          "value": "formal presentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Creating a formal presentation is an explicit plan."
+    },
+    {
+      "case": "6d550036",
+      "seq": 12,
+      "turn_id": "answer_ec904b3c_2:8",
+      "source": "These tips are really helpful! I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis. I'll also make sure to practice my presentation to ensure I stay within the time limit and deliver my message confidently. Additionally, I'll consider using interactive visualizations to make it easier for my audience to explore the data. One question I have is, how can I ensure that my presentation is engaging and holds the audience's attention throughout?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_focus",
+        "object": "highlight_key_findings_and_insights"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_presentation_format",
+          "value": "formal presentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Highlighting key findings and insights is an explicit intended focus."
+    },
+    {
+      "case": "6d550036",
+      "seq": 13,
+      "turn_id": "answer_ec904b3c_2:8",
+      "source": "These tips are really helpful! I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis. I'll also make sure to practice my presentation to ensure I stay within the time limit and deliver my message confidently. Additionally, I'll consider using interactive visualizations to make it easier for my audience to explore the data. One question I have is, how can I ensure that my presentation is engaging and holds the audience's attention throughout?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "practice_presentation"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_presentation_format",
+          "value": "formal presentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Practicing the presentation is explicit; it overwrites create_formal_presentation under planned_action."
+    },
+    {
+      "case": "6d550036",
+      "seq": 14,
+      "turn_id": "answer_ec904b3c_2:8",
+      "source": "These tips are really helpful! I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis. I'll also make sure to practice my presentation to ensure I stay within the time limit and deliver my message confidently. Additionally, I'll consider using interactive visualizations to make it easier for my audience to explore the data. One question I have is, how can I ensure that my presentation is engaging and holds the audience's attention throughout?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_goal",
+        "object": "deliver_message_confidently"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_presentation_format",
+          "value": "formal presentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Delivering confidently is an explicit goal."
+    },
+    {
+      "case": "6d550036",
+      "seq": 15,
+      "turn_id": "answer_ec904b3c_2:8",
+      "source": "These tips are really helpful! I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis. I'll also make sure to practice my presentation to ensure I stay within the time limit and deliver my message confidently. Additionally, I'll consider using interactive visualizations to make it easier for my audience to explore the data. One question I have is, how can I ensure that my presentation is engaging and holds the audience's attention throughout?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_feature",
+        "object": "interactive_visualizations"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_presentation_format",
+          "value": "formal presentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Interactive visualizations are explicitly under consideration."
+    },
+    {
+      "case": "6d550036",
+      "seq": 16,
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "project_goal",
+        "object": "identify_trends_and_patterns"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_project",
+          "value": "customer data analysis",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "led_project",
+          "value": "Marketing Research data analysis team",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "marketing_project_topic",
+          "value": "market analysis for a new product launch",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "The project goal is supported; customer data and project identity are absent."
+    },
+    {
+      "case": "6d550036",
+      "seq": 17,
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_method",
+        "object": "clustering_analysis"
+      },
+      "source_labels": [
+        {
+          "predicate": "current_project",
+          "value": "customer data analysis",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "led_project",
+          "value": "Marketing Research data analysis team",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "marketing_project_topic",
+          "value": "market analysis for a new product launch",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Clustering analysis is explicitly considered."
+    },
+    {
+      "case": "6d550036",
+      "seq": 18,
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "evaluating_methods",
+        "object": [
+          "k-means",
+          "hierarchical_clustering"
+        ]
+      },
+      "source_labels": [
+        {
+          "predicate": "current_project",
+          "value": "customer data analysis",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "led_project",
+          "value": "Marketing Research data analysis team",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "marketing_project_topic",
+          "value": "market analysis for a new product launch",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The user is deciding between k-means and hierarchical clustering."
+    },
+    {
+      "case": "6d550036",
+      "seq": 19,
+      "turn_id": "answer_ec904b3c_1:2",
+      "source": "I was thinking of using k-means clustering initially, but I'm not sure about the number of clusters. Can you suggest any methods to determine the optimal number of clusters?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_algorithm",
+        "object": "k-means clustering"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_clustering_method",
+          "value": "k-means",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "uses_clustering_method",
+          "value": "k-means",
+          "disposition": "forbidden",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "K-means is considered, not represented as actual use."
+    },
+    {
+      "case": "6d550036",
+      "seq": 20,
+      "turn_id": "answer_ec904b3c_1:4",
+      "source": "I think I'll try the elbow method and silhouette analysis first. I'll also take a look at the data visualization to see if I can identify any patterns or structures that might help me decide on the number of clusters. By the way, do you have any recommendations on how to prepare my data for clustering? Should I normalize or scale my data?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_analysis_method",
+        "object": "elbow method and silhouette analysis"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_clustering_evaluation",
+          "value": "elbow method and silhouette analysis",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Elbow method and silhouette analysis are explicitly planned."
+    },
+    {
+      "case": "6d550036",
+      "seq": 21,
+      "turn_id": "answer_ec904b3c_1:6",
+      "source": "I'll definitely take those data preparation steps into consideration. I've also been thinking about how to visualize my data to identify patterns or structures that might help me decide on the number of clusters. Do you have any recommendations on what types of plots or visualizations I should use to visualize my customer data?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "data preparation steps"
+      },
+      "source_labels": [],
+      "category": "unsupported_strengthening",
+      "reason": "Taking steps into consideration does not assert a plan to perform those steps."
+    },
+    {
+      "case": "6d550036",
+      "seq": 22,
+      "turn_id": "answer_ec904b3c_1:8",
+      "source": "I think I'll start with some scatter plots and heatmaps to visualize the relationships between my customer features. I also want to try out dimensionality reduction techniques like PCA or t-SNE to see if I can identify any clusters or patterns in my high-dimensional data. By the way, I've had some experience with data visualization from my Marketing Research class project, where we had to create reports and presentations to communicate our findings to stakeholders. Do you think I should use any specific color schemes or visual encoding techniques to make my visualizations more effective?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_visualization_types",
+        "object": "scatter plots, heatmaps"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_visualizations",
+          "value": "scatter plots and heatmaps",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "planned_dimensionality_reduction",
+          "value": "PCA or t-SNE",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "visualization_experience",
+          "value": "reports and presentations for Marketing Research project",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Scatter plots and heatmaps are explicitly planned."
+    },
+    {
+      "case": "6d550036",
+      "seq": 23,
+      "turn_id": "answer_ec904b3c_1:8",
+      "source": "I think I'll start with some scatter plots and heatmaps to visualize the relationships between my customer features. I also want to try out dimensionality reduction techniques like PCA or t-SNE to see if I can identify any clusters or patterns in my high-dimensional data. By the way, I've had some experience with data visualization from my Marketing Research class project, where we had to create reports and presentations to communicate our findings to stakeholders. Do you think I should use any specific color schemes or visual encoding techniques to make my visualizations more effective?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_techniques",
+        "object": "PCA, t-SNE"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_visualizations",
+          "value": "scatter plots and heatmaps",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "planned_dimensionality_reduction",
+          "value": "PCA or t-SNE",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "visualization_experience",
+          "value": "reports and presentations for Marketing Research project",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Trying PCA or t-SNE is explicitly desired; the list loses the alternative wording."
+    },
+    {
+      "case": "6d550036",
+      "seq": 24,
+      "turn_id": "answer_ec904b3c_1:8",
+      "source": "I think I'll start with some scatter plots and heatmaps to visualize the relationships between my customer features. I also want to try out dimensionality reduction techniques like PCA or t-SNE to see if I can identify any clusters or patterns in my high-dimensional data. By the way, I've had some experience with data visualization from my Marketing Research class project, where we had to create reports and presentations to communicate our findings to stakeholders. Do you think I should use any specific color schemes or visual encoding techniques to make my visualizations more effective?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal_for_visualization",
+        "object": "identify clusters or patterns in high-dimensional data"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_visualizations",
+          "value": "scatter plots and heatmaps",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "planned_dimensionality_reduction",
+          "value": "PCA or t-SNE",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "visualization_experience",
+          "value": "reports and presentations for Marketing Research project",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Identifying clusters or patterns is the stated visualization goal."
+    },
+    {
+      "case": "6d550036",
+      "seq": 25,
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "research_interests",
+        "object": "consumer behavior and social media"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "presented_research",
+          "value": "poster at an academic conference on consumer psychology",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "The broad research interest is supported but omits the poster's precise research topic."
+    },
+    {
+      "case": "6d550036",
+      "seq": 26,
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "presentation_context",
+        "object": "academic conference on consumer psychology"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "presented_research",
+          "value": "poster at an academic conference on consumer psychology",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "The conference context is correct; the poster presentation action is missing from this assertion."
+    },
+    {
+      "case": "6d550036",
+      "seq": 27,
+      "turn_id": "answer_ec904b3c_3:4",
+      "source": "I'm particularly interested in the role of authenticity in establishing credibility. Can you provide more information on how influencers can demonstrate authenticity on social media, and how consumers perceive authenticity in influencer marketing?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "interests_in_topic",
+        "object": "authenticity_in_establishing_credibility"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_interest",
+          "value": "authenticity in influencer marketing",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Interest in authenticity establishing credibility is explicit."
+    },
+    {
+      "case": "6d550036",
+      "seq": 28,
+      "turn_id": "answer_ec904b3c_3:6",
+      "source": "I'm interested in learning more about the role of social identity in influencer marketing. Can you provide more information on how social identity theory can explain the effectiveness of social media influencer marketing, and how influencers can leverage social identity to build a stronger connection with their audience?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learning_interest",
+        "object": "social identity in influencer marketing"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_interest",
+          "value": "social identity in influencer marketing",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Learning about social identity in influencer marketing is explicit."
+    },
+    {
+      "case": "6d550036",
+      "seq": 29,
+      "turn_id": "answer_ec904b3c_3:8",
+      "source": "I'd like to explore more about the role of social identity in influencer marketing, particularly in the context of my research on the effects of social media influencers on consumer purchasing decisions. Can you provide more information on how influencers can use social identity to increase brand awareness and drive sales?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "research_topic",
+        "object": "social identity in influencer marketing"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Social identity is the requested research subtopic; the full purchasing-decisions topic is separate."
+    },
+    {
+      "case": "6d550036",
+      "seq": 30,
+      "turn_id": "answer_ec904b3c_3:8",
+      "source": "I'd like to explore more about the role of social identity in influencer marketing, particularly in the context of my research on the effects of social media influencers on consumer purchasing decisions. Can you provide more information on how influencers can use social identity to increase brand awareness and drive sales?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "research_focus",
+        "object": "effects of social media influencers on consumer purchasing decisions"
+      },
+      "source_labels": [
+        {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The research focus is explicitly effects on consumer purchasing decisions."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 1,
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "feeding_frequency",
+        "object": "once a day"
+      },
+      "source_labels": [
+        {
+          "predicate": "starter_created",
+          "value": "about a month before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_frequency",
+          "value": "once a day",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "starter_flour",
+          "value": "all-purpose flour",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_ratio",
+          "value": "1:1:1 flour:water:starter",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Once-daily feeding is explicit, but the predicate drops sourdough-starter context."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 2,
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_flour",
+        "object": "all-purpose flour"
+      },
+      "source_labels": [
+        {
+          "predicate": "starter_created",
+          "value": "about a month before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_frequency",
+          "value": "once a day",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "starter_flour",
+          "value": "all-purpose flour",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_ratio",
+          "value": "1:1:1 flour:water:starter",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "All-purpose flour is used to feed the starter; the specific use is omitted."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 3,
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_ingredient",
+        "object": "water"
+      },
+      "source_labels": [
+        {
+          "predicate": "starter_created",
+          "value": "about a month before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_frequency",
+          "value": "once a day",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "starter_flour",
+          "value": "all-purpose flour",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_ratio",
+          "value": "1:1:1 flour:water:starter",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Water is used to feed the starter; the specific use is omitted."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 4,
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "assertion": {
+        "subject": "bread",
+        "predicate": "resulted_quality",
+        "object": "dense and heavy"
+      },
+      "source_labels": [
+        {
+          "predicate": "starter_created",
+          "value": "about a month before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_frequency",
+          "value": "once a day",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "starter_flour",
+          "value": "all-purpose flour",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_ratio",
+          "value": "1:1:1 flour:water:starter",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The bread's dense and heavy result is explicit; labels attach that result to the user instead."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 5,
+      "turn_id": "answer_733e443a_3:6",
+      "source": "I think I'll try blending whole wheat flour with all-purpose flour first and see how it goes. I'll start with a 25% whole wheat, 75% all-purpose ratio and adjust from there. Thanks for the tips! By the way, I've been experimenting with different baking recipes lately, and I recently tried out a new bread recipe using sourdough starter on Tuesday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "blend whole wheat flour with all-purpose flour"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_starter_flour_blend",
+          "value": "25% whole wheat, 75% all-purpose",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_tuesday",
+          "value": "sourdough bread",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Blending the two flours is explicitly planned."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 6,
+      "turn_id": "answer_733e443a_3:6",
+      "source": "I think I'll try blending whole wheat flour with all-purpose flour first and see how it goes. I'll start with a 25% whole wheat, 75% all-purpose ratio and adjust from there. Thanks for the tips! By the way, I've been experimenting with different baking recipes lately, and I recently tried out a new bread recipe using sourdough starter on Tuesday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "initial_ratio",
+        "object": "25% whole wheat, 75% all-purpose"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_starter_flour_blend",
+          "value": "25% whole wheat, 75% all-purpose",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_tuesday",
+          "value": "sourdough bread",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "ambiguous_relation",
+      "reason": "The ratio belongs to a proposed blend; initial_ratio does not preserve its planned status or flour context."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 7,
+      "turn_id": "answer_733e443a_3:8",
+      "source": "The bread recipe I tried on Tuesday was a sourdough bread recipe using my starter, and I have to say it didn't quite turn out as expected. The bread came out dense and heavy, which was a bit disappointing. I think it might be due to my starter not being active enough, but I'm not sure.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "tried_recipe_on",
+        "object": "sourdough bread recipe using starter"
+      },
+      "source_labels": [
+        {
+          "predicate": "baked_tuesday",
+          "value": "sourdough bread",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Trying the sourdough bread recipe is explicit; the value omits Tuesday despite the tried_recipe_on predicate."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 8,
+      "turn_id": "answer_733e443a_3:10",
+      "source": "I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\n\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "baked_item",
+        "object": "chocolate_cake"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_dough_change",
+          "value": "gentler mixing and longer fermentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_for_sister_birthday",
+          "value": "chocolate cake",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "birthday_cake_result",
+          "value": "amazing",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Baking chocolate cake is explicit; the sister's birthday context is lost."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 9,
+      "turn_id": "answer_733e443a_1:0",
+      "source": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+      "assertion": {
+        "subject": "chocolate_cake",
+        "predicate": "flavor_enhancer",
+        "object": "espresso_powder"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_event",
+          "value": "dinner party next weekend",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_for_sister_birthday",
+          "value": "chocolate cake",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "birthday_cake_ingredient",
+          "value": "espresso powder",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Espresso powder enhanced the chocolate cake's flavor; the assertion uses the cake as subject."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 10,
+      "turn_id": "answer_733e443a_1:4",
+      "source": "I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "favorite_fruit",
+        "object": "strawberries"
+      },
+      "source_labels": [
+        {
+          "predicate": "favorite_fruit",
+          "value": "strawberries",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "planned_tart_fruit",
+          "value": "strawberries",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Favorite fruit strawberries exactly matches the label."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 11,
+      "turn_id": "answer_733e443a_1:8",
+      "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "ingredient_preference",
+        "object": "all-purpose flour"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_tart_flour",
+          "value": "all-purpose flour",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "owns_appliance",
+          "value": "stand mixer",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "stand_mixer_acquired",
+          "value": "a few weeks before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Choosing flour for this tart does not establish a general ingredient preference."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 12,
+      "turn_id": "answer_733e443a_1:8",
+      "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_device",
+        "object": "stand mixer"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_tart_flour",
+          "value": "all-purpose flour",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "owns_appliance",
+          "value": "stand mixer",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "stand_mixer_acquired",
+          "value": "a few weeks before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Stand-mixer use is explicit; ownership and purchase timing are not represented in this assertion."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 13,
+      "turn_id": "answer_733e443a_2:0",
+      "source": "I'm thinking of baking some chicken wings for tonight's dinner. Can you give me some tips on how to achieve that perfect crispy skin?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_activity",
+        "object": "baking chicken wings"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_dinner",
+          "value": "baked chicken wings",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "cooked_dinner",
+          "value": "chicken wings",
+          "disposition": "forbidden",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of baking chicken wings is converted into a definite planned activity."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 14,
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "try dry brine method and baking powder trick"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_wings_method",
+          "value": "dry brine and baking powder",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "first_convection_use",
+          "value": "cookies last Thursday",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "convection_roasted_vegetables",
+          "value": "done",
+          "disposition": "forbidden",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Trying dry brine and baking powder is explicitly planned."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 15,
+      "turn_id": "answer_733e443a_2:6",
+      "source": "I'm thinking of making some roasted sweet potatoes to go along with the crispy chicken wings and roasted veggies. Do you have any tips on how to achieve that perfect caramelized crust on sweet potatoes using convection?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_food_preparation",
+        "object": "roasted sweet potatoes"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_side_dish",
+          "value": "roasted sweet potatoes",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of roasted sweet potatoes is converted into a definite planned preparation."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 16,
+      "turn_id": "answer_733e443a_2:8",
+      "source": "I'm thinking of trying out a new bread recipe this weekend, possibly something with whole wheat flour. Do you have any recommendations for whole wheat bread recipes that would pair well with the crispy chicken wings and roasted veggies?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_activity",
+        "object": "trying out a new bread recipe"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_weekend_baking",
+          "value": "whole wheat bread",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of a possible bread recipe is converted into a definite planned activity."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 17,
+      "turn_id": "answer_733e443a_2:10",
+      "source": "I think I'll try out the Garlic and Herb Whole Wheat Focaccia recipe. I love the idea of a flavorful bread that can complement the savory flavors of the chicken wings and roasted veggies. Plus, the garlic and herbs will add a nice aroma to the bread. Can you give me some tips on how to get the perfect crumb and crust on the focaccia?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "intends_to_try_recipe",
+        "object": "Garlic and Herb Whole Wheat Focaccia"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_weekend_baking",
+          "value": "garlic and herb whole wheat focaccia",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The user explicitly intends to try the focaccia recipe."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 18,
+      "turn_id": "answer_733e443a_4:0",
+      "source": "I'm thinking of trying out a new recipe for a rustic Italian bread this weekend. Do you have any tips on how to achieve a crispy crust? By the way, I made a delicious whole wheat baguette last Saturday, and I'm considering using the same flour for this recipe.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "made_food_item",
+        "object": "whole_wheat_baguette"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_weekend_baking",
+          "value": "rustic Italian bread",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_last_saturday",
+          "value": "whole wheat baguette",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Making the whole-wheat baguette is explicit; last Saturday is omitted."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 19,
+      "turn_id": "answer_733e443a_4:2",
+      "source": "I'll definitely consider using a higher protein flour for this recipe. Do you think the convection setting on my oven would help with browning and crisping the crust?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "intends_to_consider",
+        "object": "higher protein flour"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_bread_flour",
+          "value": "higher protein flour",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The commitment is to consider flour, not to use it; that distinction is preserved."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 20,
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "used_setting",
+        "object": "convection"
+      },
+      "source_labels": [
+        {
+          "predicate": "baked_last_thursday",
+          "value": "cookies",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "cookie_result",
+          "value": "crispy outside and chewy inside",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Convection use is explicit; cookie event and timing are stored separately."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 21,
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "baked_item",
+        "object": "cookies"
+      },
+      "source_labels": [
+        {
+          "predicate": "baked_last_thursday",
+          "value": "cookies",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "cookie_result",
+          "value": "crispy outside and chewy inside",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Baking cookies is explicit; this overwrites chocolate cake under baked_item."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 22,
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "baked_time",
+        "object": "last Thursday"
+      },
+      "source_labels": [
+        {
+          "predicate": "baked_last_thursday",
+          "value": "cookies",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "cookie_result",
+          "value": "crispy outside and chewy inside",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Last Thursday is correct for baking cookies, but the event identity is absent."
+    },
+    {
+      "case": "88432d0a",
+      "seq": 23,
+      "turn_id": "answer_733e443a_4:6",
+      "source": "I'm thinking of trying a slower rise for this Italian bread recipe. Do you think I could use my sourdough starter instead of commercial yeast to add more complexity to the flavor?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_action",
+        "object": "try slower rise"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_bread_method",
+          "value": "slower rise",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of trying a slower rise is converted into a definite planned action."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 1,
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "assertion": {
+        "subject": "user",
+        "predicate": "dining_experience",
+        "object": "Ethiopian restaurant in town"
+      },
+      "source_labels": [
+        {
+          "predicate": "recent_meal_prep",
+          "value": "rice and roasted vegetables",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "tried_restaurant",
+          "value": "Ethiopian restaurant last week",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "restaurant_preference",
+          "value": "liked the Ethiopian restaurant",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Trying an Ethiopian restaurant is explicit; timing and positive evaluation are omitted."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 2,
+      "turn_id": "answer_5a0d28f8_2:0",
+      "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "scheduled_event_time",
+        "object": "this weekend"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_event",
+          "value": "dinner party this weekend",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_indian_dish",
+          "value": "chicken tikka masala",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_indian_class",
+          "value": "Indian cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "planned_menu",
+          "value": "chicken tikka masala",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "This weekend is correct for the dinner party; the event is absent from this assertion."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 3,
+      "turn_id": "answer_5a0d28f8_2:0",
+      "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "selected_menu_item",
+        "object": "chicken tikka masala"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_event",
+          "value": "dinner party this weekend",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_indian_dish",
+          "value": "chicken tikka masala",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_indian_class",
+          "value": "Indian cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "planned_menu",
+          "value": "chicken tikka masala",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Chicken tikka masala is explicitly selected for the menu."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 4,
+      "turn_id": "answer_5a0d28f8_2:4",
+      "source": "I like the sound of the Saffron Gin Fizz and the Mumbai Mule. Can you give me some more information on how to make the saffron-infused simple syrup for the Saffron Gin Fizz?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "likes_drink",
+        "object": "Saffron Gin Fizz"
+      },
+      "source_labels": [
+        {
+          "predicate": "cocktail_interest",
+          "value": "Saffron Gin Fizz and Mumbai Mule",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "ambiguous_relation",
+      "reason": "Liking the sound of a drink supports interest, but may not support likes_drink as an experienced taste preference."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 5,
+      "turn_id": "answer_5a0d28f8_2:6",
+      "source": "What's the best way to store saffron threads and how long do they last? I want to make sure I'm getting the most out of this expensive spice.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "get_most_out_of_saffron_spice"
+      },
+      "source_labels": [],
+      "category": "supported_lossy",
+      "reason": "Getting the most from saffron is an explicit transient goal, not a retained benchmark target."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 6,
+      "turn_id": "answer_5a0d28f8_2:8",
+      "source": "I'm planning to make a big batch of saffron-infused simple syrup for my dinner party, so I want to make sure I have enough saffron threads on hand. How many threads do you think I'll need for the recipe, and do you have any recommendations for where to buy high-quality saffron?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planning_action",
+        "object": "make saffron-infused simple syrup"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_party_preparation",
+          "value": "large batch of saffron-infused simple syrup",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Making saffron-infused syrup is an explicit plan, with batch size omitted."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 7,
+      "turn_id": "answer_5a0d28f8_2:10",
+      "source": "I'm planning to make a few other Indian-inspired dishes for my dinner party, including naan bread and saag paneer. Can you give me some tips on how to make perfect naan bread at home?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planning_to_prepare_dishes",
+        "object": "Indian-inspired dishes for dinner party"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_menu",
+          "value": "naan bread and saag paneer",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Planning Indian-inspired dishes is explicit, with the specific menu stored separately."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 8,
+      "turn_id": "answer_5a0d28f8_2:10",
+      "source": "I'm planning to make a few other Indian-inspired dishes for my dinner party, including naan bread and saag paneer. Can you give me some tips on how to make perfect naan bread at home?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planning_to_prepare_dish",
+        "object": "naan bread"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_menu",
+          "value": "naan bread and saag paneer",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Naan is planned; it is later overwritten by saag paneer under the same identity."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 9,
+      "turn_id": "answer_5a0d28f8_2:10",
+      "source": "I'm planning to make a few other Indian-inspired dishes for my dinner party, including naan bread and saag paneer. Can you give me some tips on how to make perfect naan bread at home?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planning_to_prepare_dish",
+        "object": "saag paneer"
+      },
+      "source_labels": [
+        {
+          "predicate": "planned_menu",
+          "value": "naan bread and saag paneer",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Saag paneer is planned; this update replaces the other concurrently planned dish."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 10,
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "activity_history",
+        "object": "attended vegan cuisine class"
+      },
+      "source_labels": [
+        {
+          "predicate": "diet_goal",
+          "value": "eat more plant-based food",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Attendance at the vegan class is explicit, under a broad activity_history predicate."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 11,
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "dietary_interest",
+        "object": "tempeh"
+      },
+      "source_labels": [
+        {
+          "predicate": "food_interest",
+          "value": "tempeh",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "attended_fermentation_workshop",
+          "value": "local food co-op fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "learned_fermented_foods",
+          "value": "sauerkraut and kimchi",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "The user explicitly has interest in trying tempeh."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 12,
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learned_skill",
+        "object": "sauerkraut making"
+      },
+      "source_labels": [
+        {
+          "predicate": "food_interest",
+          "value": "tempeh",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "attended_fermentation_workshop",
+          "value": "local food co-op fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "learned_fermented_foods",
+          "value": "sauerkraut and kimchi",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Learning sauerkraut making is explicit; it is overwritten by kimchi under the same identity."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 13,
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learned_skill",
+        "object": "kimchi making"
+      },
+      "source_labels": [
+        {
+          "predicate": "food_interest",
+          "value": "tempeh",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "attended_fermentation_workshop",
+          "value": "local food co-op fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "learned_fermented_foods",
+          "value": "sauerkraut and kimchi",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Learning kimchi making is explicit; the workshop and other learned food are absent."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 14,
+      "turn_id": "answer_5a0d28f8_1:8",
+      "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "dietary_interest",
+        "object": "fermented foods"
+      },
+      "source_labels": [
+        {
+          "predicate": "diet_goal",
+          "value": "incorporate more fermented foods",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_vegan_dish",
+          "value": "vegan lasagna with cashew ricotta",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Interest in fermented foods is explicit, under an interest predicate instead of the goal label."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 15,
+      "turn_id": "answer_5a0d28f8_1:8",
+      "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "attended_class",
+        "object": "vegan cuisine class"
+      },
+      "source_labels": [
+        {
+          "predicate": "diet_goal",
+          "value": "incorporate more fermented foods",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_vegan_dish",
+          "value": "vegan lasagna with cashew ricotta",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Vegan class attendance is explicit, with a different predicate from the label."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 16,
+      "turn_id": "answer_5a0d28f8_1:10",
+      "source": "I'm interested in learning more about cashew-based cheese substitutes. Can you give me some recipe ideas for different types of cheese, like mozzarella or feta?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "interests_in",
+        "object": "cashew-based cheese substitutes"
+      },
+      "source_labels": [
+        {
+          "predicate": "recipe_interest",
+          "value": "cashew-based cheese substitutes",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "supported_equivalent",
+      "reason": "Interest in cashew-based substitutes is explicit."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 17,
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "cook more at home"
+      },
+      "source_labels": [
+        {
+          "predicate": "cooking_goal",
+          "value": "cook more at home and use purchased ingredients",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "cooked_korean_dish",
+          "value": "bibimbap from cooking class online recipe library",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Cooking more at home is an explicit goal; the next goal replaces it under the same identity."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 18,
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "use up all ingredients bought"
+      },
+      "source_labels": [
+        {
+          "predicate": "cooking_goal",
+          "value": "cook more at home and use purchased ingredients",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "cooked_korean_dish",
+          "value": "bibimbap from cooking class online recipe library",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_partial",
+      "reason": "Using purchased ingredients is an explicit goal; this replaces the concurrent cooking goal."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 19,
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "consumed_food",
+        "object": "Korean bibimbap"
+      },
+      "source_labels": [
+        {
+          "predicate": "cooking_goal",
+          "value": "cook more at home and use purchased ingredients",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "cooked_korean_dish",
+          "value": "bibimbap from cooking class online recipe library",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "ambiguous_relation",
+      "reason": "Trying a recipe strongly suggests preparing food but does not explicitly assert consuming it."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 20,
+      "turn_id": "answer_5a0d28f8_3:2",
+      "source": "That's really helpful, thanks. I was thinking of doing a stir-fry with chicken and mixed veggies this week. Do you have a suggestion for a good marinade for the chicken?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_meal",
+        "object": "stir-fry with chicken and mixed veggies"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_weekly_meal",
+          "value": "chicken and mixed vegetable stir-fry",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of a stir-fry is converted into a definite planned meal."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 21,
+      "turn_id": "answer_5a0d28f8_3:6",
+      "source": "That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_experience_with",
+        "object": "kimchi"
+      },
+      "source_labels": [
+        {
+          "predicate": "made_fermented_food",
+          "value": "kimchi at a fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "category": "supported_lossy",
+      "reason": "Kimchi experience is explicit, but making it at a workshop is reduced to generic experience."
+    },
+    {
+      "case": "d23cf73b",
+      "seq": 22,
+      "turn_id": "answer_5a0d28f8_3:10",
+      "source": "I'm thinking of making some kimchi fried rice to go with my kimchi. Do you have any suggestions for other Korean-inspired dishes I could make to pair with my kimchi?",
+      "assertion": {
+        "subject": "user",
+        "predicate": "intends_to_cook",
+        "object": "kimchi fried rice"
+      },
+      "source_labels": [
+        {
+          "predicate": "considered_dish",
+          "value": "kimchi fried rice",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "category": "unsupported_strengthening",
+      "reason": "Thinking of kimchi fried rice is converted into an intention to cook it."
+    }
+  ]
+}

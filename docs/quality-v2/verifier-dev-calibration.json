@@ -1,0 +1,2963 @@
+{
+  "split": "dev",
+  "complete": true,
+  "threshold": 0.99,
+  "counts": {
+    "before": {
+      "tp": 32,
+      "tn": 46,
+      "fn": 1,
+      "fp": 11
+    },
+    "after": {
+      "tp": 33,
+      "tn": 56,
+      "fp": 1
+    }
+  },
+  "rows": [
+    {
+      "turn_id": "dev-001a",
+      "source": "Call me Maya Chen in project notes.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Maya Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user's name is 'Maya Chen', which directly entails the hypothesis that 'My name is Maya Chen' where 'my' refers to the speaker.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Call me Maya Chen in project notes."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user's name is 'Maya Chen', which directly entails the hypothesis that 'My name is Maya Chen' where 'my' refers to the speaker.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Call me Maya Chen in project notes."
+      }
+    },
+    {
+      "turn_id": "dev-001c",
+      "source": "I do not use Mina Chen; please don't infer that as my name.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Mina Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using 'Mina Chen' and warns against inferring it as the user's name, while the hypothesis asserts that the user's name is 'Mina Chen', creating a direct logical conflict.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Mina Chen; please don't infer that as my name."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using 'Mina Chen' and warns against inferring it as the user's name, while the hypothesis asserts that the user's name is 'Mina Chen', creating a direct logical conflict.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Mina Chen; please don't infer that as my name."
+      }
+    },
+    {
+      "turn_id": "dev-002a",
+      "source": "I work as a site reliability engineer.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "site reliability engineer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9928584098815918,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I work as a site reliability engineer."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9961662292480469,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I work as a site reliability engineer."
+      }
+    },
+    {
+      "turn_id": "dev-002c",
+      "source": "I do not use product designer; please don't infer that as my role.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "product designer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.996640682220459,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use product designer; please don't infer that as my role."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using the role of 'product designer' and instructs against inferring it as such, while the hypothesis asserts that the user's job role is exactly 'product designer'. This creates a direct logical conflict between the denial in the source and the affirmative claim in the hypothesis.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"I do not use product designer\""
+      }
+    },
+    {
+      "turn_id": "dev-002d",
+      "source": "What if someday I changed my role to product designer? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "product designer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the role change is 'only hypothetical' and not yet realized ('For now'), whereas the hypothesis asserts a completed fact ('I work as product designer').",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to product designer is 'only hypothetical' and not current ('For now'), while the hypothesis asserts it as a completed fact ('is').",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-003a",
+      "source": "My home base is Portland.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Portland",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9925453066825867,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My home base is Portland."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9925453066825867,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My home base is Portland."
+      }
+    },
+    {
+      "turn_id": "dev-003c",
+      "source": "I do not use Seattle; please don't infer that as my location.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Seattle",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9975517392158508,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Seattle; please don't infer that as my location."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9975517392158508,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Seattle; please don't infer that as my location."
+      }
+    },
+    {
+      "turn_id": "dev-003d",
+      "source": "What if someday I changed my location to Seattle? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Seattle",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the location change is 'only hypothetical' and not yet realized ('For now'), whereas the hypothesis asserts a completed fact of living there.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the location change is 'only hypothetical' and not yet realized ('For now'), whereas the hypothesis asserts a completed fact of living there.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-004a",
+      "source": "Please schedule me in Pacific Time.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Pacific Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user's direct request to schedule them in Pacific Time implies that their current or desired timezone setting is Pacific Time, making the hypothesis a valid inference of the user's state.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Please schedule me in Pacific Time."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user's direct request to schedule them in Pacific Time implies that their current or desired timezone setting is Pacific Time, making the hypothesis a valid inference of the user's state.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Please schedule me in Pacific Time."
+      }
+    },
+    {
+      "turn_id": "dev-004c",
+      "source": "I do not use Eastern Time; please don't infer that as my timezone.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Eastern Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using Eastern Time and warns against inferring it as the user's timezone, while the hypothesis asserts that the user's timezone is Eastern Time.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Eastern Time; please don't infer that as my timezone."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using Eastern Time and warns against inferring it as the user's timezone, while the hypothesis asserts that the user's timezone is Eastern Time.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Eastern Time; please don't infer that as my timezone."
+      }
+    },
+    {
+      "turn_id": "dev-004d",
+      "source": "What if someday I changed my timezone to Eastern Time? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Eastern Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the current situation is 'only hypothetical' and poses a conditional question ('What if...'), whereas the hypothesis asserts it as a completed fact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the current situation is 'only hypothetical' and poses a conditional question ('What if...'), whereas the hypothesis presents the timezone change as an established fact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-005a",
+      "source": "TypeScript is my preferred programming language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "TypeScript",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9983976483345032,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "TypeScript is my preferred programming language."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9983976483345032,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "TypeScript is my preferred programming language."
+      }
+    },
+    {
+      "turn_id": "dev-005c",
+      "source": "I do not use Java; please don't infer that as my preferred language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "Java",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9949198365211487,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Java; please don't infer that as my preferred language."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9949198365211487,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Java; please don't infer that as my preferred language."
+      }
+    },
+    {
+      "turn_id": "dev-005d",
+      "source": "What if someday I changed my preferred language to Java? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "Java",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the preference change is 'only hypothetical' and uses conditional phrasing ('What if'), whereas the hypothesis presents it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the preference change is 'only hypothetical' and uses conditional phrasing ('What if'), whereas the hypothesis presents it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-006a",
+      "source": "For durable services I prefer PostgreSQL.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "PostgreSQL",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9968184232711792,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "For durable services I prefer PostgreSQL."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.992779552936554,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "For durable services I prefer PostgreSQL."
+      }
+    },
+    {
+      "turn_id": "dev-006c",
+      "source": "I do not use MongoDB; please don't infer that as my preferred database.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9947916865348816,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use MongoDB; please don't infer that as my preferred database."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9954944849014282,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use MongoDB; please don't infer that as my preferred database."
+      }
+    },
+    {
+      "turn_id": "dev-006d",
+      "source": "Correction to what I said earlier: my preferred database is MongoDB.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.995617151260376,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my preferred database is MongoDB."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9970295429229736,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my preferred database is MongoDB."
+      }
+    },
+    {
+      "turn_id": "dev-007a",
+      "source": "I use Neovim as my everyday editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Neovim",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9978390336036682,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I use Neovim as my everyday editor."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9978390336036682,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I use Neovim as my everyday editor."
+      }
+    },
+    {
+      "turn_id": "dev-007c",
+      "source": "I do not use Emacs; please don't infer that as my editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Emacs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Emacs and requests that others not infer Emacs as their editor, while the hypothesis asserts the user's editor is Emacs.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Emacs; please don't infer that as my editor."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Emacs and requests that others not infer Emacs as their editor, while the hypothesis asserts the user's editor is Emacs.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Emacs; please don't infer that as my editor."
+      }
+    },
+    {
+      "turn_id": "dev-007d",
+      "source": "What if someday I changed my editor to Emacs? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Emacs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Emacs is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Emacs is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-008a",
+      "source": "My interactive shell is fish.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "fish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9942373037338257,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My interactive shell is fish."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9942373037338257,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My interactive shell is fish."
+      }
+    },
+    {
+      "turn_id": "dev-008c",
+      "source": "I do not use PowerShell; please don't infer that as my shell.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "PowerShell",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use PowerShell and requests that others not infer otherwise, while the hypothesis asserts the user's shell is PowerShell.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use PowerShell"
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use PowerShell and requests against inferring otherwise, while the hypothesis asserts the user's shell is PowerShell.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use PowerShell"
+      }
+    },
+    {
+      "turn_id": "dev-008d",
+      "source": "What if someday I changed my shell to PowerShell? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "PowerShell",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to PowerShell is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to PowerShell is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-009a",
+      "source": "I belong to the Reliability Platform team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Reliability Platform",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9956498742103577,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I belong to the Reliability Platform team."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9956498742103577,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I belong to the Reliability Platform team."
+      }
+    },
+    {
+      "turn_id": "dev-009c",
+      "source": "I do not use Payments; please don't infer that as my team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Payments",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Payments and requests no inference of a team connection to Payments, while the hypothesis asserts the user's team is Payments.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Payments; please don't infer that as my team."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Payments and requests no inference of a team connection to Payments, while the hypothesis asserts that the user's team is Payments.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Payments; please don't infer that as my team."
+      }
+    },
+    {
+      "turn_id": "dev-009d",
+      "source": "What if someday I changed my team to Payments? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Payments",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to 'Payments' is only hypothetical and not current ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact ('is').",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to 'Payments' is only hypothetical and not current ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact ('is').",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-010a",
+      "source": "My manager is Elena Ruiz.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Elena Ruiz",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9938982725143433,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My manager is Elena Ruiz."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9938982725143433,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My manager is Elena Ruiz."
+      }
+    },
+    {
+      "turn_id": "dev-010c",
+      "source": "I do not use Jordan Lee; please don't infer that as my manager.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Jordan Lee",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using Jordan Lee as a manager and instructs against inferring that role, while the hypothesis asserts that the user's manager is Jordan Lee.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Jordan Lee; please don't infer that as my manager."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using Jordan Lee as a manager and instructs against inferring that role, while the hypothesis asserts that the user's manager is Jordan Lee.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Jordan Lee; please don't infer that as my manager."
+      }
+    },
+    {
+      "turn_id": "dev-010d",
+      "source": "What if someday I changed my manager to Jordan Lee? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Jordan Lee",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Jordan Lee is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact ('is').",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Jordan Lee is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact ('is').",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-011a",
+      "source": "My regular on-call handoff is Tuesday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Tuesday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis accurately restates the specific fact (on-call day) and value (Tuesday) asserted by the user in the source text.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"My regular on-call handoff is Tuesday.\""
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis accurately restates the specific fact (on-call day) and value (Tuesday) asserted by the user in the source text.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"My regular on-call handoff is Tuesday.\""
+      }
+    },
+    {
+      "turn_id": "dev-011c",
+      "source": "I do not use Saturday; please don't infer that as my on call day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Saturday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Saturday and warns against inferring it as their on-call day, directly contradicting the hypothesis which asserts Saturday is the on-call day.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Saturday; please don't infer that as my on call day."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Saturday and warns against inferring it as their on-call day, while the hypothesis asserts that the user's on-call day is Saturday.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Saturday; please don't infer that as my on call day."
+      }
+    },
+    {
+      "turn_id": "dev-011d",
+      "source": "Correction to what I said earlier: my on call day is Saturday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Saturday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.992408275604248,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my on call day is Saturday."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.992408275604248,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my on call day is Saturday."
+      }
+    },
+    {
+      "turn_id": "dev-012a",
+      "source": "We deploy the API on Kubernetes.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "Kubernetes",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user deploys on Kubernetes, which fully entails the hypothesis that the user's deploy method is Kubernetes.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We deploy the API on Kubernetes."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user deploys on Kubernetes, which fully entails the hypothesis that the user's deploy method is Kubernetes.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We deploy the API on Kubernetes."
+      }
+    },
+    {
+      "turn_id": "dev-012c",
+      "source": "I do not use bare metal; please don't infer that as my deploy method.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "bare metal",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using bare metal and warns against inferring it as the deploy method, while the hypothesis asserts that the user's deploy method is bare metal.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use bare metal; please don't infer that as my deploy method."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using bare metal and warns against inferring it as the deploy method, while the hypothesis asserts that the user's deploy method is bare metal.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use bare metal; please don't infer that as my deploy method."
+      }
+    },
+    {
+      "turn_id": "dev-012d",
+      "source": "What if someday I changed my deploy method to bare metal? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "bare metal",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to bare metal is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to bare metal is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-013a",
+      "source": "Our production account is on Google Cloud.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Google Cloud",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the source's assertion that the user's production account uses Google Cloud as the provider.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our production account is on Google Cloud."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the source's assertion that the user's production account uses Google Cloud as the provider.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our production account is on Google Cloud."
+      }
+    },
+    {
+      "turn_id": "dev-013c",
+      "source": "I do not use Azure; please don't infer that as my cloud provider.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Azure",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Azure and requests that it not be inferred as their cloud provider, which directly contradicts the hypothesis claiming the user's cloud provider is Azure.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Azure; please don't infer that as my cloud provider."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Azure and requests that it not be inferred as their cloud provider, which directly contradicts the hypothesis claiming the user's cloud provider is Azure.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Azure; please don't infer that as my cloud provider."
+      }
+    },
+    {
+      "turn_id": "dev-013d",
+      "source": "What if someday I changed my cloud provider to Azure? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Azure",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Azure is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact ('is'). The source denies the truth of the hypothesis.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the change to Azure is 'only hypothetical' and not yet done ('For now'), while the hypothesis asserts it as a completed fact ('is'). The source speaker denies the truth of the hypothesis.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-014a",
+      "source": "Our team tracks issues in Linear.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Linear",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis explicitly states 'My issue tracker is Linear', which directly corresponds to the source's assertion that 'Our team tracks issues in Linear' by mapping 'My/Our team' to the user and 'issue tracker' to 'tracks issues'. The subject, predicate, and object align perfectly.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our team tracks issues in Linear"
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis explicitly states 'My issue tracker is Linear', which directly corresponds to the source's assertion that 'Our team tracks issues in Linear' with the subject 'user' and predicate 'issue_tracker'. The pronoun 'My' in the hypothesis refers to the user (source speaker), establishing a complete subject-predicate-object relationship matching the source data.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our team tracks issues in Linear"
+      }
+    },
+    {
+      "turn_id": "dev-014c",
+      "source": "I do not use Jira; please don't infer that as my issue tracker.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Jira",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Jira and warns against inferring it as their issue tracker, while the hypothesis asserts that the user's issue tracker is Jira.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Jira; please don't infer that as my issue tracker."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Jira and warns against inferring it as their issue tracker, while the hypothesis asserts that the user's issue tracker is Jira.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Jira; please don't infer that as my issue tracker."
+      }
+    },
+    {
+      "turn_id": "dev-014d",
+      "source": "What if someday I changed my issue tracker to Jira? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Jira",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Jira is hypothetical and not yet implemented ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Jira is hypothetical and not yet implemented ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-015a",
+      "source": "We write design proposals in Google Docs.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Google Docs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the source's assertion that the user writes design proposals in Google Docs, mapping 'design proposals' to 'documentation tool' and preserving the subject (user) and object (Google Docs). The transformation from a specific activity ('write design proposals') to a general category ('documentation tool') is semantically equivalent in this context.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We write design proposals in Google Docs."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the source's assertion that the user writes design proposals in Google Docs, mapping 'design proposals' to 'documentation' and 'Google Docs' to 'Google Docs', preserving the complete subject-predicate-object structure without negation or hypothetical uncertainty.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We write design proposals in Google Docs."
+      }
+    },
+    {
+      "turn_id": "dev-015c",
+      "source": "I do not use Notion; please don't infer that as my documentation tool.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Notion",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Notion and requests no inference to the contrary, while the hypothesis asserts that the user's documentation tool is Notion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Notion; please don't infer that as my documentation tool."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Notion and requests no inference to the contrary, while the hypothesis asserts that the user's documentation tool is Notion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Notion; please don't infer that as my documentation tool."
+      }
+    },
+    {
+      "turn_id": "dev-015d",
+      "source": "What if someday I changed my documentation tool to Notion? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Notion",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Notion is 'only hypothetical' and a future possibility ('What if someday'), whereas the hypothesis presents it as a current fact ('is'). The source denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Notion is 'only hypothetical' and conditional ('What if someday'), whereas the hypothesis presents it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-016a",
+      "source": "Wednesday is my meeting-free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Wednesday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9973639845848083,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Wednesday is my meeting-free day."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9973639845848083,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Wednesday is my meeting-free day."
+      }
+    },
+    {
+      "turn_id": "dev-016c",
+      "source": "I do not use Monday; please don't infer that as my meeting free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Monday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Monday and warns against inferring it as their free day, while the hypothesis asserts that Monday is indeed the meeting-free day.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Monday; please don't infer that as my meeting free day."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Monday and warns against inferring it as their free day, while the hypothesis asserts that Monday is indeed the meeting-free day.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Monday; please don't infer that as my meeting free day."
+      }
+    },
+    {
+      "turn_id": "dev-016d",
+      "source": "Correction to what I said earlier: my meeting free day is Monday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Monday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9921725988388062,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my meeting free day is Monday."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9921725988388062,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my meeting free day is Monday."
+      }
+    },
+    {
+      "turn_id": "dev-017a",
+      "source": "I normally start work at 08:30.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "08:30",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9962711334228516,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I normally start work at 08:30."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9962711334228516,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I normally start work at 08:30."
+      }
+    },
+    {
+      "turn_id": "dev-017c",
+      "source": "I do not use 06:00; please don't infer that as my work start.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "06:00",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using 06:00 as the work start time and instructs against inferring it, while the hypothesis asserts that the work start is 06:00.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use 06:00; please don't infer that as my work start."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using 06:00 as the work start time and instructs against inferring it, while the hypothesis asserts that the work start is 06:00.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use 06:00; please don't infer that as my work start."
+      }
+    },
+    {
+      "turn_id": "dev-017d",
+      "source": "What if someday I changed my work start to 06:00? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "06:00",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to 06:00 is hypothetical and not current ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to 06:00 is hypothetical and not current ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-018a",
+      "source": "My pronouns are she/her.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "she/her",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9906179308891296,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My pronouns are she/her."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9906179308891296,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My pronouns are she/her."
+      }
+    },
+    {
+      "turn_id": "dev-018c",
+      "source": "I do not use they/them; please don't infer that as my pronouns.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "they/them",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use 'they/them' and requests that it not be inferred as their pronouns, while the hypothesis asserts the user's pronouns are 'they/them', directly opposing the source's statement.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use they/them; please don't infer that as my pronouns."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use 'they/them' and requests that it not be inferred as their pronouns, while the hypothesis asserts the user's pronouns are 'they/them', directly opposing the source's statement.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use they/them; please don't infer that as my pronouns."
+      }
+    },
+    {
+      "turn_id": "dev-018d",
+      "source": "What if someday I changed my pronouns to they/them? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "they/them",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to 'they/them' is only hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis presents it as a completed fact ('My pronouns is they/them'). The source speaker denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to 'they/them' is only hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis presents it as a completed fact ('My pronouns is they/them'). The source speaker denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-019a",
+      "source": "I can speak Mandarin fluently.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "Mandarin",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9941664934158325,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I can speak Mandarin fluently."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9941664934158325,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I can speak Mandarin fluently."
+      }
+    },
+    {
+      "turn_id": "dev-019c",
+      "source": "I do not use German; please don't infer that as my spoken language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "German",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using German and requests non-inference of it as the spoken language, while the hypothesis asserts that the user's spoken language is German.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use German; please don't infer that as my spoken language."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using German and requests non-inference of it as the spoken language, while the hypothesis asserts that the user's spoken language is German.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use German; please don't infer that as my spoken language."
+      }
+    },
+    {
+      "turn_id": "dev-019d",
+      "source": "What if someday I changed my spoken language to German? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "German",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to German is hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to German is hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "captions",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source expresses a current need for captions ('I need captions'), while the hypothesis asserts this as a fixed fact ('My accessibility need is captions'). The source implies a desire or requirement rather than stating it as an established, completed state of being. Additionally, the hypothesis uses 'My' referring to the user, which contradicts the instruction that 'I/my in the hypothesis refers to that speaker', creating a structural mismatch between the source's self-reference ('I') and the hypothesis's self-reference ('My').",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I need captions enabled for video calls"
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the user's explicit statement about needing captions for video calls as a fact regarding their accessibility need.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I need captions enabled for video calls."
+      }
+    },
+    {
+      "turn_id": "dev-020c",
+      "source": "I do not use screen magnification; please don't infer that as my accessibility need.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "screen magnification",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using screen magnification and instructs against inferring it as an accessibility need, while the hypothesis asserts that the user's accessibility need is screen magnification.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use screen magnification; please don't infer that as my accessibility need."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using screen magnification and instructs against inferring it as an accessibility need, while the hypothesis asserts that the user's accessibility need is screen magnification.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use screen magnification; please don't infer that as my accessibility need."
+      }
+    },
+    {
+      "turn_id": "dev-020d",
+      "source": "What if someday I changed my accessibility need to screen magnification? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "screen magnification",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to screen magnification is 'only hypothetical' and not a current fact, while the hypothesis presents it as a definitive present state ('is'). The source also frames the scenario with 'What if', indicating uncertainty rather than established fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the change to screen magnification is 'only hypothetical' and not a current fact, while the hypothesis presents it as a definitive present state ('is'). The source also frames the scenario with 'What if', indicating uncertainty rather than established fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-021a",
+      "source": "I follow a vegetarian diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "vegetarian",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9975700974464417,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I follow a vegetarian diet."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9975700974464417,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I follow a vegetarian diet."
+      }
+    },
+    {
+      "turn_id": "dev-021c",
+      "source": "I do not use keto; please don't infer that as my diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "keto",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use keto and requests that others not infer otherwise, which directly contradicts the hypothesis claiming the user's diet is keto.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use keto"
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use keto and requests that others not infer otherwise, which directly contradicts the hypothesis claiming the user's diet is keto.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use keto"
+      }
+    },
+    {
+      "turn_id": "dev-021d",
+      "source": "Correction to what I said earlier: my diet is keto.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "keto",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis exactly matches the core factual claim made by the user in the source text, despite the surrounding meta-commentary about a correction.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "my diet is keto"
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis 'My diet is keto' is a direct restatement of the user's assertion in the source text ('my diet is keto'), satisfying the requirement for complete subject, relation, and value match without negation or hypothetical uncertainty.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "my diet is keto"
+      }
+    },
+    {
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanuts",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9965043067932129,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a peanut allergy."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9965043067932129,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a peanut allergy."
+      }
+    },
+    {
+      "turn_id": "dev-022c",
+      "source": "I do not use shellfish; please don't infer that as my allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "shellfish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using shellfish and warns against inferring an allergy from that action, while the hypothesis asserts a direct fact that the user has a shellfish allergy.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use shellfish; please don't infer that as my allergy."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies having an allergy to shellfish and warns against inferring one, while the hypothesis asserts that the user's allergy is shellfish.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use shellfish; please don't infer that as my allergy."
+      }
+    },
+    {
+      "turn_id": "dev-022d",
+      "source": "What if someday I changed my allergy to shellfish? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "shellfish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the condition is 'only hypothetical' and uses conditional phrasing ('What if'), whereas the hypothesis presents it as a definitive fact ('is'). The source denies the truth of the proposition that the allergy exists in the future.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the condition is 'only hypothetical' and uses conditional phrasing ('What if'), whereas the hypothesis presents it as a definitive fact ('is'). The source denies the truth of the proposition that the allergy exists in the future.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-023a",
+      "source": "My emergency contact is Noah Chen.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Noah Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis text is identical to the source text, establishing a complete subject-predicate-object triple with full confidence.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My emergency contact is Noah Chen."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis text is identical to the source text, establishing a complete subject-predicate-object triple with full confidence.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My emergency contact is Noah Chen."
+      }
+    },
+    {
+      "turn_id": "dev-023c",
+      "source": "I do not use Alex Chen; please don't infer that as my emergency contact.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Alex Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9932956099510193,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Alex Chen; please don't infer that as my emergency contact."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using Alex Chen as an emergency contact and warns against inferring it, while the hypothesis asserts that Alex Chen is the user's emergency contact.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Alex Chen; please don't infer that as my emergency contact."
+      }
+    },
+    {
+      "turn_id": "dev-023d",
+      "source": "What if someday I changed my emergency contact to Alex Chen? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Alex Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Alex Chen is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Alex Chen is hypothetical and not yet done ('For now this is only hypothetical'), while the hypothesis asserts it as a completed fact.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "turn_id": "dev-024a",
+      "source": "I have a cat named Pixel.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "cat named Pixel",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.993461012840271,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a cat named Pixel."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.993461012840271,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a cat named Pixel."
+      }
+    },
+    {
+      "turn_id": "dev-024c",
+      "source": "I do not use dog named Luna; please don't infer that as my pet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "dog named Luna",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using the dog as a pet and requests no inference to that effect, while the hypothesis asserts the dog is the user's pet.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use dog named Luna; please don't infer that as my pet."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly denies using the dog as a pet and requests no inference to that effect, while the hypothesis asserts the dog is the user's pet.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use dog named Luna; please don't infer that as my pet."
+      }
+    },
+    {
+      "turn_id": "dev-024d",
+      "source": "What if someday I changed my pet to dog named Luna? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "dog named Luna",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to a dog named Luna is hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis asserts it as a completed fact ('is'). The source speaker denies the truth of the hypothesis.",
+        "probability": 0.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to a dog named Luna is hypothetical and not yet realized ('For now this is only hypothetical'), whereas the hypothesis asserts it as a completed fact ('is'). The source speaker denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-025a",
+      "source": "Jazz is the music I listen to most.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "jazz",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "category": "source_label",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the user's explicit preference for jazz as their most-listened-to music, matching the subject (user), predicate (favorite_music), and object (jazz) of the source assertion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Jazz is the music I listen to most."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The hypothesis directly restates the user's explicit preference for jazz as their most-listened-to music, matching the subject (user), predicate (favorite_music), and object (jazz) of the source assertion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Jazz is the music I listen to most."
+      }
+    },
+    {
+      "turn_id": "dev-025c",
+      "source": "I do not use country; please don't infer that as my favorite music.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "country",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9980084300041199,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use country; please don't infer that as my favorite music."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9980084300041199,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use country; please don't infer that as my favorite music."
+      }
+    },
+    {
+      "turn_id": "dev-025d",
+      "source": "What if someday I changed my favorite music to country? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "country",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "category": "source_label",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the preference for country music is 'only hypothetical' and a future possibility ('What if someday'), whereas the hypothesis presents it as an established fact ('is'). The source denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the preference for country music is 'only hypothetical' and a future possibility ('What if someday'), whereas the hypothesis presents it as an established fact ('is'). The source denies the truth of the hypothesis.",
+        "probability": 0.1,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "turn_id": "dev-001c",
+      "source": "I do not use Mina Chen; please don't infer that as my name.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "not Mina Chen",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9950453042984009,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Mina Chen; please don't infer that as my name."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-004c",
+      "source": "I do not use Eastern Time; please don't infer that as my timezone.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "not Eastern Time",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9937647581100464,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Eastern Time; please don't infer that as my timezone."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-007a",
+      "source": "I use Neovim as my everyday editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "Neovim",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_relation",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9973026514053345,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I use Neovim as my everyday editor."
+      },
+      "after": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9949008226394653,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I use Neovim as my everyday editor."
+      }
+    },
+    {
+      "turn_id": "dev-009a",
+      "source": "I belong to the Reliability Platform team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "Reliability Platform team",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_relation",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9950946569442749,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I belong to the Reliability Platform team."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source states membership in a team, while the hypothesis claims a specific 'job role' title; these are not semantically equivalent concepts.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I belong to the Reliability Platform team."
+      }
+    },
+    {
+      "turn_id": "dev-009c",
+      "source": "I do not use Payments; please don't infer that as my team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": null,
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source explicitly states the user does not use Payments and requests no inference of team usage, but it does not confirm whether the user uses any other database or if they use 'None' as a general statement. The hypothesis 'I use None' is an unrelated claim about the absence of usage that cannot be derived from the specific refusal to infer team usage regarding Payments.",
+        "probability": 0.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Payments; please don't infer that as my team."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "empty extracted value cannot establish an assertion",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-010a",
+      "source": "My manager is Elena Ruiz.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "manager of Elena Ruiz",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_relation",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9926416277885437,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My manager is Elena Ruiz."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9926719665527344,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My manager is Elena Ruiz."
+      }
+    },
+    {
+      "turn_id": "dev-012c",
+      "source": "I do not use bare metal; please don't infer that as my deploy method.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "not_bare_metal",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9953582882881165,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use bare metal; please don't infer that as my deploy method."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-016c",
+      "source": "I do not use Monday; please don't infer that as my meeting free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "not Monday",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_relation",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9954656958580017,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Monday; please don't infer that as my meeting free day."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-017c",
+      "source": "I do not use 06:00; please don't infer that as my work start.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "not 06:00",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_relation",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user does not use 06:00 as their work start time and warns against inferring otherwise, which logically entails that the user's timezone is not 06:00.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use 06:00; please don't infer that as my work start."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-018c",
+      "source": "I do not use they/them; please don't infer that as my pronouns.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "not they/them",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user does not use 'they/them' and requests no inference of that as their pronouns, which logically entails the hypothesis that the user's pronouns are not 'they/them'.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use they/them; please don't infer that as my pronouns."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-019a",
+      "source": "I can speak Mandarin fluently.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "language_proficiency",
+        "object": "Mandarin",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "category": "supported_equivalent",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9963704347610474,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I can speak Mandarin fluently."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9963704347610474,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I can speak Mandarin fluently."
+      }
+    },
+    {
+      "turn_id": "dev-019c",
+      "source": "I do not use German; please don't infer that as my spoken language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "not German",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source speaker explicitly denies using German and requests that others do not infer it as their spoken language, but this does not confirm or deny whether German is actually their spoken language; the hypothesis asserts a specific fact about the user's spoken language which cannot be verified from the source text alone.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use German; please don't infer that as my spoken language."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "enable captions for video calls",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "category": "supported_lossy",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9933454990386963,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I need captions enabled for video calls."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9933454990386963,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I need captions enabled for video calls."
+      }
+    },
+    {
+      "turn_id": "dev-021c",
+      "source": "I do not use keto; please don't infer that as my diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "not_keto",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "category": "unsupported_encoding",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9910905361175537,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use keto; please don't infer that as my diet."
+      },
+      "after": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "backend": "representation_guard"
+      }
+    },
+    {
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanut",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "category": "supported_equivalent",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9969481825828552,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a peanut allergy."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9969481825828552,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I have a peanut allergy."
+      }
+    },
+    {
+      "turn_id": "dev-025a",
+      "source": "Jazz is the music I listen to most.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_music_genre",
+        "object": "Jazz",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "category": "supported_equivalent",
+      "before": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.99134361743927,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Jazz is the music I listen to most."
+      },
+      "after": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.99134361743927,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Jazz is the music I listen to most."
+      }
+    }
+  ]
+}
