@@ -62,3 +62,59 @@ def test_frozen_policy_includes_runtime_threshold_and_model_settings():
     assert before == policy_fingerprint(
         base.model_copy(update={"openai_api_key": "not-a-real-key"})
     )
+
+
+def test_review_equivalence_only_explains_its_explicitly_mapped_target():
+    from mnemo.eval_support import AtomicLabel, EvalDataset, EvalTurn
+
+    turn = EvalTurn(
+        "multi",
+        "user",
+        "I live in Oslo and my manager is Priya.",
+        "s",
+        labels=(
+            AtomicLabel("location", "Oslo", "must_keep"),
+            AtomicLabel("manager", "Priya", "must_keep"),
+        ),
+    )
+    dataset = EvalDataset(name="multi", version="1", split="test", turns=(turn,))
+    assertion = {"subject": "user", "predicate": "resides_in", "object": "Oslo"}
+    write = {**assertion, "seq": 1, "source_span": {"turn_ids": ["multi"]}}
+    report = {
+        "metadata": {"fingerprints": {"dataset": dataset.fingerprint()}},
+        "gated": {"writes": [write], "current_assertions": [write]},
+        "decisions": [
+            {
+                "turn_id": "multi",
+                "candidate": assertion,
+                "verification": {"accepted": True},
+                "outcome": "accepted",
+            }
+        ],
+    }
+    review = {
+        "dataset_sha256": dataset.fingerprint(),
+        "items": [
+            {
+                "seq": 1,
+                "turn_id": "multi",
+                "source": turn.text,
+                "assertion": assertion,
+                "category": "supported_equivalent",
+                "mapped_targets": [{"subject": "user", "predicate": "location", "object": "Oslo"}],
+            }
+        ],
+    }
+    result = analyze_report(report, dataset, review)
+    causes = {m["target"]["predicate"]: m["cause"] for m in result["misses"]}
+    assert causes["location"] == "label_equivalence"
+    assert causes["manager"] == "extraction_fidelity_or_label_mismatch"
+    # A legacy review without target mapping remains visible but cannot assign a cause.
+    del review["items"][0]["mapped_targets"]
+    result = analyze_report(report, dataset, review)
+    assert all(m["cause"] != "label_equivalence" for m in result["misses"])
+    review["items"][0]["mapped_targets"] = [
+        {"subject": "user", "predicate": "location", "object": "Boston"}
+    ]
+    with pytest.raises(ValueError, match="mapped target"):
+        analyze_report(report, dataset, review)

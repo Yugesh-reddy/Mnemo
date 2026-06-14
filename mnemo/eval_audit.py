@@ -68,8 +68,16 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
                 if (
                     key(w) != key(item["assertion"])
                     or item["source"] != turns[item["turn_id"]].text
+                    or item["turn_id"] not in decoded(w["source_span"])["turn_ids"]
                 ):
                     raise ValueError("review assertion/source differs from saved evidence")
+                allowed_targets = {
+                    assertion_key(label.subject, label.predicate, label.value)
+                    for label in turns[item["turn_id"]].labels
+                    if label.disposition in {"truth", "must_keep"}
+                }
+                if any(key(t) not in allowed_targets for t in item.get("mapped_targets", [])):
+                    raise ValueError("review mapped target is absent from source labels")
     expected, required = {}, set()
     for t in dataset.turns:
         for label in t.labels:
@@ -110,11 +118,16 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
             later = []
             cause = "extraction_omission"
         judgments = [review_by_seq[w["seq"]] for w in source_writes if w["seq"] in review_by_seq]
-        if any(j["category"] == "supported_equivalent" for j in judgments):
+        # Source proximity does not establish which required assertion a reviewed
+        # paraphrase represents. Require an explicit target mapping for attribution.
+        target_judgments = [
+            j for j in judgments if target in {key(t) for t in j.get("mapped_targets", [])}
+        ]
+        if any(j["category"] == "supported_equivalent" for j in target_judgments):
             cause = "label_equivalence"
-        elif any(j["category"] == "ambiguous_source" for j in judgments):
+        elif any(j["category"] == "ambiguous_source" for j in target_judgments):
             cause = "ambiguous_source"
-        elif any(j["category"] == "supported_lossy" for j in judgments):
+        elif any(j["category"] == "supported_lossy" for j in target_judgments):
             cause = "extraction_identity_loss"
         misses.append(
             {
@@ -130,6 +143,7 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
                 "source_writes": source_writes,
                 "later_same_identity_writes": later,
                 "review": judgments,
+                "target_review": target_judgments,
                 "turn_error": failed_turns.get(turn.turn_id),
             }
         )
