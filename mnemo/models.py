@@ -178,3 +178,5 @@ class ExtractedFact(BaseModel):
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     importance: int = Field(default=5, ge=1, le=10)
     assertion_type: str = "agent_inference"
+    evidence: str | None = Field(default=None, min_length=1)
+    """Untrusted quote hint; the worker checks it against the original input."""

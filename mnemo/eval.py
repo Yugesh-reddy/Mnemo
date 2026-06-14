@@ -14,6 +14,7 @@ from dataclasses import asdict, dataclass, replace
 from typing import Any
 
 import asyncpg
+import httpx
 
 from mnemo.audit import gate_snapshot
 from mnemo.config import Settings, get_settings
@@ -24,7 +25,12 @@ from mnemo.db import (
 from mnemo.db import (
     prepare_isolated_schema as _prepare_schema,
 )
-from mnemo.eval_data import load_benchmark_dataset, load_longmemeval, load_smoke_dataset
+from mnemo.eval_data import (
+    load_benchmark_dataset,
+    load_longmemeval,
+    load_naturalistic_dataset,
+    load_smoke_dataset,
+)
 from mnemo.eval_support import (
     DeterministicEmbedder,
     EvalDataset,
@@ -116,13 +122,28 @@ async def run_naive(
     extractor: Any | None = None,
     namespace: str = "eval-naive",
     settings: Settings | None = None,
+    turn_errors: list[dict[str, Any]] | None = None,
 ) -> set[tuple[str, str]]:
     """Store every extracted candidate without filtering or verification."""
     selected = dataset or _SMOKE
     source = extractor or LabeledReplayExtractor(selected.turns)
     store = MnemoStore(conn, embedder, namespace=namespace, settings=settings)
     for turn in selected.turns:
-        for candidate in await asyncio.to_thread(source.extract, turn.text, turn.role):
+        try:
+            candidates = await asyncio.to_thread(source.extract, turn.text, turn.role)
+        except (ValueError, RuntimeError, httpx.HTTPError) as exc:
+            if turn_errors is None:
+                raise
+            turn_errors.append(
+                {
+                    "turn_id": turn.turn_id,
+                    "session_id": turn.session_id,
+                    "stage": "extraction",
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+            continue
+        for candidate in candidates:
             await store.add(
                 candidate.subject,
                 candidate.predicate,
@@ -145,13 +166,15 @@ async def run_gated(
     verifier: Any | None = None,
     namespace: str = "eval-gated",
     settings: Settings | None = None,
+    turn_errors: list[dict[str, Any]] | None = None,
 ) -> set[tuple[str, str]]:
     """Run turns through observe → worker → quality gate."""
     selected = dataset or _SMOKE
     source = extractor or LabeledReplayExtractor(selected.turns)
+    observed = _ObservedExtractor(source)
     store = MnemoStore(conn, embedder, namespace=namespace, settings=settings)
     worker = ExtractionWorker(
-        conn, embedder, source, verifier, namespace=namespace, settings=settings
+        conn, embedder, observed, verifier, namespace=namespace, settings=settings
     )
     for turn in selected.turns:
         await store.observe(turn.turn_id, turn.text, turn.session_id, role=turn.role)
@@ -164,28 +187,84 @@ async def run_gated(
         if not remaining:
             break
         await asyncio.sleep(0.1)
-    failed = await conn.fetchval("SELECT count(*) FROM extraction_job WHERE status='failed'")
-    if failed:
+    failed = await conn.fetch(
+        "SELECT turn_id, session_id, attempts, last_error FROM extraction_job "
+        "WHERE status='failed' ORDER BY created_at"
+    )
+    if failed and turn_errors is None:
         raise RuntimeError(
-            f"evaluation has {failed} failed extraction jobs; no complete score is available"
+            f"evaluation has {len(failed)} failed extraction jobs; no complete score is available"
         )
+    if turn_errors is not None:
+        turns = {t.turn_id: t for t in selected.turns}
+        for row in failed:
+            turn = turns[row["turn_id"]]
+            message = observed.errors.get((turn.role, turn.text))
+            turn_errors.append(
+                {
+                    "turn_id": turn.turn_id,
+                    "session_id": row["session_id"],
+                    "stage": "extraction" if message else "worker",
+                    "attempts": row["attempts"],
+                    "error": message or row["last_error"],
+                }
+            )
     return await _stored_pairs(conn)
+
+
+class _ObservedExtractor:
+    """Keep evaluation diagnostics while the real worker owns retries and audit events."""
+
+    def __init__(self, source: Any) -> None:
+        self.source = source
+        self.errors: dict[tuple[str, str], str] = {}
+
+    def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
+        try:
+            result = self.source.extract(text, role)
+        except (ValueError, RuntimeError, httpx.HTTPError) as exc:
+            self.errors[(role, text)] = f"{type(exc).__name__}: {exc}"
+            raise
+        self.errors.pop((role, text), None)
+        return result
+
+
+@dataclass(frozen=True)
+class _ExtractionFailure:
+    error: str
 
 
 class _MaterializedExtractor:
     backend = "materialized-candidate-replay"
 
-    def __init__(self, turns: Iterable[EvalTurn], extracted: list[list[ExtractedFact]]) -> None:
-        self._items = {(t.role, t.text): tuple(c) for t, c in zip(turns, extracted, strict=True)}
+    def __init__(
+        self,
+        turns: Iterable[EvalTurn],
+        extracted: list[list[ExtractedFact] | _ExtractionFailure],
+    ) -> None:
+        self._items: dict[tuple[str, str], tuple[ExtractedFact, ...] | _ExtractionFailure] = {}
+        for turn, candidates in zip(turns, extracted, strict=True):
+            key = (turn.role, turn.text)
+            value = candidates if isinstance(candidates, _ExtractionFailure) else tuple(candidates)
+            if key in self._items and self._items[key] != value:
+                raise ValueError("conflicting candidate replay for identical role/text input")
+            self._items[key] = value
 
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
-        return list(self._items.get((role, text), ()))
+        item = self._items.get((role, text), ())
+        if isinstance(item, _ExtractionFailure):
+            raise ValueError(item.error)
+        return list(item)
 
 
 def _materialize_candidates(dataset: EvalDataset, extractor: Any) -> _MaterializedExtractor:
-    return _MaterializedExtractor(
-        dataset.turns, [extractor.extract(t.text, t.role) for t in dataset.turns]
-    )
+    extracted: list[list[ExtractedFact] | _ExtractionFailure] = []
+    for turn in dataset.turns:
+        try:
+            extracted.append(extractor.extract(turn.text, turn.role))
+        except (ValueError, RuntimeError, httpx.HTTPError) as exc:
+            extracted.append(_ExtractionFailure(f"{type(exc).__name__}: {exc}"))
+    return _MaterializedExtractor(dataset.turns, extracted)
 
 
 async def assertion_snapshot(conn: asyncpg.Connection) -> dict[str, Any]:
@@ -495,6 +574,8 @@ async def evaluate(
     connections: list[asyncpg.Connection | None] = [None, None]
     result: dict[str, Any] | None = None
     cleanup_errors: list[dict[str, str]] = []
+    naive_errors: list[dict[str, Any]] = []
+    gated_errors: list[dict[str, Any]] = []
     try:
         connections[0] = await _prepare_schema(target_dsn, schemas[0], embed_dim=settings.embed_dim)
         connections[1] = await _prepare_schema(target_dsn, schemas[1], embed_dim=settings.embed_dim)
@@ -506,6 +587,7 @@ async def evaluate(
             dataset=selected,
             extractor=selected_extractor,
             settings=settings,
+            turn_errors=naive_errors,
         )
         naive_elapsed = time.perf_counter() - started
         after_naive = usage_snapshot(original_extractor, selected_embedder, verifier)
@@ -517,6 +599,7 @@ async def evaluate(
             extractor=selected_extractor,
             verifier=verifier,
             settings=settings,
+            turn_errors=gated_errors,
         )
         gated_elapsed = time.perf_counter() - started
         after_gated = usage_snapshot(original_extractor, selected_embedder, verifier)
@@ -528,6 +611,8 @@ async def evaluate(
         )
         config_hash = gate_snapshot(settings)["fingerprint"]
         naive_data, gated_data = naive.as_dict(), gated.as_dict()
+        naive_data["turn_errors"] = naive_errors
+        gated_data["turn_errors"] = gated_errors
         naive_data["usage"] = usage_delta(before_naive, after_naive)
         gated_data["usage"] = usage_delta(after_naive, after_gated)
         for arm in (naive_data, gated_data):
@@ -567,6 +652,7 @@ async def evaluate(
                 )
             ],
             "metadata": {
+                "status": "scored_with_errors" if naive_errors or gated_errors else "scored",
                 "dataset": selected.name,
                 "dataset_version": selected.version,
                 "split": selected.split,
@@ -626,6 +712,8 @@ def report(result: dict[str, Any]) -> None:
         "synthetic" if meta.get("synthetic", True) else "external conversations; supplied labels"
     )
     print(f"PRECISION / RECALL WRITE-QUALITY EVAL ({meta.get('dataset', 'smoke')}; {label})")
+    if meta.get("status") == "scored_with_errors":
+        print("  FAILED TURNS PRESENT: their labels remain in the recall denominator.")
     for name in ("naive", "gated"):
         row = result[name]
         print(
@@ -640,7 +728,9 @@ def report(result: dict[str, Any]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dataset", choices=("smoke", "benchmark"), default="smoke")
+    parser.add_argument(
+        "--dataset", choices=("smoke", "benchmark", "naturalistic"), default="smoke"
+    )
     parser.add_argument("--split", choices=("dev", "held_out", "all"), default="held_out")
     parser.add_argument(
         "--mode", choices=("candidate_replay", "pipeline"), default="candidate_replay"
@@ -661,9 +751,14 @@ def main() -> None:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--probe-retrieval", action="store_true")
     args = parser.parse_args()
-    dataset = (
-        load_smoke_dataset() if args.dataset == "smoke" else load_benchmark_dataset(args.split)
-    )
+    if args.dataset == "naturalistic":
+        if args.split == "held_out":
+            parser.error("naturalistic is authored development data, not a holdout")
+        dataset = load_naturalistic_dataset()
+    else:
+        dataset = (
+            load_smoke_dataset() if args.dataset == "smoke" else load_benchmark_dataset(args.split)
+        )
     from pathlib import Path
 
     from mnemo.embedder import build_embedder
@@ -718,6 +813,8 @@ def main() -> None:
         raise SystemExit(
             "Evaluation scored; cleanup failed. See metadata.cleanup_errors in the report."
         )
+    if result["metadata"].get("status") == "scored_with_errors":
+        raise SystemExit("Evaluation scored with failed turns; see each arm's turn_errors.")
 
 
 if __name__ == "__main__":

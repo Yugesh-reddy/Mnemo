@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from mnemo.eval import assertion_key
-from mnemo.eval_data import load_benchmark_dataset, load_smoke_dataset
+from mnemo.eval_data import load_benchmark_dataset, load_naturalistic_dataset, load_smoke_dataset
 from mnemo.eval_support import EvalDataset
 
 
@@ -38,6 +38,7 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
         for d in report["decisions"]
     ]
     writes = report["gated"]["writes"]
+    failed_turns = {e["turn_id"]: e for e in report["gated"].get("turn_errors", [])}
     actual = {key(w) for w in report["gated"]["current_assertions"]}
     unmatched = []
     for w in writes:
@@ -102,6 +103,9 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
         elif any(d["candidate"] for d in ds):
             later = []
             cause = "extraction_fidelity_or_label_mismatch"
+        elif turn.turn_id in failed_turns:
+            later = []
+            cause = failed_turns[turn.turn_id]["stage"] + "_error"
         else:
             later = []
             cause = "extraction_omission"
@@ -126,6 +130,7 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
                 "source_writes": source_writes,
                 "later_same_identity_writes": later,
                 "review": judgments,
+                "turn_error": failed_turns.get(turn.turn_id),
             }
         )
     return {
@@ -153,14 +158,20 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("report", type=Path)
-    parser.add_argument("--dataset", choices=("benchmark", "smoke"), default="benchmark")
+    parser.add_argument(
+        "--dataset", choices=("benchmark", "smoke", "naturalistic"), default="benchmark"
+    )
     parser.add_argument("--review", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     review = json.loads(args.review.read_text()) if args.review else None
     if review and review["report_sha256"] != hashlib.sha256(args.report.read_bytes()).hexdigest():
         raise ValueError("review belongs to a different report")
-    dataset = load_benchmark_dataset("all") if args.dataset == "benchmark" else load_smoke_dataset()
+    dataset = (
+        load_naturalistic_dataset()
+        if args.dataset == "naturalistic"
+        else load_benchmark_dataset("all") if args.dataset == "benchmark" else load_smoke_dataset()
+    )
     result = analyze_report(json.loads(args.report.read_text()), dataset, review)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(

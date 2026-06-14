@@ -1,0 +1,1225 @@
+{
+  "harbor-01-00": [
+    {
+      "subject": "user",
+      "predicate": "name",
+      "value": "Asha Patel",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "project",
+      "value": "Harbor Voices",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-01": [],
+  "harbor-01-02": [
+    {
+      "subject": "user",
+      "predicate": "role",
+      "value": "community archivist",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-03": [],
+  "harbor-01-04": [
+    {
+      "subject": "user",
+      "predicate": "manager",
+      "value": "Priya Nair",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "manager",
+      "value": "Morgan",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-01-05": [],
+  "harbor-01-06": [
+    {
+      "subject": "user",
+      "predicate": "location",
+      "value": "Boston",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "timezone",
+      "value": "America/New_York",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-07": [],
+  "harbor-01-08": [
+    {
+      "subject": "user",
+      "predicate": "uses_database",
+      "value": "PostgreSQL",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "preferred_database",
+      "value": "PostgreSQL",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-01-09": [],
+  "harbor-01-10": [
+    {
+      "subject": "user",
+      "predicate": "import_language",
+      "value": "Python",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "editor",
+      "value": "Neovim",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "shell",
+      "value": "fish",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-01-11": [],
+  "harbor-01-12": [
+    {
+      "subject": "user",
+      "predicate": "issue_tracker",
+      "value": "Linear",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "documentation_tool",
+      "value": "Obsidian",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-01-13": [],
+  "harbor-01-14": [
+    {
+      "subject": "user",
+      "predicate": "transcription_budget_usd",
+      "value": "100",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-15": [],
+  "harbor-01-16": [
+    {
+      "subject": "user",
+      "predicate": "meeting_free_day",
+      "value": "Wednesday",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-17": [],
+  "harbor-01-18": [
+    {
+      "subject": "user",
+      "predicate": "accessibility_need",
+      "value": "captions enabled on video calls",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-01-19": [],
+  "harbor-02-00": [
+    {
+      "subject": "user",
+      "predicate": "first_interview",
+      "value": "Lena Ortiz on April 10",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-02-01": [],
+  "harbor-02-02": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_room",
+      "value": "Cedar Room",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "first_interview_time",
+      "value": "2 to 4 pm",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-02-03": [],
+  "harbor-02-04": [
+    {
+      "subject": "user",
+      "predicate": "borrowed_equipment",
+      "value": "Zoom H5 recorder",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "owns_equipment",
+      "value": "headphones",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-02-05": [],
+  "harbor-02-06": [
+    {
+      "subject": "user",
+      "predicate": "tested_room",
+      "value": "Cedar Room",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "preferred_interview_table_position",
+      "value": "by the window",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-02-07": [],
+  "harbor-02-08": [
+    {
+      "subject": "user",
+      "predicate": "considered_scanning",
+      "value": "Lena photographs after the interview with permission",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "has_scan_permission",
+      "value": "Lena photographs",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-02-09": [],
+  "harbor-02-10": [
+    {
+      "subject": "user",
+      "predicate": "consent_form_version",
+      "value": "3",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-02-11": [],
+  "harbor-02-12": [
+    {
+      "subject": "user",
+      "predicate": "prepared_consent_copies",
+      "value": "2",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-02-13": [],
+  "harbor-02-14": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_topic",
+      "value": "waterfront businesses after the ferry terminal moved",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-02-15": [],
+  "harbor-02-16": [],
+  "harbor-02-17": [],
+  "harbor-02-18": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_accessibility",
+      "value": "large-print prompts",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-02-19": [],
+  "harbor-03-00": [
+    {
+      "subject": "user",
+      "predicate": "transcription_budget_usd",
+      "value": "150",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-03-01": [],
+  "harbor-03-02": [
+    {
+      "subject": "user",
+      "predicate": "first_interview",
+      "value": "Lena Ortiz on April 13",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-03-03": [],
+  "harbor-03-04": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_time",
+      "value": "2 to 4 pm",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "first_interview_room",
+      "value": "Cedar Room",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-03-05": [],
+  "harbor-03-06": [
+    {
+      "subject": "user",
+      "predicate": "considered_purchase",
+      "value": "second recorder",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "purchased",
+      "value": "second recorder",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-03-07": [],
+  "harbor-03-08": [
+    {
+      "subject": "user",
+      "predicate": "audio_editor",
+      "value": "Audacity",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "uses_database",
+      "value": "Audacity",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-03-09": [],
+  "harbor-03-10": [
+    {
+      "subject": "user",
+      "predicate": "checklist_format_preference",
+      "value": "plain text",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-03-11": [],
+  "harbor-03-12": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_count",
+      "value": "4",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-03-13": [],
+  "harbor-03-14": [
+    {
+      "subject": "user",
+      "predicate": "project_responsibility",
+      "value": "review catalog metadata before publication",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-03-15": [],
+  "harbor-03-16": [
+    {
+      "subject": "user",
+      "predicate": "uses_intake_tool",
+      "value": "shared spreadsheet",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-03-17": [],
+  "harbor-03-18": [
+    {
+      "subject": "user",
+      "predicate": "change_management_preference",
+      "value": "avoid several simultaneous workflow changes",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-03-19": [],
+  "harbor-04-00": [
+    {
+      "subject": "user",
+      "predicate": "completed_interview",
+      "value": "Lena Ortiz in Cedar Room on April 13",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "first_interview_audio_minutes",
+      "value": "74",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-01": [],
+  "harbor-04-02": [
+    {
+      "subject": "user",
+      "predicate": "returned_equipment",
+      "value": "Zoom H5 recorder",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-03": [],
+  "harbor-04-04": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_release_condition",
+      "value": "Lena transcript review before publishing one story",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-04-05": [],
+  "harbor-04-06": [
+    {
+      "subject": "user",
+      "predicate": "has_scan_permission",
+      "value": "eight Lena photographs",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "scanned_photographs",
+      "value": "eight Lena photographs after the April 13 interview",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-07": [],
+  "harbor-04-08": [
+    {
+      "subject": "user",
+      "predicate": "archive_image_format",
+      "value": "TIFF",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "browsing_image_format",
+      "value": "JPEG",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-09": [],
+  "harbor-04-10": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_name_spelling",
+      "value": "Lena Ortiz",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-11": [],
+  "harbor-04-12": [
+    {
+      "subject": "user",
+      "predicate": "first_transcript_status",
+      "value": "unreviewed draft",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "completed_transcript",
+      "value": "Lena interview",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-04-13": [],
+  "harbor-04-14": [
+    {
+      "subject": "user",
+      "predicate": "first_transcript_review_deadline",
+      "value": "April 18",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-04-15": [],
+  "harbor-04-16": [
+    {
+      "subject": "user",
+      "predicate": "editing_priority",
+      "value": "transcript accuracy before audio cleanup",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-04-17": [],
+  "harbor-04-18": [],
+  "harbor-04-19": [],
+  "harbor-05-00": [
+    {
+      "subject": "user",
+      "predicate": "meeting_free_day",
+      "value": "Monday",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-05-01": [],
+  "harbor-05-02": [
+    {
+      "subject": "user",
+      "predicate": "call_availability",
+      "value": "Wednesday afternoons",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "works_evenings",
+      "value": "every Wednesday",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-05-03": [],
+  "harbor-05-04": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_handoff_day",
+      "value": "Saturday",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-05-05": [],
+  "harbor-05-06": [
+    {
+      "subject": "user",
+      "predicate": "emergency_contact",
+      "value": "Eli Patel",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "emergency_contact",
+      "value": "Morgan",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-05-07": [],
+  "harbor-05-08": [
+    {
+      "subject": "user",
+      "predicate": "allergy",
+      "value": "peanuts",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-05-09": [],
+  "harbor-05-10": [
+    {
+      "subject": "user",
+      "predicate": "usual_lunch",
+      "value": "vegetarian food",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-05-11": [],
+  "harbor-05-12": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_count",
+      "value": "6",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-05-13": [],
+  "harbor-05-14": [],
+  "harbor-05-15": [],
+  "harbor-05-16": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_intro_time",
+      "value": "Saturday at 10 am",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-05-17": [],
+  "harbor-05-18": [
+    {
+      "subject": "user",
+      "predicate": "active_project",
+      "value": "second neighborhood oral-history project",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-05-19": [],
+  "harbor-06-00": [
+    {
+      "subject": "user",
+      "predicate": "first_transcript_name_review",
+      "value": "approved by Lena",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "first_interview_release_condition",
+      "value": "another conversation with Lena before publishing restricted story",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-06-01": [],
+  "harbor-06-02": [
+    {
+      "subject": "user",
+      "predicate": "first_transcript_status",
+      "value": "reviewed with one passage withheld",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-06-03": [],
+  "harbor-06-04": [
+    {
+      "subject": "user",
+      "predicate": "next_interview",
+      "value": "Omar Haddad on April 24",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-06-05": [],
+  "harbor-06-06": [
+    {
+      "subject": "user",
+      "predicate": "next_interview_format",
+      "value": "phone",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "next_interview_room",
+      "value": "Cedar Room",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-06-07": [],
+  "harbor-06-08": [
+    {
+      "subject": "user",
+      "predicate": "next_interview_focus",
+      "value": "Omar work first, then the terminal move",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-06-09": [],
+  "harbor-06-10": [
+    {
+      "subject": "user",
+      "predicate": "catalog_rights_field",
+      "value": "rights_status",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "catalog_rights_values",
+      "value": "pending, cleared, restricted",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-06-11": [],
+  "harbor-06-12": [
+    {
+      "subject": "user",
+      "predicate": "import_language",
+      "value": "Python",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "query_language",
+      "value": "SQL",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "preferred_language",
+      "value": "SQL",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-06-13": [],
+  "harbor-06-14": [
+    {
+      "subject": "user",
+      "predicate": "primary_language",
+      "value": "Python",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-06-15": [],
+  "harbor-06-16": [],
+  "harbor-06-17": [],
+  "harbor-06-18": [
+    {
+      "subject": "user",
+      "predicate": "catalog_table",
+      "value": "interviews",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "rights_export_columns",
+      "value": "interview_id, participant_name, rights_status",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-06-19": [],
+  "harbor-07-00": [
+    {
+      "subject": "user",
+      "predicate": "completed_phone_interview",
+      "value": "Omar Haddad on April 24",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "omar_audio_minutes",
+      "value": "51",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-07-01": [],
+  "harbor-07-02": [
+    {
+      "subject": "user",
+      "predicate": "omar_followup_status",
+      "value": "awaiting route-number reply",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-07-03": [],
+  "harbor-07-04": [
+    {
+      "subject": "user",
+      "predicate": "omar_recording_date",
+      "value": "April 24",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-07-05": [],
+  "harbor-07-06": [
+    {
+      "subject": "user",
+      "predicate": "considered_exhibition",
+      "value": "June",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "scheduled_exhibition",
+      "value": "June",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-07-07": [],
+  "harbor-07-08": [
+    {
+      "subject": "user",
+      "predicate": "archive_review_meeting",
+      "value": "May 2 with Priya",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "exhibition_launch",
+      "value": "May 2",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-07-09": [],
+  "harbor-07-10": [
+    {
+      "subject": "user",
+      "predicate": "sample_page_photographs",
+      "value": "3 cleared photographs",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-07-11": [],
+  "harbor-07-12": [
+    {
+      "subject": "user",
+      "predicate": "page_type_preference",
+      "value": "readable serif typeface",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-07-13": [],
+  "harbor-07-14": [
+    {
+      "subject": "user",
+      "predicate": "sample_page_change",
+      "value": "larger captions after Jules laptop review",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-07-15": [],
+  "harbor-07-16": [],
+  "harbor-07-17": [],
+  "harbor-07-18": [
+    {
+      "subject": "user",
+      "predicate": "planned_usability_check",
+      "value": "two volunteers on Wednesday afternoon",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "meeting_free_day",
+      "value": "Monday",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-07-19": [],
+  "harbor-08-00": [
+    {
+      "subject": "user",
+      "predicate": "usability_result",
+      "value": "photo dates found; rights note missed by both volunteers",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-01": [],
+  "harbor-08-02": [
+    {
+      "subject": "user",
+      "predicate": "rights_note_position",
+      "value": "directly below the title",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-08-03": [],
+  "harbor-08-04": [
+    {
+      "subject": "user",
+      "predicate": "backup_purchase",
+      "value": "external SSD on April 28",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "backup_purchase_usd",
+      "value": "90",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-05": [],
+  "harbor-08-06": [
+    {
+      "subject": "user",
+      "predicate": "transcription_budget_usd",
+      "value": "150",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "transcription_budget_usd",
+      "value": "60",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-08-07": [],
+  "harbor-08-08": [
+    {
+      "subject": "user",
+      "predicate": "backup_schedule",
+      "value": "Thursday afternoon",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "backup_drive_storage",
+      "value": "locked cabinet",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-09": [],
+  "harbor-08-10": [
+    {
+      "subject": "user",
+      "predicate": "backup_restore_test",
+      "value": "one interview audio and transcript opened correctly",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-11": [],
+  "harbor-08-12": [
+    {
+      "subject": "user",
+      "predicate": "review_brief_topics",
+      "value": "interviews, permissions, budget, next two weeks",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-13": [],
+  "harbor-08-14": [
+    {
+      "subject": "user",
+      "predicate": "completed_interview_count",
+      "value": "2",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-08-15": [],
+  "harbor-08-16": [],
+  "harbor-08-17": [],
+  "harbor-08-18": [
+    {
+      "subject": "user",
+      "predicate": "planned_brief_completion",
+      "value": "tomorrow morning",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "harbor-08-19": [],
+  "harbor-09-00": [
+    {
+      "subject": "user",
+      "predicate": "project_extension",
+      "value": "Harbor Voices for another month approved on May 2",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "approved_exhibition",
+      "value": "June",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-09-01": [],
+  "harbor-09-02": [
+    {
+      "subject": "user",
+      "predicate": "manager",
+      "value": "Priya Nair",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "manager",
+      "value": "Morgan",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-09-03": [],
+  "harbor-09-04": [
+    {
+      "subject": "user",
+      "predicate": "first_interview_release_condition",
+      "value": "written approval received; cleared for publication",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-09-05": [],
+  "harbor-09-06": [
+    {
+      "subject": "user",
+      "predicate": "omar_route_number",
+      "value": "17",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "omar_route_number",
+      "value": "70",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-09-07": [],
+  "harbor-09-08": [
+    {
+      "subject": "user",
+      "predicate": "omar_followup_status",
+      "value": "resolved",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-09-09": [],
+  "harbor-09-10": [
+    {
+      "subject": "user",
+      "predicate": "catalog_preview_date",
+      "value": "May 16",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-09-11": [],
+  "harbor-09-12": [
+    {
+      "subject": "user",
+      "predicate": "preferred_database",
+      "value": "PostgreSQL",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-09-13": [],
+  "harbor-09-14": [
+    {
+      "subject": "user",
+      "predicate": "uses_database",
+      "value": "PostgreSQL",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "uses_database",
+      "value": "MongoDB",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-09-15": [],
+  "harbor-09-16": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_count",
+      "value": "7",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-09-17": [],
+  "harbor-09-18": [],
+  "harbor-09-19": [],
+  "harbor-10-00": [
+    {
+      "subject": "user",
+      "predicate": "catalog_preview_date",
+      "value": "May 19",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-10-01": [],
+  "harbor-10-02": [
+    {
+      "subject": "user",
+      "predicate": "accessibility_need",
+      "value": "captions enabled on video calls",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "catalog_accessibility_checks",
+      "value": "image descriptions and keyboard navigation",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-10-03": [],
+  "harbor-10-04": [
+    {
+      "subject": "user",
+      "predicate": "image_description_status",
+      "value": "two drafted; awaiting review",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "harbor-10-05": [],
+  "harbor-10-06": [
+    {
+      "subject": "user",
+      "predicate": "archive_image_format",
+      "value": "TIFF",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-10-07": [],
+  "harbor-10-08": [
+    {
+      "subject": "user",
+      "predicate": "volunteer_handoff_day",
+      "value": "Saturday",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "volunteer_handoff_day",
+      "value": "Tuesday",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-10-09": [],
+  "harbor-10-10": [
+    {
+      "subject": "user",
+      "predicate": "emergency_contact",
+      "value": "Eli Patel",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "emergency_contact",
+      "value": "Alex Chen",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-10-11": [],
+  "harbor-10-12": [
+    {
+      "subject": "user",
+      "predicate": "recent_listening",
+      "value": "jazz while editing last week",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "preferred_music_genre",
+      "value": "jazz",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "harbor-10-13": [],
+  "harbor-10-14": [],
+  "harbor-10-15": [],
+  "harbor-10-16": [
+    {
+      "subject": "user",
+      "predicate": "project_email",
+      "value": "harbor-voices@example.org",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "harbor-10-17": [],
+  "harbor-10-18": [
+    {
+      "subject": "user",
+      "predicate": "post_preview_goal",
+      "value": "review usefulness of notes before adding automation",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "harbor-10-19": []
+}

@@ -47,7 +47,7 @@ def load_cases(manifest_path: Path, split: str) -> list[tuple[str, EvalDataset]]
 
 def policy_fingerprint(settings: Settings | None = None) -> str:
     digest = hashlib.sha256()
-    for name in ("extraction.py", "quality.py", "core.py", "config.py"):
+    for name in ("extraction.py", "quality.py", "core.py", "config.py", "models.py"):
         digest.update(name.encode())
         digest.update(Path(__file__).with_name(name).read_bytes())
     digest.update(json.dumps(gate_snapshot(settings or get_settings()), sort_keys=True).encode())
@@ -114,14 +114,25 @@ async def run(args: argparse.Namespace) -> None:
         for component in (extractor, embedder, verifier):
             if hasattr(component, "close"):
                 component.close()
+    if policy_fingerprint(settings) != fingerprint:
+        raise RuntimeError("policy changed during evaluation; partial report retained")
+    has_errors = any(r["metadata"].get("status") == "scored_with_errors" for r in results.values())
     args.output.write_text(
         json.dumps(
-            {"split": args.split, "policy_sha256": fingerprint, "complete": True, "cases": results},
+            {
+                "split": args.split,
+                "policy_sha256": fingerprint,
+                "complete": True,
+                "status": "scored_with_errors" if has_errors else "scored",
+                "cases": results,
+            },
             indent=2,
             default=str,
         )
         + "\n"
     )
+    if has_errors:
+        raise RuntimeError("evaluation scored with failed turns; complete report retained")
 
 
 def main() -> None:

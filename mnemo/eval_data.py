@@ -8,6 +8,7 @@ regression benchmark; it must never be presented as a real-world model result.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
@@ -15,6 +16,41 @@ from pathlib import Path
 from typing import Any
 
 from mnemo.eval_support import AtomicLabel, EvalDataset, EvalTurn
+
+
+def load_naturalistic_dataset() -> EvalDataset:
+    """One project-authored conversation; explicitly development and synthetic."""
+    base = Path(__file__).parent / "data/quality-v4"
+    manifest = json.loads((base / "naturalistic-200-manifest.json").read_text())
+    source = (base / "naturalistic-200.json").read_bytes()
+    label_bytes = (base / "naturalistic-200-labels.json").read_bytes()
+    for content, field in ((source, "source_sha256"), (label_bytes, "labels_sha256")):
+        if hashlib.sha256(content).hexdigest() != manifest[field]:
+            raise ValueError("naturalistic source or label fingerprint changed")
+    data, labels = json.loads(source), json.loads(label_bytes)
+    identities = {row["turn_id"] for row in data["turns"]}
+    if len(identities) != len(data["turns"]) or identities != set(labels):
+        raise ValueError("every distinct naturalistic turn requires explicit labels")
+    turns = tuple(
+        EvalTurn(
+            turn_id=row["turn_id"],
+            session_id=row["session_id"],
+            role=row["role"],
+            text=row["text"],
+            timestamp=datetime.fromisoformat(row["timestamp"]),
+            source_id="project-authored:" + row["turn_id"],
+            labels=tuple(AtomicLabel(**label) for label in labels[row["turn_id"]]),
+        )
+        for row in data["turns"]
+    )
+    return EvalDataset(
+        name=data["name"],
+        version=data["version"],
+        split="dev",
+        turns=turns,
+        metadata={"synthetic": True, "origin": data["origin"], "source_manifest": manifest},
+    )
+
 
 _SMOKE_ROWS = (
     (

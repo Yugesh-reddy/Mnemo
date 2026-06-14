@@ -42,7 +42,7 @@ def gate_snapshot(settings: Settings) -> dict[str, Any]:
         "dedup_sim",
     )
     values = {field: getattr(settings, field) for field in fields}
-    values["pipeline_version"] = "2026-09-11-v5.1"
+    values["pipeline_version"] = "2026-09-13-v6.2"
     values["fingerprint"] = hashlib.sha256(json.dumps(values, sort_keys=True).encode()).hexdigest()
     return values
 

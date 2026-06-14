@@ -1,0 +1,16 @@
+{
+  "source_sha256": "c48a4bbb9708950b34e8d360e74fbd06ddf4fbdc1543de145a77fee5eebb60d7",
+  "labels_sha256": "7c70df6b80dc6fc4fc5a98f55b0d072532485d5e29ecadc83687e9ff413405bb",
+  "turns": 200,
+  "sessions": 10,
+  "user_turns": 100,
+  "assistant_turns": 100,
+  "annotation": "All user turns source-reviewed at authorship, before model outputs. Assistant turns excluded. Provisional single-author/reviewer labels; not exhaustive semantic gold.",
+  "scope": "One continuing fictional project conversation across ten sessions; distinct from modular 200-turn regression and external LongMemEval records.",
+  "source_review_notes": [
+    "Session timestamps checked against dated events; April 1 through May 7, 2026.",
+    "Import use is not primary-language preference; primary-language label occurs only at its explicit statement.",
+    "Some targets require earlier user context to resolve pronouns; this deliberately exercises the current turn-only extraction limitation.",
+    "Before model evaluation, corrected interview-focus label: work first then terminal move is topic order, not a claim that the work preceded the move."
+  ]
+}

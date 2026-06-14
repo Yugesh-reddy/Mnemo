@@ -233,3 +233,22 @@ async def test_cleanup_failure_preserves_scores_and_closes_both_connections(
                 await original(conn, schema)
         finally:
             await conn.close()
+
+
+def test_naturalistic_conversation_preserves_corrections_and_annotation_scope():
+    from mnemo.eval_data import load_naturalistic_dataset
+
+    dataset = load_naturalistic_dataset()
+    assert len(dataset.turns) == 200
+    assert len({turn.session_id for turn in dataset.turns}) == 10
+    assert dataset.split == "dev" and dataset.metadata["synthetic"] is True
+    assert all(not turn.labels for turn in dataset.turns if turn.role == "assistant")
+    assert ("transcription_budget_usd", "150") in dataset.must_keep
+    assert ("transcription_budget_usd", "100") not in dataset.truth
+    assert ("meeting_free_day", "Monday") in dataset.must_keep
+    assert ("volunteer_handoff_day", "Saturday") in dataset.must_keep
+    assert ("catalog_preview_date", "May 19") in dataset.must_keep
+    assert ("preferred_database", "PostgreSQL") in dataset.must_keep
+    assert ("uses_database", "MongoDB") in dataset.forbidden
+    dates = [turn.timestamp for turn in dataset.turns]
+    assert dates == sorted(dates)

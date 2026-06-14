@@ -40,64 +40,83 @@ class Extractor(Protocol):
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]: ...
 
 
-_SYSTEM_PROMPT = """Extract atomic memory assertions supported by the user's turn.
+_SYSTEM_PROMPT = """Read the user's turn and extract its explicitly stated memory facts.
+First copy the evidence, then express the SAME meaning as a subject/predicate/object.
+Return only JSON: {"facts": [{"evidence": "verbatim source clause",
+"subject": "user", "predicate": "precise_relation", "object": "complete value",
+"confidence": 0.95, "importance": 7}]}.
 
-Return ONLY JSON of the form:
-{"facts": [{"subject": "...", "predicate": "...", "object": "...",
-            "kind": "triple", "confidence": 0.0-1.0, "importance": 1-10,
-            "assertion_type": "..."}]}
+For each independent assertion:
+1. Copy a contiguous evidence span EXACTLY from the turn, including negation,
+   tense, dates and qualifications. Do not rewrite or invent the quote.
+2. subject is the actor/entity; use user for the speaker. predicate is a precise
+   snake_case relationship actually expressed by that span. The vocabulary is open.
+   object contains the complete value and any event context needed to preserve
+   meaning. Keep what happened, to whom/what, where and when bound together.
+   Put literal names, items and dates in the object, not inside the predicate.
+   For stable attributes, the object is the value, not a repetition of the action.
+3. Do not substitute another relationship. Using something is not preferring it.
+   Liking a food is not an allergy. Using a programming language, appliance or
+   oven setting does not make it an editor. Membership is not a job role.
+   A person's manager is not someone that person manages. Listening often is
+   frequency, not necessarily preference. Copy the stated attribute's meaning.
+   Use specific known types: PostgreSQL is a database, Python is a programming
+   language, and a mixer is an appliance. Database use is uses_database and an
+   explicit database preference is preferred_database. Keep these distinct.
+4. Include all explicit relevant facts, even when the turn also asks for advice:
+   needs, preferences, tool use, projects, completed activities, learned skills,
+   dates and corrections. A completed event must not become a generic present
+   role or goal. An action's date belongs to that action, not to a different event.
+5. Keep independent attributes separate. Preserve the same predicate through a
+   correction: a meeting-free day remains meeting_free_day, and diet remains diet.
+   Preserve all simultaneously mentioned values; a list is allowed when they share
+   the exact same relation. Do not replace one value with a different concurrent one.
+6. Preserve modality: thinking of/considering is considered_, explicit intention
+   is planned_, and only stated completion is completed. Questions and denied or
+   hypothetical positive facts are not assertions. Do not encode exclusions as
+   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.
 
-Rules:
-- Use a precise snake_case predicate for the relationship actually stated. The
-  vocabulary is open. Do not force an unfamiliar relationship into role, timezone,
-  goal, location or uses_database. Distinct attributes need distinct predicates.
-- subject is the actual actor or entity. Use "user" for the speaker, but preserve
-  named people, teams, services and projects when they are the subject.
-- Preserve direction: "My manager is Dana" means user/manager/Dana, not that the
-  user manages Dana. A team membership is not a job role.
-- Preserve type: using an editor is editor use, not database use. A scheduled day
-  is not a timezone. A need is not merely a generic goal. Use uses_database only
-  for database use, and preferred_database only for an explicit database preference.
-- Preserve numbers, times and complete corrected values. Keep independent facts
-  separate, including accessibility needs, allergies and emergency contacts.
-- Keep the same attribute name in corrections. Use these standard names when
-  they exactly describe the stated relation: role, team, location, timezone,
-  preferred_database, uses_database, preferred_language, primary_language, editor,
-  shell, issue_tracker, documentation_tool,
-  manager, accessibility_need, allergy, emergency_contact, on_call_day,
-  meeting_free_day, diet. In particular a meeting-free day is meeting_free_day,
-  not a generic free_day; changing a diet does not create a separate diet_type.
-  Keep an unfamiliar relation precise instead of forcing it into this list.
-  These examples are not a menu: copy a newly stated attribute's meaning into a
-  new predicate. An interactive shell is shell, and an issue tracker is issue_tracker;
-  neither is an editor or database merely because it is software.
-- Never encode an excluded value as a positive attribute: do not write name="not
-  Dana", timezone="not UTC", object=null, or object={"not":...}. A denial supplies
-  no positive replacement value. Leave its positive candidate out. A factual clause
-  beside a denial or hypothetical still supports its own assertion.
-- Distinguish plans from completed actions using planned_ or considered_ predicates.
-  "I'm thinking of" or "I'm considering" is considered_, not a definite plan.
-  Use planned_ only for an explicit decision/intention; it does not assert completion.
-  Do not turn a question into a fact. Extract all clearly stated, memory-relevant
-  facts from multi-clause turns, even when the turn also asks for advice.
-- importance: 1 (trivia/transient) to 10 (identity-defining durable fact).
-- assertion_type is "direct_user_statement" when the user states it about themselves,
-  otherwise "agent_inference".
-- NEVER extract facts about the user from assistant turns.
-- Include stable preferences, important needs, project context and explicit plans.
-  Also include relevant completed activities, accomplishments and experiences.
-  A question following a factual statement does not erase the stated fact. Do not
-  replace a reported past event with a generic goal or a request for advice.
-  Exclude chit-chat. If none, return {"facts": []}.
+importance is 1..10: high for important needs, identity, preferences and corrections;
+moderate for relevant experiences and project context; low for fleeting trivia.
+confidence is 0..1. If there are no supported memory facts, return {"facts": []}.
+Do not fill imagined attributes or use predicate names as a menu.
 
-Examples:
-Turn (user): "I prefer Postgres for my project."
-{"facts": [{"subject": "user", "predicate": "preferred_database", "object": "PostgreSQL",
-            "kind": "triple", "confidence": 0.97, "importance": 8,
-            "assertion_type": "direct_user_statement"}]}
-Turn (user): "Thanks, that helps!"
-{"facts": []}
+Example user turn: "I bought a kiln in April. I might teach pottery next fall."
+{"facts": [
+ {"evidence": "I bought a kiln in April.", "subject": "user", "predicate": "purchased",
+  "object": "kiln in April", "confidence": 0.95, "importance": 6},
+ {"evidence": "I might teach pottery next fall.", "subject": "user",
+  "predicate": "considered_teaching",
+  "object": "pottery next fall", "confidence": 0.95, "importance": 5}
+]}
+Example user turn: "I use Postgres for my project."
+{"facts": [{"evidence": "I use Postgres for my project.", "subject": "user",
+"predicate": "uses_database", "object": "Postgres", "confidence": 0.95, "importance": 7}]}
 """
+
+
+def _extraction_messages(
+    text: str, role: str, validation_error: str | None, previous_content: str | None = None
+) -> list[dict[str, str]]:
+    messages = [
+        {"role": "system", "content": _SYSTEM_PROMPT},
+        {"role": "user", "content": f"Turn ({role}): {text}"},
+    ]
+    if validation_error:
+        if previous_content is not None:
+            messages.append({"role": "assistant", "content": previous_content})
+        messages.append(
+            {
+                "role": "user",
+                "content": (
+                    "Validator feedback (not source evidence): "
+                    + validation_error
+                    + ". Return the complete corrected facts array using only the original "
+                    "Turn above. Copy evidence exactly and put the value in object."
+                ),
+            }
+        )
+    return messages
 
 
 class OllamaExtractor:
@@ -117,22 +136,28 @@ class OllamaExtractor:
         self._client = httpx.Client(timeout=timeout)
 
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
+        last_error = None
+        content = None
         for _ in range(self.max_retries + 1):
-            content = self._chat(text, role)
-            facts = self._parse(content)
-            if facts is not None:
-                return facts
-        raise ValueError("extractor returned malformed output after retries")
+            content = self._chat(text, role, last_error, content)
+            try:
+                return self._parse(content, text)
+            except ValueError as exc:
+                last_error = str(exc)
+        raise ValueError(f"extractor output rejected after retries: {last_error}")
 
-    def _chat(self, text: str, role: str) -> str:
+    def _chat(
+        self,
+        text: str,
+        role: str,
+        validation_error: str | None = None,
+        previous_content: str | None = None,
+    ) -> str:
         resp = self._client.post(
             f"{self.host}/api/chat",
             json={
                 "model": self.model,
-                "messages": [
-                    {"role": "system", "content": _SYSTEM_PROMPT},
-                    {"role": "user", "content": f"Turn ({role}): {text}"},
-                ],
+                "messages": _extraction_messages(text, role, validation_error, previous_content),
                 "format": "json",
                 "think": False,
                 "stream": False,
@@ -144,21 +169,18 @@ class OllamaExtractor:
         return resp.json()["message"]["content"]
 
     @staticmethod
-    def _parse(content: str) -> list[ExtractedFact] | None:
-        try:
-            data = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        if not isinstance(data, dict):
-            return None
+    def _parse(content: str, source_text: str) -> list[ExtractedFact]:
+        data = json.loads(content)
+        if not isinstance(data, dict) or not isinstance(data.get("facts"), list):
+            raise ValueError("output requires a facts array")
         out: list[ExtractedFact] = []
-        if not isinstance(data.get("facts"), list):
-            return None
-        for item in data["facts"]:
-            try:
-                out.append(ExtractedFact.model_validate(item))
-            except ValidationError:
-                return None  # retry the batch rather than silently losing malformed candidates
+        for index, item in enumerate(data["facts"]):
+            fact = ExtractedFact.model_validate(item)
+            if fact.evidence is None or fact.evidence not in source_text:
+                raise ValueError(f"candidate {index} evidence is absent from source")
+            if fact.object is None or (isinstance(fact.object, str) and not fact.object.strip()):
+                raise ValueError(f"candidate {index} requires a nonempty value in object")
+            out.append(fact)
         return out
 
     def close(self) -> None:
@@ -185,22 +207,28 @@ class OpenAIExtractor:
         self._client = httpx.Client(timeout=timeout, headers={"Authorization": f"Bearer {api_key}"})
 
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
+        last_error = None
+        content = None
         for _ in range(self.max_retries + 1):
-            content = self._chat(text, role)
-            facts = OllamaExtractor._parse(content)
-            if facts is not None:
-                return facts
-        raise ValueError("extractor returned malformed output after retries")
+            content = self._chat(text, role, last_error, content)
+            try:
+                return OllamaExtractor._parse(content, text)
+            except ValueError as exc:
+                last_error = str(exc)
+        raise ValueError(f"extractor output rejected after retries: {last_error}")
 
-    def _chat(self, text: str, role: str) -> str:
+    def _chat(
+        self,
+        text: str,
+        role: str,
+        validation_error: str | None = None,
+        previous_content: str | None = None,
+    ) -> str:
         resp = self._client.post(
             f"{self.base_url}/chat/completions",
             json={
                 "model": self.model,
-                "messages": [
-                    {"role": "system", "content": _SYSTEM_PROMPT},
-                    {"role": "user", "content": f"Turn ({role}): {text}"},
-                ],
+                "messages": _extraction_messages(text, role, validation_error, previous_content),
                 "response_format": {"type": "json_object"},
                 "temperature": 0,
             },
@@ -310,7 +338,9 @@ class ExtractionWorker:
                 )
                 continue
             result: dict[str, Any] = {"candidate": cand.model_dump(mode="json"), "fact": cand}
-            if cand.confidence < self.settings.confidence_floor:
+            if cand.evidence is not None and cand.evidence not in text:
+                result.update(reason="extracted evidence is absent from source", outcome="rejected")
+            elif cand.confidence < self.settings.confidence_floor:
                 result.update(reason="below extraction confidence floor", outcome="rejected")
             elif error := representation_error(cand, text):
                 result.update(reason=error, outcome="rejected")
@@ -369,10 +399,22 @@ class ExtractionWorker:
             if owned is None:
                 raise LeaseLost("claim no longer owns the job at commit")
             first_event_id = None
-            span = {"turn_ids": [job["turn_id"]], "session_id": job["session_id"]}
+            base_span = {"turn_ids": [job["turn_id"]], "session_id": job["session_id"]}
             if job["cache_id"]:
-                span["cache_ids"] = [str(job["cache_id"])]
+                base_span["cache_ids"] = [str(job["cache_id"])]
             for index, item in enumerate(prepared):
+                span = dict(base_span)
+                # Only the trusted queued text determines evidence offsets. A
+                # quote is a navigation aid, not a replacement for full-turn verification.
+                quote = item["candidate"].get("evidence")
+                if isinstance(quote, str) and quote and quote in text:
+                    start = text.index(quote)
+                    span["evidence"] = {
+                        "text": quote,
+                        "start": start,
+                        "end": start + len(quote),
+                        "offset_unit": "unicode_codepoint",
+                    }
                 event = None
                 components = None
                 outcome, reason = item.get("outcome"), item.get("reason")

@@ -1,0 +1,1409 @@
+{
+  "name": "harbor-voices-naturalistic-200",
+  "version": "1.0.0",
+  "split": "dev",
+  "synthetic": true,
+  "origin": "Project-authored fictional naturalistic dialogue; Codex author and label reviewer; not independent human gold or a held-out sample.",
+  "turns": [
+    {
+      "turn_id": "harbor-01-00",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "I'm Asha Patel. I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront. I need help keeping the practical details straight.",
+      "timestamp": "2026-04-01T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-01",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "Let's start with the people and the project constraints. What is your role?",
+      "timestamp": "2026-04-01T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-02",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "My job title is community archivist. The interviews are a side project at the library, rather than a new department.",
+      "timestamp": "2026-04-01T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-03",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "That gives us a useful scope. Who approves decisions for your work?",
+      "timestamp": "2026-04-01T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-04",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "Priya Nair is my manager. Morgan helps with the interviews, but Morgan doesn't manage me.",
+      "timestamp": "2026-04-01T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-05",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "Understood. Where will you usually be working?",
+      "timestamp": "2026-04-01T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-06",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "I live in Boston, and my work timezone is America/New_York. Please keep the timezone in invitations even when everyone seems local.",
+      "timestamp": "2026-04-01T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-07",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "Explicit timezones will help with guests who travel. What tools are already in place?",
+      "timestamp": "2026-04-01T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-08",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "We use PostgreSQL for the catalog. That's an existing choice from the library, not a statement that it's my favorite database.",
+      "timestamp": "2026-04-01T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-09",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "I'll treat that as current database use. How are you preparing the catalog data?",
+      "timestamp": "2026-04-01T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-10",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "I write the import scripts in Python. Neovim is my editor, and fish is my interactive shell.",
+      "timestamp": "2026-04-01T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-11",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "Those are three separate tool choices. How do you track project work?",
+      "timestamp": "2026-04-01T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-12",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "We track issues in Linear. Interview notes live in Obsidian, though the final catalog records go into the database.",
+      "timestamp": "2026-04-01T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-13",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "We can keep task links and notes separate from catalog records. Is there an initial budget?",
+      "timestamp": "2026-04-01T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-14",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "My monthly transcription budget is 100 dollars. That's the approved ceiling for now; I haven't asked for an increase yet.",
+      "timestamp": "2026-04-01T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-15",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "I'll use that ceiling when comparing transcription options. Are there meeting constraints?",
+      "timestamp": "2026-04-01T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-16",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "Wednesday is my meeting-free day. I need a long block for cleaning the old spreadsheets.",
+      "timestamp": "2026-04-01T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-17",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "Then Wednesday should stay clear of interview planning calls. Anything needed for the other calls?",
+      "timestamp": "2026-04-01T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-18",
+      "session_id": "harbor-session-01",
+      "role": "user",
+      "text": "I need captions enabled on video calls. Please make that part of our normal setup, not something I have to request every time.",
+      "timestamp": "2026-04-01T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-01-19",
+      "session_id": "harbor-session-01",
+      "role": "assistant",
+      "text": "I'll include captions in the call setup notes. We can build the interview checklist next.",
+      "timestamp": "2026-04-01T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-00",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "I've booked the first interview for April 10 with Lena Ortiz. She's bringing photographs from her family's shop.",
+      "timestamp": "2026-04-04T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-01",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "That gives the first session a clear focus. Where is it happening?",
+      "timestamp": "2026-04-04T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-02",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "The first interview is in the library's Cedar Room. I reserved it from 2 to 4 pm.",
+      "timestamp": "2026-04-04T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-03",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "Two hours should include setup and packing time. What recording equipment is available?",
+      "timestamp": "2026-04-04T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-04",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "I borrowed a Zoom H5 recorder from the media desk yesterday. I own the headphones, but the recorder has to go back after the session.",
+      "timestamp": "2026-04-04T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-05",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "I'll distinguish the loan from your own equipment. Have you checked the room's sound?",
+      "timestamp": "2026-04-04T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-06",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "I tested the Cedar Room this morning. The ventilation hum is audible near the door, so I want the table by the window.",
+      "timestamp": "2026-04-04T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-07",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "The seating plan can reflect that test. How will you handle the photographs?",
+      "timestamp": "2026-04-04T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-08",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "I'll scan the photographs after the interview, if Lena agrees. I haven't received permission to scan them yet.",
+      "timestamp": "2026-04-04T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-09",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "The checklist should make scanning conditional on consent. What should we record before starting audio?",
+      "timestamp": "2026-04-04T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-10",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "Our consent form is version 3. The library requires the participant's signature before recording begins.",
+      "timestamp": "2026-04-04T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-11",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "I'll put the consent check ahead of the recorder check. Do you have the form ready?",
+      "timestamp": "2026-04-04T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-12",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "Yes, I printed two copies. One is for Lena and one is for our locked project folder.",
+      "timestamp": "2026-04-04T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-13",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "That covers both copies. What do you want to learn in this first interview?",
+      "timestamp": "2026-04-04T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-14",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "My main question for Lena is how the waterfront businesses changed when the ferry terminal moved. I don't want to turn it into a general family biography.",
+      "timestamp": "2026-04-04T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-15",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "We can use the terminal move as the central thread and let family details support it.",
+      "timestamp": "2026-04-04T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-16",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "Could you suggest three open questions that don't assume the move was bad for every shop?",
+      "timestamp": "2026-04-04T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-17",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "You could ask what changed, which changes were surprising, and how different businesses responded. Each leaves room for mixed experiences.",
+      "timestamp": "2026-04-04T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-18",
+      "session_id": "harbor-session-02",
+      "role": "user",
+      "text": "Those work. I'll bring a large-print copy of the prompts because Lena asked for one.",
+      "timestamp": "2026-04-04T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-02-19",
+      "session_id": "harbor-session-02",
+      "role": "assistant",
+      "text": "I'll add the large-print prompts to the packing list.",
+      "timestamp": "2026-04-04T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-00",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "Priya approved the budget increase today. The monthly transcription ceiling is now 150 dollars, replacing the old 100-dollar limit.",
+      "timestamp": "2026-04-07T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-01",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "I'll use the updated ceiling for future planning.",
+      "timestamp": "2026-04-07T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-02",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "We also moved the first interview to April 13. Lena has a family commitment on the 10th; the person and room are unchanged.",
+      "timestamp": "2026-04-07T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-03",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "The date changed while the interview's other details stayed stable.",
+      "timestamp": "2026-04-07T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-04",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "The reservation on April 13 is still 2 to 4 pm in Cedar Room. I confirmed it with the front desk.",
+      "timestamp": "2026-04-07T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-05",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "I'll keep that confirmation with the interview details.",
+      "timestamp": "2026-04-07T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-06",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "I'm considering buying a second recorder, but I haven't chosen a model or committed to spending the money.",
+      "timestamp": "2026-04-07T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-07",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "We can leave that as an open equipment question rather than a purchase.",
+      "timestamp": "2026-04-07T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-08",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "For editing audio I use Audacity. Please don't put that under databases just because we mentioned PostgreSQL earlier.",
+      "timestamp": "2026-04-07T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-09",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "Audio editing and catalog storage will remain separate tool records.",
+      "timestamp": "2026-04-07T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-10",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "I prefer plain-text checklists over a new project-management app. Linear is enough for the team's tasks.",
+      "timestamp": "2026-04-07T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-11",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "I can keep the working checklist in plain text.",
+      "timestamp": "2026-04-07T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-12",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "The team has four volunteers, including Morgan. I coordinate their schedules, but they're not my employees.",
+      "timestamp": "2026-04-07T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-13",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "I'll describe them as volunteers and keep scheduling separate from employment relationships.",
+      "timestamp": "2026-04-07T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-14",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "Morgan handles recording setup, and Jules checks the scanned images. I review catalog metadata before it goes public.",
+      "timestamp": "2026-04-07T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-15",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "That gives the handoff clear responsibilities.",
+      "timestamp": "2026-04-07T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-16",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "Could we use one shared spreadsheet as a temporary intake list? I'm asking about the workflow, not saying we've adopted it.",
+      "timestamp": "2026-04-07T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-17",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "A temporary intake sheet could work if it links to source files and has a clear owner. It would still need a decision from your team.",
+      "timestamp": "2026-04-07T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-18",
+      "session_id": "harbor-session-03",
+      "role": "user",
+      "text": "Let's leave intake as it is until after the first interview. I don't want to change three things in the same week.",
+      "timestamp": "2026-04-07T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-03-19",
+      "session_id": "harbor-session-03",
+      "role": "assistant",
+      "text": "We'll revisit intake after that session, when you have a concrete example to work from.",
+      "timestamp": "2026-04-07T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-00",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "The interview with Lena is finished. We recorded 74 minutes of audio in Cedar Room on April 13.",
+      "timestamp": "2026-04-14T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-01",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "That gives us a completed session to process. How did the equipment perform?",
+      "timestamp": "2026-04-14T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-02",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "The borrowed recorder worked well. I returned the Zoom H5 to the media desk this afternoon.",
+      "timestamp": "2026-04-14T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-03",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "I'll mark the loan as returned rather than owned equipment.",
+      "timestamp": "2026-04-14T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-04",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "Lena signed the recording form, but she asked us to keep one story off the public website until she reviews the transcript.",
+      "timestamp": "2026-04-14T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-05",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "The public release needs to wait for that review. Did she agree to scanning the photographs?",
+      "timestamp": "2026-04-14T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-06",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "Yes, she gave written permission to scan eight photographs. We scanned all eight after the interview.",
+      "timestamp": "2026-04-14T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-07",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "I'll separate permission from the completed scanning work.",
+      "timestamp": "2026-04-14T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-08",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "I saved the originals as TIFF files. The JPEG copies are only for browsing, and shouldn't replace the originals.",
+      "timestamp": "2026-04-14T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-09",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "The archive and browsing copies will have separate roles.",
+      "timestamp": "2026-04-14T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-10",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "We caught a spelling mistake in Lena's surname on the intake sheet. It's Ortiz, with a z; the interview recording itself is fine.",
+      "timestamp": "2026-04-14T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-11",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "The spelling correction belongs in the intake metadata.",
+      "timestamp": "2026-04-14T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-12",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "I haven't finished the transcript. The automatic draft confuses the old shop names, so I'm checking them against the photographs.",
+      "timestamp": "2026-04-14T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-13",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "The draft should remain marked as unreviewed while you check those names.",
+      "timestamp": "2026-04-14T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-14",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "My review deadline for that draft is April 18. I promised to send Lena a readable copy before asking about publication.",
+      "timestamp": "2026-04-14T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-15",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "I'll keep the review deadline tied to Lena's transcript.",
+      "timestamp": "2026-04-14T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-16",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "The noise cleanup can wait. The words and names matter more than making the recording sound polished.",
+      "timestamp": "2026-04-14T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-17",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "We'll prioritize transcript accuracy before audio cleanup.",
+      "timestamp": "2026-04-14T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-18",
+      "session_id": "harbor-session-04",
+      "role": "user",
+      "text": "Can you turn those next steps into a short checklist?",
+      "timestamp": "2026-04-14T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-04-19",
+      "session_id": "harbor-session-04",
+      "role": "assistant",
+      "text": "Review shop names, check the surname in metadata, send the readable transcript by April 18, and hold the restricted story until Lena responds.",
+      "timestamp": "2026-04-14T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-00",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "Quick correction for our meeting schedule: Monday is now my meeting-free day, not Wednesday. The library moved my public desk shift.",
+      "timestamp": "2026-04-17T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-01",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll update the recurring meeting constraint to Monday.",
+      "timestamp": "2026-04-17T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-02",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "Wednesday afternoons are available for project calls now. Please don't infer that I work every Wednesday evening as well.",
+      "timestamp": "2026-04-17T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-03",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll keep afternoon availability separate from evening work.",
+      "timestamp": "2026-04-17T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-04",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "The volunteer handoff is on Saturday. It used to happen on Friday, but the media desk no longer opens late that day.",
+      "timestamp": "2026-04-17T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-05",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "Saturday will be the recurring handoff day.",
+      "timestamp": "2026-04-17T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-06",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "My emergency contact is Eli Patel. Morgan is a colleague, and should not be listed as my emergency contact.",
+      "timestamp": "2026-04-17T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-07",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll keep Eli as the contact and distinguish Morgan's project role.",
+      "timestamp": "2026-04-17T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-08",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "For the volunteer lunch, remember that I have a peanut allergy. It isn't simply a food preference.",
+      "timestamp": "2026-04-17T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-09",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll retain that as an allergy for planning the lunch.",
+      "timestamp": "2026-04-17T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-10",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "I usually bring vegetarian food, but I haven't said that every volunteer is vegetarian.",
+      "timestamp": "2026-04-17T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-11",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "Your usual food choice won't be applied to the whole group.",
+      "timestamp": "2026-04-17T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-12",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "We have two new volunteers, so there are six in total now. Morgan is still handling recording setup.",
+      "timestamp": "2026-04-17T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-13",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll update the total from four to six.",
+      "timestamp": "2026-04-17T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-14",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "Could you suggest a ten-minute introduction for the new volunteers? They need to understand consent before they touch equipment.",
+      "timestamp": "2026-04-17T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-15",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "Start with why consent matters, walk through the form, and demonstrate where recording starts and stops. Then let them ask about a concrete scenario.",
+      "timestamp": "2026-04-17T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-16",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "That order makes sense. I've scheduled the introduction for Saturday at 10 am, just before handoff.",
+      "timestamp": "2026-04-17T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-17",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "I'll keep the introduction time attached to Saturday's session.",
+      "timestamp": "2026-04-17T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-18",
+      "session_id": "harbor-session-05",
+      "role": "user",
+      "text": "What if we eventually ran a second project in another neighborhood? It's only a possibility, so don't add another active project yet.",
+      "timestamp": "2026-04-17T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-05-19",
+      "session_id": "harbor-session-05",
+      "role": "assistant",
+      "text": "We can leave expansion as an idea for a later review.",
+      "timestamp": "2026-04-17T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-00",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "Lena returned her transcript edits yesterday. She approved the corrected shop names, but the restricted story still needs another conversation.",
+      "timestamp": "2026-04-20T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-01",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "The name review is complete, while the release restriction remains open.",
+      "timestamp": "2026-04-20T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-02",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "I finished the transcript review on April 18 as planned. The current transcript status is reviewed, with one passage held from publication.",
+      "timestamp": "2026-04-20T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-03",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "I'll keep those as separate review and release states.",
+      "timestamp": "2026-04-20T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-04",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "Our next interview is with Omar Haddad on April 24. He worked at the ferry terminal for thirty years.",
+      "timestamp": "2026-04-20T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-05",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "We can prepare questions about the terminal from his perspective.",
+      "timestamp": "2026-04-20T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-06",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "Omar prefers a phone interview. I will call him from the library; he isn't coming to Cedar Room.",
+      "timestamp": "2026-04-20T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-07",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "The session format is phone, so the room setup can stay minimal.",
+      "timestamp": "2026-04-20T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-08",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "I want to ask about his own work first, then the terminal move. I don't know whether he agrees with Lena's account.",
+      "timestamp": "2026-04-20T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-09",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "The prompts should leave space for a different account.",
+      "timestamp": "2026-04-20T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-10",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "We added a field called rights_status to the catalog. Its values are pending, cleared, and restricted.",
+      "timestamp": "2026-04-20T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-11",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "That should make publication readiness explicit.",
+      "timestamp": "2026-04-20T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-12",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "I use Python for imports and SQL for catalog queries. Neither statement means I've switched my preferred programming language.",
+      "timestamp": "2026-04-20T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-13",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "I'll keep those usage roles separate from preference.",
+      "timestamp": "2026-04-20T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-14",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "For my own scripts, Python is still my primary language. The SQL work is part of the catalog maintenance.",
+      "timestamp": "2026-04-20T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-15",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "The primary-language fact stays Python.",
+      "timestamp": "2026-04-20T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-16",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "Can you help me write a query that lists records with pending rights, without changing any records?",
+      "timestamp": "2026-04-20T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-17",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "A read-only query can select records whose rights_status equals pending. We should confirm the table name before making it executable.",
+      "timestamp": "2026-04-20T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-18",
+      "session_id": "harbor-session-06",
+      "role": "user",
+      "text": "The table is interviews. I only want interview_id, participant_name, and rights_status in that export.",
+      "timestamp": "2026-04-20T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-06-19",
+      "session_id": "harbor-session-06",
+      "role": "assistant",
+      "text": "That gives us the table and the three columns needed for the export.",
+      "timestamp": "2026-04-20T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-00",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "The phone interview with Omar happened on April 24 and lasted 51 minutes. We covered his terminal job and the ferry schedule changes.",
+      "timestamp": "2026-04-25T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-01",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "I'll record it as a completed interview with those topics.",
+      "timestamp": "2026-04-25T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-02",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "I had a follow-up question about a route number, so I emailed him. He hasn't replied yet.",
+      "timestamp": "2026-04-25T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-03",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "That route number should remain unresolved rather than guessed.",
+      "timestamp": "2026-04-25T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-04",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "Morgan noticed that one audio filename used April 23 by mistake. The interview was April 24; please keep that correction attached to Omar's recording.",
+      "timestamp": "2026-04-25T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-05",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "I'll use April 24 for Omar's recording and note the filename correction.",
+      "timestamp": "2026-04-25T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-06",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "I'm considering an exhibition in June, but we don't have approval or a venue. For now it's an idea, not a scheduled event.",
+      "timestamp": "2026-04-25T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-07",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "We'll keep June exhibition planning tentative.",
+      "timestamp": "2026-04-25T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-08",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "We do have a confirmed review meeting on May 2 with Priya. That's about the archive, not an exhibition launch.",
+      "timestamp": "2026-04-25T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-09",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "The May 2 event is an archive review meeting.",
+      "timestamp": "2026-04-25T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-10",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "I made a sample page using three photographs, all from the cleared set. The restricted story isn't on it.",
+      "timestamp": "2026-04-25T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-11",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "The sample can demonstrate the layout while respecting the release status.",
+      "timestamp": "2026-04-25T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-12",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "I'd like the page to use a readable serif typeface. I haven't picked a particular font yet.",
+      "timestamp": "2026-04-25T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-13",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "We can compare a few readable serif options without marking one as selected.",
+      "timestamp": "2026-04-25T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-14",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "The first sample had tiny captions. I increased the caption size after Jules tried it on a small laptop.",
+      "timestamp": "2026-04-25T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-15",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "That feedback should guide the next sample as well.",
+      "timestamp": "2026-04-25T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-16",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "Can you propose a short usability check for the page?",
+      "timestamp": "2026-04-25T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-17",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "Ask someone to find a photograph's date, identify who is speaking, and locate the rights note. Watch where they hesitate before changing the layout.",
+      "timestamp": "2026-04-25T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-18",
+      "session_id": "harbor-session-07",
+      "role": "user",
+      "text": "I'll try that with two volunteers on Wednesday afternoon. Please keep Monday free as we agreed.",
+      "timestamp": "2026-04-25T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-07-19",
+      "session_id": "harbor-session-07",
+      "role": "assistant",
+      "text": "The usability check can use Wednesday afternoon while Monday remains meeting-free.",
+      "timestamp": "2026-04-25T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-00",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "The usability check is done. Both volunteers found the photo dates, but neither noticed the rights note without a hint.",
+      "timestamp": "2026-04-29T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-01",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "The rights note needs a more visible position.",
+      "timestamp": "2026-04-29T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-02",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "We moved the rights note directly below the title. I don't want to hide it in a hover tooltip.",
+      "timestamp": "2026-04-29T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-03",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "I'll keep the visible placement as the current design decision.",
+      "timestamp": "2026-04-29T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-04",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "I bought an external SSD for project backups on April 28. It cost 90 dollars, which came from the equipment budget rather than transcription.",
+      "timestamp": "2026-04-29T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-05",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "I'll keep the equipment purchase separate from the monthly transcription ceiling.",
+      "timestamp": "2026-04-29T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-06",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "The transcription ceiling is still 150 dollars per month. The SSD purchase didn't reduce it to 60.",
+      "timestamp": "2026-04-29T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-07",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "The monthly transcription limit remains 150 dollars.",
+      "timestamp": "2026-04-29T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-08",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "I run a backup every Thursday afternoon. The SSD is stored in the locked cabinet after each backup.",
+      "timestamp": "2026-04-29T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-09",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "That gives the backup routine both a schedule and a storage location.",
+      "timestamp": "2026-04-29T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-10",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "We tested restoring one interview yesterday. The audio and transcript both opened correctly from the backup.",
+      "timestamp": "2026-04-29T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-11",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "I'll record the successful restore test rather than assume all future backups are valid.",
+      "timestamp": "2026-04-29T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-12",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "Priya asked for a one-page review brief. It should cover interviews, permissions, budget, and the next two weeks of work.",
+      "timestamp": "2026-04-29T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-13",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "Those four topics can form a compact brief.",
+      "timestamp": "2026-04-29T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-14",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "I don't want to include a made-up completion percentage. We have two completed interviews and several unfinished tasks; those counts are clearer.",
+      "timestamp": "2026-04-29T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-15",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "We can report the completed interview count and list the open tasks.",
+      "timestamp": "2026-04-29T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-16",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "Could you draft the outline without inventing outcomes from the May 2 review?",
+      "timestamp": "2026-04-29T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-17",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "Yes: completed interviews, current release restrictions, actual spending and budget ceilings, open follow-ups, and proposed next steps. Review outcomes stay blank until the meeting occurs.",
+      "timestamp": "2026-04-29T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-18",
+      "session_id": "harbor-session-08",
+      "role": "user",
+      "text": "That's the right scope. I'll finish the brief tomorrow morning before sending it to Priya.",
+      "timestamp": "2026-04-29T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-08-19",
+      "session_id": "harbor-session-08",
+      "role": "assistant",
+      "text": "The brief remains a planned task until you've finished and sent it.",
+      "timestamp": "2026-04-29T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-00",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "We held the archive review on May 2. Priya approved continuing Harbor Voices for another month, but didn't approve an exhibition.",
+      "timestamp": "2026-05-03T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-01",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "I'll distinguish the project extension from the exhibition idea.",
+      "timestamp": "2026-05-03T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-02",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "The manager relationship hasn't changed: Priya Nair is still my manager. Morgan ran part of the meeting because I was presenting the sample page.",
+      "timestamp": "2026-05-03T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-03",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "Running part of a meeting doesn't change who manages you.",
+      "timestamp": "2026-05-03T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-04",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "Lena has now cleared the previously restricted story for publication. I saved her written approval with the interview record.",
+      "timestamp": "2026-05-03T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-05",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "That changes the release condition for her story.",
+      "timestamp": "2026-05-03T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-06",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "Omar replied with the route number too. His answer was route 17, not route 70 as the automatic transcript guessed.",
+      "timestamp": "2026-05-03T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-07",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "I'll preserve route 17 as the corrected value and keep it tied to his follow-up.",
+      "timestamp": "2026-05-03T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-08",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "We corrected the transcript and marked Omar's follow-up resolved. The raw recording wasn't edited to match the text.",
+      "timestamp": "2026-05-03T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-09",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "The corrected transcript and unchanged recording can remain separate source artifacts.",
+      "timestamp": "2026-05-03T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-10",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "The public catalog preview is planned for May 16. That's a preview of cleared material, not the June exhibition we discussed.",
+      "timestamp": "2026-05-03T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-11",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "I'll keep the preview and exhibition as different events.",
+      "timestamp": "2026-05-03T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-12",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both. That is an actual preference, unlike my earlier statement about what the library already used.",
+      "timestamp": "2026-05-03T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-13",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "I'll record that explicit preference separately from database use.",
+      "timestamp": "2026-05-03T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-14",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "We still use PostgreSQL. Please don't replace that with MongoDB just because it appeared in the comparison.",
+      "timestamp": "2026-05-03T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-15",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "The current database-use fact stays PostgreSQL.",
+      "timestamp": "2026-05-03T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-16",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "I have a new volunteer named Theo helping with the preview. With Theo, the total is seven volunteers.",
+      "timestamp": "2026-05-03T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-17",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "I'll update the volunteer total to seven.",
+      "timestamp": "2026-05-03T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-18",
+      "session_id": "harbor-session-09",
+      "role": "user",
+      "text": "Can you list the remaining launch tasks without treating every idea we've discussed as a commitment?",
+      "timestamp": "2026-05-03T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-09-19",
+      "session_id": "harbor-session-09",
+      "role": "assistant",
+      "text": "The remaining list can focus on cleared catalog records, the preview page, rights notes and final checks. The unapproved exhibition and possible second project stay outside it.",
+      "timestamp": "2026-05-03T01:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-00",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "The catalog preview moved from May 16 to May 19. We need the extra time for accessibility checks, and Priya agreed to the change.",
+      "timestamp": "2026-05-07T00:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-01",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll update the preview date while preserving why it moved.",
+      "timestamp": "2026-05-07T00:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-02",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "The captions requirement still applies to our video calls. For the catalog page itself, we're checking image descriptions and keyboard navigation.",
+      "timestamp": "2026-05-07T00:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-03",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "Those are separate accessibility needs for calls and the page.",
+      "timestamp": "2026-05-07T00:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-04",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "Jules found two images with missing descriptions. I wrote descriptions for both this morning, but we still need someone else to review them.",
+      "timestamp": "2026-05-07T00:16:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-05",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll mark the descriptions as drafted and awaiting review.",
+      "timestamp": "2026-05-07T00:20:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-06",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "We aren't changing the TIFF originals. The description updates belong in catalog metadata and the browsing page.",
+      "timestamp": "2026-05-07T00:24:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-07",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll keep descriptive metadata separate from the original image files.",
+      "timestamp": "2026-05-07T00:28:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-08",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "The Saturday volunteer handoff is staying put. The date change for the preview doesn't move that recurring handoff to Tuesday.",
+      "timestamp": "2026-05-07T00:32:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-09",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "The recurring handoff remains Saturday.",
+      "timestamp": "2026-05-07T00:36:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-10",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "My emergency contact is still Eli Patel. Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+      "timestamp": "2026-05-07T00:40:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-11",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll retain Eli as your emergency contact and keep the vendor contact separate.",
+      "timestamp": "2026-05-07T00:44:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-12",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "I listened to a lot of jazz while editing last week. That doesn't mean I want a permanent favorite-genre entry; my listening changes with the task.",
+      "timestamp": "2026-05-07T00:48:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-13",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll treat that as recent listening context rather than a lasting preference.",
+      "timestamp": "2026-05-07T00:52:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-14",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "Could you summarize the current dates, budget and contacts for the next person helping me? Please include the corrections, not just the first values you saw.",
+      "timestamp": "2026-05-07T00:56:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-15",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "The summary should use the latest confirmed values and keep unresolved items clearly marked. I can organize it as a short handoff note.",
+      "timestamp": "2026-05-07T01:00:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-16",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "One last detail for that note: the project email is harbor-voices@example.org. Use that address for participant scheduling, not my personal inbox.",
+      "timestamp": "2026-05-07T01:04:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-17",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "I'll use the project address in the scheduling handoff.",
+      "timestamp": "2026-05-07T01:08:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-18",
+      "session_id": "harbor-session-10",
+      "role": "user",
+      "text": "Thanks. After the preview, I want to review which notes were actually useful before we add more automation. We can leave exhibition planning for another conversation.",
+      "timestamp": "2026-05-07T01:12:00+00:00"
+    },
+    {
+      "turn_id": "harbor-10-19",
+      "session_id": "harbor-session-10",
+      "role": "assistant",
+      "text": "That gives the next review a practical focus: keep useful notes, inspect mistakes and decide what automation is justified.",
+      "timestamp": "2026-05-07T01:16:00+00:00"
+    }
+  ]
+}
