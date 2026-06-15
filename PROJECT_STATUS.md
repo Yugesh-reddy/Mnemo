@@ -1,13 +1,42 @@
 # Mnemo — implementation status
 
-Updated September 14, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+Updated September 15, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the correctness plan](docs/CORRECTNESS_PLAN.md) records the infrastructure backlog.
 The [quality reliability plan](docs/QUALITY_RELIABILITY_PLAN.md) and
-[current evidence](docs/quality-v4/README.md) cover the follow-up work.
+[current evidence](docs/quality-v5/README.md) cover the follow-up work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
 
-## Latest extraction milestone
+## Latest extraction milestone: partial batch recovery
+
+Continued the linked quality-debugging thread by recovering its uncommitted parser,
+audit and replay fixes from the local transcript. The unsuccessful component-check
+verifier remains excluded: its final broader development run introduced three
+false accepts on the older cases. [Recovery evidence](docs/quality-v5/handoff-evidence.json).
+
+After bounded retries, both extraction providers preserve validated siblings from
+the final response and keep malformed members as separate raw rejection records.
+Every survivor still passes the normal semantic verifier. Worker commits preserve
+low-trust provenance and atomic decisions/cache reconciliation. Replay and report
+tools preserve rejection evidence without giving malformed output coverage credit.
+
+The new 20-source development probe has three partial responses, four rejected
+members and no failed turns. On identical final replies, partial recovery retains
+**60 candidates versus 54** for whole-response parsing. The incremental gate stores
+**five source-supported session facts** from six recovered candidates; one supported
+denial is incorrectly rejected because the verifier conflates cookies and vegetables.
+One write is a complete must-keep equivalent and another is incomplete. Strict
+must-keep matching remains **0/24**, and this is not a full-pipeline accuracy result.
+[Measurements and source review](docs/quality-v5/README.md).
+
+Required-Postgres validation passes **218 tests, zero skipped**, with the installed
+`qwen3.5:4b-mlx` extractor. Ruff/Black, clean-wheel installation, the scripted eval
+and real extraction/rollback demo pass. The workstation's default `llama3.2:3b`
+is unavailable, so the model integration check and demo require the documented
+model override. The original disjoint 48-turn reservation `b46e15ed` has been
+restored by checksum and remains unopened, unlabeled and unevaluated.
+
+## Prior evidence-grounded extraction milestone
 
 Commit `3aaaed1` adds evidence-first extraction, exact-quote and nonempty-value
 validation, bounded retries with the failed response and validator feedback,
@@ -181,14 +210,16 @@ compute rates have been requested from the user.
    the new interview-versus-audio duration issue and compound usability label;
    preserve the frozen reports before any dataset version change.
 2. Use development sources to fix actor attribution, lost event bindings and
-   verification that demands completed actions for schedules or requests. Recover
-   valid co-occurring facts when one candidate fails quote validation. Do not tune
-   confidence thresholds on holdout outputs.
+   verification that demands completed actions for schedules or requests. Partial
+   batch recovery is implemented and measured; false rejections that conflate
+   different activities and malformed source quotes still lose supported facts.
+   Do not tune confidence thresholds on holdout outputs.
 3. Review the prepared [identity/cardinality proposal](docs/quality-v4/IDENTITY_PROPOSAL.md)
    before changing one-HEAD semantics. Different relation names leave old and new
    budget/date values current; simultaneous plans can also overwrite one another.
-4. Measure important-fact availability across sessions and elapsed TTL, and reserve
-   a new untouched holdout before another policy cycle. Source-supported historical
+4. Measure important-fact availability across sessions and elapsed TTL, and preserve
+   the unopened `b46e15ed` reservation for validation after a future policy freeze.
+   Source-supported historical
    writes and same-session retrieval do not establish durable correct memory.
 5. Configure the intended repository's required `correctness` merge check and
    calculate monetary cost with actual prices.

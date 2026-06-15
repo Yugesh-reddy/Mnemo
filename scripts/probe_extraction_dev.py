@@ -16,13 +16,13 @@ import httpx
 
 from mnemo.config import get_settings
 from mnemo.eval import assertion_key
-from mnemo.eval_audit import decoded
+from mnemo.eval_audit import candidate_key, replay_candidates
 from mnemo.eval_suite import load_cases, policy_fingerprint
-from mnemo.extraction import build_extractor
+from mnemo.extraction import ExtractionBatch, build_extractor
 
 
 def coverage(candidates: list[dict], labels: list[dict]) -> dict:
-    actual = {assertion_key(c["subject"], c["predicate"], c["object"]) for c in candidates}
+    actual = {key for c in candidates if (key := candidate_key(c)) is not None}
     eligible = [label for label in labels if label["disposition"] in {"truth", "must_keep"}]
     expected = {
         assertion_key(label["subject"], label["predicate"], label["value"]) for label in eligible
@@ -66,6 +66,15 @@ def main() -> None:
         "rows": [],
     }
     extractor = build_extractor(settings)
+    chat = extractor._chat
+    attempts: list[str] = []
+
+    def traced_chat(*args, **kwargs):
+        content = chat(*args, **kwargs)
+        attempts.append(content)
+        return content
+
+    extractor._chat = traced_chat
     try:
         for identity, dataset in load_cases(args.manifest, "dev"):
             old = baseline["cases"][identity]
@@ -77,14 +86,22 @@ def main() -> None:
                     and not any(label.disposition == "must_keep" for label in turn.labels)
                 ):
                     continue
-                previous = [
-                    decoded(d["candidate"])
-                    for d in old["decisions"]
-                    if d["turn_id"] == turn.turn_id and decoded(d["candidate"])
-                ]
+                previous_batch = replay_candidates(
+                    [
+                        d
+                        for d in old["decisions"]
+                        if d["turn_id"] == turn.turn_id and d["outcome"] != "error"
+                    ]
+                )
+                previous = [f.model_dump(mode="json") for f in previous_batch]
                 started = time.perf_counter()
+                attempts = []
+                rejections = []
                 try:
-                    after = [f.model_dump(mode="json") for f in extractor.extract(turn.text)]
+                    batch = extractor.extract(turn.text)
+                    after = [f.model_dump(mode="json") for f in batch]
+                    if isinstance(batch, ExtractionBatch):
+                        rejections = batch.rejections
                     error = None
                 except (ValueError, RuntimeError, httpx.HTTPError) as exc:
                     after, error = [], str(exc)
@@ -96,8 +113,11 @@ def main() -> None:
                         "source": turn.text,
                         "labels": labels,
                         "before": previous,
+                        "before_rejections": previous_batch.rejections,
                         "after": after,
                         "error": error,
+                        "rejections": rejections,
+                        "raw_attempts": attempts,
                         "elapsed_ms": (time.perf_counter() - started) * 1000,
                         "before_coverage": coverage(previous, labels),
                         "after_coverage": coverage(after, labels),

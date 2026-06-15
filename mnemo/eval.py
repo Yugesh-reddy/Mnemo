@@ -38,7 +38,7 @@ from mnemo.eval_support import (
     LabeledReplayExtractor,
     component_fingerprint,
 )
-from mnemo.extraction import ExtractionWorker
+from mnemo.extraction import ExtractionBatch, ExtractionWorker
 from mnemo.models import ExtractedFact
 
 logger = logging.getLogger(__name__)
@@ -234,6 +234,12 @@ class _ExtractionFailure:
     error: str
 
 
+@dataclass(frozen=True)
+class _ExtractionSnapshot:
+    facts: tuple[ExtractedFact, ...]
+    rejections: tuple[dict[str, Any], ...] = ()
+
+
 class _MaterializedExtractor:
     backend = "materialized-candidate-replay"
 
@@ -242,19 +248,26 @@ class _MaterializedExtractor:
         turns: Iterable[EvalTurn],
         extracted: list[list[ExtractedFact] | _ExtractionFailure],
     ) -> None:
-        self._items: dict[tuple[str, str], tuple[ExtractedFact, ...] | _ExtractionFailure] = {}
+        self._items: dict[tuple[str, str], _ExtractionSnapshot | _ExtractionFailure] = {}
         for turn, candidates in zip(turns, extracted, strict=True):
             key = (turn.role, turn.text)
-            value = candidates if isinstance(candidates, _ExtractionFailure) else tuple(candidates)
+            value = (
+                candidates
+                if isinstance(candidates, _ExtractionFailure)
+                else _ExtractionSnapshot(
+                    tuple(candidates),
+                    tuple(candidates.rejections) if isinstance(candidates, ExtractionBatch) else (),
+                )
+            )
             if key in self._items and self._items[key] != value:
                 raise ValueError("conflicting candidate replay for identical role/text input")
             self._items[key] = value
 
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
-        item = self._items.get((role, text), ())
+        item = self._items.get((role, text), _ExtractionSnapshot(()))
         if isinstance(item, _ExtractionFailure):
             raise ValueError(item.error)
-        return list(item)
+        return ExtractionBatch(list(item.facts), list(item.rejections))
 
 
 def _materialize_candidates(dataset: EvalDataset, extractor: Any) -> _MaterializedExtractor:

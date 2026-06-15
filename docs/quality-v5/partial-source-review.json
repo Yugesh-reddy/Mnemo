@@ -1,0 +1,367 @@
+{
+  "complete": true,
+  "reviewer": "Codex; provisional single source review, not independent human adjudication.",
+  "probe_sha256": "c60306fd526a8c3c9c799a6a65e0deb41919526ed73cc999592a5e9d62c1be94",
+  "measurement_sha256": "517275183179371bdd98d21afc09073317a88f7e44100681877d7ada6e5cacf1",
+  "policy_sha256": "9ca7df14bd5897dae2a2b0dee1281a5dbd1e28341f2020b86de09daf260ff422",
+  "scope": "All six newly recovered candidates and every incremental gated historical write. No review or accuracy claim for the other 54 extracted candidates.",
+  "candidate_categories": {
+    "supported_plan": 1,
+    "supported_denial": 1,
+    "supported_request": 2,
+    "supported_lossy": 1,
+    "supported_equivalent": 1
+  },
+  "write_categories": {
+    "supported_plan": 1,
+    "supported_request": 2,
+    "supported_lossy": 1,
+    "supported_equivalent": 1
+  },
+  "source_supported_writes": 5,
+  "source_unsupported_writes": 0,
+  "source_supported_rejections": 1,
+  "strict_must_keep_matches": 0,
+  "strict_must_keep_targets": 24,
+  "rows": [
+    {
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "assertion": {
+        "kind": "triple",
+        "object": "dry brine method and baking powder trick",
+        "subject": "user",
+        "evidence": "I'll definitely try the dry brine method and baking powder trick.",
+        "predicate": "intends_to_try",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_plan",
+      "reason": "The speaker explicitly commits to trying the dry brine method and baking powder trick; the candidate retains intention rather than claiming completion.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'll definitely try the dry brine method and baking powder trick', which directly confirms the intent to attempt these methods.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'll definitely try the dry brine method and baking powder trick.",
+        "probability": 1.0
+      }
+    },
+    {
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "assertion": {
+        "kind": "triple",
+        "object": "roasting veggies with convection",
+        "subject": "user",
+        "evidence": "I haven't tried roasting veggies with convection yet.",
+        "predicate": "has_not_tried",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_denial",
+      "reason": "The source explicitly denies having roasted vegetables with convection. Baking cookies with convection is a different activity and does not contradict this denial.",
+      "mapped_targets": [],
+      "outcome": "rejected",
+      "verification": {
+        "label": "contradiction",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states they 'just used my oven's convection setting for the first time last Thursday', which directly contradicts the assertion that they have not tried roasting vegetables with convection.",
+        "backend": "ollama",
+        "accepted": false,
+        "evidence": "I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies",
+        "probability": 0.95
+      }
+    },
+    {
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "assertion": {
+        "kind": "triple",
+        "object": "recipe ideas for meal prep",
+        "subject": "user",
+        "evidence": "I'm looking for some recipe ideas for meal prep.",
+        "predicate": "looking_for_recipe_ideas",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_request",
+      "reason": "The opening sentence explicitly requests recipe ideas for meal prep.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'm looking for some recipe ideas for meal prep', which directly matches the subject (user), predicate (looking_for_recipe_ideas), and object (recipe ideas for meal prep) in the assertion.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'm looking for some recipe ideas for meal prep.",
+        "probability": 1.0
+      }
+    },
+    {
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "assertion": {
+        "kind": "triple",
+        "object": "new Ethiopian restaurant in town",
+        "subject": "user",
+        "evidence": "I tried out a new Ethiopian restaurant in town last week and loved it!",
+        "predicate": "tried_ethiopian_restaurant",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_lossy",
+      "reason": "Trying the new Ethiopian restaurant is explicit. The object drops last week and the positive reaction, so it only partially covers the labeled event.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "tried_restaurant",
+          "object": "Ethiopian restaurant last week",
+          "coverage": "partial"
+        }
+      ],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The speaker explicitly states they 'tried out a new Ethiopian restaurant in town last week', which directly confirms the predicate 'tried_ethiopian_restaurant' with the specified object and past tense.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I tried out a new Ethiopian restaurant in town last week",
+        "probability": 1.0
+      }
+    },
+    {
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "assertion": {
+        "kind": "triple",
+        "object": "healthy meal prep ideas",
+        "subject": "user",
+        "evidence": "I'm looking for some healthy meal prep ideas.",
+        "predicate": "looking_for",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_request",
+      "reason": "The speaker explicitly says they are looking for healthy meal prep ideas.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'm looking for some healthy meal prep ideas', which directly matches the assertion's subject (user), predicate (looking_for), and object (healthy meal prep ideas). The additional context about plant-based eating and a vegan class supports the motivation but does not alter the core factual claim of the search intent.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'm looking for some healthy meal prep ideas.",
+        "probability": 1.0
+      }
+    },
+    {
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "assertion": {
+        "kind": "triple",
+        "object": "class on vegan cuisine",
+        "subject": "user",
+        "evidence": "I recently attended a class on vegan cuisine that got me really inspired.",
+        "predicate": "attended_class",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_equivalent",
+      "reason": "The speaker explicitly reports attending a class on vegan cuisine. The stored relation and value preserve the must-keep assertion with different wording.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "attended_vegan_class",
+          "object": "vegan cuisine class",
+          "coverage": "complete"
+        }
+      ],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states they 'recently attended a class on vegan cuisine', which directly confirms the predicate 'attended_class' with object 'class on vegan cuisine'. The context of being 'inspired' further supports the event occurred.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+        "probability": 1.0
+      }
+    }
+  ],
+  "writes": [
+    {
+      "seq": 1,
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "assertion": {
+        "kind": "triple",
+        "object": "dry brine method and baking powder trick",
+        "subject": "user",
+        "evidence": "I'll definitely try the dry brine method and baking powder trick.",
+        "predicate": "intends_to_try",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_plan",
+      "reason": "The speaker explicitly commits to trying the dry brine method and baking powder trick; the candidate retains intention rather than claiming completion.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'll definitely try the dry brine method and baking powder trick', which directly confirms the intent to attempt these methods.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'll definitely try the dry brine method and baking powder trick.",
+        "probability": 1.0
+      }
+    },
+    {
+      "seq": 2,
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "assertion": {
+        "kind": "triple",
+        "object": "recipe ideas for meal prep",
+        "subject": "user",
+        "evidence": "I'm looking for some recipe ideas for meal prep.",
+        "predicate": "looking_for_recipe_ideas",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_request",
+      "reason": "The opening sentence explicitly requests recipe ideas for meal prep.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'm looking for some recipe ideas for meal prep', which directly matches the subject (user), predicate (looking_for_recipe_ideas), and object (recipe ideas for meal prep) in the assertion.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'm looking for some recipe ideas for meal prep.",
+        "probability": 1.0
+      }
+    },
+    {
+      "seq": 3,
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "assertion": {
+        "kind": "triple",
+        "object": "new Ethiopian restaurant in town",
+        "subject": "user",
+        "evidence": "I tried out a new Ethiopian restaurant in town last week and loved it!",
+        "predicate": "tried_ethiopian_restaurant",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_lossy",
+      "reason": "Trying the new Ethiopian restaurant is explicit. The object drops last week and the positive reaction, so it only partially covers the labeled event.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "tried_restaurant",
+          "object": "Ethiopian restaurant last week",
+          "coverage": "partial"
+        }
+      ],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The speaker explicitly states they 'tried out a new Ethiopian restaurant in town last week', which directly confirms the predicate 'tried_ethiopian_restaurant' with the specified object and past tense.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I tried out a new Ethiopian restaurant in town last week",
+        "probability": 1.0
+      }
+    },
+    {
+      "seq": 4,
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "assertion": {
+        "kind": "triple",
+        "object": "healthy meal prep ideas",
+        "subject": "user",
+        "evidence": "I'm looking for some healthy meal prep ideas.",
+        "predicate": "looking_for",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_request",
+      "reason": "The speaker explicitly says they are looking for healthy meal prep ideas.",
+      "mapped_targets": [],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states 'I'm looking for some healthy meal prep ideas', which directly matches the assertion's subject (user), predicate (looking_for), and object (healthy meal prep ideas). The additional context about plant-based eating and a vegan class supports the motivation but does not alter the core factual claim of the search intent.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I'm looking for some healthy meal prep ideas.",
+        "probability": 1.0
+      }
+    },
+    {
+      "seq": 5,
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "assertion": {
+        "kind": "triple",
+        "object": "class on vegan cuisine",
+        "subject": "user",
+        "evidence": "I recently attended a class on vegan cuisine that got me really inspired.",
+        "predicate": "attended_class",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "agent_inference"
+      },
+      "category": "supported_equivalent",
+      "reason": "The speaker explicitly reports attending a class on vegan cuisine. The stored relation and value preserve the must-keep assertion with different wording.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "attended_vegan_class",
+          "object": "vegan cuisine class",
+          "coverage": "complete"
+        }
+      ],
+      "outcome": "demoted",
+      "verification": {
+        "label": "entailment",
+        "model": "qwen3.5:4b-mlx",
+        "reason": "The user explicitly states they 'recently attended a class on vegan cuisine', which directly confirms the predicate 'attended_class' with object 'class on vegan cuisine'. The context of being 'inspired' further supports the event occurred.",
+        "backend": "ollama",
+        "accepted": true,
+        "evidence": "I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+        "probability": 1.0
+      }
+    }
+  ],
+  "limitations": [
+    "All five writes were demoted to session tier; later-session or post-TTL availability is not established.",
+    "One recovered write is a complete must-keep equivalent and one is partial. Original labels and strict metrics are unchanged.",
+    "The verifier wrongly treats convection-baked cookies as contradicting a denial of convection-roasted vegetables.",
+    "The raw malformed siblings remain rejected; the parser does not rewrite their quotes or claim that their missed targets were recovered.",
+    "This incremental source review does not establish general pipeline accuracy or independent held-out performance."
+  ]
+}

@@ -9,9 +9,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from mnemo.eval import assertion_key
 from mnemo.eval_data import load_benchmark_dataset, load_naturalistic_dataset, load_smoke_dataset
 from mnemo.eval_support import EvalDataset
+from mnemo.extraction import ExtractionBatch
+from mnemo.models import ExtractedFact
 
 
 def decoded(value: Any) -> Any:
@@ -27,6 +31,38 @@ def payload(row: dict) -> Any:
 
 def key(row: dict) -> tuple[str, str]:
     return assertion_key(row["subject"], row["predicate"], payload(row))
+
+
+def candidate_key(row: Any) -> tuple[str, str] | None:
+    """Raw rejection envelopes and malformed members cannot earn coverage."""
+    try:
+        fact = ExtractedFact.model_validate(row)
+    except ValidationError:
+        return None
+    return assertion_key(fact.subject, fact.predicate, fact.object)
+
+
+def replay_candidates(decisions: list[dict]) -> ExtractionBatch:
+    """Reconstruct survivors and raw rejections without promoting rejected output.
+
+    Semantically rejected, well-formed candidates remain eligible for verifier
+    replay. Malformed members must have an explicit pre-verification rejection;
+    other malformed records indicate corrupt/incompatible evidence and fail closed.
+    """
+    facts, rejections = [], []
+    for decision in decisions:
+        if decision["outcome"] == "error":
+            raise ValueError("cannot replay extraction errors as candidate batches")
+        candidate = decoded(decision["candidate"])
+        if not candidate:
+            continue
+        try:
+            facts.append(ExtractedFact.model_validate(candidate))
+        except ValidationError:
+            if decision["outcome"] != "rejected" or decoded(decision.get("verification")):
+                raise ValueError("malformed candidate lacks extraction rejection") from None
+            rejections.append({"candidate": candidate, "reason": decision["reason"]})
+    return ExtractionBatch(facts, rejections)
 
 
 def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = None) -> dict:
@@ -93,7 +129,7 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
         if target in actual:
             continue
         ds = [d for d in decisions if d["turn_id"] == turn.turn_id]
-        exact = [d for d in ds if d["candidate"] and key(d["candidate"]) == target]
+        exact = [d for d in ds if candidate_key(d["candidate"]) == target]
         source_writes = [w for w in writes if turn.turn_id in decoded(w["source_span"])["turn_ids"]]
         last_exact = [w for w in writes if key(w) == target]
         if last_exact:
@@ -108,12 +144,15 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
                 if any(d["verification"] and not d["verification"]["accepted"] for d in exact)
                 else "gate_or_write_loss"
             )
-        elif any(d["candidate"] for d in ds):
+        elif any(candidate_key(d["candidate"]) is not None for d in ds):
             later = []
             cause = "extraction_fidelity_or_label_mismatch"
         elif turn.turn_id in failed_turns:
             later = []
             cause = failed_turns[turn.turn_id]["stage"] + "_error"
+        elif any(d["candidate"] for d in ds):
+            later = []
+            cause = "extraction_validation_rejection"
         else:
             later = []
             cause = "extraction_omission"

@@ -1,0 +1,31 @@
+{
+  "reserved_at": "2026-09-15T02:34:38.673080+00:00",
+  "source_url": "https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned/resolve/98d7416/longmemeval_oracle.json",
+  "source_sha256": "821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c",
+  "selection_rule": "ascending sha256(mnemo-quality-v2:question_id); 40..54 turns; exclude all used question/session IDs",
+  "excluded_ids": [
+    "2ce6a0f2",
+    "6d550036",
+    "88432d0a",
+    "d23cf73b",
+    "e3038f8c",
+    "gpt4_15e38248",
+    "gpt4_2655b836"
+  ],
+  "id": "b46e15ed",
+  "session_ids": [
+    "answer_4bfcc250_4",
+    "answer_4bfcc250_3",
+    "answer_4bfcc250_2",
+    "answer_4bfcc250_1"
+  ],
+  "turns": 48,
+  "path": "reserved-holdout.json",
+  "sha256": "956f330b204ed34e731c3cf15a669aeb402291ef52edccbbb3b53b185df4b852",
+  "status": "reserved_unopened_unlabeled_unevaluated",
+  "recovery": {
+    "thread_id": "01a0a2e7-8c71-7903-b8a3-b73d9825a87e",
+    "transcript_sha256": "3d17c723712e41d00c668eb48e938adee24bffa71e97f5f851740708e751b476",
+    "note": "Original source restored by reserved question ID from checksum-verified upstream data. Text not exposed, labeled or evaluated during continuation."
+  }
+}

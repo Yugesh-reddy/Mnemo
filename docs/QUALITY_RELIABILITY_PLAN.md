@@ -1,9 +1,10 @@
 # Memory quality reliability: implementation and acceptance plan
 
-Updated September 13, 2026. This follows the infrastructure milestone in
+Updated September 15, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
 Executed measurements and source-review qualifications live in
+[quality-v5/README.md](quality-v5/README.md); the preceding extraction cycle is in
 [quality-v4/README.md](quality-v4/README.md); prior cycles remain in
 [quality-v3/README.md](quality-v3/README.md) and
 [quality-v2/README.md](quality-v2/README.md).
@@ -183,3 +184,28 @@ Next bounded development priorities, from the completed source review:
 4. Review stable correction identities and cross-session availability alongside
    the prepared contract proposal. Do not use embedding similarity as proof of
    equivalence or silently merge distinct events.
+
+## 8. Partial batch recovery
+
+Implemented September 15: after the existing bounded retries, recover validated
+members of the final extraction response and audit each malformed sibling. Never
+combine attempts or revive an earlier response after final JSON/provider failure.
+The normal verifier and scoring still apply, and replay/report tooling preserves
+raw rejections without awarding candidate coverage. No schema, dependency,
+identity contract or numeric threshold changes were needed.
+
+The 20-source development rerun retains 60 candidates versus 54 when the identical
+final replies are parsed with whole-response rejection. Three partial batches
+recover six candidates; four malformed members remain rejected. The incremental
+gate stores five source-supported session facts and falsely rejects one supported
+denial. Source review covers all six recovered candidates and all five writes.
+Strict must-keep remains 0/24; one recovered write is an equivalent must-keep and
+another only partially preserves its event. This fixes batch loss, without meeting
+the broader quality acceptance target or demonstrating durable recall.
+
+Validation passes 218 required-Postgres tests with zero skips using the installed
+model, lint/format, a clean built wheel, `make eval`, and the rollback demo with
+the available model override. Full evidence and reproduction commands are in
+[quality-v5](quality-v5/README.md). The linked thread's failed verifier experiment
+is recorded separately and excluded from production. The original next holdout,
+`b46e15ed`, is restored and remains unopened, unlabeled and unevaluated.

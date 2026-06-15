@@ -15,9 +15,9 @@ from pathlib import Path
 from mnemo.config import get_settings
 from mnemo.embedder import build_embedder
 from mnemo.eval import _MaterializedExtractor, evaluate
+from mnemo.eval_audit import replay_candidates
 from mnemo.eval_data import load_benchmark_dataset
 from mnemo.eval_suite import policy_fingerprint
-from mnemo.models import ExtractedFact
 from mnemo.quality import build_verifier
 
 
@@ -32,22 +32,15 @@ async def run(args: argparse.Namespace) -> None:
         raise ValueError("source report has unresolved cleanup errors")
     by_turn = {}
     for decision in saved["decisions"]:
-        candidates = by_turn.setdefault(decision["turn_id"], [])
+        decisions = by_turn.setdefault(decision["turn_id"], [])
         if decision["outcome"] == "error":
             raise ValueError("cannot replay a source report with extraction errors")
-        candidate = json.loads(decision["candidate"])
-        if candidate:
-            candidates.append(ExtractedFact.model_validate(candidate))
-    by_source, extracted = {}, []
+        decisions.append(decision)
+    extracted = []
     for turn in dataset.turns:
         if turn.turn_id not in by_turn:
             raise ValueError("source report is missing a turn's candidate decisions")
-        candidates = by_turn[turn.turn_id] if turn.role == "user" else []
-        key = (turn.role, turn.text)
-        if key in by_source and by_source[key] != candidates:
-            raise ValueError("repeated source has different candidates; replay would be ambiguous")
-        by_source[key] = candidates
-        extracted.append(candidates)
+        extracted.append(replay_candidates(by_turn[turn.turn_id]) if turn.role == "user" else [])
     settings = get_settings()
     fingerprint = policy_fingerprint(settings)
     embedder, verifier = build_embedder(settings), build_verifier(settings)

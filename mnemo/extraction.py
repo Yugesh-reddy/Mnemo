@@ -40,6 +40,24 @@ class Extractor(Protocol):
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]: ...
 
 
+class ExtractionBatch(list[ExtractedFact]):
+    """Validated survivors plus rejected members of the same final response.
+
+    Remains list-compatible for SDK callers. The worker and evaluation replay
+    preserve rejections for auditing; they never treat them as memory candidates.
+    """
+
+    def __init__(self, facts: list[ExtractedFact], rejections: list[dict[str, Any]]) -> None:
+        super().__init__(facts)
+        self.rejections = rejections
+
+
+class _InvalidExtractionBatch(ValueError):
+    def __init__(self, batch: ExtractionBatch) -> None:
+        super().__init__("; ".join(item["reason"] for item in batch.rejections))
+        self.batch = batch
+
+
 _SYSTEM_PROMPT = """Read the user's turn and extract its explicitly stated memory facts.
 First copy the evidence, then express the SAME meaning as a subject/predicate/object.
 Return only JSON: {"facts": [{"evidence": "verbatim source clause",
@@ -138,12 +156,18 @@ class OllamaExtractor:
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
         last_error = None
         content = None
-        for _ in range(self.max_retries + 1):
+        for attempt in range(self.max_retries + 1):
             content = self._chat(text, role, last_error, content)
             try:
                 return self._parse(content, text)
             except ValueError as exc:
                 last_error = str(exc)
+                if (
+                    attempt == self.max_retries
+                    and isinstance(exc, _InvalidExtractionBatch)
+                    and exc.batch
+                ):
+                    return exc.batch
         raise ValueError(f"extractor output rejected after retries: {last_error}")
 
     def _chat(
@@ -174,13 +198,28 @@ class OllamaExtractor:
         if not isinstance(data, dict) or not isinstance(data.get("facts"), list):
             raise ValueError("output requires a facts array")
         out: list[ExtractedFact] = []
+        rejections: list[dict[str, Any]] = []
         for index, item in enumerate(data["facts"]):
-            fact = ExtractedFact.model_validate(item)
-            if fact.evidence is None or fact.evidence not in source_text:
-                raise ValueError(f"candidate {index} evidence is absent from source")
-            if fact.object is None or (isinstance(fact.object, str) and not fact.object.strip()):
-                raise ValueError(f"candidate {index} requires a nonempty value in object")
-            out.append(fact)
+            try:
+                fact = ExtractedFact.model_validate(item)
+                if fact.evidence is None or fact.evidence not in source_text:
+                    raise ValueError("evidence is absent from source")
+                if fact.object is None or (
+                    isinstance(fact.object, str) and not fact.object.strip()
+                ):
+                    raise ValueError("requires a nonempty value in object")
+                out.append(fact)
+            except ValueError as exc:
+                rejections.append(
+                    {
+                        # Keep invalid output distinct from a validated assertion,
+                        # including complete-looking facts with fabricated quotes.
+                        "candidate": {"raw": item},
+                        "reason": f"candidate {index} {exc}",
+                    }
+                )
+        if rejections:
+            raise _InvalidExtractionBatch(ExtractionBatch(out, rejections))
         return out
 
     def close(self) -> None:
@@ -209,12 +248,18 @@ class OpenAIExtractor:
     def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
         last_error = None
         content = None
-        for _ in range(self.max_retries + 1):
+        for attempt in range(self.max_retries + 1):
             content = self._chat(text, role, last_error, content)
             try:
                 return OllamaExtractor._parse(content, text)
             except ValueError as exc:
                 last_error = str(exc)
+                if (
+                    attempt == self.max_retries
+                    and isinstance(exc, _InvalidExtractionBatch)
+                    and exc.batch
+                ):
+                    return exc.batch
         raise ValueError(f"extractor output rejected after retries: {last_error}")
 
     def _chat(
@@ -354,6 +399,8 @@ class ExtractionWorker:
                         self.embedder.embed, f"{cand.subject} {cand.predicate} {cand.object}"
                     )
             prepared.append(result)
+        if isinstance(raw, ExtractionBatch):
+            prepared.extend({**item, "outcome": "rejected"} for item in raw.rejections)
         if not prepared:
             prepared.append(
                 {
