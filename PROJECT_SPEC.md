@@ -4,7 +4,8 @@ The September 9, 2026 correctness amendment in §14 supersedes earlier wording
 where indicated. The implementation plan is in `docs/CORRECTNESS_PLAN.md`;
 executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
 The September 11 quality work follows `docs/QUALITY_RELIABILITY_PLAN.md`;
-`docs/quality-v3/README.md` records the current structured-verification cycle;
+`docs/quality-v4/README.md` records the evidence-grounded extraction cycle;
+`docs/quality-v3/README.md` records the preceding structured-verification cycle;
 `docs/quality-v2/README.md` preserves earlier source review and frozen validation.
 
 > **Working name:** Mnemo · **One-liner:** *Agent memory that stores less and remembers what matters.*

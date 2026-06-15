@@ -39,3 +39,24 @@ The v3 verifier case files are deliberately selected **development regressions**
 including cached baseline verdicts. They are not random accuracy samples or
 held-out calibration data. Post-run source judgments live under `docs/quality-v3`
 and do not silently change the frozen sidecar labels or strict scores.
+
+`quality-v4/naturalistic-200.json` is a separate, continuous fictional Harbor Voices
+project conversation with 100 user turns and 100 assistant turns over ten sessions.
+It is authored development data, not a held-out or verified human conversation.
+Every turn has an explicit sidecar label list. Source and label hashes are checked
+by `load_naturalistic_dataset()`. Source review preceded model output and corrected
+an interview topic-order label that incorrectly implied temporal order. Some labels
+need preceding user context to resolve references; current extraction is turn-only.
+
+The v4 external manifest reuses the three frozen development records and reserved
+`e3038f8c` (48 turns, four disjoint sessions). Its atomic labels were written only
+after the v6.2 policy freeze and before any output on that record. Its source-review
+notes distinguish friend/grandmother vase references, tentative club/storage plans,
+collection counts and an ambiguous new-record addition. The review does not infer
+58 records from an explicitly repeated count of 57. Assistant inheritance claims
+are not accepted as user evidence. Labels remain provisional single-reviewer work.
+
+The v4 holdout is now evaluated and consumed. Both the authored 200-turn report
+and the 48-turn holdout retain failed extraction turns and unchanged strict scores.
+Every gated historical write and strict must-keep miss has a source-linked review
+in `docs/quality-v4`. Post-run label issues remain separate from frozen labels.

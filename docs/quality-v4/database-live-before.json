@@ -1,0 +1,12 @@
+[
+  {
+    "subject": "user",
+    "predicate": "uses_tool",
+    "object": "Postgres for my project",
+    "kind": "triple",
+    "confidence": 0.95,
+    "importance": 6,
+    "assertion_type": "agent_inference",
+    "evidence": "I use Postgres for my project."
+  }
+]

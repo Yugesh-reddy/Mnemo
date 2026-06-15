@@ -1,0 +1,48 @@
+/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 7286.31it/s]
+Evaluating dev/6d550036: 44 turns
+Traceback (most recent call last):
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 89, in run
+    results[identity] = await evaluate(
+                        ^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval.py", line 518, in evaluate
+    gated_pairs = await run_gated(
+                  ^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval.py", line 164, in run_gated
+    if await worker.process_one():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/extraction.py", line 517, in process_one
+    prepared = await self._prepare_with_renewal(job, text, role)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/extraction.py", line 337, in _prepare_with_renewal
+    done, _ = await asyncio.wait({pending}, timeout=self.settings.job_lease_seconds / 3)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 464, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 550, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 140, in <module>
+    main()
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 136, in main
+    asyncio.run(run(parser.parse_args()))
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt

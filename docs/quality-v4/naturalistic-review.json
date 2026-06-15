@@ -1,0 +1,2388 @@
+{
+  "complete": true,
+  "report_sha256": "10c93157fbcb21f4aa2736418ef55fa4cecb9a7f48bb17a2ed0b97c7d2249441",
+  "dataset_sha256": "f15d941125a0764309fa29505ad29ca21451aa247ce7bf767c36daafea5fe2b5",
+  "policy_sha256": "e83de34c8b51dcd9a72bdf63782907c725fce1d5c2527d9e1618748361744626",
+  "reviewer": "Codex; provisional single reviewer, also author of this development corpus",
+  "scope": "Every gated historical write, judged against its source. Supported_lossy denotes true but incomplete content; ambiguous categories are not counted as proven true or false. These post-run judgments do not replace frozen strict scores or independent gold.",
+  "categories": {
+    "supported_equivalent": 43,
+    "supported_extra": 34,
+    "supported_exact": 2,
+    "unsupported_strengthening": 1,
+    "supported_lossy": 44,
+    "unsupported_temporal": 1,
+    "unsupported_actor": 9,
+    "ambiguous_actor": 4,
+    "unsupported_type": 1,
+    "unsupported_binding": 1,
+    "ambiguous_encoding": 2,
+    "supported_component": 2,
+    "ambiguous_relation": 1
+  },
+  "rows": [
+    {
+      "seq": 1,
+      "turn_id": "harbor-01-00",
+      "source": "I'm Asha Patel. I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront. I need help keeping the practical details straight.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "is_named",
+        "object": "Asha Patel"
+      },
+      "category": "supported_equivalent",
+      "reason": "The speaker explicitly gives the name Asha Patel.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "name",
+          "object": "Asha Patel"
+        }
+      ]
+    },
+    {
+      "seq": 2,
+      "turn_id": "harbor-01-00",
+      "source": "I'm Asha Patel. I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront. I need help keeping the practical details straight.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "coordinates_project",
+        "object": "Harbor Voices"
+      },
+      "category": "supported_equivalent",
+      "reason": "Coordinating Harbor Voices preserves the project association.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "project",
+          "object": "Harbor Voices"
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "turn_id": "harbor-01-02",
+      "source": "My job title is community archivist. The interviews are a side project at the library, rather than a new department.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "job_title",
+        "object": "community archivist"
+      },
+      "category": "supported_equivalent",
+      "reason": "The community-archivist job title is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "role",
+          "object": "community archivist"
+        }
+      ]
+    },
+    {
+      "seq": 4,
+      "turn_id": "harbor-01-02",
+      "source": "My job title is community archivist. The interviews are a side project at the library, rather than a new department.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "interviews_status",
+        "object": "side project at the library, not a new department"
+      },
+      "category": "supported_extra",
+      "reason": "The interviews are explicitly a library side project, not a department.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 5,
+      "turn_id": "harbor-01-04",
+      "source": "Priya Nair is my manager. Morgan helps with the interviews, but Morgan doesn't manage me.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_manager",
+        "object": "Priya Nair"
+      },
+      "category": "supported_equivalent",
+      "reason": "The manager relation preserves direction and Priya Nair.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "manager",
+          "object": "Priya Nair"
+        }
+      ]
+    },
+    {
+      "seq": 6,
+      "turn_id": "harbor-01-06",
+      "source": "I live in Boston, and my work timezone is America/New_York. Please keep the timezone in invitations even when everyone seems local.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "lives_in",
+        "object": "Boston"
+      },
+      "category": "supported_equivalent",
+      "reason": "Living in Boston is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "location",
+          "object": "Boston"
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "turn_id": "harbor-01-06",
+      "source": "I live in Boston, and my work timezone is America/New_York. Please keep the timezone in invitations even when everyone seems local.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "work_timezone_is",
+        "object": "America/New_York"
+      },
+      "category": "supported_equivalent",
+      "reason": "The full work timezone identifier is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "timezone",
+          "object": "America/New_York"
+        }
+      ]
+    },
+    {
+      "seq": 8,
+      "turn_id": "harbor-01-08",
+      "source": "We use PostgreSQL for the catalog. That's an existing choice from the library, not a statement that it's my favorite database.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "PostgreSQL"
+      },
+      "category": "supported_exact",
+      "reason": "Database use remains distinct from preference.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "uses_database",
+          "object": "PostgreSQL"
+        }
+      ]
+    },
+    {
+      "seq": 9,
+      "turn_id": "harbor-01-08",
+      "source": "We use PostgreSQL for the catalog. That's an existing choice from the library, not a statement that it's my favorite database.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "not_preferred_database",
+        "object": "PostgreSQL"
+      },
+      "category": "unsupported_strengthening",
+      "reason": "Saying use does not assert a favorite does not assert that PostgreSQL is not preferred. Absence of a preference claim becomes a negative preference.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 10,
+      "turn_id": "harbor-01-12",
+      "source": "We track issues in Linear. Interview notes live in Obsidian, though the final catalog records go into the database.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "tracks_issues_in",
+        "object": "Linear"
+      },
+      "category": "supported_equivalent",
+      "reason": "Linear is explicitly the issue tracker.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "issue_tracker",
+          "object": "Linear"
+        }
+      ]
+    },
+    {
+      "seq": 11,
+      "turn_id": "harbor-01-12",
+      "source": "We track issues in Linear. Interview notes live in Obsidian, though the final catalog records go into the database.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "stores_interview_notes_in",
+        "object": "Obsidian"
+      },
+      "category": "supported_equivalent",
+      "reason": "Obsidian explicitly holds interview notes.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "documentation_tool",
+          "object": "Obsidian"
+        }
+      ]
+    },
+    {
+      "seq": 12,
+      "turn_id": "harbor-01-12",
+      "source": "We track issues in Linear. Interview notes live in Obsidian, though the final catalog records go into the database.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "stores_final_catalog_records_in",
+        "object": "the database"
+      },
+      "category": "supported_extra",
+      "reason": "Final catalog records explicitly go into the database.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 13,
+      "turn_id": "harbor-01-14",
+      "source": "My monthly transcription budget is 100 dollars. That's the approved ceiling for now; I haven't asked for an increase yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_budget",
+        "object": "100 dollars per month"
+      },
+      "category": "supported_lossy",
+      "reason": "Amount and monthly cadence survive without the transcription-budget identity.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "transcription_budget_usd",
+          "object": "100"
+        }
+      ]
+    },
+    {
+      "seq": 14,
+      "turn_id": "harbor-01-14",
+      "source": "My monthly transcription budget is 100 dollars. That's the approved ceiling for now; I haven't asked for an increase yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_approved_ceiling",
+        "object": "100 dollars"
+      },
+      "category": "supported_lossy",
+      "reason": "The ceiling survives without budget type or monthly cadence.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "transcription_budget_usd",
+          "object": "100"
+        }
+      ]
+    },
+    {
+      "seq": 15,
+      "turn_id": "harbor-01-14",
+      "source": "My monthly transcription budget is 100 dollars. That's the approved ceiling for now; I haven't asked for an increase yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_requested_increase",
+        "object": "transcription budget"
+      },
+      "category": "supported_extra",
+      "reason": "No transcription-budget increase has been requested yet, as stated.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 16,
+      "turn_id": "harbor-01-16",
+      "source": "Wednesday is my meeting-free day. I need a long block for cleaning the old spreadsheets.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_meeting_free_day",
+        "object": "Wednesday"
+      },
+      "category": "supported_equivalent",
+      "reason": "Wednesday is the stated meeting-free day at this point in history.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "meeting_free_day",
+          "object": "Wednesday"
+        }
+      ]
+    },
+    {
+      "seq": 17,
+      "turn_id": "harbor-01-16",
+      "source": "Wednesday is my meeting-free day. I need a long block for cleaning the old spreadsheets.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "needs_time_block_for",
+        "object": "cleaning the old spreadsheets"
+      },
+      "category": "supported_extra",
+      "reason": "A long block is explicitly needed for spreadsheet cleaning.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 18,
+      "turn_id": "harbor-01-18",
+      "source": "I need captions enabled on video calls. Please make that part of our normal setup, not something I have to request every time.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "needs_captions_enabled",
+        "object": "video calls"
+      },
+      "category": "supported_equivalent",
+      "reason": "The captions-enabled-on-video-calls need is preserved.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "accessibility_need",
+          "object": "captions enabled on video calls"
+        }
+      ]
+    },
+    {
+      "seq": 19,
+      "turn_id": "harbor-01-18",
+      "source": "I need captions enabled on video calls. Please make that part of our normal setup, not something I have to request every time.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "wants_normal_setup",
+        "object": "captions enabled on video calls"
+      },
+      "category": "supported_equivalent",
+      "reason": "The normal setup explicitly requires captions; redundant with the preceding need.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "accessibility_need",
+          "object": "captions enabled on video calls"
+        }
+      ]
+    },
+    {
+      "seq": 20,
+      "turn_id": "harbor-02-00",
+      "source": "I've booked the first interview for April 10 with Lena Ortiz. She's bringing photographs from her family's shop.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "booked_interview",
+        "object": "April 10 with Lena Ortiz"
+      },
+      "category": "supported_lossy",
+      "reason": "Person and date survive without first-interview identity; the later move still needs to bind to this event.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview",
+          "object": "Lena Ortiz on April 10"
+        }
+      ]
+    },
+    {
+      "seq": 21,
+      "turn_id": "harbor-02-00",
+      "source": "I've booked the first interview for April 10 with Lena Ortiz. She's bringing photographs from her family's shop.",
+      "assertion": {
+        "subject": "Lena Ortiz",
+        "predicate": "bringing_photographs",
+        "object": "photographs from her family's shop"
+      },
+      "category": "supported_extra",
+      "reason": "She resolves locally to Lena Ortiz bringing her family shop photographs.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 22,
+      "turn_id": "harbor-02-02",
+      "source": "The first interview is in the library's Cedar Room. I reserved it from 2 to 4 pm.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "scheduled_interview_location",
+        "object": "library's Cedar Room"
+      },
+      "category": "supported_lossy",
+      "reason": "The room is correct but first-interview identity is absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview_room",
+          "object": "Cedar Room"
+        }
+      ]
+    },
+    {
+      "seq": 23,
+      "turn_id": "harbor-02-02",
+      "source": "The first interview is in the library's Cedar Room. I reserved it from 2 to 4 pm.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "reserved_time_slot",
+        "object": "2 to 4 pm"
+      },
+      "category": "supported_lossy",
+      "reason": "The time survives without interview or room binding.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview_time",
+          "object": "2 to 4 pm"
+        }
+      ]
+    },
+    {
+      "seq": 24,
+      "turn_id": "harbor-02-04",
+      "source": "I borrowed a Zoom H5 recorder from the media desk yesterday. I own the headphones, but the recorder has to go back after the session.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "borrowed_device",
+        "object": "Zoom H5 recorder from the media desk yesterday"
+      },
+      "category": "supported_equivalent",
+      "reason": "Borrowing the named recorder is explicit, without inventing ownership.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "borrowed_equipment",
+          "object": "Zoom H5 recorder"
+        }
+      ]
+    },
+    {
+      "seq": 25,
+      "turn_id": "harbor-02-04",
+      "source": "I borrowed a Zoom H5 recorder from the media desk yesterday. I own the headphones, but the recorder has to go back after the session.",
+      "assertion": {
+        "subject": "recorder",
+        "predicate": "must_be_returned",
+        "object": "after the session"
+      },
+      "category": "supported_lossy",
+      "reason": "The return requirement is stated, but recorder/session references are unresolved.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 26,
+      "turn_id": "harbor-02-06",
+      "source": "I tested the Cedar Room this morning. The ventilation hum is audible near the door, so I want the table by the window.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "tested_location",
+        "object": "Cedar Room this morning"
+      },
+      "category": "supported_equivalent",
+      "reason": "Testing Cedar Room is explicit with its relative timing.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "tested_room",
+          "object": "Cedar Room"
+        }
+      ]
+    },
+    {
+      "seq": 27,
+      "turn_id": "harbor-02-06",
+      "source": "I tested the Cedar Room this morning. The ventilation hum is audible near the door, so I want the table by the window.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "wants_table_position",
+        "object": "by the window"
+      },
+      "category": "supported_lossy",
+      "reason": "The table position survives without interview/room context.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "preferred_interview_table_position",
+          "object": "by the window"
+        }
+      ]
+    },
+    {
+      "seq": 28,
+      "turn_id": "harbor-02-08",
+      "source": "I'll scan the photographs after the interview, if Lena agrees. I haven't received permission to scan them yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_received_permission",
+        "object": "to scan them"
+      },
+      "category": "supported_lossy",
+      "reason": "No scan permission is stated, but them is not resolved to Lena photographs.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 29,
+      "turn_id": "harbor-02-10",
+      "source": "Our consent form is version 3. The library requires the participant's signature before recording begins.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_consent_form_version",
+        "object": "version 3"
+      },
+      "category": "supported_equivalent",
+      "reason": "Consent-form version 3 is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "consent_form_version",
+          "object": "3"
+        }
+      ]
+    },
+    {
+      "seq": 30,
+      "turn_id": "harbor-02-10",
+      "source": "Our consent form is version 3. The library requires the participant's signature before recording begins.",
+      "assertion": {
+        "subject": "library",
+        "predicate": "requires_signature_before_recording",
+        "object": "participant's signature before recording begins"
+      },
+      "category": "supported_extra",
+      "reason": "The library requires participant signature before recording.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 31,
+      "turn_id": "harbor-02-12",
+      "source": "Yes, I printed two copies. One is for Lena and one is for our locked project folder.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "printed",
+        "object": "two copies"
+      },
+      "category": "supported_lossy",
+      "reason": "Two printed copies survive without the consent-form reference from prior context.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "prepared_consent_copies",
+          "object": "2"
+        }
+      ]
+    },
+    {
+      "seq": 32,
+      "turn_id": "harbor-02-12",
+      "source": "Yes, I printed two copies. One is for Lena and one is for our locked project folder.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "printed_for",
+        "object": "Lena and our locked project folder"
+      },
+      "category": "supported_lossy",
+      "reason": "Destinations are stated, but the printed item is missing.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 33,
+      "turn_id": "harbor-02-14",
+      "source": "My main question for Lena is how the waterfront businesses changed when the ferry terminal moved. I don't want to turn it into a general family biography.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "asked_question_about",
+        "object": "waterfront businesses changed when the ferry terminal moved"
+      },
+      "category": "unsupported_temporal",
+      "reason": "The main question is for a future interview, not an already asked question.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 34,
+      "turn_id": "harbor-02-18",
+      "source": "Those work. I'll bring a large-print copy of the prompts because Lena asked for one.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "will_bring",
+        "object": "large-print copy of the prompts"
+      },
+      "category": "supported_lossy",
+      "reason": "Bringing large-print prompts is explicit but the first-interview/Lena binding is absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview_accessibility",
+          "object": "large-print prompts"
+        }
+      ]
+    },
+    {
+      "seq": 35,
+      "turn_id": "harbor-02-18",
+      "source": "Those work. I'll bring a large-print copy of the prompts because Lena asked for one.",
+      "assertion": {
+        "subject": "Lena",
+        "predicate": "asked_for",
+        "object": "large-print copy of the prompts"
+      },
+      "category": "supported_extra",
+      "reason": "Lena is explicitly the requester of the large-print copy.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 36,
+      "turn_id": "harbor-03-00",
+      "source": "Priya approved the budget increase today. The monthly transcription ceiling is now 150 dollars, replacing the old 100-dollar limit.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "approved_budget_increase",
+        "object": "budget increase today"
+      },
+      "category": "unsupported_actor",
+      "reason": "Priya approved the increase; the assertion assigns approval to the user.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 37,
+      "turn_id": "harbor-03-00",
+      "source": "Priya approved the budget increase today. The monthly transcription ceiling is now 150 dollars, replacing the old 100-dollar limit.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "updated_transcription_ceiling",
+        "object": "150 dollars (replacing 100-dollar limit)"
+      },
+      "category": "ambiguous_actor",
+      "reason": "The transcription ceiling is correct, but the user is assigned the update action and monthly cadence is absent; Priya is the named approver.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "transcription_budget_usd",
+          "object": "150"
+        }
+      ]
+    },
+    {
+      "seq": 38,
+      "turn_id": "harbor-03-02",
+      "source": "We also moved the first interview to April 13. Lena has a family commitment on the 10th; the person and room are unchanged.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "moved_interview_date",
+        "object": "first interview to April 13"
+      },
+      "category": "supported_lossy",
+      "reason": "The first-interview date change survives without its interviewee.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview",
+          "object": "Lena Ortiz on April 13"
+        }
+      ]
+    },
+    {
+      "seq": 39,
+      "turn_id": "harbor-03-02",
+      "source": "We also moved the first interview to April 13. Lena has a family commitment on the 10th; the person and room are unchanged.",
+      "assertion": {
+        "subject": "Lena",
+        "predicate": "has_family_commitment",
+        "object": "on the 10th"
+      },
+      "category": "supported_extra",
+      "reason": "Lena family commitment on the 10th is stated.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 40,
+      "turn_id": "harbor-03-02",
+      "source": "We also moved the first interview to April 13. Lena has a family commitment on the 10th; the person and room are unchanged.",
+      "assertion": {
+        "subject": "person and room",
+        "predicate": "are_unchanged",
+        "object": "unchanged"
+      },
+      "category": "supported_lossy",
+      "reason": "Unchanged person and room survive without their identities or interview reference.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 41,
+      "turn_id": "harbor-03-04",
+      "source": "The reservation on April 13 is still 2 to 4 pm in Cedar Room. I confirmed it with the front desk.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_reservation",
+        "object": "April 13, 2 to 4 pm in Cedar Room"
+      },
+      "category": "supported_lossy",
+      "reason": "Date, time and room are bound together, but first-interview identity is absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview_time",
+          "object": "2 to 4 pm"
+        },
+        {
+          "subject": "user",
+          "predicate": "first_interview_room",
+          "object": "Cedar Room"
+        }
+      ]
+    },
+    {
+      "seq": 42,
+      "turn_id": "harbor-03-04",
+      "source": "The reservation on April 13 is still 2 to 4 pm in Cedar Room. I confirmed it with the front desk.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "confirmed_with",
+        "object": "front desk"
+      },
+      "category": "supported_lossy",
+      "reason": "Confirmation with the front desk survives without the thing confirmed.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 43,
+      "turn_id": "harbor-03-06",
+      "source": "I'm considering buying a second recorder, but I haven't chosen a model or committed to spending the money.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considering_purchase",
+        "object": "second recorder"
+      },
+      "category": "supported_extra",
+      "reason": "The second-recorder purchase stays under consideration.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 44,
+      "turn_id": "harbor-03-06",
+      "source": "I'm considering buying a second recorder, but I haven't chosen a model or committed to spending the money.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_chosen_model",
+        "object": "model"
+      },
+      "category": "supported_lossy",
+      "reason": "No model is chosen for the second recorder, but recorder scope is absent.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 45,
+      "turn_id": "harbor-03-08",
+      "source": "For editing audio I use Audacity. Please don't put that under databases just because we mentioned PostgreSQL earlier.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_appliance",
+        "object": "Audacity for editing audio"
+      },
+      "category": "unsupported_type",
+      "reason": "Audacity is used for audio editing; appliance use changes its type.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 46,
+      "turn_id": "harbor-03-08",
+      "source": "For editing audio I use Audacity. Please don't put that under databases just because we mentioned PostgreSQL earlier.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "requested_no_classification",
+        "object": "PostgreSQL as a database"
+      },
+      "category": "unsupported_binding",
+      "reason": "The exclusion concerns classifying Audacity as a database; the candidate incorrectly binds it to PostgreSQL.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 47,
+      "turn_id": "harbor-03-10",
+      "source": "I prefer plain-text checklists over a new project-management app. Linear is enough for the team's tasks.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "prefers_tool_type",
+        "object": "plain-text checklists"
+      },
+      "category": "supported_equivalent",
+      "reason": "The plain-text checklist preference is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "checklist_format_preference",
+          "object": "plain text"
+        }
+      ]
+    },
+    {
+      "seq": 48,
+      "turn_id": "harbor-03-14",
+      "source": "Morgan handles recording setup, and Jules checks the scanned images. I review catalog metadata before it goes public.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "handles_recording_setup",
+        "object": "recording setup"
+      },
+      "category": "unsupported_actor",
+      "reason": "Morgan handles recording setup. The assertion assigns that responsibility to the user.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 49,
+      "turn_id": "harbor-03-14",
+      "source": "Morgan handles recording setup, and Jules checks the scanned images. I review catalog metadata before it goes public.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "reviews_catalog_metadata",
+        "object": "catalog metadata before it goes public"
+      },
+      "category": "supported_equivalent",
+      "reason": "The user explicitly reviews catalog metadata before publication.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "project_responsibility",
+          "object": "review catalog metadata before publication"
+        }
+      ]
+    },
+    {
+      "seq": 50,
+      "turn_id": "harbor-03-16",
+      "source": "Could we use one shared spreadsheet as a temporary intake list? I'm asking about the workflow, not saying we've adopted it.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "proposes_using",
+        "object": "one shared spreadsheet as a temporary intake list"
+      },
+      "category": "supported_extra",
+      "reason": "The workflow question proposes a possible shared intake spreadsheet without claiming adoption.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 51,
+      "turn_id": "harbor-03-18",
+      "source": "Let's leave intake as it is until after the first interview. I don't want to change three things in the same week.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "decides_to_leave_intake_as_is",
+        "object": "until after the first interview"
+      },
+      "category": "supported_extra",
+      "reason": "The user explicitly decides to keep intake unchanged until after the first interview.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 52,
+      "turn_id": "harbor-03-18",
+      "source": "Let's leave intake as it is until after the first interview. I don't want to change three things in the same week.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "declines_to_change_three_things_in_same_week",
+        "object": "three things in the same week"
+      },
+      "category": "supported_equivalent",
+      "reason": "Avoiding three simultaneous changes preserves the stated change-management preference.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "change_management_preference",
+          "object": "avoid several simultaneous workflow changes"
+        }
+      ]
+    },
+    {
+      "seq": 53,
+      "turn_id": "harbor-04-00",
+      "source": "The interview with Lena is finished. We recorded 74 minutes of audio in Cedar Room on April 13.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_interview",
+        "object": "interview with Lena"
+      },
+      "category": "supported_lossy",
+      "reason": "Completion with Lena survives, but surname, room and date are absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "completed_interview",
+          "object": "Lena Ortiz in Cedar Room on April 13"
+        }
+      ]
+    },
+    {
+      "seq": 54,
+      "turn_id": "harbor-04-00",
+      "source": "The interview with Lena is finished. We recorded 74 minutes of audio in Cedar Room on April 13.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "recorded_audio",
+        "object": "74 minutes of audio in Cedar Room on April 13"
+      },
+      "category": "supported_lossy",
+      "reason": "Audio duration, room and date are correct, but the interviewee is unbound.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "completed_interview",
+          "object": "Lena Ortiz in Cedar Room on April 13"
+        },
+        {
+          "subject": "user",
+          "predicate": "first_interview_audio_minutes",
+          "object": "74"
+        }
+      ]
+    },
+    {
+      "seq": 55,
+      "turn_id": "harbor-04-02",
+      "source": "The borrowed recorder worked well. I returned the Zoom H5 to the media desk this afternoon.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "found_borrowed_recorder_worked_well",
+        "object": "borrowed recorder"
+      },
+      "category": "supported_extra",
+      "reason": "The user explicitly says the borrowed recorder worked well.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 56,
+      "turn_id": "harbor-04-02",
+      "source": "The borrowed recorder worked well. I returned the Zoom H5 to the media desk this afternoon.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "returned_device",
+        "object": "Zoom H5 to the media desk this afternoon"
+      },
+      "category": "supported_equivalent",
+      "reason": "Returning the Zoom H5 to the media desk is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "returned_equipment",
+          "object": "Zoom H5 recorder"
+        }
+      ]
+    },
+    {
+      "seq": 57,
+      "turn_id": "harbor-04-04",
+      "source": "Lena signed the recording form, but she asked us to keep one story off the public website until she reviews the transcript.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "signed_form",
+        "object": "recording form"
+      },
+      "category": "unsupported_actor",
+      "reason": "Lena signed the form; the assertion says the user signed it.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 58,
+      "turn_id": "harbor-04-04",
+      "source": "Lena signed the recording form, but she asked us to keep one story off the public website until she reviews the transcript.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "requested_restriction",
+        "object": "one story off the public website until she reviews the transcript"
+      },
+      "category": "unsupported_actor",
+      "reason": "Lena requested the publication restriction; the user is incorrectly made the requester, and she remains unresolved.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 59,
+      "turn_id": "harbor-04-08",
+      "source": "I saved the originals as TIFF files. The JPEG copies are only for browsing, and shouldn't replace the originals.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "saved_as_file_format",
+        "object": "TIFF files"
+      },
+      "category": "supported_lossy",
+      "reason": "TIFF is preserved without identifying the archival originals.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "archive_image_format",
+          "object": "TIFF"
+        }
+      ]
+    },
+    {
+      "seq": 60,
+      "turn_id": "harbor-04-08",
+      "source": "I saved the originals as TIFF files. The JPEG copies are only for browsing, and shouldn't replace the originals.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "designated_purpose_for",
+        "object": "browsing"
+      },
+      "category": "supported_lossy",
+      "reason": "Browsing purpose survives without binding it to the JPEG copies.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "browsing_image_format",
+          "object": "JPEG"
+        }
+      ]
+    },
+    {
+      "seq": 61,
+      "turn_id": "harbor-04-10",
+      "source": "We caught a spelling mistake in Lena's surname on the intake sheet. It's Ortiz, with a z; the interview recording itself is fine.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "identified_spelling_mistake",
+        "object": "Lena's surname on the intake sheet"
+      },
+      "category": "supported_lossy",
+      "reason": "Finding the surname error is supported, but the corrected Ortiz spelling is omitted.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_interview_name_spelling",
+          "object": "Lena Ortiz"
+        }
+      ]
+    },
+    {
+      "seq": 62,
+      "turn_id": "harbor-04-12",
+      "source": "I haven't finished the transcript. The automatic draft confuses the old shop names, so I'm checking them against the photographs.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_finished_transcripting",
+        "object": "transcript"
+      },
+      "category": "supported_lossy",
+      "reason": "The unfinished transcript state is supported, but the first-interview identity and draft status are absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_transcript_status",
+          "object": "unreviewed draft"
+        }
+      ]
+    },
+    {
+      "seq": 63,
+      "turn_id": "harbor-04-12",
+      "source": "I haven't finished the transcript. The automatic draft confuses the old shop names, so I'm checking them against the photographs.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "is_checking_against_photos",
+        "object": "old_shop_names"
+      },
+      "category": "supported_extra",
+      "reason": "Checking old shop names against photographs is explicitly stated.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 64,
+      "turn_id": "harbor-04-14",
+      "source": "My review deadline for that draft is April 18. I promised to send Lena a readable copy before asking about publication.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "promised_to_send_readable_copy",
+        "object": "Lena"
+      },
+      "category": "supported_lossy",
+      "reason": "The readable-copy promise to Lena is stated, but the document and before-publication condition are missing.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 65,
+      "turn_id": "harbor-04-16",
+      "source": "The noise cleanup can wait. The words and names matter more than making the recording sound polished.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "prioritizes_content_over_audio_quality",
+        "object": "words and names over polished audio"
+      },
+      "category": "supported_equivalent",
+      "reason": "The priority of words/names over polished audio is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "editing_priority",
+          "object": "transcript accuracy before audio cleanup"
+        }
+      ]
+    },
+    {
+      "seq": 66,
+      "turn_id": "harbor-05-00",
+      "source": "Quick correction for our meeting schedule: Monday is now my meeting-free day, not Wednesday. The library moved my public desk shift.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Monday"
+      },
+      "category": "supported_exact",
+      "reason": "Monday explicitly replaces Wednesday as the meeting-free day.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "meeting_free_day",
+          "object": "Monday"
+        }
+      ]
+    },
+    {
+      "seq": 67,
+      "turn_id": "harbor-05-00",
+      "source": "Quick correction for our meeting schedule: Monday is now my meeting-free day, not Wednesday. The library moved my public desk shift.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "public_desk_shift_moved",
+        "object": "library"
+      },
+      "category": "ambiguous_encoding",
+      "reason": "Library is the actor moving the desk shift, but the passive predicate/value could read as a destination; the relation is poorly specified.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 68,
+      "turn_id": "harbor-05-02",
+      "source": "Wednesday afternoons are available for project calls now. Please don't infer that I work every Wednesday evening as well.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_available_time_slots",
+        "object": "Wednesday afternoons for project calls now"
+      },
+      "category": "supported_equivalent",
+      "reason": "Wednesday-afternoon availability is explicitly for project calls, without inferring evenings.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "call_availability",
+          "object": "Wednesday afternoons"
+        }
+      ]
+    },
+    {
+      "seq": 69,
+      "turn_id": "harbor-05-04",
+      "source": "The volunteer handoff is on Saturday. It used to happen on Friday, but the media desk no longer opens late that day.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_handoff_day",
+        "object": "Saturday"
+      },
+      "category": "supported_lossy",
+      "reason": "Saturday survives without the volunteer-handoff identity.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "volunteer_handoff_day",
+          "object": "Saturday"
+        }
+      ]
+    },
+    {
+      "seq": 70,
+      "turn_id": "harbor-05-06",
+      "source": "My emergency contact is Eli Patel. Morgan is a colleague, and should not be listed as my emergency contact.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_emergency_contact",
+        "object": "Eli Patel"
+      },
+      "category": "supported_equivalent",
+      "reason": "The emergency-contact relation preserves Eli Patel.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "emergency_contact",
+          "object": "Eli Patel"
+        }
+      ]
+    },
+    {
+      "seq": 71,
+      "turn_id": "harbor-05-06",
+      "source": "My emergency contact is Eli Patel. Morgan is a colleague, and should not be listed as my emergency contact.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "excludes_from_emergency_contact",
+        "object": "Morgan"
+      },
+      "category": "supported_extra",
+      "reason": "Morgan is explicitly excluded as the emergency contact; no positive replacement is invented.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 72,
+      "turn_id": "harbor-05-08",
+      "source": "For the volunteer lunch, remember that I have a peanut allergy. It isn't simply a food preference.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_allergy",
+        "object": "peanut"
+      },
+      "category": "supported_equivalent",
+      "reason": "Peanut and peanuts identify the same explicitly stated allergy.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "allergy",
+          "object": "peanuts"
+        }
+      ]
+    },
+    {
+      "seq": 73,
+      "turn_id": "harbor-05-10",
+      "source": "I usually bring vegetarian food, but I haven't said that every volunteer is vegetarian.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "usually_brings_food_type",
+        "object": "vegetarian food"
+      },
+      "category": "supported_equivalent",
+      "reason": "Usual vegetarian food is preserved as a habit, not every volunteer diet.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "usual_lunch",
+          "object": "vegetarian food"
+        }
+      ]
+    },
+    {
+      "seq": 74,
+      "turn_id": "harbor-05-10",
+      "source": "I usually bring vegetarian food, but I haven't said that every volunteer is vegetarian.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_stated_all_volunteers_are_vegetarian",
+        "object": "every volunteer is vegetarian"
+      },
+      "category": "supported_extra",
+      "reason": "The source explicitly denies having made the universal volunteer-diet claim.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 75,
+      "turn_id": "harbor-05-16",
+      "source": "That order makes sense. I've scheduled the introduction for Saturday at 10 am, just before handoff.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "scheduled_introduction",
+        "object": "Saturday at 10 am just before handoff"
+      },
+      "category": "supported_lossy",
+      "reason": "The introduction time survives but the volunteer context is absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "volunteer_intro_time",
+          "object": "Saturday at 10 am"
+        }
+      ]
+    },
+    {
+      "seq": 76,
+      "turn_id": "harbor-06-02",
+      "source": "I finished the transcript review on April 18 as planned. The current transcript status is reviewed, with one passage held from publication.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_transcript_review",
+        "object": "transcript review on April 18"
+      },
+      "category": "supported_lossy",
+      "reason": "Completed transcript review and April 18 survive without the first-interview identity or publication restriction.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_transcript_status",
+          "object": "reviewed with one passage withheld"
+        }
+      ]
+    },
+    {
+      "seq": 77,
+      "turn_id": "harbor-06-02",
+      "source": "I finished the transcript review on April 18 as planned. The current transcript status is reviewed, with one passage held from publication.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_current_status",
+        "object": "reviewed with one passage held from publication"
+      },
+      "category": "supported_lossy",
+      "reason": "Reviewed-withheld status survives under a generic current-status identity instead of the first transcript.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "first_transcript_status",
+          "object": "reviewed with one passage withheld"
+        }
+      ]
+    },
+    {
+      "seq": 78,
+      "turn_id": "harbor-06-06",
+      "source": "Omar prefers a phone interview. I will call him from the library; he isn't coming to Cedar Room.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "prefers_interview_type",
+        "object": "phone interview"
+      },
+      "category": "unsupported_actor",
+      "reason": "Omar prefers a phone interview; the assertion assigns that preference to the user.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 79,
+      "turn_id": "harbor-06-06",
+      "source": "Omar prefers a phone interview. I will call him from the library; he isn't coming to Cedar Room.",
+      "assertion": {
+        "subject": "Omar",
+        "predicate": "not_coming_to_location",
+        "object": "Cedar Room"
+      },
+      "category": "supported_extra",
+      "reason": "Omar explicitly is not coming to Cedar Room; the local he reference resolves correctly.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 80,
+      "turn_id": "harbor-06-10",
+      "source": "We added a field called rights_status to the catalog. Its values are pending, cleared, and restricted.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "added_field_to_catalog",
+        "object": "rights_status"
+      },
+      "category": "supported_equivalent",
+      "reason": "The named catalog field is explicitly added.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "catalog_rights_field",
+          "object": "rights_status"
+        }
+      ]
+    },
+    {
+      "seq": 81,
+      "turn_id": "harbor-06-10",
+      "source": "We added a field called rights_status to the catalog. Its values are pending, cleared, and restricted.",
+      "assertion": {
+        "subject": "rights_status",
+        "predicate": "has_values",
+        "object": "pending, cleared, and restricted"
+      },
+      "category": "supported_equivalent",
+      "reason": "The field entity preserves its three allowed values; the label uses a user-scoped catalog property instead.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "catalog_rights_values",
+          "object": "pending, cleared, restricted"
+        }
+      ]
+    },
+    {
+      "seq": 82,
+      "turn_id": "harbor-06-14",
+      "source": "For my own scripts, Python is still my primary language. The SQL work is part of the catalog maintenance.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "primary_language",
+        "object": "Python for own scripts"
+      },
+      "category": "supported_equivalent",
+      "reason": "Python remains primary for the user own scripts; the extra qualifier is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "primary_language",
+          "object": "Python"
+        }
+      ]
+    },
+    {
+      "seq": 83,
+      "turn_id": "harbor-06-14",
+      "source": "For my own scripts, Python is still my primary language. The SQL work is part of the catalog maintenance.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "performs_work_in",
+        "object": "SQL for catalog maintenance"
+      },
+      "category": "supported_extra",
+      "reason": "The user describes SQL work as catalog maintenance.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 84,
+      "turn_id": "harbor-06-18",
+      "source": "The table is interviews. I only want interview_id, participant_name, and rights_status in that export.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "identified_table",
+        "object": "interviews"
+      },
+      "category": "supported_lossy",
+      "reason": "The table name is correct but its catalog context is missing.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "catalog_table",
+          "object": "interviews"
+        }
+      ]
+    },
+    {
+      "seq": 85,
+      "turn_id": "harbor-06-18",
+      "source": "The table is interviews. I only want interview_id, participant_name, and rights_status in that export.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "specified_export_columns",
+        "object": "interview_id, participant_name, and rights_status"
+      },
+      "category": "supported_lossy",
+      "reason": "All export columns survive without the particular rights-export context.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "rights_export_columns",
+          "object": "interview_id, participant_name, rights_status"
+        }
+      ]
+    },
+    {
+      "seq": 86,
+      "turn_id": "harbor-07-00",
+      "source": "The phone interview with Omar happened on April 24 and lasted 51 minutes. We covered his terminal job and the ferry schedule changes.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "had_interview_with",
+        "object": "Omar on April 24"
+      },
+      "category": "supported_lossy",
+      "reason": "Omar and the date survive, but phone format and the resolved surname are absent.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "completed_phone_interview",
+          "object": "Omar Haddad on April 24"
+        }
+      ]
+    },
+    {
+      "seq": 87,
+      "turn_id": "harbor-07-00",
+      "source": "The phone interview with Omar happened on April 24 and lasted 51 minutes. We covered his terminal job and the ferry schedule changes.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "had_interview_with",
+        "object": "Omar for 51 minutes on April 24"
+      },
+      "category": "supported_lossy",
+      "reason": "Omar, date and interview duration survive, but phone format is absent. The source states interview duration, not explicitly audio duration; the audio-minutes label needs revision.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "completed_phone_interview",
+          "object": "Omar Haddad on April 24"
+        }
+      ]
+    },
+    {
+      "seq": 88,
+      "turn_id": "harbor-07-00",
+      "source": "The phone interview with Omar happened on April 24 and lasted 51 minutes. We covered his terminal job and the ferry schedule changes.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "discussed_topics",
+        "object": "Omar's terminal job and ferry schedule changes"
+      },
+      "category": "supported_extra",
+      "reason": "The interview topics are explicitly reported as covered.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 89,
+      "turn_id": "harbor-07-02",
+      "source": "I had a follow-up question about a route number, so I emailed him. He hasn't replied yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "asked_question_about",
+        "object": "route number"
+      },
+      "category": "supported_extra",
+      "reason": "The follow-up question and resulting email support asking about a route number in ordinary conversational context.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 90,
+      "turn_id": "harbor-07-02",
+      "source": "I had a follow-up question about a route number, so I emailed him. He hasn't replied yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "sent_email_to",
+        "object": "him"
+      },
+      "category": "supported_lossy",
+      "reason": "The email action is explicit, but him is not resolved to Omar.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 91,
+      "turn_id": "harbor-07-06",
+      "source": "I'm considering an exhibition in June, but we don't have approval or a venue. For now it's an idea, not a scheduled event.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considering_exhibition",
+        "object": "exhibition in June"
+      },
+      "category": "supported_extra",
+      "reason": "The June exhibition remains under consideration, not approved or scheduled.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 92,
+      "turn_id": "harbor-07-08",
+      "source": "We do have a confirmed review meeting on May 2 with Priya. That's about the archive, not an exhibition launch.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_confirmed_meeting",
+        "object": "review meeting on May 2 with Priya"
+      },
+      "category": "supported_lossy",
+      "reason": "Confirmed review meeting, date and Priya survive without the archive topic.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "archive_review_meeting",
+          "object": "May 2 with Priya"
+        }
+      ]
+    },
+    {
+      "seq": 93,
+      "turn_id": "harbor-07-08",
+      "source": "We do have a confirmed review meeting on May 2 with Priya. That's about the archive, not an exhibition launch.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "clarifies_topic",
+        "object": "archive vs exhibition launch"
+      },
+      "category": "supported_lossy",
+      "reason": "The topic distinction is stated, but the associated meeting and direction of the contrast are absent.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 94,
+      "turn_id": "harbor-07-10",
+      "source": "I made a sample page using three photographs, all from the cleared set. The restricted story isn't on it.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "created_page",
+        "object": "sample page using three photographs from the cleared set"
+      },
+      "category": "supported_equivalent",
+      "reason": "The sample page uses three cleared photographs, as stated.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "sample_page_photographs",
+          "object": "3 cleared photographs"
+        }
+      ]
+    },
+    {
+      "seq": 95,
+      "turn_id": "harbor-07-10",
+      "source": "I made a sample page using three photographs, all from the cleared set. The restricted story isn't on it.",
+      "assertion": {
+        "subject": "restricted story",
+        "predicate": "not_present_on",
+        "object": "sample page"
+      },
+      "category": "supported_extra",
+      "reason": "The restricted story is explicitly absent from the sample page.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 96,
+      "turn_id": "harbor-07-12",
+      "source": "I'd like the page to use a readable serif typeface. I haven't picked a particular font yet.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_not_selected_font",
+        "object": "particular font"
+      },
+      "category": "supported_lossy",
+      "reason": "No particular font is selected, but the page context is absent.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 97,
+      "turn_id": "harbor-07-14",
+      "source": "The first sample had tiny captions. I increased the caption size after Jules tried it on a small laptop.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "had_tiny_captions",
+        "object": "first sample"
+      },
+      "category": "supported_extra",
+      "reason": "The first sample explicitly had tiny captions; user ownership follows the project context.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 98,
+      "turn_id": "harbor-07-14",
+      "source": "The first sample had tiny captions. I increased the caption size after Jules tried it on a small laptop.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "increased_caption_size",
+        "object": "after Jules tried it on a small laptop"
+      },
+      "category": "supported_lossy",
+      "reason": "The caption increase and Jules laptop trial survive, but it/page is unresolved.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "sample_page_change",
+          "object": "larger captions after Jules laptop review"
+        }
+      ]
+    },
+    {
+      "seq": 99,
+      "turn_id": "harbor-07-18",
+      "source": "I'll try that with two volunteers on Wednesday afternoon. Please keep Monday free as we agreed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "plans_to_try_with_volunteers",
+        "object": "two volunteers on Wednesday afternoon"
+      },
+      "category": "supported_lossy",
+      "reason": "Volunteers and Wednesday afternoon survive without the usability-check activity.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 100,
+      "turn_id": "harbor-07-18",
+      "source": "I'll try that with two volunteers on Wednesday afternoon. Please keep Monday free as we agreed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "requests_monday_be_free",
+        "object": "Monday"
+      },
+      "category": "supported_lossy",
+      "reason": "The Monday-free request is explicit, but the meeting-free restriction needs prior user context.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "meeting_free_day",
+          "object": "Monday"
+        }
+      ]
+    },
+    {
+      "seq": 101,
+      "turn_id": "harbor-08-00",
+      "source": "The usability check is done. Both volunteers found the photo dates, but neither noticed the rights note without a hint.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_usability_check",
+        "object": "usability check"
+      },
+      "category": "ambiguous_actor",
+      "reason": "The usability check is done, but this source turn does not name the user as its performer.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 102,
+      "turn_id": "harbor-08-00",
+      "source": "The usability check is done. Both volunteers found the photo dates, but neither noticed the rights note without a hint.",
+      "assertion": {
+        "subject": "volunteers",
+        "predicate": "found_photo_dates",
+        "object": "photo dates"
+      },
+      "category": "supported_component",
+      "reason": "Volunteers finding the photo dates is one correct atomic component of the combined usability-result label.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "usability_result",
+          "object": "photo dates found; rights note missed by both volunteers"
+        }
+      ]
+    },
+    {
+      "seq": 103,
+      "turn_id": "harbor-08-00",
+      "source": "The usability check is done. Both volunteers found the photo dates, but neither noticed the rights note without a hint.",
+      "assertion": {
+        "subject": "volunteers",
+        "predicate": "did_not_notice_rights_note",
+        "object": "rights note without a hint"
+      },
+      "category": "supported_component",
+      "reason": "Volunteers missing the rights note is the other correct atomic component of the combined usability-result label.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "usability_result",
+          "object": "photo dates found; rights note missed by both volunteers"
+        }
+      ]
+    },
+    {
+      "seq": 104,
+      "turn_id": "harbor-08-02",
+      "source": "We moved the rights note directly below the title. I don't want to hide it in a hover tooltip.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "moved_note_position",
+        "object": "rights note directly below the title"
+      },
+      "category": "supported_equivalent",
+      "reason": "The rights note is explicitly moved directly below the title.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "rights_note_position",
+          "object": "directly below the title"
+        }
+      ]
+    },
+    {
+      "seq": 105,
+      "turn_id": "harbor-08-02",
+      "source": "We moved the rights note directly below the title. I don't want to hide it in a hover tooltip.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "declined_hiding_in_tooltip",
+        "object": "it in a hover tooltip"
+      },
+      "category": "supported_lossy",
+      "reason": "Avoiding a hover tooltip is stated, but it is not resolved to the rights note.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 106,
+      "turn_id": "harbor-08-04",
+      "source": "I bought an external SSD for project backups on April 28. It cost 90 dollars, which came from the equipment budget rather than transcription.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "purchased",
+        "object": "external SSD for project backups on April 28"
+      },
+      "category": "supported_equivalent",
+      "reason": "SSD purchase, backup purpose and April 28 are explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "backup_purchase",
+          "object": "external SSD on April 28"
+        }
+      ]
+    },
+    {
+      "seq": 107,
+      "turn_id": "harbor-08-04",
+      "source": "I bought an external SSD for project backups on April 28. It cost 90 dollars, which came from the equipment budget rather than transcription.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "paid_90_dollars_from_equipment_budget",
+        "object": "external SSD for project backups on April 28"
+      },
+      "category": "supported_equivalent",
+      "reason": "The price and equipment-budget source are bound to the SSD purchase. Encoding 90 in the predicate makes identity unstable despite preserving this assertion.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "backup_purchase_usd",
+          "object": "90"
+        }
+      ]
+    },
+    {
+      "seq": 108,
+      "turn_id": "harbor-08-06",
+      "source": "The transcription ceiling is still 150 dollars per month. The SSD purchase didn't reduce it to 60.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_transcription_ceiling",
+        "object": "150 dollars per month"
+      },
+      "category": "supported_equivalent",
+      "reason": "The transcription ceiling remains 150 dollars per month.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "transcription_budget_usd",
+          "object": "150"
+        }
+      ]
+    },
+    {
+      "seq": 109,
+      "turn_id": "harbor-08-06",
+      "source": "The transcription ceiling is still 150 dollars per month. The SSD purchase didn't reduce it to 60.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "did_not_reduce_transcription_ceiling_to",
+        "object": "60"
+      },
+      "category": "supported_extra",
+      "reason": "The source explicitly keeps the ceiling at 150 and denies a reduction to 60.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 110,
+      "turn_id": "harbor-08-08",
+      "source": "I run a backup every Thursday afternoon. The SSD is stored in the locked cabinet after each backup.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "runs_backup",
+        "object": "every Thursday afternoon"
+      },
+      "category": "supported_equivalent",
+      "reason": "Every Thursday afternoon is the stated backup schedule.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "backup_schedule",
+          "object": "Thursday afternoon"
+        }
+      ]
+    },
+    {
+      "seq": 111,
+      "turn_id": "harbor-08-08",
+      "source": "I run a backup every Thursday afternoon. The SSD is stored in the locked cabinet after each backup.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "stores_in_locked_cabinet",
+        "object": "SSD after each backup"
+      },
+      "category": "ambiguous_actor",
+      "reason": "The SSD storage location is stated passively; the user is assigned the storage action without an explicit actor.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "backup_drive_storage",
+          "object": "locked cabinet"
+        }
+      ]
+    },
+    {
+      "seq": 112,
+      "turn_id": "harbor-08-10",
+      "source": "We tested restoring one interview yesterday. The audio and transcript both opened correctly from the backup.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "tested_restoring",
+        "object": "one interview yesterday"
+      },
+      "category": "supported_extra",
+      "reason": "We tested restoring one interview supports the user participating in the test.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 113,
+      "turn_id": "harbor-08-10",
+      "source": "We tested restoring one interview yesterday. The audio and transcript both opened correctly from the backup.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "verified_opening",
+        "object": "audio and transcript from the backup"
+      },
+      "category": "supported_equivalent",
+      "reason": "The audio and transcript both opened correctly in the reported restore test.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "backup_restore_test",
+          "object": "one interview audio and transcript opened correctly"
+        }
+      ]
+    },
+    {
+      "seq": 114,
+      "turn_id": "harbor-08-12",
+      "source": "Priya asked for a one-page review brief. It should cover interviews, permissions, budget, and the next two weeks of work.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "requested_review_brief",
+        "object": "one-page review brief"
+      },
+      "category": "unsupported_actor",
+      "reason": "Priya requested the brief; the assertion says the user requested it.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 115,
+      "turn_id": "harbor-08-12",
+      "source": "Priya asked for a one-page review brief. It should cover interviews, permissions, budget, and the next two weeks of work.",
+      "assertion": {
+        "subject": "review brief",
+        "predicate": "should_cover",
+        "object": "interviews, permissions, budget, and the next two weeks of work"
+      },
+      "category": "supported_equivalent",
+      "reason": "The brief retains all requested topics; the label uses a user-scoped property while the assertion correctly uses the brief entity.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "review_brief_topics",
+          "object": "interviews, permissions, budget, next two weeks"
+        }
+      ]
+    },
+    {
+      "seq": 116,
+      "turn_id": "harbor-08-14",
+      "source": "I don't want to include a made-up completion percentage. We have two completed interviews and several unfinished tasks; those counts are clearer.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "declines_including",
+        "object": "made-up completion percentage"
+      },
+      "category": "supported_extra",
+      "reason": "The user explicitly rejects including a fabricated completion percentage.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 117,
+      "turn_id": "harbor-08-14",
+      "source": "I don't want to include a made-up completion percentage. We have two completed interviews and several unfinished tasks; those counts are clearer.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "states_counts",
+        "object": "two completed interviews and several unfinished tasks"
+      },
+      "category": "supported_equivalent",
+      "reason": "Two completed interviews and unfinished tasks are explicitly reported.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "completed_interview_count",
+          "object": "2"
+        }
+      ]
+    },
+    {
+      "seq": 118,
+      "turn_id": "harbor-08-18",
+      "source": "That's the right scope. I'll finish the brief tomorrow morning before sending it to Priya.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "will_finish_brief",
+        "object": "tomorrow morning before sending to Priya"
+      },
+      "category": "supported_extra",
+      "reason": "Tomorrow-morning completion before sending to Priya remains a future intention.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 119,
+      "turn_id": "harbor-09-00",
+      "source": "We held the archive review on May 2. Priya approved continuing Harbor Voices for another month, but didn't approve an exhibition.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "held_archive_review",
+        "object": "on May 2"
+      },
+      "category": "supported_extra",
+      "reason": "The user is included in we held the archive review on May 2.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 120,
+      "turn_id": "harbor-09-00",
+      "source": "We held the archive review on May 2. Priya approved continuing Harbor Voices for another month, but didn't approve an exhibition.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "approved_continuing",
+        "object": "Harbor Voices for another month"
+      },
+      "category": "unsupported_actor",
+      "reason": "Priya approved continuing Harbor Voices; the assertion assigns approval to the user.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 121,
+      "turn_id": "harbor-09-00",
+      "source": "We held the archive review on May 2. Priya approved continuing Harbor Voices for another month, but didn't approve an exhibition.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "did_not_approve",
+        "object": "an exhibition"
+      },
+      "category": "unsupported_actor",
+      "reason": "Priya did not approve the exhibition; that does not establish what the user approved or denied.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 122,
+      "turn_id": "harbor-09-02",
+      "source": "The manager relationship hasn't changed: Priya Nair is still my manager. Morgan ran part of the meeting because I was presenting the sample page.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_manager",
+        "object": "Priya Nair"
+      },
+      "category": "supported_equivalent",
+      "reason": "Priya Nair remains the manager, without confusing Morgan meeting leadership with management.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "manager",
+          "object": "Priya Nair"
+        }
+      ]
+    },
+    {
+      "seq": 123,
+      "turn_id": "harbor-09-02",
+      "source": "The manager relationship hasn't changed: Priya Nair is still my manager. Morgan ran part of the meeting because I was presenting the sample page.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "presented_sample_page",
+        "object": "sample page"
+      },
+      "category": "supported_extra",
+      "reason": "The user explicitly was presenting the sample page.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 124,
+      "turn_id": "harbor-09-06",
+      "source": "Omar replied with the route number too. His answer was route 17, not route 70 as the automatic transcript guessed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "replied_with_route_number",
+        "object": "route number"
+      },
+      "category": "unsupported_actor",
+      "reason": "Omar replied with the route number; the assertion assigns the reported reply to the user.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 125,
+      "turn_id": "harbor-09-06",
+      "source": "Omar replied with the route number too. His answer was route 17, not route 70 as the automatic transcript guessed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "provided_corrected_route",
+        "object": "route 17"
+      },
+      "category": "ambiguous_actor",
+      "reason": "The user relays route 17, but the background answer is Omar response. The predicate lacks that actor/event binding.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "omar_route_number",
+          "object": "17"
+        }
+      ]
+    },
+    {
+      "seq": 126,
+      "turn_id": "harbor-09-08",
+      "source": "We corrected the transcript and marked Omar's follow-up resolved. The raw recording wasn't edited to match the text.",
+      "assertion": {
+        "subject": "raw recording",
+        "predicate": "not_edited_to_match_text",
+        "object": "text"
+      },
+      "category": "supported_lossy",
+      "reason": "The recording was not edited to match text, but its Omar-recording identity is missing.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 127,
+      "turn_id": "harbor-09-10",
+      "source": "The public catalog preview is planned for May 16. That's a preview of cleared material, not the June exhibition we discussed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_public_catalog_preview",
+        "object": "May 16"
+      },
+      "category": "supported_equivalent",
+      "reason": "The public catalog preview is planned for May 16 at this point in history; its later correction must still supersede this date.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "catalog_preview_date",
+          "object": "May 16"
+        }
+      ]
+    },
+    {
+      "seq": 128,
+      "turn_id": "harbor-09-10",
+      "source": "The public catalog preview is planned for May 16. That's a preview of cleared material, not the June exhibition we discussed.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "clarified_material_scope",
+        "object": "cleared material (not June exhibition)"
+      },
+      "category": "supported_lossy",
+      "reason": "Cleared material is correct, but preview identity is omitted.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 129,
+      "turn_id": "harbor-09-12",
+      "source": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both. That is an actual preference, unlike my earlier statement about what the library already used.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "prefers_database",
+        "object": "PostgreSQL over MongoDB for this catalog"
+      },
+      "category": "supported_equivalent",
+      "reason": "The explicit PostgreSQL-over-MongoDB preference preserves the catalog scope.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "preferred_database",
+          "object": "PostgreSQL"
+        }
+      ]
+    },
+    {
+      "seq": 130,
+      "turn_id": "harbor-09-12",
+      "source": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both. That is an actual preference, unlike my earlier statement about what the library already used.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "clarified_preference",
+        "object": "preference regarding database choice"
+      },
+      "category": "supported_lossy",
+      "reason": "Clarifying a database preference is supported but the chosen database is omitted.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 131,
+      "turn_id": "harbor-09-14",
+      "source": "We still use PostgreSQL. Please don't replace that with MongoDB just because it appeared in the comparison.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "requests_no_replacement",
+        "object": "MongoDB"
+      },
+      "category": "ambiguous_relation",
+      "reason": "The source forbids replacing PostgreSQL with MongoDB; no_replacement/MongoDB leaves replacement direction unspecified.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 132,
+      "turn_id": "harbor-09-16",
+      "source": "I have a new volunteer named Theo helping with the preview. With Theo, the total is seven volunteers.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_volunteer",
+        "object": "Theo"
+      },
+      "category": "supported_extra",
+      "reason": "Theo is explicitly a new volunteer helping with the preview.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 133,
+      "turn_id": "harbor-09-16",
+      "source": "I have a new volunteer named Theo helping with the preview. With Theo, the total is seven volunteers.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_total_volunteers",
+        "object": "seven"
+      },
+      "category": "supported_equivalent",
+      "reason": "Seven is the stated total volunteer count, equivalent to numeric 7.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "volunteer_count",
+          "object": "7"
+        }
+      ]
+    },
+    {
+      "seq": 134,
+      "turn_id": "harbor-10-02",
+      "source": "The captions requirement still applies to our video calls. For the catalog page itself, we're checking image descriptions and keyboard navigation.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "is_checking",
+        "object": "image descriptions and keyboard navigation for catalog page"
+      },
+      "category": "supported_equivalent",
+      "reason": "The catalog checks preserve both image descriptions and keyboard navigation.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "catalog_accessibility_checks",
+          "object": "image descriptions and keyboard navigation"
+        }
+      ]
+    },
+    {
+      "seq": 135,
+      "turn_id": "harbor-10-06",
+      "source": "We aren't changing the TIFF originals. The description updates belong in catalog metadata and the browsing page.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "not_changing_file_format",
+        "object": "TIFF originals"
+      },
+      "category": "supported_equivalent",
+      "reason": "The TIFF originals remain unchanged, preserving their current format.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "archive_image_format",
+          "object": "TIFF"
+        }
+      ]
+    },
+    {
+      "seq": 136,
+      "turn_id": "harbor-10-06",
+      "source": "We aren't changing the TIFF originals. The description updates belong in catalog metadata and the browsing page.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "assigns_updates_to_location",
+        "object": "catalog metadata and the browsing page"
+      },
+      "category": "supported_lossy",
+      "reason": "Metadata and browsing-page destinations survive without identifying description updates.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 137,
+      "turn_id": "harbor-10-08",
+      "source": "The Saturday volunteer handoff is staying put. The date change for the preview doesn't move that recurring handoff to Tuesday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "staying_put",
+        "object": "Saturday volunteer handoff"
+      },
+      "category": "ambiguous_encoding",
+      "reason": "The handoff is staying put, not the user. Saturday and volunteer handoff survive but the subject/action representation is unclear.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "volunteer_handoff_day",
+          "object": "Saturday"
+        }
+      ]
+    },
+    {
+      "seq": 138,
+      "turn_id": "harbor-10-08",
+      "source": "The Saturday volunteer handoff is staying put. The date change for the preview doesn't move that recurring handoff to Tuesday.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "not_moving_to_tuesday",
+        "object": "recurring handoff"
+      },
+      "category": "supported_extra",
+      "reason": "The recurring handoff explicitly is not moving to Tuesday.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 139,
+      "turn_id": "harbor-10-10",
+      "source": "My emergency contact is still Eli Patel. Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "emergency_contact_is",
+        "object": "Eli Patel"
+      },
+      "category": "supported_equivalent",
+      "reason": "Eli Patel remains the emergency contact; Alex is not substituted.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "emergency_contact",
+          "object": "Eli Patel"
+        }
+      ]
+    },
+    {
+      "seq": 140,
+      "turn_id": "harbor-10-10",
+      "source": "My emergency contact is still Eli Patel. Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "explicitly_forbids_merging_contacts",
+        "object": "Eli Patel and Alex Chen"
+      },
+      "category": "supported_extra",
+      "reason": "The user explicitly forbids merging Eli Patel and Alex Chen.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 141,
+      "turn_id": "harbor-10-12",
+      "source": "I listened to a lot of jazz while editing last week. That doesn't mean I want a permanent favorite-genre entry; my listening changes with the task.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "listened_to_genre",
+        "object": "jazz while editing last week"
+      },
+      "category": "supported_extra",
+      "reason": "Jazz listening remains a task-specific past experience rather than a permanent genre preference.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 142,
+      "turn_id": "harbor-10-16",
+      "source": "One last detail for that note: the project email is harbor-voices@example.org. Use that address for participant scheduling, not my personal inbox.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "specified_project_email",
+        "object": "harbor-voices@example.org"
+      },
+      "category": "supported_equivalent",
+      "reason": "The complete project email address is explicit.",
+      "mapped_targets": [
+        {
+          "subject": "user",
+          "predicate": "project_email",
+          "object": "harbor-voices@example.org"
+        }
+      ]
+    },
+    {
+      "seq": 143,
+      "turn_id": "harbor-10-16",
+      "source": "One last detail for that note: the project email is harbor-voices@example.org. Use that address for participant scheduling, not my personal inbox.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "instructed_scheduling_method",
+        "object": "harbor-voices@example.org"
+      },
+      "category": "supported_extra",
+      "reason": "Using the project email for participant scheduling is explicitly instructed.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 144,
+      "turn_id": "harbor-10-18",
+      "source": "Thanks. After the preview, I want to review which notes were actually useful before we add more automation. We can leave exhibition planning for another conversation.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "wants_to_review_notes",
+        "object": "notes that were actually useful"
+      },
+      "category": "supported_lossy",
+      "reason": "Reviewing useful notes survives without after-preview and before-more-automation ordering.",
+      "mapped_targets": []
+    },
+    {
+      "seq": 145,
+      "turn_id": "harbor-10-18",
+      "source": "Thanks. After the preview, I want to review which notes were actually useful before we add more automation. We can leave exhibition planning for another conversation.",
+      "assertion": {
+        "subject": "user",
+        "predicate": "agrees_to_delay_discussion",
+        "object": "exhibition planning"
+      },
+      "category": "supported_extra",
+      "reason": "Leaving exhibition planning for another conversation supports deferring the discussion.",
+      "mapped_targets": []
+    }
+  ]
+}

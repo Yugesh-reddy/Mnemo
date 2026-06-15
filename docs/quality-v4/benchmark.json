@@ -1,0 +1,380 @@
+{
+  "complete": true,
+  "status": "scored",
+  "measured_at": "2026-09-15T02:07:20.645751+00:00",
+  "policy_sha256": "e83de34c8b51dcd9a72bdf63782907c725fce1d5c2527d9e1618748361744626",
+  "samples": 25,
+  "successful_samples": 25,
+  "failed_samples": 0,
+  "warmup_samples": 2,
+  "failed_warmup_samples": 0,
+  "load_model": "closed-loop serial; one outstanding observation and one worker",
+  "concurrency": 1,
+  "percentile_method": "nearest rank",
+  "measurement_seconds": 158.7348096249998,
+  "throughput_observations_per_second": 0.15749538528480805,
+  "successful_observations_per_second": 0.15749538528480805,
+  "latency": {
+    "p50_ms": 6288.222125000175,
+    "p95_ms": 7446.855041999697,
+    "mean_ms": 6349.3757716000255,
+    "max_ms": 7579.641958000138
+  },
+  "successful_latency": {
+    "p50_ms": 6288.222125000175,
+    "p95_ms": 7446.855041999697,
+    "mean_ms": 6349.3757716000255,
+    "max_ms": 7579.641958000138
+  },
+  "observe_latency": {
+    "p50_ms": 22.74133300034009,
+    "p95_ms": 31.402999999954773,
+    "mean_ms": 22.3993832400447,
+    "max_ms": 33.124958999906085
+  },
+  "processing_latency": {
+    "p50_ms": 6268.1975839996085,
+    "p95_ms": 7424.354916999619,
+    "mean_ms": 6326.97638835998,
+    "max_ms": 7554.291374999593
+  },
+  "requests": [
+    {
+      "sample": 0,
+      "source_turn": "dev-001a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 25.680499999907624,
+      "processing_ms": 6660.525082999811,
+      "total_ms": 6686.205582999719
+    },
+    {
+      "sample": 1,
+      "source_turn": "dev-002a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 20.91462499993213,
+      "processing_ms": 5349.159790999693,
+      "total_ms": 5370.074415999625
+    },
+    {
+      "sample": 2,
+      "source_turn": "dev-003a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 28.785208000044804,
+      "processing_ms": 5255.0817500005,
+      "total_ms": 5283.866958000544
+    },
+    {
+      "sample": 3,
+      "source_turn": "dev-004a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 16.442708999420574,
+      "processing_ms": 6166.958958000578,
+      "total_ms": 6183.401666999998
+    },
+    {
+      "sample": 4,
+      "source_turn": "dev-005a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 23.7190420002662,
+      "processing_ms": 6735.615749999852,
+      "total_ms": 6759.334792000118
+    },
+    {
+      "sample": 5,
+      "source_turn": "dev-006a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 20.216874999277934,
+      "processing_ms": 7217.261708000478,
+      "total_ms": 7237.478582999756
+    },
+    {
+      "sample": 6,
+      "source_turn": "dev-007a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 26.39237499988667,
+      "processing_ms": 5751.699499999631,
+      "total_ms": 5778.091874999518
+    },
+    {
+      "sample": 7,
+      "source_turn": "dev-008a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 16.740957999900274,
+      "processing_ms": 5119.633958000122,
+      "total_ms": 5136.3749160000225
+    },
+    {
+      "sample": 8,
+      "source_turn": "dev-009a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 15.248707999489852,
+      "processing_ms": 5777.150124999935,
+      "total_ms": 5792.3988329994245
+    },
+    {
+      "sample": 9,
+      "source_turn": "dev-010a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 15.31666699975176,
+      "processing_ms": 5328.1639169999835,
+      "total_ms": 5343.480583999735
+    },
+    {
+      "sample": 10,
+      "source_turn": "dev-011a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 15.84258300044894,
+      "processing_ms": 6146.73700000003,
+      "total_ms": 6162.579583000479
+    },
+    {
+      "sample": 11,
+      "source_turn": "dev-012a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 25.72179200069513,
+      "processing_ms": 7273.121624999476,
+      "total_ms": 7298.843417000171
+    },
+    {
+      "sample": 12,
+      "source_turn": "dev-013a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 27.130500000566826,
+      "processing_ms": 6726.195917000041,
+      "total_ms": 6753.326417000608
+    },
+    {
+      "sample": 13,
+      "source_turn": "dev-014a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 16.29483299984713,
+      "processing_ms": 6601.611667000725,
+      "total_ms": 6617.906500000572
+    },
+    {
+      "sample": 14,
+      "source_turn": "dev-015a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 25.3742909999346,
+      "processing_ms": 6637.978834000023,
+      "total_ms": 6663.353124999958
+    },
+    {
+      "sample": 15,
+      "source_turn": "dev-016a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 22.937083000215353,
+      "processing_ms": 6190.671667000061,
+      "total_ms": 6213.608750000276
+    },
+    {
+      "sample": 16,
+      "source_turn": "dev-017a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 25.350583000545157,
+      "processing_ms": 7554.291374999593,
+      "total_ms": 7579.641958000138
+    },
+    {
+      "sample": 17,
+      "source_turn": "dev-018a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 33.124958999906085,
+      "processing_ms": 6723.816875000011,
+      "total_ms": 6756.941833999917
+    },
+    {
+      "sample": 18,
+      "source_turn": "dev-019a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 18.689833000280487,
+      "processing_ms": 5701.553416999559,
+      "total_ms": 5720.2432499998395
+    },
+    {
+      "sample": 19,
+      "source_turn": "dev-020a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 22.74133300034009,
+      "processing_ms": 6082.234624999728,
+      "total_ms": 6104.975958000068
+    },
+    {
+      "sample": 20,
+      "source_turn": "dev-021a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 18.933874999675027,
+      "processing_ms": 6416.30241599978,
+      "total_ms": 6435.236290999455
+    },
+    {
+      "sample": 21,
+      "source_turn": "dev-022a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 24.457583000184968,
+      "processing_ms": 7402.9890000001615,
+      "total_ms": 7427.446583000346
+    },
+    {
+      "sample": 22,
+      "source_turn": "dev-023a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 20.024541000566387,
+      "processing_ms": 6268.1975839996085,
+      "total_ms": 6288.222125000175
+    },
+    {
+      "sample": 23,
+      "source_turn": "dev-024a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 31.402999999954773,
+      "processing_ms": 5663.10225000052,
+      "total_ms": 5694.505250000475
+    },
+    {
+      "sample": 24,
+      "source_turn": "dev-025a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 22.500125000078697,
+      "processing_ms": 7424.354916999619,
+      "total_ms": 7446.855041999697
+    }
+  ],
+  "warmup_requests": [
+    {
+      "sample": -2,
+      "source_turn": "dev-024a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 58.62066600002436,
+      "processing_ms": 6190.622209000139,
+      "total_ms": 6249.242875000164
+    },
+    {
+      "sample": -1,
+      "source_turn": "dev-025a",
+      "status": "done",
+      "attempts": 1,
+      "last_error": null,
+      "observe_ms": 14.188000000103784,
+      "processing_ms": 8314.286083000297,
+      "total_ms": 8328.474083000401
+    }
+  ],
+  "usage": {
+    "extractor": {
+      "requests": 25,
+      "input_tokens": 21839,
+      "output_tokens": 1350,
+      "unmetered_requests": 0
+    },
+    "embedder": {
+      "requests": 50,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "unmetered_requests": 50
+    },
+    "verifier": {
+      "requests": 25,
+      "input_tokens": 9775,
+      "output_tokens": 2128,
+      "unmetered_requests": 0,
+      "nli_requests": 0
+    }
+  },
+  "warmup_usage": {
+    "extractor": {
+      "requests": 2,
+      "input_tokens": 1748,
+      "output_tokens": 110,
+      "unmetered_requests": 0
+    },
+    "embedder": {
+      "requests": 4,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "unmetered_requests": 4
+    },
+    "verifier": {
+      "requests": 2,
+      "input_tokens": 784,
+      "output_tokens": 178,
+      "unmetered_requests": 0,
+      "nli_requests": 0
+    }
+  },
+  "api_cost": {
+    "usd": null,
+    "reason": "No pricing supplied; measured usage is reported separately."
+  },
+  "local_compute_cost": {
+    "usd": null,
+    "reason": "No explicit local USD/hour rate supplied."
+  },
+  "models": {
+    "extractor": "qwen3.5:4b-mlx",
+    "embedder": "nomic-embed-text",
+    "verifier": "cross-encoder/nli-deberta-v3-small",
+    "verifier_backend": "cross_encoder",
+    "fallback_backend": "ollama"
+  },
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "limitations": [
+    "Not a saturation or concurrent-worker capacity benchmark.",
+    "Run without other model workloads; OS activity is not isolated.",
+    "Latency and throughput include terminal failures and worker retries/backoff; successful-only metrics are reported separately.",
+    "Job completion does not prove extraction coverage or assertion correctness.",
+    "API and local-compute estimates are separate, not automatically summed."
+  ]
+}

@@ -72,7 +72,12 @@
         "answer_b6018747_3"
       ],
       "sha256": "206fc80e5523122983963ae43c7cbe62234fc031d9fcd5c0986eaeae289ddcc0",
-      "annotation_status": "Unopened source; reserved before extraction changes; read and label only after freeze."
+      "annotation_status": "Labeled after v6.2 code/settings freeze and before any holdout model output.",
+      "labels": "e3038f8c-labels.json",
+      "labels_sha256": "ede030f63d35953bc2c2149130e6898aaa9491dab5f4905e639f672a87e5676f",
+      "reviewer": "Codex; provisional single-reviewer source annotations",
+      "annotation_scope": "Memory-relevant possessions/counts, goals and explicitly qualified plans. Empty user questions reviewed. Assistant suggestions and mistaken inheritance/ownership claims excluded.",
+      "labeled_at": "2026-09-14T00:12:57.585993+00:00"
     }
   ]
 }

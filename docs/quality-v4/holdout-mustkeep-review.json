@@ -1,0 +1,601 @@
+{
+  "complete": true,
+  "report_sha256": "976a403253cb73ef80736fb28f7760baf46e1b9cd75b997e8f23da4f66081d53",
+  "case": "e3038f8c",
+  "dataset_sha256": "879454ef974a0e9a55d9dc80dfa969665a6d3bbb7f5bab4b24bd2aa013b9c95a",
+  "policy_sha256": "e83de34c8b51dcd9a72bdf63782907c725fce1d5c2527d9e1618748361744626",
+  "reviewer": "Codex; same reviewer as provisional holdout labels, not independent human adjudication",
+  "strict_must_keep_total": 9,
+  "strict_must_keep_recovered": 0,
+  "strict_misses_reviewed": 9,
+  "reviewed_causes": {
+    "label_equivalence": 4,
+    "extraction_omission": 1,
+    "extraction_relation_and_verification": 1,
+    "verification_rejection": 1,
+    "extraction_binding_and_session_scope": 1,
+    "extraction_error": 1
+  },
+  "limitations": [
+    "Post-run diagnoses do not change frozen labels or strict metrics.",
+    "Current state is administrative across sessions; saved probes use the target latest source session.",
+    "Related writes include partial assertions. Neither partial assertions nor raw cache are credited as complete atomic recovery."
+  ],
+  "rows": [
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "coin_storage_goal",
+        "object": "safe storage for rare coins"
+      },
+      "turn_id": "answer_b6018747_3:4",
+      "source": "I actually have 25 rare coins that I need to store safely, so I'll definitely consider those factors when choosing between a fireproof safe and a safety deposit box.",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "label_equivalence",
+      "reason": "needs_safe_storage=rare coins preserves the complete safe-storage goal and appears in its saved semantic probe.",
+      "related_writes": [
+        {
+          "seq": 19,
+          "assertion": {
+            "subject": "user",
+            "predicate": "needs_safe_storage",
+            "object": "rare coins"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_3:4",
+        "query": "user coin_storage_goal safe storage for rare coins",
+        "k": 5,
+        "session_id": "answer_b6018747_3",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 24.508124999556458,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "needs_safe_storage",
+            "object": "rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_rare_coins",
+            "object": "25 rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_meant_to_update",
+            "object": "inventory list of rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "will_consider_factors_for_choice",
+            "object": "fireproof safe and a safety deposit box",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "is_considering_appraisal",
+            "object": "rare book collection",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "friend_vase_appraisal_goal",
+        "object": "appraise friend antique vase"
+      },
+      "turn_id": "answer_b6018747_3:0",
+      "source": "I'm looking for a reputable appraiser to evaluate my friend's antique vase. Do you have any recommendations or directories I can check?",
+      "automatic_cause": "extraction_omission",
+      "reviewed_cause": "extraction_omission",
+      "reason": "Both friend-vase appraisal requests yield no atomic facts. The latest source explicitly states the goal, but the worker records extractor found no atomic facts. No verifier rejection is responsible.",
+      "related_writes": [],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_3:0",
+        "query": "user friend_vase_appraisal_goal appraise friend antique vase",
+        "k": 5,
+        "session_id": "answer_b6018747_3",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 19.577833000766987,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "is_considering_appraisal",
+            "object": "rare book collection",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "plans_to_check_out",
+            "object": "directories and resources to find a reputable book appraiser",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_meant_to_update",
+            "object": "inventory list of rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_rare_coins",
+            "object": "25 rare coins",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "owned_rare_book",
+        "object": "first edition of To Kill a Mockingbird"
+      },
+      "turn_id": "answer_b6018747_4:0",
+      "source": "I'm looking for a professional book conservator to sign my recently acquired first edition of \"To Kill a Mockingbird\". Do you have any recommendations or know of any reputable services in my area? By the way, I've been collecting rare books for a while now and have a small but valuable collection of 5 books.",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "extraction_relation_and_verification",
+      "reason": "The extractor emits seeking_conservationist_for_signing rather than ownership of the acquired first edition. That service request is additionally rejected at a 0.95 entailment verdict. Accepting it would not itself restore the missing ownership assertion.",
+      "related_writes": [],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_4:0",
+        "query": "user owned_rare_book first edition of To Kill a Mockingbird",
+        "k": 5,
+        "session_id": "answer_b6018747_4",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 17.858416000308353,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "collects_rare_books",
+            "object": "5 books",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_starting",
+            "object": "rare book club with friends who share interest",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "plans_to_organize_meeting",
+            "object": "rare book club",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "rare_book_count",
+        "object": "5"
+      },
+      "turn_id": "answer_b6018747_4:0",
+      "source": "I'm looking for a professional book conservator to sign my recently acquired first edition of \"To Kill a Mockingbird\". Do you have any recommendations or know of any reputable services in my area? By the way, I've been collecting rare books for a while now and have a small but valuable collection of 5 books.",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "label_equivalence",
+      "reason": "collects_rare_books=5 books preserves the collection count in ordinary source context and is retrieved. Predicate and object shape differ from the strict count label.",
+      "related_writes": [
+        {
+          "seq": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "collects_rare_books",
+            "object": "5 books"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_4:0",
+        "query": "user rare_book_count 5",
+        "k": 5,
+        "session_id": "answer_b6018747_4",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 18.136832999516628,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "collects_rare_books",
+            "object": "5 books",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "plans_to_organize_meeting",
+            "object": "rare book club",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_starting",
+            "object": "rare book club with friends who share interest",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "rare_coin_count",
+        "object": "25"
+      },
+      "turn_id": "answer_b6018747_3:4",
+      "source": "I actually have 25 rare coins that I need to store safely, so I'll definitely consider those factors when choosing between a fireproof safe and a safety deposit box.",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "label_equivalence",
+      "reason": "has_rare_coins=25 rare coins preserves ownership and count and is retrieved.",
+      "related_writes": [
+        {
+          "seq": 18,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_rare_coins",
+            "object": "25 rare coins"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_3:4",
+        "query": "user rare_coin_count 25",
+        "k": 5,
+        "session_id": "answer_b6018747_3",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 18.190417000369052,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "has_rare_coins",
+            "object": "25 rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "needs_safe_storage",
+            "object": "rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "is_considering_appraisal",
+            "object": "rare book collection",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_meant_to_update",
+            "object": "inventory list of rare records",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "rare_figurine_count",
+        "object": "12"
+      },
+      "turn_id": "answer_b6018747_2:4",
+      "source": "I'll keep that in mind. Yeah, I have 12 rare figurines in my collection, and I'm always looking to improve my knowledge about them. Do you think these appraisers would also be able to help me find a good way to store them safely? I've been meaning to get a better display case or a secure storage solution to protect them from damage.",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "verification_rejection",
+      "reason": "The correct has_collection_items=12 rare figurines candidate is rejected at a 0.95 entailment verdict under the unchanged 0.99 threshold. The retained knowledge-improvement desire has no collection count.",
+      "related_writes": [],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_2:4",
+        "query": "user rare_figurine_count 12",
+        "k": 5,
+        "session_id": "answer_b6018747_2",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 18.467541000063648,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "has_collection_size",
+            "object": "57 rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "wants_to_improve_knowledge",
+            "object": "knowledge about rare figurines",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "is_worried_about_storing_safely",
+            "object": "rare coins",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "rare_record_count",
+        "object": "57"
+      },
+      "turn_id": "answer_b6018747_1:0",
+      "source": "I've been looking for a way to organize my music collection, specifically my rare records. Do you have any suggestions on how to create a catalog system for my 57 rare records?",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "extraction_binding_and_session_scope",
+      "reason": "The earlier has_collection_size=57 rare records is a full equivalent in administrative current state, but the latest source is in another session. Its probe returns the later catalog-suggestions request about 57 records, which lacks an explicit collection-ownership relation; the earlier count assertion is not returned.",
+      "related_writes": [
+        {
+          "seq": 9,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_collection_size",
+            "object": "57 rare records"
+          },
+          "in_current": true,
+          "in_probe": false
+        },
+        {
+          "seq": 11,
+          "assertion": {
+            "subject": "user",
+            "predicate": "requests_suggestions_for_catalog_system_creation",
+            "object": "57 rare records"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_1:0",
+        "query": "user rare_record_count 57",
+        "k": 5,
+        "session_id": "answer_b6018747_1",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 18.431999999847903,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "requests_suggestions_for_catalog_system_creation",
+            "object": "57 rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "considered_showcasing",
+            "object": "rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "looking_for_organization_method",
+            "object": "music collection, specifically rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "needs_to_research",
+            "object": "value of grandmother's antique vase",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "",
+            "predicate": "",
+            "object": "I think I'll start looking into those display cases and storage solutions. I've been meaning to get a better way to showcase the rare records, and it would be great to have a system that can protect them as well.",
+            "tier": "session",
+            "source": "fast_cache"
+          }
+        ]
+      },
+      "turn_error": null
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "record_display_goal",
+        "object": "protect and showcase rare records"
+      },
+      "turn_id": "answer_b6018747_1:10",
+      "source": "I think I'll start looking into those display cases and storage solutions. I've been meaning to get a better way to showcase the rare records, and it would be great to have a system that can protect them as well.",
+      "automatic_cause": "extraction_error",
+      "reviewed_cause": "extraction_error",
+      "reason": "The latest combined display/protection goal exhausts quote-validation retries. The earlier considered-showcasing assertion preserves only display, not protection. Raw cache may contain the latest full source; it is not an atomic-memory recovery.",
+      "related_writes": [
+        {
+          "seq": 16,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_showcasing",
+            "object": "rare records"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_1:10",
+        "query": "user record_display_goal protect and showcase rare records",
+        "k": 5,
+        "session_id": "answer_b6018747_1",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 18.24650000071415,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "considered_showcasing",
+            "object": "rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "",
+            "predicate": "",
+            "object": "I think I'll start looking into those display cases and storage solutions. I've been meaning to get a better way to showcase the rare records, and it would be great to have a system that can protect them as well.",
+            "tier": "session",
+            "source": "fast_cache"
+          },
+          {
+            "subject": "user",
+            "predicate": "requests_suggestions_for_catalog_system_creation",
+            "object": "57 rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "looking_for_organization_method",
+            "object": "music collection, specifically rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "needs_to_research",
+            "object": "value of grandmother's antique vase",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": {
+        "turn_id": "answer_b6018747_1:10",
+        "session_id": "answer_b6018747_1",
+        "stage": "extraction",
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source"
+      }
+    },
+    {
+      "target": {
+        "subject": "user",
+        "predicate": "record_inventory_goal",
+        "object": "update rare record inventory"
+      },
+      "turn_id": "answer_b6018747_3:10",
+      "source": "I'll definitely check out those directories and resources to find a reputable book appraiser. By the way, speaking of rare items, I've been meaning to update my inventory list of rare records. Do you know of any good software or apps that can help me organize and track my collection?",
+      "automatic_cause": "extraction_fidelity_or_label_mismatch",
+      "reviewed_cause": "label_equivalence",
+      "reason": "has_meant_to_update=inventory list of rare records preserves the uncompleted inventory goal and is retrieved.",
+      "related_writes": [
+        {
+          "seq": 25,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_meant_to_update",
+            "object": "inventory list of rare records"
+          },
+          "in_current": true,
+          "in_probe": true
+        }
+      ],
+      "retrieval_probe": {
+        "turn_id": "answer_b6018747_3:10",
+        "query": "user record_inventory_goal update rare record inventory",
+        "k": 5,
+        "session_id": "answer_b6018747_3",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 17.557834000399453,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "has_meant_to_update",
+            "object": "inventory list of rare records",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "has_rare_coins",
+            "object": "25 rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "is_considering_appraisal",
+            "object": "rare book collection",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "needs_safe_storage",
+            "object": "rare coins",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "plans_to_check_out",
+            "object": "directories and resources to find a reputable book appraiser",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      "turn_error": null
+    }
+  ]
+}

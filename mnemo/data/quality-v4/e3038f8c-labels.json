@@ -1,0 +1,324 @@
+{
+  "answer_b6018747_4:0": [
+    {
+      "subject": "user",
+      "predicate": "owned_rare_book",
+      "value": "first edition of To Kill a Mockingbird",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "rare_book_count",
+      "value": "5",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "collection_interest",
+      "value": "rare books",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "sought_book_service",
+      "value": "professional conservator signature for first edition of To Kill a Mockingbird",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_4:1": [],
+  "answer_b6018747_4:2": [
+    {
+      "subject": "user",
+      "predicate": "grandmother_vase_appraisal_goal",
+      "value": "appraise grandmother antique vase",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_4:3": [],
+  "answer_b6018747_4:4": [
+    {
+      "subject": "user",
+      "predicate": "coin_storage_goal",
+      "value": "safe storage for rare coins",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_4:5": [],
+  "answer_b6018747_4:6": [],
+  "answer_b6018747_4:7": [],
+  "answer_b6018747_4:8": [
+    {
+      "subject": "user",
+      "predicate": "considered_starting_club",
+      "value": "rare book club with friends",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "collection_interest",
+      "value": "rare books",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_4:9": [],
+  "answer_b6018747_4:10": [
+    {
+      "subject": "user",
+      "predicate": "considered_club_meeting",
+      "value": "rare book topics with club members",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_4:11": [],
+  "answer_b6018747_2:0": [
+    {
+      "subject": "user",
+      "predicate": "friend_vase_appraisal_goal",
+      "value": "appraise friend antique vase",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "inherited_vase",
+      "value": "friend antique vase",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_2:1": [],
+  "answer_b6018747_2:2": [
+    {
+      "subject": "user",
+      "predicate": "owns_rare_figurines",
+      "value": "rare figurines",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_2:3": [],
+  "answer_b6018747_2:4": [
+    {
+      "subject": "user",
+      "predicate": "rare_figurine_count",
+      "value": "12",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "figurine_storage_goal",
+      "value": "display case or secure storage to protect figurines",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_2:5": [],
+  "answer_b6018747_2:6": [
+    {
+      "subject": "user",
+      "predicate": "coin_storage_goal",
+      "value": "safe storage for rare coins",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_2:7": [],
+  "answer_b6018747_2:8": [
+    {
+      "subject": "user",
+      "predicate": "acquired_record",
+      "value": "new vinyl record",
+      "disposition": "truth",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "record_storage_goal",
+      "value": "safe storage for rare records",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_2:9": [],
+  "answer_b6018747_2:10": [
+    {
+      "subject": "user",
+      "predicate": "rare_record_count",
+      "value": "57",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "record_inventory_goal",
+      "value": "update rare record inventory",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_2:11": [],
+  "answer_b6018747_1:0": [
+    {
+      "subject": "user",
+      "predicate": "rare_record_count",
+      "value": "57",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "record_catalog_goal",
+      "value": "catalog rare record collection",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_1:1": [],
+  "answer_b6018747_1:2": [
+    {
+      "subject": "user",
+      "predicate": "planned_record_catalog_tool",
+      "value": "spreadsheet",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "uses_record_catalog_tool",
+      "value": "spreadsheet",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_1:3": [],
+  "answer_b6018747_1:4": [
+    {
+      "subject": "user",
+      "predicate": "grandmother_vase_appraisal_goal",
+      "value": "appraise grandmother antique vase",
+      "disposition": "truth",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_1:5": [],
+  "answer_b6018747_1:6": [
+    {
+      "subject": "user",
+      "predicate": "planned_vase_research",
+      "value": "online resources for antique vases similar to grandmother vase",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_1:7": [],
+  "answer_b6018747_1:8": [
+    {
+      "subject": "user",
+      "predicate": "planned_vase_forum_request",
+      "value": "information about grandmother vase",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "record_display_goal",
+      "value": "protect and showcase rare records",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_1:9": [],
+  "answer_b6018747_1:10": [
+    {
+      "subject": "user",
+      "predicate": "record_display_goal",
+      "value": "protect and showcase rare records",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_1:11": [],
+  "answer_b6018747_3:0": [
+    {
+      "subject": "user",
+      "predicate": "friend_vase_appraisal_goal",
+      "value": "appraise friend antique vase",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "inherited_vase",
+      "value": "friend antique vase",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_3:1": [],
+  "answer_b6018747_3:2": [
+    {
+      "subject": "user",
+      "predicate": "considered_coin_storage",
+      "value": "fireproof safe or safety deposit box",
+      "disposition": "candidate",
+      "importance": 6
+    },
+    {
+      "subject": "user",
+      "predicate": "owns_coin_safe",
+      "value": "fireproof safe",
+      "disposition": "forbidden",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_3:3": [],
+  "answer_b6018747_3:4": [
+    {
+      "subject": "user",
+      "predicate": "rare_coin_count",
+      "value": "25",
+      "disposition": "must_keep",
+      "importance": 9
+    },
+    {
+      "subject": "user",
+      "predicate": "coin_storage_goal",
+      "value": "safe storage for rare coins",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_3:5": [],
+  "answer_b6018747_3:6": [],
+  "answer_b6018747_3:7": [],
+  "answer_b6018747_3:8": [
+    {
+      "subject": "user",
+      "predicate": "considered_book_appraisal",
+      "value": "rare book collection",
+      "disposition": "candidate",
+      "importance": 6
+    }
+  ],
+  "answer_b6018747_3:9": [],
+  "answer_b6018747_3:10": [
+    {
+      "subject": "user",
+      "predicate": "record_inventory_goal",
+      "value": "update rare record inventory",
+      "disposition": "must_keep",
+      "importance": 9
+    }
+  ],
+  "answer_b6018747_3:11": []
+}

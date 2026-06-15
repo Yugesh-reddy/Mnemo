@@ -1,0 +1,145 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_failed_extraction_retains_other_turns_errors_and_recall_denominator[candidate_replay] _
+
+_disposable_test_db = 'postgresql://mnemo:mnemo@localhost:5432/mnemo_test_f85bd4f113c6'
+mode = 'candidate_replay'
+
+    @pytest.mark.parametrize("mode", ["candidate_replay", "pipeline"])
+    async def test_failed_extraction_retains_other_turns_errors_and_recall_denominator(
+        _disposable_test_db, mode
+    ):
+        dataset = EvalDataset(
+            name="failed-extraction",
+            version="1",
+            split="test",
+            turns=(
+                EvalTurn(
+                    "failed", "user", "I live in Oslo.", "s",
+                    labels=(AtomicLabel("location", "Oslo", "must_keep"),),
+                ),
+                EvalTurn(
+                    "good", "user", "I prefer Python.", "s",
+                    labels=(AtomicLabel("preferred_language", "Python", "must_keep"),),
+                ),
+            ),
+        )
+    
+        class PartlyBroken:
+            def extract(self, text, role="user"):
+                if "Oslo" in text:
+                    raise ValueError("candidate 1 evidence is absent from source")
+                return [ExtractedFact(
+                    subject="user", predicate="preferred_language", object="Python", importance=9
+                )]
+    
+        settings = get_settings().model_copy(update={"job_retry_base_seconds": 0})
+>       result = await evaluate(
+            _disposable_test_db, dataset=dataset, extractor=PartlyBroken(), mode=mode,
+            settings=settings,
+        )
+
+tests/test_eval_failures.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+mnemo/eval.py:490: in evaluate
+    await asyncio.to_thread(_materialize_candidates, selected, original_extractor)
+../../../.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/threads.py:25: in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+mnemo/eval.py:192: in _materialize_candidates
+    dataset.turns, [extractor.extract(t.text, t.role) for t in dataset.turns]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_eval_failures.test_failed_extraction_retains_other_turns_errors_and_recall_denominator.<locals>.PartlyBroken object at 0x107f74440>
+text = 'I live in Oslo.', role = 'user'
+
+    def extract(self, text, role="user"):
+        if "Oslo" in text:
+>           raise ValueError("candidate 1 evidence is absent from source")
+E           ValueError: candidate 1 evidence is absent from source
+
+tests/test_eval_failures.py:34: ValueError
+_ test_failed_extraction_retains_other_turns_errors_and_recall_denominator[pipeline] _
+
+_disposable_test_db = 'postgresql://mnemo:mnemo@localhost:5432/mnemo_test_f85bd4f113c6'
+mode = 'pipeline'
+
+    @pytest.mark.parametrize("mode", ["candidate_replay", "pipeline"])
+    async def test_failed_extraction_retains_other_turns_errors_and_recall_denominator(
+        _disposable_test_db, mode
+    ):
+        dataset = EvalDataset(
+            name="failed-extraction",
+            version="1",
+            split="test",
+            turns=(
+                EvalTurn(
+                    "failed", "user", "I live in Oslo.", "s",
+                    labels=(AtomicLabel("location", "Oslo", "must_keep"),),
+                ),
+                EvalTurn(
+                    "good", "user", "I prefer Python.", "s",
+                    labels=(AtomicLabel("preferred_language", "Python", "must_keep"),),
+                ),
+            ),
+        )
+    
+        class PartlyBroken:
+            def extract(self, text, role="user"):
+                if "Oslo" in text:
+                    raise ValueError("candidate 1 evidence is absent from source")
+                return [ExtractedFact(
+                    subject="user", predicate="preferred_language", object="Python", importance=9
+                )]
+    
+        settings = get_settings().model_copy(update={"job_retry_base_seconds": 0})
+>       result = await evaluate(
+            _disposable_test_db, dataset=dataset, extractor=PartlyBroken(), mode=mode,
+            settings=settings,
+        )
+
+tests/test_eval_failures.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+mnemo/eval.py:508: in evaluate
+    naive_pairs = await run_naive(
+mnemo/eval.py:130: in run_naive
+    for candidate in await asyncio.to_thread(source.extract, turn.text, turn.role):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/threads.py:25: in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_eval_failures.test_failed_extraction_retains_other_turns_errors_and_recall_denominator.<locals>.PartlyBroken object at 0x107f77dd0>
+text = 'I live in Oslo.', role = 'user'
+
+    def extract(self, text, role="user"):
+        if "Oslo" in text:
+>           raise ValueError("candidate 1 evidence is absent from source")
+E           ValueError: candidate 1 evidence is absent from source
+
+tests/test_eval_failures.py:34: ValueError
+____ test_candidate_replay_rejects_conflicting_results_for_identical_source ____
+
+    def test_candidate_replay_rejects_conflicting_results_for_identical_source():
+        turns = [EvalTurn("a", "user", "I live in Oslo.", "s"),
+                 EvalTurn("b", "user", "I live in Oslo.", "s")]
+        oslo = ExtractedFact(subject="user", predicate="location", object="Oslo")
+        boston = oslo.model_copy(update={"object": "Boston"})
+>       with pytest.raises(ValueError, match="conflicting"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_eval_failures.py:62: Failed
+=========================== short test summary info ============================
+FAILED tests/test_eval_failures.py::test_failed_extraction_retains_other_turns_errors_and_recall_denominator[candidate_replay]
+FAILED tests/test_eval_failures.py::test_failed_extraction_retains_other_turns_errors_and_recall_denominator[pipeline]
+FAILED tests/test_eval_failures.py::test_candidate_replay_rejects_conflicting_results_for_identical_source
+3 failed, 1 passed in 0.39s

@@ -1,10 +1,11 @@
 # Memory quality reliability: implementation and acceptance plan
 
-September 11, 2026. This follows the infrastructure milestone in
+Updated September 13, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
 Executed measurements and source-review qualifications live in
-[quality-v3/README.md](quality-v3/README.md); the prior cycle remains in
+[quality-v4/README.md](quality-v4/README.md); prior cycles remain in
+[quality-v3/README.md](quality-v3/README.md) and
 [quality-v2/README.md](quality-v2/README.md).
 
 ## 1. Establish attributable labels before policy changes
@@ -127,3 +128,58 @@ repository/branch and actual compute prices have been requested from the user.
 
 Consolidation remains deferred. Reflection requires measured benefit, complete
 source lineage, verification against those sources and source-capped trust.
+
+## 7. Evidence-grounded extraction cycle
+
+Implemented and committed as 3aaaed1: evidence-first extraction with source-checked
+quotes, per-candidate trusted offsets, full-turn verification, nonempty values and
+bounded corrective retries. The v6.2 development probe still has three failed
+source turns covering four must-keep targets. Source review finds 15 complete
+candidate targets versus four in the saved v5.1 baseline; strict matching stays
+zero. This is a diagnostic improvement, not evidence of reliable stored memory.
+
+Implemented: the evaluator saves failed-turn errors while retaining every target
+in the recall denominator, and rejects conflicting replay candidates for repeated
+text. Required-Postgres tests pass with zero skips.
+
+One continuous 200-turn fictional project conversation is authored and labeled
+before model output. It supplies ten sessions and explicit corrections, permissions,
+relation types, dates and context-dependent references. It remains provisional
+same-author development data. The complete run scores 200 turns with five failed
+extractions retained. All 145 writes and 30 strict must-keep misses are reviewed.
+Strict must-keep is 2/32; 16 misses have retrieved equivalents, while actor, event,
+verification and session losses remain. Source review finds 13 unsupported writes.
+
+Policy v6.2 is frozen after the extraction development probe and tests. The next
+disjoint 48-turn external holdout, e3038f8c, was labeled after that freeze and before
+its model outputs. Its complete frozen result has 0/9 exact must-keep and one failed
+extraction. All 25 writes and nine misses are source-reviewed: four misses have
+retrieved equivalents; one write is unsupported and one ambiguous. These outputs
+did not change policy. The holdout is consumed; reserve another before further
+policy development. All original reports remain available.
+
+A concrete [identity/cardinality design](quality-v4/IDENTITY_PROPOSAL.md) is prepared
+for review before any schema or one-HEAD contract change. Consolidation remains last.
+
+
+Commit `703d028` repairs controlled measurement: failed extractions are retried by
+the real worker through terminal status, and failed/warmup observations keep their
+usage and timings. Separate successful-only metrics prevent failures from being
+presented as successful capacity. The required-Postgres suite now passes 200 tests
+with zero skips, including failed-job, all-failed and warmup regressions. The
+controlled 25-observation run completes all jobs: p50 6.29 s / p95 7.45 s end-to-end,
+22.7 / 31.4 ms observe-only, 0.1575 observations/s. It measures simple fixture facts
+under serial load, not concurrent capacity. Explicit prices remain unavailable.
+
+Next bounded development priorities, from the completed source review:
+
+1. Preserve actors and event references before verification; third-party actions
+   must not become user actions merely because the turn was user-authored.
+2. Verify the asserted modality: schedules do not require completed interviews,
+   requests do not require completed actions, and past actions do not require
+   permanent present state.
+3. Recover valid batch members after a different candidate exhausts evidence
+   validation; measure recall and false writes before enabling that behavior.
+4. Review stable correction identities and cross-session availability alongside
+   the prepared contract proposal. Do not use embedding similarity as proof of
+   equivalence or silently merge distinct events.

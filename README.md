@@ -84,6 +84,10 @@ uv run mnemo-eval --dataset benchmark --split all --output synthetic.json
 uv run --extra nli mnemo-eval --real --dataset benchmark --split held_out \
   --verifier cross_encoder --output real-held-out.json
 
+# One continuous authored 200-turn development conversation across ten sessions
+uv run --extra nli mnemo-eval --real --dataset naturalistic --split dev \
+  --verifier cross_encoder --probe-retrieval --output naturalistic.json
+
 # Independent end-to-end runs of extraction through each arm
 uv run mnemo-eval --real --mode pipeline --output pipeline.json
 
@@ -110,7 +114,9 @@ report tokens. Evaluation creates private temporary schemas and never truncates
 application tables.
 Reports retain the actual assertion history for review. Cleanup lock conflicts
 are retried; if cleanup still fails, scores are saved with error metadata and the
-CLI exits unsuccessfully instead of losing the report.
+CLI exits unsuccessfully instead of losing the report. Failed extraction turns are
+also retained with their errors and remain in recall denominators. A report with
+failed turns has status `scored_with_errors`; it is not a successful pipeline run.
 
 See [recorded evidence](docs/evaluation), [annotation scope and attribution](mnemo/data/README.md),
 and [the detailed implementation plan](docs/CORRECTNESS_PLAN.md).
@@ -120,18 +126,28 @@ The original real-model 200-turn synthetic run achieved **25% final precision an
 after including evidence and audit records. The broader evaluation exposes
 substantial remaining quality gaps; see [current status](PROJECT_STATUS.md).
 
-The [memory-quality work](docs/quality-v3/README.md) source-reviews all 38 original
-unmatched writes and eight missed must-keep targets. External coverage now spans
-264 turns across six conversations, with separate development and consumed
-holdout records. Labels remain provisional single-reviewer annotations.
-On 103 selected dev assertions, structured verification records zero false accepts
-and three false rejects, but the new 46-turn holdout still misses all 11 exact
-must-keep targets. Source review finds one false assertion among its 20 writes.
-The **180 passing tests** establish regressions; memory reliability is not yet met.
+The [memory-quality audit](docs/quality-v4/README.md) retains reviews of the original
+38 unmatched writes and eight misses, and expands external coverage to **312 turns
+across seven conversations**. Labels remain provisional single-reviewer annotations.
+Evidence-grounded extraction now checks exact source quotes and retries invalid
+output; evaluations keep failed turns in the scores and preserve their errors.
+
+The continuous authored **200-turn development run** has **1.41% strict final
+precision, 2.41% recall and 2/32 must-keep**. Review of all 145 gated writes finds
+13 unsupported and seven ambiguous assertions; 16 strict must-keep misses have
+source-supported equivalents returned by search. The frozen **48-turn holdout**
+has **0/9 exact must-keep**, with four retrieved equivalents and one unsupported
+assertion among 25 writes. Extraction failures remain in both complete reports.
+Zero forbidden-list matches does not establish zero false memories.
+
+**200 tests pass with Postgres required and zero skips.** These establish
+regressions, while real-model memory reliability remains unmet. The controlled
+benchmark retains failed jobs, retries, warmups and usage; missing prices remain
+unknown. Consolidation stays deferred.
 
 ```bash
 # Use the configured real extraction, embedding and verifier backends
-mnemo-eval-suite --manifest mnemo/data/quality-v3/manifest.json \
+mnemo-eval-suite --manifest mnemo/data/quality-v4/manifest.json \
   --split dev --output external-dev.json
 
 # Serial workload; warmup excluded. Supply actual rates for a monetary estimate.

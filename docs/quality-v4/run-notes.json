@@ -1,0 +1,12 @@
+{
+  "external-dev.log": "Initial setup failed because the NLI cache was absent; no case was evaluated. The identical previous model revision was restored.",
+  "external-dev-run.log": "Stopped with SIGINT during first case to add validation feedback after extraction probe exposed two repeated evidence failures. This is an incomplete abandoned development attempt, not a scored result.",
+  "extraction-dev.json": "Initial evidence prompt; 20 development source turns. Two turns exhausted retries; one additional source emitted null-valued assertions. Original output retained.",
+  "extraction-dev-review.json": "Post-run single-reviewer candidate coverage: 4 to 14 complete targets out of 24. Strict matching remains zero, and this is not final-memory recall.",
+  "environment": "Repaired stale virtualenv home after removed Anaconda install; started Docker and Ollama; restored NLI snapshot fa2804872c3b4bd748f38c0185cc85775361e735.",
+  "holdout.log": "September 14 setup failure: Docker/Postgres had stopped. Connection refused before extraction/materialization; no holdout outputs were produced. Same frozen policy restarted after restoring the service, log holdout-restored.log.",
+  "naturalistic-real.json": "Complete 200-turn candidate-replay run with five failed extraction turns, all retained in scores; CLI exited nonzero with scored_with_errors. Cleanup succeeded. All 145 writes and 30 strict must-keep misses source-reviewed.",
+  "holdout.json": "Complete 48-turn frozen validation after restoring Docker; one failed extraction retained. CLI exited nonzero with scored_with_errors; cleanup succeeded. All 25 writes and nine strict must-keep misses source-reviewed. No policy changes followed these outputs. Local integration tests briefly overlapped this diagnostic run.",
+  "benchmark": "Completed 25 measured observations and two warmups after model evaluation and pytest finished; all succeeded on first worker attempt. Six database-backed failure/retry/warmup cases verify failure accounting independently. No monetary estimate without actual rates.",
+  "validation": "200 passed, zero skipped with required Postgres. Ruff/Black and rebuilt wheel installation outside the checkout pass. No evaluation schemas remain after cleanup."
+}

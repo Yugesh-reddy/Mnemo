@@ -25,6 +25,10 @@ assert len(mnemo.eval_suite.load_cases(manifest, 'holdout')) == 1
 manifest_v3 = files('mnemo').joinpath('data/quality-v3/manifest.json')
 assert len(mnemo.eval_suite.load_cases(manifest_v3, 'dev')) == 3
 assert len(mnemo.eval_suite.load_cases(manifest_v3, 'holdout')[0][1].turns) == 46
+assert len(mnemo.eval.load_naturalistic_dataset().turns) == 200
+manifest_v4 = files('mnemo').joinpath('data/quality-v4/manifest.json')
+assert len(mnemo.eval_suite.load_cases(manifest_v4, 'dev')) == 3
+assert len(mnemo.eval_suite.load_cases(manifest_v4, 'holdout')[0][1].turns) == 48
 print('Installed wheel: runtime imports, migrations, data and templates verified')
 PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval" --json > eval.json

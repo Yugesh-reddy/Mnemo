@@ -1,11 +1,52 @@
 # Mnemo — implementation status
 
-Updated September 11, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+Updated September 14, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the correctness plan](docs/CORRECTNESS_PLAN.md) records the infrastructure backlog.
 The [quality reliability plan](docs/QUALITY_RELIABILITY_PLAN.md) and
-[current evidence](docs/quality-v3/README.md) cover the follow-up work.
+[current evidence](docs/quality-v4/README.md) cover the follow-up work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
+
+## Latest extraction milestone
+
+Commit `3aaaed1` adds evidence-first extraction, exact-quote and nonempty-value
+validation, bounded retries with the failed response and validator feedback,
+trusted per-candidate source offsets, and full-turn verification. Failed evaluation
+turns retain their labels in recall and expose errors in saved reports. Conflicting
+replayed candidates for repeated text are rejected instead of silently overwritten.
+
+The v6.2 extraction probe covers 20 development sources with 24 per-turn must-keep
+targets. Single-reviewer diagnosis finds 15 complete targets versus four in saved
+v5.1 candidates; strict matching is still zero. Five targets are partial, and four
+are lost through three failed source turns. This is candidate coverage, not memory
+recall or verifier accuracy. All intermediate attempts and judgments are retained.
+
+The continuous 200-turn fictional development evaluation is complete. Gated strict
+final precision/recall is **1.41% / 2.41%**, with **2/32 must-keep**. All 145 writes
+have source review: 125 supported (including 44 lossy and two component assertions),
+13 unsupported and seven ambiguous. All 30 strict must-keep misses are reviewed;
+16 have equivalents returned by search. Five extraction turns fail, including a
+May 19 correction that leaves the earlier May 16 atomic assertion current.
+
+The frozen **48-turn external holdout** has **0% strict final/history precision and
+recall, 0/9 must-keep** in both arms. Review of all 25 gated writes finds 23 supported
+(including seven lossy), one unsupported and one ambiguous. Four must-keep misses
+have equivalents returned by search; other losses include an omitted appraisal goal,
+a rejected figurine count, missing ownership, session scope and a failed extraction.
+Both reports are complete with status `scored_with_errors`, not successful pipeline
+runs. Source review does not rewrite frozen labels or establish independent accuracy.
+
+Policy v6.2 remains unchanged after these outputs. The holdout is now consumed.
+See [all evidence and source judgments](docs/quality-v4/README.md).
+
+Current correctness validation: **200 passed, zero skipped**, with Postgres required.
+Commit `703d028` also makes the controlled benchmark retain failed jobs, warmups,
+worker retries and usage. Successful-only latency is separate from measurements
+including terminal failures. The controlled 25-observation run finishes all jobs with **p50 6.29 s / p95 7.45 s**
+end-to-end and **22.7 / 31.4 ms** observe-only, at **0.1575 observations/s**. It is
+a serial workload of simple fixture facts, not concurrent capacity or quality
+acceptance. Actual costs remain unknown. Ruff/Black and the rebuilt clean-wheel
+checks pass; old-policy measurements below remain historical.
 
 ## Implemented and regression tested
 
@@ -40,12 +81,11 @@ source-linked review with report/source hashes. Reviews distinguish equivalent
 wording, unsafe encodings, wrong relations and ambiguous source labels. They are
 provisional judgments by one Codex reviewer, not independent human gold.
 
-Three external development conversations supply 140 turns. A 42-turn holdout was
-consumed by the prior cycle; a different 46-turn record was reserved before the
-current changes and labeled only after the policy freeze. Including the original
-36-turn record, coverage totals **264 external turns across six records**. This
-still does not satisfy the separate single naturalistic 200-turn requirement.
-LongMemEval includes simulated dialogue, not verified human conversations.
+Three external development conversations supply 140 turns. Separate 42-, 46- and
+48-turn holdouts are now consumed. Including the original 36-turn record, coverage
+totals **312 external turns across seven records**. The continuous authored 200-turn
+development conversation is separate. LongMemEval includes simulated dialogue, not
+verified human conversations. All atomic labels remain provisional.
 
 Both full-suite arms share real extracted candidates and use isolated stores.
 Source/label/policy fingerprints, historical writes, must-keep retrieval probes,
@@ -53,7 +93,7 @@ usage and all allocated storage are recorded. The latest synthetic replay instea
 uses saved user candidates to isolate verifier behavior; only its gated arm is
 published. Neither evaluation format establishes a competitor comparison.
 
-## Executed correctness validation
+## Prior v5.1 correctness validation
 
 The required-Postgres suite passes **180 tests, zero skipped**, including available
 local-model integration checks. [Latest test log](docs/quality-v3/tests-validated.log).
@@ -67,7 +107,7 @@ required-DB unavailability fails instead of skipping, real MCP observation and
 rollback demos pass, and HNSW execution plans are preserved. Infrastructure
 regressions do not prove real-model write accuracy.
 
-## Current quality results
+## Prior v5.1 quality results
 
 The 18-turn **scripted** regression remains **90.9% precision / 100% recall** versus
 naive **60% / 90%**. Its source turns are unchanged; v2 labels correct database use
@@ -103,18 +143,24 @@ The equivalent lecture assertion is retrieved despite its exact label miss.
 These held-out findings did not change the frozen policy.
 
 **Zero forbidden-list matches does not mean zero false memories.** Source review
-finds false assertions in all three current evaluation scopes. Read the
+finds false assertions in all three preceding v5.1 evaluation scopes. Read the
 [full evidence](docs/quality-v3/README.md) for sources, all write judgments, all
-missed must-keep traces and limits. Both holdouts are now consumed.
+missed must-keep traces and limits. Those two holdouts are consumed.
 
 ## Storage, latency, cost and remote CI
 
-Current external dev allocated bytes grow from **2,457,600 to 4,038,656**; holdout
+Current v6.2 allocated bytes rise from **2,392,064 to 3,743,744** on the 200-turn
+development run and **696,320 to 1,433,600** on the 48-turn holdout. Fewer events
+do not establish a total-storage saving. The [current controlled benchmark](docs/quality-v4/benchmark.json)
+is measured separately from diagnostic evaluation times. No monetary estimate is
+claimed without actual rates. The paragraphs below preserve v5.1 measurements.
+
+Prior v5.1 external dev allocated bytes grow from **2,457,600 to 4,038,656**; holdout
 bytes grow from **835,584 to 1,409,024** despite fewer events. These totals include
 evidence, queue, audit records and indexes; no total-storage saving is established.
 
 The controlled benchmark uses 25 observations after two warmups, one worker and
-one outstanding request, after other model runs finish. The latest result is
+one outstanding request, after other model runs finish. That prior result is
 **p50 7.49 s / p95 12.73 s**, observe-only **36.2 / 94.0 ms**, and **0.129
 observations/s**. The workstation had about 12 GB of swap occupied during a host
 sample; OS pressure is not isolated, and occupancy alone does not prove paging
@@ -131,18 +177,19 @@ compute rates have been requested from the user.
 
 ## Remaining work, in order
 
-1. Independently adjudicate provisional atomic labels and development equivalences;
-   preserve original strict reports and keep source correctness separate from
-   whether a fact is useful enough to retain.
-2. Fix extraction's relation, type, event-binding and coverage errors on development
-   sources. Unknown-relation rendering is repaired, but structured fallback and
-   prompt instructions alone do not guarantee faithful assertions.
-3. Prepare a concrete storage-identity/cardinality proposal before changing the
-   one-HEAD-per-subject/predicate contract. Simultaneous plans and interests still
-   overwrite one another. Measure durable access across sessions and TTL expiry.
-4. Add one naturalistic 200-turn conversation and reserve another untouched holdout
-   before further policy development. Require source-reviewed false-write and
-   must-keep non-regression before declaring quality reliable.
+1. Independently adjudicate provisional labels and explicit equivalences. Review
+   the new interview-versus-audio duration issue and compound usability label;
+   preserve the frozen reports before any dataset version change.
+2. Use development sources to fix actor attribution, lost event bindings and
+   verification that demands completed actions for schedules or requests. Recover
+   valid co-occurring facts when one candidate fails quote validation. Do not tune
+   confidence thresholds on holdout outputs.
+3. Review the prepared [identity/cardinality proposal](docs/quality-v4/IDENTITY_PROPOSAL.md)
+   before changing one-HEAD semantics. Different relation names leave old and new
+   budget/date values current; simultaneous plans can also overwrite one another.
+4. Measure important-fact availability across sessions and elapsed TTL, and reserve
+   a new untouched holdout before another policy cycle. Source-supported historical
+   writes and same-session retrieval do not establish durable correct memory.
 5. Configure the intended repository's required `correctness` merge check and
    calculate monetary cost with actual prices.
 

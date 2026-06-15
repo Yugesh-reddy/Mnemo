@@ -1,0 +1,169 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_provider_retries_fabricated_quote_and_preserves_valid_evidence[OllamaExtractor] _
+
+extractor_class = <class 'mnemo.extraction.OllamaExtractor'>
+
+    @pytest.mark.parametrize('extractor_class', [OllamaExtractor, OpenAIExtractor])
+    def test_provider_retries_fabricated_quote_and_preserves_valid_evidence(extractor_class):
+        kwargs = {'api_key': 'test'} if extractor_class is OpenAIExtractor else {}
+        extractor = extractor_class(model='stub', max_retries=1, **kwargs)
+        source = 'I use Python and R to build predictive models.'
+        replies = iter([
+            {'facts': [{'subject': 'user', 'predicate': 'uses_language', 'object': 'Python',
+                        'evidence': 'I use Python as an editor.'}]},
+            {'facts': [{'subject': 'user', 'predicate': 'uses_language', 'object': 'Python',
+                        'evidence': source}]},
+        ])
+        extractor._chat = lambda *args: json.dumps(next(replies))
+        try:
+            facts = extractor.extract(source)
+            assert len(facts) == 1
+>           assert facts[0].evidence == source
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_extraction_evidence.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ExtractedFact(subject='user', predicate='uses_language', object='Python', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference')
+item = 'evidence'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ExtractedFact' object has no attribute 'evidence'
+
+.venv/lib/python3.12/site-packages/pydantic/main.py:1042: AttributeError
+_ test_provider_retries_fabricated_quote_and_preserves_valid_evidence[OpenAIExtractor] _
+
+extractor_class = <class 'mnemo.extraction.OpenAIExtractor'>
+
+    @pytest.mark.parametrize('extractor_class', [OllamaExtractor, OpenAIExtractor])
+    def test_provider_retries_fabricated_quote_and_preserves_valid_evidence(extractor_class):
+        kwargs = {'api_key': 'test'} if extractor_class is OpenAIExtractor else {}
+        extractor = extractor_class(model='stub', max_retries=1, **kwargs)
+        source = 'I use Python and R to build predictive models.'
+        replies = iter([
+            {'facts': [{'subject': 'user', 'predicate': 'uses_language', 'object': 'Python',
+                        'evidence': 'I use Python as an editor.'}]},
+            {'facts': [{'subject': 'user', 'predicate': 'uses_language', 'object': 'Python',
+                        'evidence': source}]},
+        ])
+        extractor._chat = lambda *args: json.dumps(next(replies))
+        try:
+            facts = extractor.extract(source)
+            assert len(facts) == 1
+>           assert facts[0].evidence == source
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_extraction_evidence.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ExtractedFact(subject='user', predicate='uses_language', object='Python', kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference')
+item = 'evidence'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ExtractedFact' object has no attribute 'evidence'
+
+.venv/lib/python3.12/site-packages/pydantic/main.py:1042: AttributeError
+___________ test_provider_does_not_silently_accept_ungrounded_output ___________
+
+    def test_provider_does_not_silently_accept_ungrounded_output():
+        extractor = OllamaExtractor(model='stub', max_retries=0)
+        extractor._chat = lambda *args: json.dumps({'facts': [
+            {'subject': 'user', 'predicate': 'favorite_fruit', 'object': 'strawberries'}
+        ]})
+        try:
+>           with pytest.raises(ValueError, match='after retries'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_evidence.py:39: Failed
+__________ test_worker_rechecks_plugin_evidence_and_audits_each_span ___________
+
+store = <mnemo.core.MnemoStore object at 0x10c617680>
+db = <asyncpg.connection.Connection object at 0x10c5e6120>
+
+    async def test_worker_rechecks_plugin_evidence_and_audits_each_span(store, db):
+        source = 'Résumé: I learned to make kimchi. I use Python.'
+        class Extractor:
+            def extract(self, text, role='user'):
+                return [
+                    ExtractedFact(subject='user', predicate='learned_to_make', object='kimchi',
+                                  evidence='I learned to make kimchi.', importance=8),
+                    ExtractedFact(subject='user', predicate='uses_language', object='Python',
+                                  evidence='I use Python.', importance=8),
+                    ExtractedFact(subject='user', predicate='allergy', object='peanuts',
+                                  evidence='I have a peanut allergy.', importance=8),
+                    # Existing third-party extractors need not supply the new optional field.
+                    ExtractedFact(subject='user', predicate='programming_language', object='Python',
+                                  importance=8),
+                ]
+        verifier = Accept()
+        await store.observe('quoted', source, 'trusted-session')
+        await ExtractionWorker(db, store.embedder, Extractor(), verifier).process_one()
+        rows = await db.fetch('SELECT candidate, source_span, outcome FROM quality_decision ORDER BY candidate_index')
+>       assert len(verifier.sources) == 3
+E       AssertionError: assert 4 == 3
+E        +  where 4 = len(['Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.'])
+E        +    where ['Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.', 'Résumé: I learned to make kimchi. I use Python.'] = <tests.test_extraction_evidence.Accept object at 0x10c617050>.sources
+
+tests/test_extraction_evidence.py:74: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_extraction_evidence.py::test_provider_retries_fabricated_quote_and_preserves_valid_evidence[OllamaExtractor]
+FAILED tests/test_extraction_evidence.py::test_provider_retries_fabricated_quote_and_preserves_valid_evidence[OpenAIExtractor]
+FAILED tests/test_extraction_evidence.py::test_provider_does_not_silently_accept_ungrounded_output
+FAILED tests/test_extraction_evidence.py::test_worker_rechecks_plugin_evidence_and_audits_each_span
+4 failed in 0.32s
