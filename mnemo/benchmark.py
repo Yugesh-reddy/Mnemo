@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+import asyncpg
+
 from mnemo.config import get_settings
 from mnemo.core import MnemoStore
 from mnemo.db import drop_isolated_schema, prepare_isolated_schema
@@ -48,6 +50,25 @@ def local_compute_cost(seconds: float, hourly_rate: float | None) -> dict[str, A
     }
 
 
+async def finish_job(
+    conn: asyncpg.Connection, worker: ExtractionWorker, turn_id: str
+) -> dict[str, Any]:
+    """Include the worker's configured retries/backoff in serial service time."""
+    while True:
+        await worker.process_one()
+        job = await conn.fetchrow(
+            "SELECT status, attempts, last_error, "
+            "GREATEST(0, EXTRACT(EPOCH FROM available_at-clock_timestamp())) AS wait_seconds "
+            "FROM extraction_job WHERE turn_id=$1",
+            turn_id,
+        )
+        if job is None:
+            raise RuntimeError("benchmark observation has no job")
+        if job["status"] in {"done", "failed"}:
+            return {k: job[k] for k in ("status", "attempts", "last_error")}
+        await asyncio.sleep(max(0.01, min(1.0, float(job["wait_seconds"]))))
+
+
 async def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.samples < 1 or args.warmup < 0:
         raise ValueError("samples must be positive; warmup cannot be negative")
@@ -62,7 +83,7 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
     )
     schema = "mnemo_eval_" + uuid4().hex
     conn = None
-    rows = []
+    rows, warmup_rows = [], []
     try:
         conn = await prepare_isolated_schema(settings.dsn, schema, embed_dim=settings.embed_dim)
         source = [t for t in load_benchmark_dataset("dev").turns if t.turn_id.endswith("a")]
@@ -80,40 +101,49 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
             start = time.perf_counter()
             await store.observe(str(index), turn.text, "benchmark")
             observed = time.perf_counter()
-            processed = await worker.process_one()
+            job = await finish_job(conn, worker, str(index))
             completed = time.perf_counter()
-            status = await conn.fetchval(
-                "SELECT status FROM extraction_job WHERE turn_id=$1", str(index)
+            (rows if index >= 0 else warmup_rows).append(
+                {
+                    "sample": index,
+                    "source_turn": turn.turn_id,
+                    **job,
+                    "observe_ms": (observed - start) * 1000,
+                    "processing_ms": (completed - observed) * 1000,
+                    "total_ms": (completed - start) * 1000,
+                }
             )
-            if not processed or status != "done":
-                raise RuntimeError(f"benchmark job did not complete: {status}")
-            if index >= 0:
-                rows.append(
-                    {
-                        "sample": index,
-                        "source_turn": turn.turn_id,
-                        "observe_ms": (observed - start) * 1000,
-                        "processing_ms": (completed - observed) * 1000,
-                        "total_ms": (completed - start) * 1000,
-                    }
-                )
         elapsed = time.perf_counter() - started
         after = usage_snapshot(extractor, embedder, verifier)
         usage = usage_delta(before, after)
+        successful = [r for r in rows if r["status"] == "done"]
+        failed_warmups = sum(r["status"] == "failed" for r in warmup_rows)
         result = {
+            "complete": True,
+            "status": (
+                "scored_with_errors" if len(successful) != len(rows) or failed_warmups else "scored"
+            ),
             "measured_at": measured_at,
             "policy_sha256": policy_fingerprint(settings),
             "samples": args.samples,
+            "successful_samples": len(successful),
+            "failed_samples": len(rows) - len(successful),
             "warmup_samples": args.warmup,
+            "failed_warmup_samples": failed_warmups,
             "load_model": "closed-loop serial; one outstanding observation and one worker",
             "concurrency": 1,
             "percentile_method": "nearest rank",
             "measurement_seconds": elapsed,
             "throughput_observations_per_second": args.samples / elapsed,
+            "successful_observations_per_second": len(successful) / elapsed,
             "latency": summarize_latencies([r["total_ms"] for r in rows]),
+            "successful_latency": (
+                summarize_latencies([r["total_ms"] for r in successful]) if successful else None
+            ),
             "observe_latency": summarize_latencies([r["observe_ms"] for r in rows]),
             "processing_latency": summarize_latencies([r["processing_ms"] for r in rows]),
             "requests": rows,
+            "warmup_requests": warmup_rows,
             "usage": usage,
             "warmup_usage": usage_delta(before_warmup, before),
             "api_cost": estimate_cost(
@@ -131,6 +161,9 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
             "limitations": [
                 "Not a saturation or concurrent-worker capacity benchmark.",
                 "Run without other model workloads; OS activity is not isolated.",
+                "Latency and throughput include terminal failures and worker retries/backoff; "
+                "successful-only metrics are reported separately.",
+                "Job completion does not prove extraction coverage or assertion correctness.",
                 "API and local-compute estimates are separate, not automatically summed.",
             ],
         }
@@ -167,6 +200,8 @@ def main() -> None:
             indent=2,
         )
     )
+    if result["status"] == "scored_with_errors":
+        raise RuntimeError("benchmark contains failed jobs; complete measurements retained")
 
 
 if __name__ == "__main__":

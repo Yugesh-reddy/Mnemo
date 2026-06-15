@@ -161,8 +161,13 @@ def analyze_report(report: dict, dataset: EvalDataset, review: dict | None = Non
         "misses": misses,
         "limitations": [
             "Source review is not independent human adjudication.",
-            "No retrieval probes or TTL simulation exist in the saved baseline; "
-            "do not attribute these misses to retrieval latency or expiry.",
+            (
+                "Saved retrieval probes describe their recorded query/session only; "
+                "there is no simulated passage of time or TTL-expiry experiment."
+                if report["gated"].get("retrieval_probes")
+                else "No retrieval probes or TTL simulation exist in the saved baseline; "
+                "do not attribute these misses to retrieval latency or expiry."
+            ),
             "Original strict metrics are preserved. Source-scoped equivalences do not "
             "rewrite labels or inflate the published score.",
         ],
