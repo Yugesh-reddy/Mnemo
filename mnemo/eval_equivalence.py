@@ -51,7 +51,7 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
         raise ValueError("review/replay belongs to a different candidate snapshot")
     if not replay["complete"] or replay["split"] != "dev":
         raise ValueError("requires a complete development replay")
-    candidates, support, by_turn = {}, {}, {}
+    candidates, support, by_turn, raw_rejections = {}, {}, {}, {}
     for index, row in enumerate(probe["rows"]):
         judged = judgments["rows"][str(index)]
         if judged["source"] != row["source"] or judged["turn_id"] != row["turn_id"]:
@@ -59,6 +59,9 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
         if len(judged["candidates"]) != len(row["after"]):
             raise ValueError("every candidate needs a source review")
         by_turn[(row["case"], row["turn_id"])] = row
+        for j, rejected in enumerate(row.get("rejections", []), start=len(row["after"])):
+            ref = f"{row['case']}/{row['turn_id']}/candidate{j}"
+            raw_rejections[ref] = rejected
         for j, candidate in enumerate(row["after"]):
             ref = f"{row['case']}/{row['turn_id']}/candidate{j}"
             judgment = judged["candidates"][j]
@@ -81,19 +84,41 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
         or {(e["case"], e["turn_id"], e["label_index"]) for e in entries} != expected
     ):
         raise ValueError("review must cover every target occurrence exactly once")
-    decisions, event_by_ref, writes = {}, {}, []
+    decisions, event_by_ref, writes, seen_raw = {}, {}, [], set()
     for case, report in replay["cases"].items():
         if report["metadata"]["cleanup_errors"]:
             raise ValueError("replay has cleanup errors")
         for decision in report["decisions"]:
             ref = f"{case}/{decision['turn_id']}/candidate{decision['candidate_index']}"
+            if ref in raw_rejections:
+                rejected = raw_rejections[ref]
+                if (
+                    decoded(decision["candidate"]) != rejected["candidate"]
+                    or decision["reason"] != rejected["reason"]
+                    or decision["outcome"] != "rejected"
+                    or decoded(decision["verification"]) is not None
+                    or ref in seen_raw
+                ):
+                    raise ValueError("raw extraction rejection differs from saved evidence")
+                seen_raw.add(ref)
+                continue
             if ref not in candidates:
-                continue  # Raw rejection envelopes remain in the original report.
+                continue  # Empty-batch/error sentinels have no candidate assertion.
+            if ref in decisions:
+                raise ValueError("duplicate candidate decision")
             if decoded(decision["candidate"]) != candidates[ref]:
                 raise ValueError("replay survivor differs from reviewed candidate")
             decisions[ref] = decision
             if decision["event_id"]:
                 event_by_ref[ref] = decision["event_id"]
+        events = [w["event_id"] for w in report["gated"]["writes"]]
+        decision_events = {d["event_id"] for d in report["decisions"] if d["event_id"]}
+        if (
+            len(events) != report["gated"]["total_events"]
+            or len(set(events)) != len(events)
+            or set(events) != decision_events
+        ):
+            raise ValueError("incomplete historical write evidence")
         for write in report["gated"]["writes"]:
             sources = decoded(write["source_span"])["turn_ids"]
             refs = [
@@ -122,6 +147,8 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
             writes.append(
                 {"case": case, "write": write, "candidate_refs": refs, "source_support": status}
             )
+    if seen_raw != set(raw_rejections):
+        raise ValueError("incomplete raw extraction rejection evidence")
     if set(decisions) != set(candidates):
         raise ValueError("replay is missing reviewed candidate decisions")
     stage_entries = []
@@ -211,6 +238,8 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
     last_rows = {e["logical_target_id"]: e for e in stage_entries}
     counts = Counter(w["source_support"] for w in writes)
     return {
+        "review_scoring_version": "equivalence-v1",
+        "scorer_sha256": _sha(Path(__file__)),
         "scope": replay["scope"],
         "review_status": "provisional agent judgments; no human gold",
         "input_sha256": {

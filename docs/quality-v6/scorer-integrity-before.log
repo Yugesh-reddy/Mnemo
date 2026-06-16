@@ -1,0 +1,64 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_scoring_refuses_missing_audit_records_or_historical_writes[raw_rejections] _
+
+tmp_path = PosixPath('/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/pytest-of-yugesh/pytest-27/test_scoring_refuses_missing_a0')
+mutation = 'raw_rejections'
+
+    @pytest.mark.parametrize("mutation", ["raw_rejections", "historical_write"])
+    def test_scoring_refuses_missing_audit_records_or_historical_writes(tmp_path, mutation):
+        from mnemo.eval_equivalence import score
+    
+        root = Path(__file__).resolve().parents[1]
+        probe, review, support, replay = [root / name for name in (
+            "docs/quality-v5/extraction-partial-dev.json",
+            "docs/quality-v6/mustkeep-review.json",
+            "docs/quality-v6/independent-review.json",
+            "docs/quality-v6/baseline-complete.json",
+        )]
+        report = json.loads(replay.read_text())
+        if mutation == "raw_rejections":
+            for case in report["cases"].values():
+                case["decisions"] = [d for d in case["decisions"] if "raw" not in json.loads(d["candidate"])]
+        else:
+            report["cases"]["d23cf73b"]["gated"]["writes"].pop()
+        changed = tmp_path / "incomplete.json"
+        changed.write_text(json.dumps(report))
+>       with pytest.raises(ValueError, match="incomplete"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_eval_equivalence.py:90: Failed
+_ test_scoring_refuses_missing_audit_records_or_historical_writes[historical_write] _
+
+tmp_path = PosixPath('/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/pytest-of-yugesh/pytest-27/test_scoring_refuses_missing_a1')
+mutation = 'historical_write'
+
+    @pytest.mark.parametrize("mutation", ["raw_rejections", "historical_write"])
+    def test_scoring_refuses_missing_audit_records_or_historical_writes(tmp_path, mutation):
+        from mnemo.eval_equivalence import score
+    
+        root = Path(__file__).resolve().parents[1]
+        probe, review, support, replay = [root / name for name in (
+            "docs/quality-v5/extraction-partial-dev.json",
+            "docs/quality-v6/mustkeep-review.json",
+            "docs/quality-v6/independent-review.json",
+            "docs/quality-v6/baseline-complete.json",
+        )]
+        report = json.loads(replay.read_text())
+        if mutation == "raw_rejections":
+            for case in report["cases"].values():
+                case["decisions"] = [d for d in case["decisions"] if "raw" not in json.loads(d["candidate"])]
+        else:
+            report["cases"]["d23cf73b"]["gated"]["writes"].pop()
+        changed = tmp_path / "incomplete.json"
+        changed.write_text(json.dumps(report))
+>       with pytest.raises(ValueError, match="incomplete"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_eval_equivalence.py:90: Failed
+=========================== short test summary info ============================
+FAILED tests/test_eval_equivalence.py::test_scoring_refuses_missing_audit_records_or_historical_writes[raw_rejections]
+FAILED tests/test_eval_equivalence.py::test_scoring_refuses_missing_audit_records_or_historical_writes[historical_write]
+2 failed, 7 deselected in 0.11s

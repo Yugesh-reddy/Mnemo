@@ -47,6 +47,12 @@ unresolved object `that`; it receives no complete-coverage credit. All 23 fixed
 queries use original label text, the declared originating session, `k=5` and
 `reinforce=False`. These are regression queries, not realistic question phrasing.
 
+Code review found two integrity gaps in the scorer: it could overlook removed
+raw rejection records or omitted historical writes. New checks require exact
+rejection coverage and agreement between write IDs, decision event IDs and the
+reported event count. [Revalidated scoring](baseline-score-validated.json) retains
+the same totals; nine scorer tests pass, including both corruption regressions.
+
 The frozen strict scorer copies the old aliases/value normalization into
 `mnemo/eval_normalization.py` as `mnemo-strict-v1`. Changing production aliases can
 no longer silently change this scoring version. Diagnostic exports now include

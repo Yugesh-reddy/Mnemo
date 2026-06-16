@@ -60,12 +60,42 @@ def test_complete_saved_baseline_scores_all_targets_and_all_historical_writes(tm
     assert result["unique_complete_by_stage"]["retrieved"] == 16
     replay = json.loads(paths[-1].read_text())
     replay["cases"]["88432d0a"]["decisions"] = [
-        d for d in replay["cases"]["88432d0a"]["decisions"] if d["outcome"] != "rejected"
+        d
+        for d in replay["cases"]["88432d0a"]["decisions"]
+        if d["outcome"] != "rejected" or "raw" in json.loads(d["candidate"])
     ]
     changed = tmp_path / "missing-rejections.json"
     changed.write_text(json.dumps(replay))
     with pytest.raises(ValueError, match="missing reviewed candidate decisions"):
         score(*paths[:-1], changed)
+
+
+@pytest.mark.parametrize("mutation", ["raw_rejections", "historical_write"])
+def test_scoring_refuses_missing_audit_records_or_historical_writes(tmp_path, mutation):
+    from mnemo.eval_equivalence import score
+
+    root = Path(__file__).resolve().parents[1]
+    probe, review, support, replay = [
+        root / name
+        for name in (
+            "docs/quality-v5/extraction-partial-dev.json",
+            "docs/quality-v6/mustkeep-review.json",
+            "docs/quality-v6/independent-review.json",
+            "docs/quality-v6/baseline-complete.json",
+        )
+    ]
+    report = json.loads(replay.read_text())
+    if mutation == "raw_rejections":
+        for case in report["cases"].values():
+            case["decisions"] = [
+                d for d in case["decisions"] if "raw" not in json.loads(d["candidate"])
+            ]
+    else:
+        report["cases"]["d23cf73b"]["gated"]["writes"].pop()
+    changed = tmp_path / "incomplete.json"
+    changed.write_text(json.dumps(report))
+    with pytest.raises(ValueError, match="incomplete"):
+        score(probe, review, support, changed)
 
 
 @pytest.mark.parametrize("mutation", ["source", "label", "duplicate", "missing"])
