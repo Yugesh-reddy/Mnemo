@@ -1,0 +1,39 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_strict_normalization_is_frozen_independently_of_storage_aliases _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a4e83e0>
+
+    def test_strict_normalization_is_frozen_independently_of_storage_aliases(monkeypatch):
+        from mnemo.core import PREDICATE_ALIASES
+    
+        before = assertion_key(" USER ", "favorite_db", "Postgres")
+        assert before == ("user|preferred_database", "postgresql")
+        monkeypatch.setitem(PREDICATE_ALIASES, "favorite_db", "future_relation")
+>       assert assertion_key(" USER ", "favorite_db", "Postgres") == before
+E       AssertionError: assert ('user|future... 'postgresql') == ('user|prefer... 'postgresql')
+E         
+E         At index 0 diff: 'user|future_relation' != 'user|preferred_database'
+E         Use -v to get more diff
+
+tests/test_eval_traceability.py:13: AssertionError
+_______ test_diagnostics_link_decisions_writes_visibility_and_retrieval ________
+
+_disposable_test_db = 'postgresql://mnemo:mnemo@localhost:5432/mnemo_test_cafac51734dc'
+
+    async def test_diagnostics_link_decisions_writes_visibility_and_retrieval(_disposable_test_db):
+        dataset = EvalDataset(
+            name="traceability", version="1", split="dev",
+            turns=(EvalTurn("t", "user", "I prefer Python.", "s",
+                            labels=(AtomicLabel("preferred_language", "Python", "must_keep"),)),),
+        )
+        report = await evaluate(_disposable_test_db, dataset=dataset, probe_retrieval=True)
+>       assert report["metadata"]["strict_scoring_version"] == "mnemo-strict-v1"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'strict_scoring_version'
+
+tests/test_eval_traceability.py:23: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_eval_traceability.py::test_strict_normalization_is_frozen_independently_of_storage_aliases
+FAILED tests/test_eval_traceability.py::test_diagnostics_link_decisions_writes_visibility_and_retrieval
+2 failed in 0.55s

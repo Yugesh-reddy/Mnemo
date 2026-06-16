@@ -1,0 +1,1666 @@
+{
+  "reviewer": "independent-agent-provisional",
+  "review_version": "source-equivalence-independent-v1",
+  "status": "Provisional independent agent review; not human gold or independent model-family validation.",
+  "input_path": "docs/quality-v5/extraction-partial-dev.json",
+  "input_sha256": "c60306fd526a8c3c9c799a6a65e0deb41919526ed73cc999592a5e9d62c1be94",
+  "allowed_evidence_consulted": [
+    "docs/quality-v5/extraction-partial-dev.json"
+  ],
+  "instructions_consulted": [
+    "PROJECT_SPEC.md",
+    "docs/NEXT_SESSION_QUALITY_PLAN.md §2"
+  ],
+  "holdout_accessed": false,
+  "parent_review_accessed": false,
+  "scope": "All 60 after candidates and all 24 must-keep occurrence labels in the 20 saved development turns. Before candidates, malformed-rejection contents, gate/storage/retrieval outcomes, and other turns were not judged.",
+  "indexing": "Zero-based input row, after-candidate, and original-label indexes. Rows keyed by original input row index.",
+  "rubric": {
+    "source_support": "Supported means every asserted component is entailed by the complete source. Unsupported includes unjustified strengthening even without direct contradiction. Ambiguous means an assertion lacks a determinate reading sufficient to judge. A true but incomplete assertion may be supported while giving only partial target coverage.",
+    "complete_coverage": "The stored subject/predicate/object preserves actor, relation, value, negation, modality, and target-material event/time qualifications. Evidence quotes cannot replace omitted assertion details.",
+    "composition": "Joint credit requires an explicit shared relation/event binding in participating assertions. Same source proximity alone is insufficient.",
+    "label_ambiguity": "Ambiguous original targets remain in the denominator and receive no complete credit pending adjudication. Labels are frozen and unchanged.",
+    "unique_accounting": "Group only case-scoped subject/predicate logical targets. Rows 6 and 7 repeat the sister-birthday-cake target. Candidate-stage unique coverage uses any complete occurrence; no current-memory or retention claim is made.",
+    "aliases": "All equivalence judgments are source-specific; none authorizes storage canonicalization or identity changes."
+  },
+  "summary": {
+    "source_rows": 20,
+    "candidates": 60,
+    "candidate_source_support": {
+      "supported": 56,
+      "unsupported": 3,
+      "ambiguous": 1
+    },
+    "mustkeep_occurrences": 24,
+    "occurrence_coverage": {
+      "complete": 16,
+      "partial": 4,
+      "ambiguous": 2,
+      "none": 2
+    },
+    "mustkeep_label_source_support": {
+      "supported": 22,
+      "ambiguous": 2
+    },
+    "unique_targets": 23,
+    "unique_candidate_coverage": {
+      "complete": 16,
+      "partial": 3,
+      "ambiguous": 2,
+      "none": 2
+    },
+    "repeated_target": {
+      "logical_target_id": "88432d0a:user:baked_for_sister_birthday",
+      "row_indexes": [
+        6,
+        7
+      ],
+      "occurrence_coverage": [
+        "partial",
+        "complete"
+      ]
+    },
+    "critical_review_points": [
+      {
+        "row": 2,
+        "labels": [
+          1
+        ],
+        "issue": "Leadership loses Marketing Research project binding; candidate composition is not explicit."
+      },
+      {
+        "row": 6,
+        "candidates": [
+          0,
+          1
+        ],
+        "issue": "Tentative source conditions are strengthened when epistemic qualifiers are omitted."
+      },
+      {
+        "row": 8,
+        "labels": [
+          0
+        ],
+        "candidates": [
+          0
+        ],
+        "issue": "Favorite-food candidate is unsupported; original favorite-fruit comparison class is an annotation ambiguity."
+      },
+      {
+        "row": 10,
+        "labels": [
+          1
+        ],
+        "candidates": [
+          1,
+          2
+        ],
+        "issue": "Use plus acquisition does not explicitly preserve current ownership."
+      },
+      {
+        "row": 13,
+        "labels": [
+          1
+        ],
+        "candidates": [
+          1
+        ],
+        "issue": "Last-week timing is quote-only and gives no complete target credit."
+      },
+      {
+        "row": 19,
+        "labels": [
+          0
+        ],
+        "candidates": [
+          0,
+          2
+        ],
+        "issue": "From versus at workshop is a label ambiguity; unresolved that gives an ambiguous candidate assertion."
+      }
+    ],
+    "disagreements": "No parent or other independent judgments were inspected; disagreements require later comparison. The listed critical points are intended for explicit adjudication."
+  },
+  "rows": {
+    "0": {
+      "row_index": 0,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_2:0",
+      "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+      "source_sha256": "f668b68c0d4921ab48704b84183f821c7f2358df0ccc0189ca7cf0d05faaf81a",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/0/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_programming_languages",
+            "object": "Python, R"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly says they are using both Python and R; the comma retains the conjunction."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/0/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "struggling_with_task",
+            "object": "feature engineering"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly reports trouble with feature engineering."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "6d550036:answer_ec904b3c_2:0:label:0",
+          "logical_target_id": "6d550036:user:uses_programming_languages",
+          "original_label": {
+            "predicate": "uses_programming_languages",
+            "value": "Python and R",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "Python, R preserves use of both languages; only conjunction punctuation differs.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "1": {
+      "row_index": 1,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "source_sha256": "ab147c8a505df1e68232baba5bdd9a3b3c96cbdcd50458cf258ca0a14e265739",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/1/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "is_working_on_project",
+            "object": "solo project for Data Mining class"
+          },
+          "source_support": "supported",
+          "reason": "The assertion preserves ongoing work, solo participation, and the Data Mining class project."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/1/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "interested_in_applying_techniques",
+            "object": "customer purchase data"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly expresses interest in applying techniques to customer purchase data; the assertion keeps interest rather than completed application."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/1/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "trying_to_identify_patterns_trends",
+            "object": "patterns and trends"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly says they are trying to identify patterns and trends."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/1/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "thinks_feature_engineering_will_help",
+            "object": "identifying patterns and trends"
+          },
+          "source_support": "supported",
+          "reason": "The source states the user thinks feature engineering will help with identifying patterns and trends; the belief modality is retained."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "6d550036:answer_ec904b3c_2:2:label:0",
+          "logical_target_id": "6d550036:user:current_course_project",
+          "original_label": {
+            "predicate": "current_course_project",
+            "value": "solo Data Mining project",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "The assertion retains the user, ongoing solo project, and Data Mining class association.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "2": {
+      "row_index": 2,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "source_sha256": "25208b4ac62420250c8f83391b996f329cba7d35a3843b8c55521d8846aa6622",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/2/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "working_on_project",
+            "object": "project involving analyzing customer data to identify trends and patterns"
+          },
+          "source_support": "supported",
+          "reason": "The current project and its customer-data pattern-analysis purpose are explicit."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/2/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_using",
+            "object": "clustering analysis"
+          },
+          "source_support": "supported",
+          "reason": "Considering clustering analysis is explicit and is not changed into actual use."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/2/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "had_experience_with_data_analysis",
+            "object": "Marketing Research class project"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly reports data-analysis experience from the Marketing Research class project."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/2/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "led_team_and_conducted_analysis",
+            "object": "data analysis team for a new product launch"
+          },
+          "source_support": "supported",
+          "reason": "The user says they led the data-analysis team and participated in its market analysis for a new product launch. The assertion is supported but omits the Marketing Research class binding."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "6d550036:answer_ec904b3c_1:0:label:1",
+          "logical_target_id": "6d550036:user:led_project",
+          "original_label": {
+            "predicate": "led_project",
+            "value": "Marketing Research data analysis team",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "partial",
+          "candidate_indexes": [
+            2,
+            3
+          ],
+          "candidate_support": {
+            "2": "supported",
+            "3": "supported"
+          },
+          "reason": "Candidate 3 retains leadership of a data-analysis team for a product launch but omits Marketing Research. Candidate 2 retains Marketing Research data-analysis experience but does not assert that this is the team the user led. There is no explicit shared event identity permitting the two assertions to compose into the complete target.",
+          "composition": "No complete composition justified; see reason.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "3": {
+      "row_index": 3,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "source_sha256": "991456b39d3eee115f3a5344a77c8816c2e4edb90a2afc08cef698e492320889",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/3/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "presented_poster",
+            "object": "research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly presented a research poster on this topic at this conference; both the topic and conference remain in the assertion."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "6d550036:answer_ec904b3c_3:0:label:0",
+          "logical_target_id": "6d550036:user:research_topic",
+          "original_label": {
+            "predicate": "research_topic",
+            "value": "social media influencers and consumer purchasing decisions",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "The user's presented research poster explicitly retains the influencer/purchasing-decisions research topic.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        },
+        {
+          "label_index": 1,
+          "target_id": "6d550036:answer_ec904b3c_3:0:label:1",
+          "logical_target_id": "6d550036:user:presented_research",
+          "original_label": {
+            "predicate": "presented_research",
+            "value": "poster at an academic conference on consumer psychology",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "The single assertion retains the user, poster presentation, academic conference, and consumer-psychology topic. No composition or duplicate credit is needed.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "4": {
+      "row_index": 4,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:0",
+      "source": "I'm looking for some advice on improving my sourdough starter. I tried out a new bread recipe using sourdough starter on Tuesday, but it didn't quite turn out as expected. Do you have any tips on how to get my starter to be more active and produce better results?",
+      "source_sha256": "86a1d3f346ee076f89d35df94aebc24102a6403e7e87a55d65c7b4c3e8efb36f",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/4/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "tried_bread_recipe",
+            "object": "new bread recipe using sourdough starter on Tuesday"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly tried a bread recipe using sourdough starter on Tuesday."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/4/after/1",
+          "assertion": {
+            "subject": "bread recipe",
+            "predicate": "did_not_turn_out_as_expected",
+            "object": "as expected"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly says the attempted bread recipe did not turn out as expected; the local reference to the recipe is clear."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "88432d0a:answer_733e443a_3:0:label:0",
+          "logical_target_id": "88432d0a:user:baked_tuesday",
+          "original_label": {
+            "predicate": "baked_tuesday",
+            "value": "sourdough bread",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "Trying a bread recipe using sourdough starter is the source-local bread-making event; Tuesday remains in the assertion.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "5": {
+      "row_index": 5,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "source_sha256": "a675520ab315fe76cd5978d28f87a8c8b64b7a1215e7f7f893b8a46ac37142fb",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/5/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "created_sourdough_starter",
+            "object": "sourdough starter about a month ago"
+          },
+          "source_support": "supported",
+          "reason": "Creation of the sourdough starter about a month ago is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/5/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "feeds_sourdough_starter",
+            "object": "once a day with all-purpose flour and water"
+          },
+          "source_support": "supported",
+          "reason": "Daily feeding of the sourdough starter with all-purpose flour and water is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/5/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_ratio",
+            "object": "1:1:1 (flour:water:starter)"
+          },
+          "source_support": "supported",
+          "reason": "The source reports using this flour:water:starter ratio, usually. The predicate uses_ratio does not assert exclusive or exceptionless use."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/5/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "baked_bread",
+            "object": "dense and heavy on Tuesday"
+          },
+          "source_support": "supported",
+          "reason": "The source says the user used the starter in a recipe on Tuesday and the bread came out dense and heavy; this supports the bread-baking outcome."
+        },
+        {
+          "candidate_index": 4,
+          "candidate_ref": "extraction-partial-dev.json#/rows/5/after/4",
+          "assertion": {
+            "subject": "user",
+            "predicate": "found_disappointing",
+            "object": "bread came out dense and heavy"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly describes the dense, heavy bread outcome as disappointing to the user."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "88432d0a:answer_733e443a_3:2:label:1",
+          "logical_target_id": "88432d0a:user:starter_feeding_frequency",
+          "original_label": {
+            "predicate": "starter_feeding_frequency",
+            "value": "once a day",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            1
+          ],
+          "candidate_support": {
+            "1": "supported"
+          },
+          "reason": "The assertion explicitly ties once-a-day feeding to the user's sourdough starter.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "6": {
+      "row_index": 6,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:10",
+      "source": "I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\n\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!",
+      "source_sha256": "9bd81990913f235b069c1f39b1a8a8b257df8b2de08267a980deba66b458e00e",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "thinks_overmixing_dough",
+            "object": "dough"
+          },
+          "source_support": "unsupported",
+          "reason": "The source says I think I might have been overmixing. The assertion thinks_overmixing_dough omits the inner possibility qualification and strengthens a tentative possibility into a belief that overmixing occurred. Model confidence and the evidence quote do not restore that modality."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/1",
+          "assertion": {
+            "subject": "fermentation_time",
+            "predicate": "was_short",
+            "object": "a bit short"
+          },
+          "source_support": "unsupported",
+          "reason": "The source says maybe the fermentation time was short; was_short asserts the condition without the material uncertainty."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "plans_to_be_more_gentle_when_mixing_and_increase_fermentation_time",
+            "object": "dough"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly intends to try gentler mixing and longer fermentation; plans_to preserves an intention rather than asserting execution."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_experimented_with_flour_types",
+            "object": "different types of flour"
+          },
+          "source_support": "supported",
+          "reason": "Recent experimentation with different flour types is explicit."
+        },
+        {
+          "candidate_index": 4,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/4",
+          "assertion": {
+            "subject": "user",
+            "predicate": "baked_chocolate_cake",
+            "object": "chocolate cake"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly baked a chocolate cake. The assertion is supported but loses the sister-birthday event binding."
+        },
+        {
+          "candidate_index": 5,
+          "candidate_ref": "extraction-partial-dev.json#/rows/6/after/5",
+          "assertion": {
+            "subject": "chocolate cake",
+            "predicate": "turned_out_amazing_and_was_loved_by_everyone",
+            "object": "amazing; everyone"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly says the chocolate cake turned out amazing and everyone loved it; everyone is the source speaker's reported evaluation, not added evidence."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "88432d0a:answer_733e443a_3:10:label:1",
+          "logical_target_id": "88432d0a:user:baked_for_sister_birthday",
+          "original_label": {
+            "predicate": "baked_for_sister_birthday",
+            "value": "chocolate cake",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "partial",
+          "candidate_indexes": [
+            4
+          ],
+          "candidate_support": {
+            "4": "supported"
+          },
+          "reason": "The assertion retains user and chocolate-cake baking but loses the sister-birthday event. The source quote cannot supply that missing stored relation.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "7": {
+      "row_index": 7,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:0",
+      "source": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+      "source_sha256": "df4c532539d3ec9023f8192850b2f7e70b3e6eccc158a441b33f8d8022dbcb3a",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/7/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "seeking_recipe_ideas",
+            "object": "dinner party next weekend"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly seeks recipe ideas for the dinner party next weekend."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/7/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "baked_chocolate_cake",
+            "object": "sister's birthday party last weekend"
+          },
+          "source_support": "supported",
+          "reason": "The predicate preserves baking chocolate cake and the object preserves the sister-birthday party and last-weekend timing."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "88432d0a:answer_733e443a_1:0:label:1",
+          "logical_target_id": "88432d0a:user:baked_for_sister_birthday",
+          "original_label": {
+            "predicate": "baked_for_sister_birthday",
+            "value": "chocolate cake",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            1
+          ],
+          "candidate_support": {
+            "1": "supported"
+          },
+          "reason": "Chocolate-cake baking appears in the predicate and the sister-birthday event appears in the object, with last-weekend timing retained.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "8": {
+      "row_index": 8,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:4",
+      "source": "I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.",
+      "source_sha256": "0e40473361216be2122fe451b46e8b1d0b0d9a3be89b41ee80dc7e1ba8bad51c",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/8/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "favorite_food",
+            "object": "strawberries"
+          },
+          "source_support": "unsupported",
+          "reason": "The source says strawberries are my favorite without specifying the comparison class. favorite_food adds the stronger food-wide superlative, which is not established by the source."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/8/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "eating_sweet_treats_lately",
+            "object": "a lot of sweet treats"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly says the user has been eating a lot of sweet treats lately."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/8/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "consumed",
+            "object": "leftover birthday cake"
+          },
+          "source_support": "supported",
+          "reason": "Leftover birthday cake is explicitly included among the treats the user has been eating."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/8/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "thinks_strawberries_will_be_change_of_pace",
+            "object": "the tartness of strawberries"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly thinks the tartness of strawberries will provide a change of pace; the belief modality is retained."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "88432d0a:answer_733e443a_1:4:label:0",
+          "logical_target_id": "88432d0a:user:favorite_fruit",
+          "original_label": {
+            "predicate": "favorite_fruit",
+            "value": "strawberries",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "ambiguous",
+          "coverage": "ambiguous",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "unsupported"
+          },
+          "reason": "The original label infers a fruit comparison class from an unqualified my favorite. The candidate instead asserts favorite_food, which strengthens the comparison class and is not source-supported. No complete credit is warranted; independent adjudication must resolve the intended label scope without treating food and fruit as aliases.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "9": {
+      "row_index": 9,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:6",
+      "source": "I was thinking of making a homemade crust, but I'm not sure what type of flour to use. I've been experimenting with different types of flour lately, including whole wheat flour, which I used to make a delicious whole wheat baguette last Saturday. Would whole wheat flour work for a tart crust?",
+      "source_sha256": "7c4718381b29833e036f358f586139bda77a8c118de49c7990d59a2b3d27f15b",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/9/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_making",
+            "object": "homemade crust"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly was thinking of making a homemade crust, with no claim of actual preparation."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/9/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "experimenting_with_flour_types",
+            "object": "different types of flour"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly reports experimentation with different flour types."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/9/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "used_whole_wheat_flour",
+            "object": "whole wheat flour"
+          },
+          "source_support": "supported",
+          "reason": "The full source explicitly says the user used whole wheat flour to make a baguette; complete-source support exists even though the short quote alone is weaker."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/9/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "made_baguette",
+            "object": "delicious whole wheat baguette last Saturday"
+          },
+          "source_support": "supported",
+          "reason": "The assertion preserves the user's making a whole wheat baguette and last-Saturday timing; delicious is the source speaker's evaluation."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "88432d0a:answer_733e443a_1:6:label:0",
+          "logical_target_id": "88432d0a:user:baked_last_saturday",
+          "original_label": {
+            "predicate": "baked_last_saturday",
+            "value": "whole wheat baguette",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            3
+          ],
+          "candidate_support": {
+            "3": "supported"
+          },
+          "reason": "The candidate retains the whole wheat baguette and last Saturday; made is a source-local equivalent of the bread-baking event.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "10": {
+      "row_index": 10,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:8",
+      "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+      "source_sha256": "f7fa94bc8830ed9795dac9f075891d5a725f3fd99b0626cded2baff03f0a2206",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/10/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "intends_to_use",
+            "object": "all-purpose flour for the tart crust"
+          },
+          "source_support": "supported",
+          "reason": "The source expresses the user's intended selection of all-purpose flour for the tart crust; no completed use is asserted."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/10/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_appliance",
+            "object": "new stand mixer"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly reports using a new stand mixer."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/10/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "acquired_appliance",
+            "object": "stand mixer a few weeks ago"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly says the user got the stand mixer a few weeks ago."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "88432d0a:answer_733e443a_1:8:label:1",
+          "logical_target_id": "88432d0a:user:owns_appliance",
+          "original_label": {
+            "predicate": "owns_appliance",
+            "value": "stand mixer",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "partial",
+          "candidate_indexes": [
+            1,
+            2
+          ],
+          "candidate_support": {
+            "1": "supported",
+            "2": "supported"
+          },
+          "reason": "The source supports ownership through my new stand mixer. Candidate 1 states use and candidate 2 states acquisition weeks ago; neither explicitly preserves ownership. Their combination still permits borrowed/temporary acquisition and does not establish a current ownership relation without importing the source's possessive. Do not make owns/uses/acquired global aliases.",
+          "composition": "No complete composition justified; see reason.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "11": {
+      "row_index": 11,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "source_sha256": "8856441bde26b7cd095eeeeaec1cb57274feff7e8588b42da50d07dcd8670b90",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/11/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "intends_to_try",
+            "object": "dry brine method and baking powder trick"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly states an intention to try the dry brine method and baking powder trick."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/11/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_not_tried",
+            "object": "roasting veggies with convection"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly denies having tried roasting vegetables with convection. Baking cookies with convection is a different activity and does not contradict this assertion."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "88432d0a:answer_733e443a_2:2:label:1",
+          "logical_target_id": "88432d0a:user:first_convection_use",
+          "original_label": {
+            "predicate": "first_convection_use",
+            "value": "cookies last Thursday",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "none",
+          "candidate_indexes": [],
+          "candidate_support": {},
+          "reason": "Neither surviving candidate states the first convection use, cookies, or last Thursday. The negated vegetable-roasting assertion concerns a different activity and cannot cover this event.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "12": {
+      "row_index": 12,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "source_sha256": "64129f6d99fd6a730db85304572c6321997f41cf815de82723a12f8d2107257f",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/12/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "used_convection_setting",
+            "object": "oven for baking cookies last Thursday"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly states that the user used the oven's convection setting to bake cookies last Thursday."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "88432d0a:answer_733e443a_4:4:label:0",
+          "logical_target_id": "88432d0a:user:baked_last_thursday",
+          "original_label": {
+            "predicate": "baked_last_thursday",
+            "value": "cookies",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "Using the oven's convection setting for baking cookies last Thursday preserves actor, baking activity, dish, and timing.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "13": {
+      "row_index": 13,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "source_sha256": "3a1c182dc3ec33609251a2445e6d2fcf12ca1dd1391245a701fe104f5b979c77",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/13/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "looking_for_recipe_ideas",
+            "object": "recipe ideas for meal prep"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly seeks meal-prep recipe ideas."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/13/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "tried_ethiopian_restaurant",
+            "object": "new Ethiopian restaurant in town"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly tried the new Ethiopian restaurant in town. The assertion omits last week, but does not add an unsupported claim."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_4:0:label:1",
+          "logical_target_id": "d23cf73b:user:tried_restaurant",
+          "original_label": {
+            "predicate": "tried_restaurant",
+            "value": "Ethiopian restaurant last week",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "partial",
+          "candidate_indexes": [
+            1
+          ],
+          "candidate_support": {
+            "1": "supported"
+          },
+          "reason": "Trying the Ethiopian restaurant is retained, but last week appears only in evidence and is missing from the assertion.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "14": {
+      "row_index": 14,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_2:0",
+      "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+      "source_sha256": "b6775d3b2b065a05dc2e4fa59ddaf2f84b9a8b792806790e3635f64ca389f9b1",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/14/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "planning_dinner_party",
+            "object": "this weekend"
+          },
+          "source_support": "supported",
+          "reason": "Planning a dinner party this weekend is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/14/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "considering_serving",
+            "object": "Indian-inspired dish"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly considers serving an Indian-inspired dish."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/14/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_making",
+            "object": "perfect chicken tikka masala in a class on Indian cuisine"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly learned to make chicken tikka masala in a class on Indian cuisine; the dish and learning setting remain bound in one assertion."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_2:0:label:1",
+          "logical_target_id": "d23cf73b:user:learned_indian_dish",
+          "original_label": {
+            "predicate": "learned_indian_dish",
+            "value": "chicken tikka masala",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            2
+          ],
+          "candidate_support": {
+            "2": "supported"
+          },
+          "reason": "The assertion explicitly retains learning to make chicken tikka masala.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        },
+        {
+          "label_index": 2,
+          "target_id": "d23cf73b:answer_5a0d28f8_2:0:label:2",
+          "logical_target_id": "d23cf73b:user:attended_indian_class",
+          "original_label": {
+            "predicate": "attended_indian_class",
+            "value": "Indian cuisine class",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            2
+          ],
+          "candidate_support": {
+            "2": "supported"
+          },
+          "reason": "Learning this dish in a class on Indian cuisine entails participation in that class and the setting is explicit in the assertion.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "15": {
+      "row_index": 15,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "source_sha256": "738365c5ed41e50ef7ccd55f7bd20cb3b5fcb5c2e7bbd6d6abec0df637228506",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/15/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "looking_for",
+            "object": "healthy meal prep ideas"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly seeks healthy meal-prep ideas."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/15/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_class",
+            "object": "class on vegan cuisine"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly attended a class on vegan cuisine."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "d23cf73b:answer_5a0d28f8_1:0:label:0",
+          "logical_target_id": "d23cf73b:user:diet_goal",
+          "original_label": {
+            "predicate": "diet_goal",
+            "value": "eat more plant-based food",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "none",
+          "candidate_indexes": [],
+          "candidate_support": {},
+          "reason": "Seeking healthy meal-prep ideas or attending a vegan class does not assert the user's goal of eating more plant-based food.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        },
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_1:0:label:1",
+          "logical_target_id": "d23cf73b:user:attended_vegan_class",
+          "original_label": {
+            "predicate": "attended_vegan_class",
+            "value": "vegan cuisine class",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            1
+          ],
+          "candidate_support": {
+            "1": "supported"
+          },
+          "reason": "Attendance and the vegan-cuisine class are explicit in the assertion.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "16": {
+      "row_index": 16,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "source_sha256": "d7d5b20b271bc3e0aecefd7d562e198667cc4a961362ff88502239b664f93b87",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/16/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "intends_to_try",
+            "object": "tempeh"
+          },
+          "source_support": "supported",
+          "reason": "Meaning to try tempeh supports an intention to try it, not completed consumption."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/16/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_workshop",
+            "object": "workshop on fermentation at a local food co-op"
+          },
+          "source_support": "supported",
+          "reason": "Attendance at the fermentation workshop at a local food co-op is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/16/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_to_make",
+            "object": "sauerkraut and kimchi"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly learned to make both sauerkraut and kimchi. This does not by itself encode the workshop binding, but that binding is not needed to support this assertion."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_1:6:label:1",
+          "logical_target_id": "d23cf73b:user:attended_fermentation_workshop",
+          "original_label": {
+            "predicate": "attended_fermentation_workshop",
+            "value": "local food co-op fermentation workshop",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            1
+          ],
+          "candidate_support": {
+            "1": "supported"
+          },
+          "reason": "The assertion retains workshop attendance, fermentation topic, and local food co-op setting.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        },
+        {
+          "label_index": 2,
+          "target_id": "d23cf73b:answer_5a0d28f8_1:6:label:2",
+          "logical_target_id": "d23cf73b:user:learned_fermented_foods",
+          "original_label": {
+            "predicate": "learned_fermented_foods",
+            "value": "sauerkraut and kimchi",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            2
+          ],
+          "candidate_support": {
+            "2": "supported"
+          },
+          "reason": "The assertion retains learning to make both sauerkraut and kimchi; this mapping is source-specific and not a global predicate alias.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "17": {
+      "row_index": 17,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:8",
+      "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+      "source_sha256": "d37e27f34a0974df86cadfae10a9a5126606ee8d8fbb5fa35651f290c4da722e",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/17/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "wants_to_incorporate",
+            "object": "more fermented foods into my diet"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly wants to try incorporating more fermented foods; wants_to_incorporate retains desire rather than accomplished diet change."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/17/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_class",
+            "object": "class on vegan cuisine"
+          },
+          "source_support": "supported",
+          "reason": "Attendance at a vegan-cuisine class is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/17/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_how_to_make",
+            "object": "delicious vegan lasagna with a cashew-based ricotta cheese substitute"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly learned to make vegan lasagna with a cashew-based ricotta substitute; the distinguishing ingredient is retained."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_1:8:label:1",
+          "logical_target_id": "d23cf73b:user:learned_vegan_dish",
+          "original_label": {
+            "predicate": "learned_vegan_dish",
+            "value": "vegan lasagna with cashew ricotta",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            2
+          ],
+          "candidate_support": {
+            "2": "supported"
+          },
+          "reason": "Learning to make vegan lasagna and its cashew-based ricotta substitute are both preserved.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "18": {
+      "row_index": 18,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "source_sha256": "e7a9cb31d70583d9e473242275cf8ae676afb4c083e9998f2d89dee08115ff9a",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/18/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "tries_to_cook_at_home",
+            "object": "more at home"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly reports trying to cook more at home; the assertion preserves effort rather than certain success."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/18/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "wants_to_use_up_ingredients",
+            "object": "all the ingredients I buy"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly wants to use all purchased ingredients."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/18/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "tried_out_recipe",
+            "object": "Korean bibimbap from the cooking class's online recipe library"
+          },
+          "source_support": "supported",
+          "reason": "The user explicitly tried the Korean bibimbap recipe from the cooking class's online recipe library; the dish and recipe provenance are retained."
+        },
+        {
+          "candidate_index": 3,
+          "candidate_ref": "extraction-partial-dev.json#/rows/18/after/3",
+          "assertion": {
+            "subject": "user",
+            "predicate": "found_amazing",
+            "object": "Korean bibimbap"
+          },
+          "source_support": "supported",
+          "reason": "The local source reference it clearly evaluates the just-tried Korean bibimbap recipe/result as amazing."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 1,
+          "target_id": "d23cf73b:answer_5a0d28f8_3:0:label:1",
+          "logical_target_id": "d23cf73b:user:cooked_korean_dish",
+          "original_label": {
+            "predicate": "cooked_korean_dish",
+            "value": "bibimbap from cooking class online recipe library",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "supported",
+          "coverage": "complete",
+          "candidate_indexes": [
+            2
+          ],
+          "candidate_support": {
+            "2": "supported"
+          },
+          "reason": "Trying out the recipe is the source-local cooking event, and Korean bibimbap plus cooking-class online-library provenance are preserved.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    },
+    "19": {
+      "row_index": 19,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:6",
+      "source": "That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out.",
+      "source_sha256": "80d38cfa574ac6048becce811789785b7084b755e9b396cdbcdd4e7e9b9a64b7",
+      "session_id": null,
+      "session_id_status": "Not present in allowed input; not inferred.",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "candidate_ref": "extraction-partial-dev.json#/rows/19/after/0",
+          "assertion": {
+            "subject": "user",
+            "predicate": "made_kimchi",
+            "object": "from a workshop I attended on fermentation"
+          },
+          "source_support": "supported",
+          "reason": "The assertion preserves the source's made-kimchi statement and its from-a-fermentation-workshop provenance. It does not assert the kimchi was physically made at the workshop."
+        },
+        {
+          "candidate_index": 1,
+          "candidate_ref": "extraction-partial-dev.json#/rows/19/after/1",
+          "assertion": {
+            "subject": "user",
+            "predicate": "did_not_know_add_ingredients",
+            "object": "seafood or garlic scapes to create different flavor profiles"
+          },
+          "source_support": "supported",
+          "reason": "The source explicitly reports the user's prior lack of knowledge about adding seafood or garlic scapes for flavor variation; negation and ingredient alternatives remain."
+        },
+        {
+          "candidate_index": 2,
+          "candidate_ref": "extraction-partial-dev.json#/rows/19/after/2",
+          "assertion": {
+            "subject": "user",
+            "predicate": "will_try_out",
+            "object": "that"
+          },
+          "source_support": "ambiguous",
+          "reason": "The object that is unresolved in the stored assertion. The source suggests experimenting with extra kimchi ingredients but leaves possible granularity choices; the detached assertion cannot identify a complete intended activity without importing its quote/context."
+        }
+      ],
+      "targets": [
+        {
+          "label_index": 0,
+          "target_id": "d23cf73b:answer_5a0d28f8_3:6:label:0",
+          "logical_target_id": "d23cf73b:user:made_fermented_food",
+          "original_label": {
+            "predicate": "made_fermented_food",
+            "value": "kimchi at a fermentation workshop",
+            "disposition": "must_keep",
+            "subject": "user",
+            "importance": 9
+          },
+          "label_source_support": "ambiguous",
+          "coverage": "ambiguous",
+          "candidate_indexes": [
+            0
+          ],
+          "candidate_support": {
+            "0": "supported"
+          },
+          "reason": "The label says kimchi at a fermentation workshop; the source and candidate say made kimchi from a workshop. From can describe learned recipe provenance without asserting the physical cooking location. Whether at was intended literally is an annotation ambiguity; do not silently rewrite it or credit the stronger location relation.",
+          "composition": "Single assertion or no candidate.",
+          "gate_outcome": "unmeasured",
+          "historical_event_lineage": "unmeasured",
+          "current_visibility": "unmeasured",
+          "retrieval": "unmeasured"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "starting_commit": "bca65666b06b9d6dc6bd904e2c2a6e9e9ce239ac",
+  "source_probe": "docs/quality-v5/extraction-partial-dev.json",
+  "development_scope": "20 must-keep source turns from three separately scoped dev records; 60 candidates plus4rejections",
+  "strict_scoring_version": "mnemo-strict-v1",
+  "review_version": "equivalence-v1",
+  "review_status": "two provisional agent source reviews, not independent human gold",
+  "holdout": "b46e15ed remains unopened; no consumed holdout examples used",
+  "baseline_policy_sha256": "9ca7df14bd5897dae2a2b0dee1281a5dbd1e28341f2020b86de09daf260ff422",
+  "evidence": {
+    "mustkeep-review.json": "991576839280ba1d32a8d595819e7ada33959ab79d06406ad7b75c607b96e7e4",
+    "independent-review.json": "2927e3505e999a960c05c99f9286ac048bda47730622ab9b46198142ae0ecfeb",
+    "baseline.json": "eecf1b2b63718830f773d414bc8db197ae14b42c9df10709969675f0575c4a0a",
+    "baseline-complete.json": "ab8161da6f1ef6e7d96366c83127bde99d34759879aca7689eb465eff744c5f2",
+    "baseline-score-final.json": "d4826e0b58037e58908f871d6416e997ec20097a90843bcc77c9a8f479aa8d2b"
+  },
+  "next_experiment": {
+    "mechanism": "model selects an immutable source span ID; runtime provides quote from original text",
+    "acceptance": [
+      "Improve at least one formerly missing source-supported must-keep target.",
+      "Complete candidate coverage >=16/24 occurrences and gated retrieval >=16/23 unique targets.",
+      "No unsupported historical writes in the selected development replay; ambiguous writes reported separately.",
+      "Preserve full-turn verification, bounded retries, malformed-member audit and low trust.",
+      "Run established103 verifier cases and deterministic positive/negative source-selector controls."
+    ],
+    "scope_limits": "This subset cannot establish conversation-wide or later-session/TTL quality. No identity/tiering/schema changes authorized."
+  }
+}

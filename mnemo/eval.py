@@ -18,7 +18,7 @@ import httpx
 
 from mnemo.audit import gate_snapshot
 from mnemo.config import Settings, get_settings
-from mnemo.core import MnemoStore, canonicalize
+from mnemo.core import MnemoStore
 from mnemo.db import (
     drop_isolated_schema as _drop_schema,
 )
@@ -31,6 +31,7 @@ from mnemo.eval_data import (
     load_naturalistic_dataset,
     load_smoke_dataset,
 )
+from mnemo.eval_normalization import STRICT_SCORING_VERSION, assertion_key
 from mnemo.eval_support import (
     DeterministicEmbedder,
     EvalDataset,
@@ -286,7 +287,8 @@ async def assertion_snapshot(conn: asyncpg.Connection) -> dict[str, Any]:
         "current_assertions": [
             dict(row)
             for row in await conn.fetch(
-                "SELECT subject,predicate,object_text,object_number,object_json "
+                "SELECT fact_id,event_id,subject,predicate,object_text,object_number,object_json,"
+                "source_span,session_id,tier,valid_from,valid_to,expires_at,recorded_at "
                 "FROM memory_current ORDER BY subject,predicate"
             )
         ],
@@ -294,7 +296,9 @@ async def assertion_snapshot(conn: asyncpg.Connection) -> dict[str, Any]:
             dict(row)
             for row in await conn.fetch(
                 "SELECT f.subject,f.predicate,e.op,e.object_text,e.object_number,e.object_json,"
-                "e.source_span,e.seq FROM memory_event e JOIN memory_fact f USING(fact_id) "
+                "e.source_span,e.seq,e.event_id,e.fact_id,e.session_id,e.tier,"
+                "e.valid_from,e.valid_to,e.expires_at,e.recorded_at,e.superseded_by "
+                "FROM memory_event e JOIN memory_fact f USING(fact_id) "
                 "ORDER BY e.seq"
             )
         ],
@@ -309,16 +313,20 @@ async def retrieval_probes(
     namespace: str,
     settings: Settings,
     k: int = 5,
+    all_must_keep: bool = False,
 ) -> list[dict[str, Any]]:
     """Separate absent assertions from failed retrieval of stored assertions."""
     latest, required = {}, set()
     for turn in dataset.turns:
         for label in turn.labels:
             key = assertion_key(label.subject, label.predicate, label.value)
-            if label.disposition in {"truth", "must_keep"}:
-                latest[key[0]] = (turn, label)
+            identity = key if all_must_keep else key[0]
+            if label.disposition == "must_keep" or (
+                not all_must_keep and label.disposition == "truth"
+            ):
+                latest[identity] = (turn, label)
             if label.disposition == "must_keep":
-                required.add(key[0])
+                required.add(identity)
     current = (await assertion_snapshot(conn))["current_assertions"]
     present = {
         assertion_key(
@@ -338,6 +346,13 @@ async def retrieval_probes(
         turn, label = latest[identity]
         target = assertion_key(label.subject, label.predicate, label.value)
         query = f"{label.subject} {label.predicate} {label.value}"
+        observed_at = await conn.fetchval("SELECT clock_timestamp()")
+        visible = await conn.fetch(
+            "SELECT event_id FROM memory_current WHERE namespace=$1 AND user_id='default' "
+            "AND agent_id='default' AND (tier='durable' OR (tier='session' AND session_id=$2))",
+            namespace,
+            turn.session_id,
+        )
         started = time.perf_counter()
         found = await store.search(query, k=k, session_id=turn.session_id, reinforce=False)
         hit = any(assertion_key(f.subject, f.predicate, f.value) == target for f in found)
@@ -347,6 +362,8 @@ async def retrieval_probes(
                 "query": query,
                 "k": k,
                 "session_id": turn.session_id,
+                "observed_at": observed_at,
+                "visible_event_ids": [r["event_id"] for r in visible],
                 "in_current": target in present,
                 "retrieved": hit,
                 "stage": (
@@ -366,6 +383,9 @@ async def retrieval_probes(
                         "object": f.value,
                         "tier": f.tier,
                         "source": f.source,
+                        "fact_id": f.fact_id,
+                        "event_id": f.event_id,
+                        "source_span": f.source_span,
                     }
                     for f in found
                 ],
@@ -442,13 +462,6 @@ async def _arm_result(
         usage=usage,
         cost=cost,
     )
-
-
-def assertion_key(subject: str, predicate: str, value: Any) -> tuple[str, str]:
-    value = str(value).strip().casefold()
-    if value in {"postgres", "postgresql", "psql"}:
-        value = "postgresql"
-    return canonicalize(subject, predicate), value
 
 
 async def historical_metrics(
@@ -563,6 +576,7 @@ async def evaluate(
     settings: Settings | None = None,
     prices: dict[str, Any] | None = None,
     probe_retrieval: bool = False,
+    probe_all_must_keep: bool = False,
 ) -> dict[str, Any]:
     """Run isolated comparison arms; never truncate or reuse application tables."""
     if mode not in {"candidate_replay", "pipeline"}:
@@ -649,7 +663,12 @@ async def evaluate(
             ):
                 before = usage_snapshot(original_extractor, selected_embedder, verifier)
                 data["retrieval_probes"] = await retrieval_probes(
-                    conn, selected_embedder, selected, namespace=namespace, settings=settings
+                    conn,
+                    selected_embedder,
+                    selected,
+                    namespace=namespace,
+                    settings=settings,
+                    all_must_keep=probe_all_must_keep,
                 )
                 data["retrieval_probe_usage"] = usage_delta(
                     before, usage_snapshot(original_extractor, selected_embedder, verifier)
@@ -660,7 +679,8 @@ async def evaluate(
             "decisions": [
                 dict(r)
                 for r in await connections[1].fetch(
-                    "SELECT turn_id, candidate, outcome, reason, verification, score_components "
+                    "SELECT decision_id,job_id,event_id,session_id,turn_id,candidate_index,"
+                    "candidate,outcome,reason,verification,score_components,source_span "
                     "FROM quality_decision ORDER BY recorded_at, candidate_index"
                 )
             ],
@@ -668,6 +688,12 @@ async def evaluate(
                 "status": "scored_with_errors" if naive_errors or gated_errors else "scored",
                 "dataset": selected.name,
                 "dataset_version": selected.version,
+                "strict_scoring_version": STRICT_SCORING_VERSION,
+                "retrieval_target_scope": (
+                    "all original must-keep assertions"
+                    if probe_all_must_keep
+                    else "latest truth by subject/predicate"
+                ),
                 "split": selected.split,
                 "turns": len(selected.turns),
                 "synthetic": bool(selected.metadata.get("synthetic", False)),

@@ -1,13 +1,23 @@
 # Memory quality reliability: implementation and acceptance plan
 
-Updated September 15, 2026. This follows the infrastructure milestone in
+Updated September 17, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
 Executed measurements and source-review qualifications live in
+[quality-v6/README.md](quality-v6/README.md); partial recovery is in
 [quality-v5/README.md](quality-v5/README.md); the preceding extraction cycle is in
 [quality-v4/README.md](quality-v4/README.md); prior cycles remain in
 [quality-v3/README.md](quality-v3/README.md) and
 [quality-v2/README.md](quality-v2/README.md).
+
+The current selected-development baseline covers all 60 saved candidates and 51
+historical writes. Reviewed complete coverage is 16/24 occurrences and 16/23
+distinct targets, with all 16 returned by fixed originating-session queries.
+Historical support is 50 supported, zero unsupported, one ambiguous; reviews are
+provisional. Frozen strict matching remains zero. Source-span selection is the
+next bounded experiment, targeting two quote-validation losses. Full conversations
+and later-session/TTL retention remain outside this subset result; the reserved
+holdout stays sealed.
 
 ## 1. Establish attributable labels before policy changes
 
