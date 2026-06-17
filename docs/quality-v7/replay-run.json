@@ -1,0 +1,22 @@
+{
+  "phase": "replay",
+  "command": [
+    ".venv/bin/python",
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "/Users/yugesh/Desktop/Projects/Mnemo/docs/quality-v7/extraction.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "/Users/yugesh/Desktop/Projects/Mnemo/docs/quality-v7/replay.json"
+  ],
+  "complete": true,
+  "started_at_utc": "2026-09-18T19:57:08.913078+00:00",
+  "policy_sha256": "917a86e4c2631c856f4d15093adc0a877effa381e3065044d86183e24c149b41",
+  "experiment_manifest_sha256": "0e6b4af632936bfdfea04083f1f0b5b27bae0eebdb504da44a405b55c9aa42ee",
+  "comparison_baseline": "v5 saved candidates / v6 complete replay, as frozen in manifest",
+  "adapter_note": "The extraction driver's embedded before rows are older v3, not the comparison baseline.",
+  "exit_code": 0,
+  "elapsed_seconds": 365.19975450000493,
+  "finished_at_utc": "2026-09-18T20:03:14.120361+00:00"
+}

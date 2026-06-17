@@ -1,0 +1,163 @@
+diff --git a/mnemo/extraction.py b/mnemo/extraction.py
+index d7f82cf..d5f066b 100644
+--- a/mnemo/extraction.py
++++ b/mnemo/extraction.py
+@@ -203,7 +203,24 @@ class OllamaExtractor:
+             try:
+                 fact = ExtractedFact.model_validate(item)
+                 if fact.evidence is None or fact.evidence not in source_text:
+-                    raise ValueError("evidence is absent from source")
++                    detail = "evidence is absent from source"
++                    evidence = fact.evidence
++                    if (
++                        evidence
++                        and evidence[-1] in ".!?"
++                        and evidence[:-1]
++                        and evidence[:-1] in source_text
++                    ):
++                        # Feedback only: the current member remains rejected. A literal
++                        # substring is not proof that its assertion is source-supported.
++                        detail += (
++                            ". Exact source substring option: "
++                            + json.dumps(evidence[:-1], ensure_ascii=False)
++                            + ". The final punctuation was not copied from the source. "
++                            "Resubmit an evidence-only correction; preserve the assertion "
++                            "and valid siblings. This literal match does not prove truth."
++                        )
++                    raise ValueError(detail)
+                 if fact.object is None or (
+                     isinstance(fact.object, str) and not fact.object.strip()
+                 ):
+diff --git a/tests/test_extraction_quote_feedback.py b/tests/test_extraction_quote_feedback.py
+new file mode 100644
+index 0000000..737fe52
+--- /dev/null
++++ b/tests/test_extraction_quote_feedback.py
+@@ -0,0 +1,127 @@
++"""A literal quote hint assists retries without accepting a malformed assertion."""
++
++import hashlib
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++
++from mnemo.extraction import ExtractionWorker, OllamaExtractor, OpenAIExtractor
++from mnemo.quality import Verdict
++
++SOURCE = "I've been restoring a wooden canoe lately, and Mira is helping."
++QUOTE = "I've been restoring a wooden canoe lately."
++ASSERTION = {
++    "subject": "user",
++    "predicate": "restoring",
++    "object": "wooden canoe lately",
++    "evidence": QUOTE,
++}
++
++
++@pytest.mark.parametrize(
++    ("source", "quote"),
++    [
++        (SOURCE, QUOTE),
++        ("Zoë repaired the café sign, then went home.", "Zoë repaired the café sign!"),
++    ],
++)
++def test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects(source, quote):
++    raw = {**ASSERTION, "evidence": quote}
++    with pytest.raises(ValueError) as error:
++        OllamaExtractor._parse(json.dumps({"facts": [raw]}), source)
++    assert "Exact source substring option: " + json.dumps(quote[:-1], ensure_ascii=False) in str(
++        error.value
++    )
++    assert error.value.batch.rejections[0]["candidate"] == {"raw": raw}
++    assert not error.value.batch
++
++
++@pytest.mark.parametrize("quote", ["I have enrolled.", "Invented place.", "."])
++def test_no_suggestion_for_nonmatching_or_empty_prefix(quote):
++    with pytest.raises(ValueError) as error:
++        OllamaExtractor._parse(
++            json.dumps({"facts": [{**ASSERTION, "evidence": quote}]}),
++            "I have not enrolled, and I might not join",
++        )
++    assert "evidence is absent from source" in str(error.value)
++    assert "Exact source substring option" not in str(error.value)
++
++
++@pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
++def test_retry_receives_hint_without_changing_first_prompt_or_output_contract(provider):
++    extractor = provider(
++        max_retries=1, **({"api_key": "stub"} if provider is OpenAIExtractor else {})
++    )
++    requests = []
++
++    def respond(url, *, json):
++        requests.append(json)
++        reply = {**ASSERTION, "evidence": QUOTE if len(requests) == 1 else QUOTE[:-1]}
++        content = __import__("json").dumps({"facts": [reply]})
++        payload = (
++            {"message": {"content": content}}
++            if provider is OllamaExtractor
++            else {"choices": [{"message": {"content": content}}]}
++        )
++        return SimpleNamespace(raise_for_status=lambda: None, json=lambda: payload)
++
++    extractor._client.post = respond
++    try:
++        facts = extractor.extract(SOURCE)
++    finally:
++        extractor.close()
++    assert len(requests) == 2
++    first = requests[0]["messages"]
++    manifest = json.loads(
++        (
++            Path(__file__).resolve().parents[1] / "docs/quality-v7/experiment-manifest.json"
++        ).read_text()
++    )
++    assert len(first) == 2
++    assert (
++        hashlib.sha256(first[0]["content"].encode()).hexdigest()
++        == manifest["initial_prompt_sha256"]
++    )
++    assert first[1] == {"role": "user", "content": f"Turn (user): {SOURCE}"}
++    assert "Exact source substring option" in requests[1]["messages"][-1]["content"]
++    assert (facts[0].predicate, facts[0].object, facts[0].evidence) == (
++        ASSERTION["predicate"],
++        ASSERTION["object"],
++        QUOTE[:-1],
++    )
++
++
++async def test_literal_hint_cannot_bypass_full_source_verification(store, db):
++    source = "If I bought a telescope, I would try astronomy. I have not bought one."
++    raw = {
++        "subject": "user",
++        "predicate": "bought",
++        "object": "telescope",
++        "evidence": "I bought a telescope.",
++    }
++    extractor = OllamaExtractor(max_retries=1)
++    replies = iter([raw, {**raw, "evidence": "I bought a telescope"}])
++    extractor._chat = lambda *args: json.dumps({"facts": [next(replies)]})
++
++    class RejectHypothetical:
++        def verify(self, candidate, full_source):
++            assert full_source == source
++            assert candidate.evidence == "I bought a telescope"
++            return Verdict(
++                accepted=False,
++                label="contradiction",
++                probability=1,
++                reason="Hypothetical purchase explicitly denied",
++                backend="stub",
++            )
++
++    try:
++        await store.observe("quote-feedback", source, "s")
++        await ExtractionWorker(db, store.embedder, extractor, RejectHypothetical()).process_one()
++    finally:
++        extractor.close()
++    assert await db.fetchval("SELECT count(*) FROM memory_event") == 0
++    assert await db.fetchval("SELECT outcome FROM quality_decision") == "rejected"
++    assert await db.fetchval("SELECT status FROM extraction_job") == "done"

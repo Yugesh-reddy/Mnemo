@@ -1,0 +1,20 @@
+{
+  "verification": "passed",
+  "restored_tests": {
+    "passed": 231,
+    "deselected": 3,
+    "skipped": 0,
+    "elapsed_seconds": 15.73,
+    "log_sha256": "83d902599bbed938271619c29e2db205f89a8dd6ec1bfe2a1fff1a25c2174255"
+  },
+  "restored_lint": {
+    "ruff": "passed",
+    "black": "passed",
+    "log_sha256": "d6ae402dfd93bb961000948696959b136e7582fadb27e4e7bb86edb5e71e7227"
+  },
+  "production_and_prior_evidence_git_diff": "empty against 09b9fa6 for mnemo/scripts/tests/migrations/dependency files and quality-v2 through v6",
+  "frozen_artifact_hashes": "all match manifest",
+  "experimental_patch_applies_cleanly": true,
+  "unrelated_untracked_AGENTS_md_preserved": true,
+  "sealed_holdout_accessed": false
+}

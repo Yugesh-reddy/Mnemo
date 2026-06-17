@@ -3,11 +3,43 @@
 Updated September 18, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the correctness plan](docs/CORRECTNESS_PLAN.md) records the infrastructure backlog.
 The [quality reliability plan](docs/QUALITY_RELIABILITY_PLAN.md) and
-[current evidence](docs/quality-v6/README.md) cover the follow-up work.
+[current evidence](docs/quality-v7/README.md) cover the follow-up work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
 
-## Current milestone: complete baseline; span experiment rejected
+## Current milestone: bounded quote-feedback experiment rejected
+
+The single v7 experiment added exact source-substring suggestions to retry errors
+for invented terminal punctuation, while retaining strict validation and the
+initial prompt. It recovered no candidates. With the same 20 development sources,
+fixed queries and unchanged `equivalence-v2` scorer, complete retrieval fell from
+**16/23 to 15/23**. Source-local coverage remained **16/24**; distinct candidate and
+historical coverage remained **16/23**, while current/visible coverage fell to
+**15/23**. All 49 gated historical writes were reviewed: **46 supported, zero
+unsupported, three ambiguous**, versus 50/0/1 in the baseline. Frozen strict
+coverage remains **0/24**; both original ambiguous targets stay unresolved and
+in the denominator.
+
+The solo Data Mining project was lost after a later, less specific project
+assertion reused its subject/predicate identity. Four first-pass replies differed
+before retry feedback applied, so this run does not establish that the diagnostic
+caused the overwrite or ambiguity increase. No contract changes were made.
+The experiment failed the retrieval threshold, retention and ambiguity criteria.
+Production extraction is restored byte-for-byte to `09b9fa6`; the patch, tests,
+reviews, raw replies and decision are preserved in [quality-v7](docs/quality-v7/README.md).
+No second prompt iteration ran. The current production baseline remains 16/23.
+
+Experimental correctness checks passed 239 tests; the restored checkout passed
+231. Both deliberately deselected three live-model tests to preserve the run
+budget; Ruff/Black passed. The one probe plus replay used 26 extraction requests,
+59 verifier LLM requests and 175 embedding requests over **664.51 seconds** of
+measured model phases. Monetary cost is unknown. Source judgments are provisional;
+the independent code-review attempt failed at its usage limit before reviewing.
+Generalization, full conversations and later-session/TTL retention remain
+unmeasured. `b46e15ed` remains sealed. This completed failure authorizes no further
+tuning cycle.
+
+## Prior milestone: complete baseline; span experiment rejected
 
 All 60 saved candidates from the 20-source development probe now have a full gate,
 store and retrieval baseline. Two provisional agent reviews agree on **16/24

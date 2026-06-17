@@ -3,8 +3,9 @@
 Updated September 18, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
-Executed measurements and source-review qualifications live in
-[quality-v6/README.md](quality-v6/README.md); partial recovery is in
+The latest rejected experiment and source-review qualifications live in
+[quality-v7/README.md](quality-v7/README.md); the complete baseline and rejected span
+experiment are in [quality-v6/README.md](quality-v6/README.md); partial recovery is in
 [quality-v5/README.md](quality-v5/README.md); the preceding extraction cycle is in
 [quality-v4/README.md](quality-v4/README.md); prior cycles remain in
 [quality-v3/README.md](quality-v3/README.md) and
@@ -22,6 +23,21 @@ scorer credits reviewed downstream alternatives in both arms and keeps the
 baseline at 16/23. All 103 older verifier decisions are reproduced and eight
 targeted controls pass. Full conversations and later-session/TTL retention remain
 outside this subset result; the reserved holdout stays sealed.
+
+The single authorized v7 retry-feedback experiment is also complete and rejected.
+Exact source-prefix hints recovered no candidates. Complete source occurrences
+remained 16/24 and distinct candidate/history targets 16/23, but current, visible
+and retrieved targets fell to 15/23. All 49 gated historical writes were reviewed:
+46 supported, zero unsupported, three ambiguous. The solo Data Mining project was
+overwritten by a less specific assertion sharing its subject/predicate identity.
+Four first-pass outputs varied before feedback, so causation of that variance is
+unmeasured. The frozen >=17/23, no-loss and no-increased-ambiguity criteria failed.
+Production is restored byte-for-byte; the patch and evidence are preserved. Both
+ambiguous targets remain unresolved, strict coverage stays 0/24 and `b46e15ed`
+remains sealed. No second implementation or prompt iteration is authorized by this
+completed failure. Restored offline validation passes 231 tests with three
+live-model tests deliberately deselected, plus Ruff/Black. No infrastructure
+failure occurred; independent code review was unavailable due to its usage limit.
 
 The next bottlenecks are extraction binding/meaning and subject/predicate identity
 collisions. The [concrete identity proposal](quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md)
