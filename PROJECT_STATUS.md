@@ -1,13 +1,13 @@
 # Mnemo — implementation status
 
-Updated September 17, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+Updated September 18, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the correctness plan](docs/CORRECTNESS_PLAN.md) records the infrastructure backlog.
 The [quality reliability plan](docs/QUALITY_RELIABILITY_PLAN.md) and
 [current evidence](docs/quality-v6/README.md) cover the follow-up work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
 
-## Current milestone: reviewed development baseline
+## Current milestone: complete baseline; span experiment rejected
 
 All 60 saved candidates from the 20-source development probe now have a full gate,
 store and retrieval baseline. Two provisional agent reviews agree on **16/24
@@ -20,14 +20,44 @@ Strict matching remains zero; original labels and evidence are preserved.
 Evaluation normalization is frozen as `mnemo-strict-v1`, independently of storage
 aliases. Existing IDs and temporal/session fields now link decisions to writes,
 visibility and retrieval. Original must-keep queries remain present when later
-truth labels reuse their predicate. Validation: **228 passed, zero skipped**.
+truth labels reuse their predicate. The baseline milestone passed 228 tests with
+zero skips; subsequent integrity and alternative-lineage regressions are included
+in the final validation below.
 
 The remaining distinct misses are three extraction binding/meaning losses, two
 quote-validation losses and two annotation ambiguities. A bounded source-span
-selection experiment is next; the production extractor/verifier are unchanged at
-this baseline. The 140-turn conversation-wide check, human adjudication and
-later-session/TTL tests remain unmeasured. `b46e15ed` remains sealed.
+selection experiment was implemented and measured, then **excluded from the
+production default**: complete source-local coverage rose to **17/24**, but
+current/visible/retrieved coverage fell to **14/23**. Its 57 historical writes
+comprise **56 supported, zero unsupported and one ambiguous** assertion.
+
+The attempted repair recovered the plant-based goal and a repeated birthday-cake
+mention, weakened the baguette event, and exposed two subject/predicate overwrite
+losses. The full patch, raw replies, failed runs and independent review differences
+are preserved. `equivalence-v2` fixes downstream scoring of explicitly reviewed
+alternative assertions and later equivalent mentions; it does not inflate
+source-local extraction or alter the frozen labels. Baseline remains 16/23 under
+the same scorer. Thirteen scorer regressions and independent code review pass.
+
+The unchanged verifier reproduces all 103 established decisions (37 true accepts,
+63 true rejects, three false rejects, zero false accepts); eight targeted controls
+pass (four positive, four negative). Production extraction is restored exactly
+to `681a638`, and verifier policy is unchanged. No extraction/verifier repair
+passed this cycle's adoption checks.
+
+The [identity follow-up proposal](docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md)
+contains measured event links and a concrete SQL/API sketch. It is unapproved;
+independent identity labels, unresolved-reference design and a persistent-store
+collision audit remain prerequisites. No contract changes were applied.
+The 140-turn conversation-wide check, human adjudication and later-session/TTL
+tests remain unmeasured. `b46e15ed` remains sealed.
 [Baseline, reviews and attribution](docs/quality-v6/README.md).
+
+Final checkout validation: **234 tests passed, zero skipped**, with Postgres
+required. Ruff/Black and clean-wheel build/installation checks pass. Packaging
+checks verify held-out resource presence without opening held-out contents.
+`make eval` and the live extraction/rollback demo also pass using the installed
+model override. The synthetic smoke result does not establish real-data quality.
 
 ## Latest extraction milestone: partial batch recovery
 

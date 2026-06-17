@@ -8,6 +8,24 @@ import pytest
 from mnemo.eval_equivalence import complete_credit, coverage_counts
 
 
+def test_later_equivalent_can_restore_stage_credit_without_inflating_source_coverage():
+    from mnemo.eval_equivalence import stage_complete_credit
+
+    entry = {
+        "coverage": "complete",
+        "candidate_refs": ["original"],
+        "stage_equivalents": [{"coverage": "complete", "candidate_refs": ["later_a", "later_b"]}],
+    }
+    available = {"later_a", "later_b"}
+    support = dict.fromkeys(["original", *available], "supported")
+    assert not complete_credit(entry, available, support)
+    assert stage_complete_credit(entry, available, support)
+    assert not stage_complete_credit(entry, {"later_a"}, support)
+    assert not stage_complete_credit(entry, available, {**support, "later_b": "ambiguous"})
+    entry["stage_equivalents"][0]["coverage"] = "partial"
+    assert not stage_complete_credit(entry, available, support)
+
+
 def test_complete_credit_requires_supported_complete_bound_candidates():
     entry = {"coverage": "complete", "candidate_refs": ["a", "b"]}
     support = {"a": "supported", "b": "supported"}
@@ -32,6 +50,38 @@ def test_unique_coverage_never_multiplies_repeated_mentions():
         "complete_unique_targets": 1,
         "unique_targets": 2,
     }
+
+
+@pytest.mark.parametrize("mutation", ["different_case", "changed_snapshot"])
+def test_stage_equivalent_requires_same_case_and_exact_reviewed_snapshot(tmp_path, mutation):
+    from mnemo.eval_equivalence import score
+
+    root = Path(__file__).resolve().parents[1]
+    probe, review, support, replay = [
+        root / name
+        for name in (
+            "docs/quality-v5/extraction-partial-dev.json",
+            "docs/quality-v6/mustkeep-review.json",
+            "docs/quality-v6/independent-review.json",
+            "docs/quality-v6/baseline-complete.json",
+        )
+    ]
+    data = json.loads(review.read_text())
+    origin = data["entries"][0]
+    alternative = data["entries"][5] if mutation == "different_case" else origin
+    group = {
+        "candidate_refs": alternative["candidate_refs"],
+        "candidates": json.loads(json.dumps(alternative["candidates"])),
+        "coverage": "complete",
+        "reason": "Purposely invalid provenance to test scorer integrity.",
+    }
+    if mutation == "changed_snapshot":
+        group["candidates"][0]["object"] = "invented replacement"
+    origin["stage_equivalents"] = [group]
+    changed = tmp_path / "review.json"
+    changed.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="stage equivalent"):
+        score(probe, changed, support, replay)
 
 
 def test_complete_saved_baseline_scores_all_targets_and_all_historical_writes(tmp_path):
@@ -68,6 +118,35 @@ def test_complete_saved_baseline_scores_all_targets_and_all_historical_writes(tm
     changed.write_text(json.dumps(replay))
     with pytest.raises(ValueError, match="missing reviewed candidate decisions"):
         score(*paths[:-1], changed)
+
+
+def test_reviewed_alternatives_restore_only_measured_downstream_coverage(tmp_path):
+    from mnemo.eval_equivalence import score
+
+    root = Path(__file__).resolve().parents[1] / "docs/quality-v6"
+    probe = root / "extraction-span-dev.json"
+    review = root / "span-review-validated.json"
+    support = root / "span-source-review.json"
+    replay = root / "span-replay-complete.json"
+    result = score(probe, review, support, replay)
+    assert result["candidate_coverage"]["complete_occurrences"] == 17
+    assert result["unique_complete_by_stage"] == {
+        "candidate": 16,
+        "historical": 16,
+        "current": 14,
+        "visible": 14,
+        "retrieved": 14,
+    }
+    assert result["historical_write_review"]["unsupported"] == 0
+    assert result["historical_write_review"]["ambiguous"] == 1
+    data = json.loads(review.read_text())
+    for entry in data["entries"]:
+        entry.pop("stage_equivalents", None)
+    changed = tmp_path / "without-alternatives.json"
+    changed.write_text(json.dumps(data))
+    incomplete = score(probe, changed, support, replay)
+    assert incomplete["candidate_coverage"] == result["candidate_coverage"]
+    assert incomplete["unique_complete_by_stage"]["retrieved"] == 12
 
 
 @pytest.mark.parametrize("mutation", ["raw_rejections", "historical_write"])

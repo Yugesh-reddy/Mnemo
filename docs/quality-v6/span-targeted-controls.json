@@ -1,0 +1,110 @@
+{
+  "split": "dev",
+  "scope": "Four constructed positive/negative pairs through evidence_id parsing and unchanged real verifier; no extraction generation, no holdouts, no prior model verdicts.",
+  "cases": [
+    {
+      "case": "actor",
+      "source": "Priya led the research team; I prepared the slides.",
+      "expected_accepted": true,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "Priya",
+        "predicate": "led",
+        "object": "research team",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "actor",
+      "source": "Priya led the research team; I prepared the slides.",
+      "expected_accepted": false,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "led",
+        "object": "research team",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "ownership",
+      "source": "Mina lent me a camera on Monday, and I returned it. I may buy one later.",
+      "expected_accepted": true,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "borrowed",
+        "object": "camera from Mina on Monday, subsequently returned",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "ownership",
+      "source": "Mina lent me a camera on Monday, and I returned it. I may buy one later.",
+      "expected_accepted": false,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "owns",
+        "object": "camera",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "activity_negation",
+      "source": "On Tuesday, I used convection to bake bread. I have never roasted squash with convection.",
+      "expected_accepted": true,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "used_convection",
+        "object": "to bake bread on Tuesday",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "activity_negation",
+      "source": "On Tuesday, I used convection to bake bread. I have never roasted squash with convection.",
+      "expected_accepted": false,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "used_convection",
+        "object": "to roast squash",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "modality",
+      "source": "I'm considering joining pottery class next month. I haven't enrolled.",
+      "expected_accepted": true,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "considered_joining",
+        "object": "pottery class next month",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    },
+    {
+      "case": "modality",
+      "source": "I'm considering joining pottery class next month. I haven't enrolled.",
+      "expected_accepted": false,
+      "candidate": {
+        "evidence_id": 0,
+        "subject": "user",
+        "predicate": "enrolled_in",
+        "object": "pottery class",
+        "confidence": 0.95,
+        "importance": 7
+      }
+    }
+  ]
+}

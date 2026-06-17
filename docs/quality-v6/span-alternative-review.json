@@ -1,0 +1,204 @@
+{
+  "input_path": "docs/quality-v6/extraction-span-dev.json",
+  "input_sha256": "1657034fc2e3fe2ac5c5e662b4978e0f55e7fdfa6ddf0dec2d8c6d7f2c652c5b",
+  "reviewer": "provisional independent agent review, not human gold",
+  "status": "provisional independent agent review, not human gold",
+  "reviewer_id": "span_review independent subagent",
+  "review_type": "bounded source-only alternative-target entailment review",
+  "holdout_accessed": false,
+  "gate_outputs_accessed": false,
+  "retrieval_outputs_accessed": false,
+  "parent_review_files_accessed": false,
+  "model_calls": 0,
+  "database_calls": 0,
+  "context_disclosure": "The follow-up request supplied primary/adjudication coverage totals and nominated these two links. These judgments are therefore a source-only follow-up to the independent review, not a blinded initial review. No gate/retrieval outputs or parent review files were read. Only the authorized extraction-span-dev.json source/label/after-candidate snapshots were displayed; the original independent review was read as bytes solely to verify its hash.",
+  "original_review": {
+    "path": "docs/quality-v6/span-source-review.json",
+    "sha256": "f57c922ab388f760e5f71c9cf53e0dcb47232438980f9dfabf8cf4be145d865a",
+    "modified": false
+  },
+  "rubric": {
+    "meaning": "Complete means that a single source-supported candidate assertion entails the exact frozen target proposition, preserving actor, relation, value, modality, and all material target dates/events. The full assertions need not be interchangeable to entail the same narrower target.",
+    "evidence": "Judge assertions using their bound own-source snapshots. A longer source quotation cannot add components missing from an assertion.",
+    "alternative_groups": "Each group below is a separate sufficient singleton option. The alternatives are OR groups, not components that must be composed together.",
+    "scope": "Alternative groups are approved only for the historical, current, visible, and retrieved stages requested by the parent. They do not amend the original source-local extraction review, its 20 source turns, its 66 candidates, or its 24 must_keep target-occurrence denominator.",
+    "identity": "Cross-turn coverage below is a target-proposition judgment within one case/user context, not a claim that the two mentions identify one unique real-world class event.",
+    "limits": "No empirical persistence, retrieval success, gate accuracy, or human-gold status is inferred."
+  },
+  "links": [
+    {
+      "link_id": "row3_research_topic_singleton_alternatives",
+      "target": {
+        "row_index": 3,
+        "case_id": "6d550036",
+        "turn_id": "answer_ec904b3c_3:0",
+        "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+        "source_sha256": "991456b39d3eee115f3a5344a77c8816c2e4edb90a2afc08cef698e492320889",
+        "label_index": 0,
+        "original_label": {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      },
+      "question": "Do row3 candidates1 and2 each independently completely cover research_topic?",
+      "decision": "both independently complete",
+      "eligible_stages": [
+        "historical",
+        "current",
+        "visible",
+        "retrieved"
+      ],
+      "alternative_groups": [
+        {
+          "candidate_refs": [
+            {
+              "row_index": 3,
+              "candidate_index": 1
+            }
+          ],
+          "coverage": "complete",
+          "source_support": "supported",
+          "composition": "single candidate; no composition",
+          "snapshots": [
+            {
+              "row_index": 3,
+              "case_id": "6d550036",
+              "turn_id": "answer_ec904b3c_3:0",
+              "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+              "source_sha256": "991456b39d3eee115f3a5344a77c8816c2e4edb90a2afc08cef698e492320889",
+              "candidate_index": 1,
+              "assertion": {
+                "subject": "user",
+                "predicate": "presented_poster",
+                "object": "effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology"
+              }
+            }
+          ],
+          "reason": "The assertion records the user presenting an academic-conference poster whose topic is explicitly the effects of social media influencers on consumer purchasing decisions. This binds the user research-presentation activity to the exact target topic. For the frozen research_topic target, the assertion is sufficient on its own; the label does not require an authorship, ownership, or completed-study claim. No missing topic words are supplied only by the evidence quotation."
+        },
+        {
+          "candidate_refs": [
+            {
+              "row_index": 3,
+              "candidate_index": 2
+            }
+          ],
+          "coverage": "complete",
+          "source_support": "supported",
+          "composition": "single candidate; no composition",
+          "snapshots": [
+            {
+              "row_index": 3,
+              "case_id": "6d550036",
+              "turn_id": "answer_ec904b3c_3:0",
+              "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+              "source_sha256": "991456b39d3eee115f3a5344a77c8816c2e4edb90a2afc08cef698e492320889",
+              "candidate_index": 2,
+              "assertion": {
+                "subject": "user",
+                "predicate": "intends_to_expand_research",
+                "object": "research on the effects of social media influencers on consumer purchasing decisions"
+              }
+            }
+          ],
+          "reason": "The assertion explicitly identifies the research the user intends to expand as research on the effects of social media influencers on consumer purchasing decisions. Expanding research presupposes an existing research activity with that topic; this does not assert that the planned expansion has already occurred. It independently preserves the complete frozen topic."
+        }
+      ],
+      "reason": "Both assertions independently entail the narrower frozen research-topic proposition. They carry different additional information, presentation versus an expansion intention, and are not equivalent full memory assertions. Either singleton may cover this target in the approved downstream stages."
+    },
+    {
+      "link_id": "row15_vegan_class_row17_attendance_alternative",
+      "target": {
+        "row_index": 15,
+        "case_id": "d23cf73b",
+        "turn_id": "answer_5a0d28f8_1:0",
+        "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+        "source_sha256": "738365c5ed41e50ef7ccd55f7bd20cb3b5fcb5c2e7bbd6d6abec0df637228506",
+        "label_index": 1,
+        "original_label": {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      },
+      "question": "Can row17 candidate1 independently cover row15 attended_vegan_class in downstream memory stages?",
+      "decision": "complete alternative approved",
+      "eligible_stages": [
+        "historical",
+        "current",
+        "visible",
+        "retrieved"
+      ],
+      "alternative_groups": [
+        {
+          "candidate_refs": [
+            {
+              "row_index": 15,
+              "candidate_index": 2
+            }
+          ],
+          "coverage": "complete",
+          "source_support": "supported",
+          "composition": "single candidate; no composition",
+          "snapshots": [
+            {
+              "row_index": 15,
+              "case_id": "d23cf73b",
+              "turn_id": "answer_5a0d28f8_1:0",
+              "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+              "source_sha256": "738365c5ed41e50ef7ccd55f7bd20cb3b5fcb5c2e7bbd6d6abec0df637228506",
+              "candidate_index": 2,
+              "assertion": {
+                "subject": "user",
+                "predicate": "attended_class",
+                "object": "vegan cuisine class recently"
+              }
+            }
+          ],
+          "reason": "The original local assertion explicitly records the user attending a vegan cuisine class recently. This includes every component of the frozen attendance target."
+        },
+        {
+          "candidate_refs": [
+            {
+              "row_index": 17,
+              "candidate_index": 1
+            }
+          ],
+          "coverage": "complete",
+          "source_support": "supported",
+          "composition": "single candidate; no composition",
+          "snapshots": [
+            {
+              "row_index": 17,
+              "case_id": "d23cf73b",
+              "turn_id": "answer_5a0d28f8_1:8",
+              "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+              "source_sha256": "d37e27f34a0974df86cadfae10a9a5126606ee8d8fbb5fa35651f290c4da722e",
+              "candidate_index": 1,
+              "assertion": {
+                "subject": "user",
+                "predicate": "attended_class",
+                "object": "vegan cuisine class"
+              }
+            }
+          ],
+          "reason": "The later assertion independently records the same case user attending a vegan cuisine class, and its own source explicitly supports attendance. The frozen row15 label specifies neither a date nor a distinct class-event identifier, so the later assertion preserves every component of the target proposition. Its omission of recently does not omit a qualifier present in that frozen label."
+        }
+      ],
+      "reason": "Approved as complete proposition coverage within case d23cf73b. No claim is made that the two source mentions prove the same uniquely identified class event; such event identity is unnecessary for this undated frozen label. This later assertion cannot retroactively count as row15 source-local extraction, and this review does not create a new must_keep label occurrence at row17."
+    }
+  ],
+  "summary": {
+    "questions_reviewed": 2,
+    "approved_links": 2,
+    "reviewed_candidate_alternatives": 4,
+    "new_alternatives_beyond_original_review": 2,
+    "original_source_local_target_occurrences": 24,
+    "original_source_local_denominator_changed": false
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-18",
+  "starting_commit": "681a63811d83f1bc0dad22c823cbe91208bb8546",
+  "code_sha256": {
+    "mnemo/eval_equivalence.py": "c78df13298be8df31bf3524315cb571a103d9cfd5c416c41ad58f001b514a0cb",
+    "mnemo/eval_normalization.py": "3f7d2db5dc6ff2d73e974eb17e93fb4f9b23f958dbe87a796ba17fdfacb20691",
+    "mnemo/eval.py": "d77a989d46d4a9d0cfcf6a80de3dffc9a933a8f2bfa842ce15adaa697c3e0b83",
+    "scripts/replay_extraction_probe.py": "4fc1e242b685a182d65dd34c3fceb4509730929a4b8fe91016ccf53603bc69e9",
+    "scripts/check-wheel.sh": "e025a3d0cf67129155299726fbef09e7d169bec156d9af11648c4b1ce3b7a911",
+    "tests/test_eval_equivalence.py": "154b0c9d9db32deb3d23db14ff9f87c9f1af44b5680603d5d73ca7485389b8ee",
+    "mnemo/extraction.py": "e1716af5093c59dbf5bb5adc101ab2f4120da707e9fac094fe0b2573d734fc3e",
+    "mnemo/quality.py": "5a6195d88d5d650930e3493290c55a56947c10cc70d37582516736e83e17f97b"
+  },
+  "checks": {
+    "pytest": "234 passed, zero skipped; MNEMO_REQUIRE_DB=1; installed local extractor override",
+    "lint": "ruff+black pass",
+    "wheel": "built, installed into fresh environment, runtime/CLI/migrations/resources verified; no holdout content opened",
+    "eval": "synthetic smoke: gated mustkeep1.0, false current/history0/0",
+    "demo": "live extraction and rollback pass with qwen3.5:4b-mlx"
+  },
+  "evidence_sha256": {
+    "final-tests-db-ready.log": "99613163d8ca9207113af863cfba7386f77572b50ecb4c4f00a54dab321f79f7",
+    "final-lint.log": "63d387c7a5c2c42f3aeb521a2fa04eedeb5dfc76d5aea9d6cf1762e5fc4dbc22",
+    "final-build.log": "2e9cc7e3d17b645c0337f9d045c92cf14d7ee2aba3e517d3b88cdb239dd60d5b",
+    "final-wheel-check.log": "2d5af91c0db766f792d1b967bf1af12988d9363fad80d979d333f98c396c8db9",
+    "final-eval.log": "fdc4fc64b52a23f0c8f958556d2cdb69dbc0f6fd1eb30319cb112de7e289498b",
+    "final-demo.log": "81a2fdb6ac875e4f61b50b2e395d4c22d9757a84050d1156e420093c4d6ef2f6"
+  },
+  "frozen_evidence": "git diff from bca6566 confirms no changes to v2-v5 or mnemo/data; no holdout content accessed for this cycle",
+  "production_policy": "extraction,quality,core,config,models byte-identical to681a638",
+  "experimental_patch_applies_cleanly": true,
+  "decision": "reject span-selection default; preserve baseline, validated scoring repairs and all experiment evidence",
+  "no_contract_approval_inferred": true
+}

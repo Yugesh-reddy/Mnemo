@@ -8,6 +8,7 @@ uv pip install --python "$mnemo_wheel_env/venv/bin/python" "$mnemo_checkout"/dis
 cd "$mnemo_wheel_env"
 "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 from importlib.resources import files
+import json
 import mnemo.eval
 import mnemo.eval_suite
 import mnemo.benchmark
@@ -19,16 +20,16 @@ assert len(list(MIGRATIONS_DIR.glob('*.sql'))) >= 7
 assert files('mnemo').joinpath('data/longmemeval-car.json').is_file()
 assert TEMPLATES.env.get_template('list.html')
 assert len(mnemo.eval.load_benchmark_dataset('all').turns) == 200
-manifest = files('mnemo').joinpath('data/quality-v2/manifest.json')
-assert len(mnemo.eval_suite.load_cases(manifest, 'dev')) == 3
-assert len(mnemo.eval_suite.load_cases(manifest, 'holdout')) == 1
-manifest_v3 = files('mnemo').joinpath('data/quality-v3/manifest.json')
-assert len(mnemo.eval_suite.load_cases(manifest_v3, 'dev')) == 3
-assert len(mnemo.eval_suite.load_cases(manifest_v3, 'holdout')[0][1].turns) == 46
 assert len(mnemo.eval.load_naturalistic_dataset().turns) == 200
-manifest_v4 = files('mnemo').joinpath('data/quality-v4/manifest.json')
-assert len(mnemo.eval_suite.load_cases(manifest_v4, 'dev')) == 3
-assert len(mnemo.eval_suite.load_cases(manifest_v4, 'holdout')[0][1].turns) == 48
+for version in ('v2', 'v3', 'v4'):
+    directory = files('mnemo').joinpath(f'data/quality-{version}')
+    manifest = directory.joinpath('manifest.json')
+    assert len(mnemo.eval_suite.load_cases(manifest, 'dev')) == 3
+    # Verify packaged resources without opening held-out source/label contents.
+    for record in json.loads(manifest.read_text())['records']:
+        assert directory.joinpath(record['path']).is_file()
+        if 'labels' in record:
+            assert directory.joinpath(record['labels']).is_file()
 print('Installed wheel: runtime imports, migrations, data and templates verified')
 PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval" --json > eval.json

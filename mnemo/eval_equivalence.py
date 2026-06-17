@@ -21,6 +21,18 @@ def complete_credit(entry: dict, available: set[str], support: dict[str, str]) -
     )
 
 
+def stage_complete_credit(entry: dict, available: set[str], support: dict[str, str]) -> bool:
+    """Later stages may use any explicitly reviewed equivalent assertion group.
+
+    Source-local extraction coverage still uses only the original occurrence.
+    Every member of a joint group must be present; separate groups are alternatives.
+    """
+    return any(
+        complete_credit(group, available, support)
+        for group in [entry, *entry.get("stage_equivalents", [])]
+    )
+
+
 def coverage_counts(entries: list[dict], available: set[str], support: dict[str, str]) -> dict:
     covered = [e for e in entries if complete_credit(e, available, support)]
     return {
@@ -176,6 +188,18 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
             raise ValueError("target review has an unbound candidate")
         if entry["candidates"] != [candidates[ref] for ref in refs]:
             raise ValueError("target review candidate snapshot differs")
+        for group in entry.get("stage_equivalents", []):
+            alternate_refs = group["candidate_refs"]
+            if (
+                not alternate_refs
+                or not group.get("reason")
+                or any(
+                    ref not in candidates or not ref.startswith(entry["case"] + "/")
+                    for ref in alternate_refs
+                )
+                or group["candidates"] != [candidates[ref] for ref in alternate_refs]
+            ):
+                raise ValueError("stage equivalent lacks a reviewed same-case candidate snapshot")
         case = replay["cases"][entry["case"]]
         current = {w["event_id"] for w in case["gated"]["current_assertions"]}
         final = latest[entry["logical_target_id"]]
@@ -195,9 +219,16 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
             "retrieved": {ref for ref, eid in event_by_ref.items() if eid in returned},
         }
         credit = {
-            stage: complete_credit(entry, values, support) for stage, values in available.items()
+            stage: (
+                complete_credit(entry, values, support)
+                if stage == "candidate"
+                else stage_complete_credit(entry, values, support)
+            )
+            for stage, values in available.items()
         }
-        if entry["coverage"] == "ambiguous":
+        if credit["retrieved"]:
+            loss = "complete_equivalent_retrieved"
+        elif entry["coverage"] == "ambiguous":
             loss = "annotation_or_assertion_ambiguity"
         elif not credit["candidate"]:
             loss = (
@@ -218,6 +249,10 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
                 **entry,
                 "stage_evidence": {
                     "decisions": [decisions.get(ref) for ref in refs],
+                    "equivalent_decisions": [
+                        [decisions.get(ref) for ref in group["candidate_refs"]]
+                        for group in entry.get("stage_equivalents", [])
+                    ],
                     "retrieval_probe": retrieval,
                     "complete_credit": credit,
                     "earliest_loss": loss,
@@ -238,7 +273,7 @@ def score(probe_path: Path, review_path: Path, support_path: Path, replay_path: 
     last_rows = {e["logical_target_id"]: e for e in stage_entries}
     counts = Counter(w["source_support"] for w in writes)
     return {
-        "review_scoring_version": "equivalence-v1",
+        "review_scoring_version": "equivalence-v2",
         "scorer_sha256": _sha(Path(__file__)),
         "scope": replay["scope"],
         "review_status": "provisional agent judgments; no human gold",

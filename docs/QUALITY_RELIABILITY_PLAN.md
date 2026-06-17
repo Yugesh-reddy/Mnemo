@@ -1,6 +1,6 @@
 # Memory quality reliability: implementation and acceptance plan
 
-Updated September 17, 2026. This follows the infrastructure milestone in
+Updated September 18, 2026. This follows the infrastructure milestone in
 [CORRECTNESS_PLAN.md](CORRECTNESS_PLAN.md). The goal remains reliable memory
 quality; passing infrastructure tests does not meet that acceptance target.
 Executed measurements and source-review qualifications live in
@@ -14,10 +14,19 @@ The current selected-development baseline covers all 60 saved candidates and 51
 historical writes. Reviewed complete coverage is 16/24 occurrences and 16/23
 distinct targets, with all 16 returned by fixed originating-session queries.
 Historical support is 50 supported, zero unsupported, one ambiguous; reviews are
-provisional. Frozen strict matching remains zero. Source-span selection is the
-next bounded experiment, targeting two quote-validation losses. Full conversations
-and later-session/TTL retention remain outside this subset result; the reserved
-holdout stays sealed.
+provisional. Frozen strict matching remains zero. The source-span experiment is
+complete and rejected: 17/24 complete source occurrences, but only 14/23 complete
+retrieved targets, with 56 supported, zero unsupported and one ambiguous write.
+Production extraction is restored; verifier policy never changed. The same v2
+scorer credits reviewed downstream alternatives in both arms and keeps the
+baseline at 16/23. All 103 older verifier decisions are reproduced and eight
+targeted controls pass. Full conversations and later-session/TTL retention remain
+outside this subset result; the reserved holdout stays sealed.
+
+The next bottlenecks are extraction binding/meaning and subject/predicate identity
+collisions. The [concrete identity proposal](quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md)
+is unapproved and includes remaining resolver, label-review and rollout work;
+no SQL migration or write/read contract change has been enabled.
 
 ## 1. Establish attributable labels before policy changes
 

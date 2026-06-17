@@ -1,0 +1,2583 @@
+{
+  "split": "dev",
+  "scope": "All 103 established development verifier controls, unchanged source/candidate/judgment; saved verdict is v3 final after, not its older baseline. Verifier policy remains unchanged in source-span extraction experiment.",
+  "source_path": "docs/quality-v3/verifier-final.json",
+  "source_sha256": "374b0624ad6c42f96a2aec14c1937717cf1ebac750c144dc3f1c544cce0c7ca0",
+  "cases": [
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-001a",
+      "source": "Call me Maya Chen in project notes.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Maya Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text expresses a request to be called 'Maya Chen' in project notes, which establishes a preference or setting for how the user is addressed in that context. It does not explicitly state as a completed fact that the user's name is Maya Chen, nor does it confirm that the request has been fulfilled. The assertion treats this as a definitive identity fact ('My name is Maya Chen'), which exceeds the scope of the source text's request.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Call me Maya Chen in project notes."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-001c",
+      "source": "I do not use Mina Chen; please don't infer that as my name.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Mina Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use 'Mina Chen' and requests no inference of it as their name, which directly contradicts the assertion that the user's name is Mina Chen.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Mina Chen; please don't infer that as my name."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-002a",
+      "source": "I work as a site reliability engineer.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "site reliability engineer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9961662292480469,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I work as a site reliability engineer."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-002c",
+      "source": "I do not use product designer; please don't infer that as my role.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "product designer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use 'product designer' and requests that this not be inferred as their role, directly contradicting the assertion that the user's role is product designer.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use product designer; please don't infer that as my role."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-002d",
+      "source": "What if someday I changed my role to product designer? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "product designer",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source text explicitly states the user's current role is hypothetical and not yet changed ('For now this is only hypothetical'), while the assertion claims the user's job role is product designer as a fact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-003a",
+      "source": "My home base is Portland.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Portland",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9925453066825867,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "My home base is Portland."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-003c",
+      "source": "I do not use Seattle; please don't infer that as my location.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Seattle",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9975517392158508,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Seattle; please don't infer that as my location."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-003d",
+      "source": "What if someday I changed my location to Seattle? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Seattle",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source text explicitly states the user's current location is hypothetical and not actual ('For now this is only hypothetical'), while the assertion claims the user currently lives in Seattle as a fact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-004a",
+      "source": "Please schedule me in Pacific Time.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Pacific Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text contains a request to schedule the user in Pacific Time, but it does not explicitly state that the user's current timezone is Pacific Time or confirm that the scheduling action has been completed. The assertion treats this as a fact about the user's timezone and implies completion, which exceeds what the source text definitively establishes.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Please schedule me in Pacific Time."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-004c",
+      "source": "I do not use Eastern Time; please don't infer that as my timezone.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Eastern Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Eastern Time and requests that it not be inferred as their timezone, which directly contradicts the assertion claiming the user's timezone is Eastern Time.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Eastern Time; please don't infer that as my timezone."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-004d",
+      "source": "What if someday I changed my timezone to Eastern Time? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "Eastern Time",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the user's current timezone is hypothetical and not yet changed; the assertion claims it is currently Eastern Time, which contradicts the 'for now' qualifier in the source.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-005a",
+      "source": "TypeScript is my preferred programming language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "TypeScript",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9983976483345032,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "TypeScript is my preferred programming language."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-005c",
+      "source": "I do not use Java; please don't infer that as my preferred language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "Java",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9949198365211487,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use Java; please don't infer that as my preferred language."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-005d",
+      "source": "What if someday I changed my preferred language to Java? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object": "Java",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the preference change is 'only hypothetical' and uses a conditional 'What if', which does not establish a completed fact or current state of preference.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-006a",
+      "source": "For durable services I prefer PostgreSQL.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "PostgreSQL",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.992779552936554,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "For durable services I prefer PostgreSQL."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-006c",
+      "source": "I do not use MongoDB; please don't infer that as my preferred database.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "NLI did not establish entailment",
+        "probability": 0.9954944849014282,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "I do not use MongoDB; please don't infer that as my preferred database."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-006d",
+      "source": "Correction to what I said earlier: my preferred database is MongoDB.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "MongoDB",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "NLI entailment passed threshold",
+        "probability": 0.9970295429229736,
+        "backend": "cross_encoder",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "evidence": "Correction to what I said earlier: my preferred database is MongoDB."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-007a",
+      "source": "I use Neovim as my everyday editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Neovim",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states 'I use Neovim as my everyday editor', which directly entails that the user's role/function is 'editor' with the object 'Neovim'. The phrase 'everyday editor' confirms the predicate 'editor' applies to the subject 'user' regarding the object 'Neovim'.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I use Neovim as my everyday editor."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-007c",
+      "source": "I do not use Emacs; please don't infer that as my editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Emacs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Emacs and requests the inference that this is their editor be avoided, directly contradicting the assertion that Emacs is their editor.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Emacs; please don't infer that as my editor."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-007d",
+      "source": "What if someday I changed my editor to Emacs? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "editor",
+        "object": "Emacs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to Emacs is 'only hypothetical' and does not confirm it has occurred or been decided as a fact.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-008a",
+      "source": "My interactive shell is fish.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "fish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's interactive shell is fish, which directly entails the assertion that the user's shell is fish.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My interactive shell is fish."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-008c",
+      "source": "I do not use PowerShell; please don't infer that as my shell.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "PowerShell",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use PowerShell and requests the speaker not to infer it as their shell, directly contradicting the assertion that the user's shell is PowerShell.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use PowerShell; please don't infer that as my shell."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-008d",
+      "source": "What if someday I changed my shell to PowerShell? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "shell",
+        "object": "PowerShell",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The user explicitly states the change is 'only hypothetical' and does not claim it has occurred or is scheduled; therefore, the assertion of a current shell state cannot be entailed.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-009a",
+      "source": "I belong to the Reliability Platform team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Reliability Platform",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states membership in the 'Reliability Platform team', which directly affirms the subject-user's relationship with the object-Reliability Platform via the predicate-team.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I belong to the Reliability Platform team."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-009c",
+      "source": "I do not use Payments; please don't infer that as my team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Payments",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The user explicitly states they do not use Payments and requests the assistant not to infer a team relationship from this fact. The assertion claims a relationship between the user and Payments as a team member, which directly contradicts the user's explicit instruction against inferring such a connection.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Payments; please don't infer that as my team."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-009d",
+      "source": "What if someday I changed my team to Payments? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "team",
+        "object": "Payments",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of the team being Payments.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-010a",
+      "source": "My manager is Elena Ruiz.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Elena Ruiz",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states 'My manager is Elena Ruiz', which directly affirms the user's manager role as Elena Ruiz. The assertion correctly identifies the subject (user), predicate (manager), and object (Elena Ruiz) without adding unsupported exclusivity or temporal constraints.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My manager is Elena Ruiz."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-010c",
+      "source": "I do not use Jordan Lee; please don't infer that as my manager.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Jordan Lee",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Jordan Lee as their manager and requests that this inference not be made, directly contradicting the assertion that the user is the manager of Jordan Lee.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Jordan Lee; please don't infer that as my manager."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-010d",
+      "source": "What if someday I changed my manager to Jordan Lee? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Jordan Lee",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion that the user currently has Jordan Lee as a manager.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical"
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-011a",
+      "source": "My regular on-call handoff is Tuesday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Tuesday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's regular on-call handoff day is Tuesday, which directly entails the assertion that the user's on_call_day is Tuesday.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"My regular on-call handoff is Tuesday.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-011c",
+      "source": "I do not use Saturday; please don't infer that as my on call day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Saturday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Saturday and requests that it not be inferred as their on-call day, which directly contradicts the assertion that Saturday is their on_call_day.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Saturday; please don't infer that as my on call day."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-011d",
+      "source": "Correction to what I said earlier: my on call day is Saturday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object": "Saturday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's on call day is Saturday, which directly matches the assertion's subject (user), predicate (on_call_day), and object (Saturday). The correction context confirms this as a factual update to previous information.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"my on call day is Saturday\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-012a",
+      "source": "We deploy the API on Kubernetes.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "Kubernetes",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's deployment method is Kubernetes, which directly matches the assertion's subject (user), predicate (deploy_method), and object (Kubernetes). The tense 'deploy' indicates a completed action or established fact about the speaker's practice.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We deploy the API on Kubernetes."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-012c",
+      "source": "I do not use bare metal; please don't infer that as my deploy method.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "bare metal",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use bare metal and requests the inference of their deploy method be avoided, which directly contradicts the assertion that 'bare metal' is their deploy method.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use bare metal"
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-012d",
+      "source": "What if someday I changed my deploy method to bare metal? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "bare metal",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no actual deployment method change has occurred.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-013a",
+      "source": "Our production account is on Google Cloud.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Google Cloud",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's production account is on Google Cloud, which directly entails that the user's cloud provider is Google Cloud.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our production account is on Google Cloud."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-013c",
+      "source": "I do not use Azure; please don't infer that as my cloud provider.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Azure",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use Azure and requests that this be treated as a non-inference for their cloud provider, directly contradicting the assertion that Azure is their cloud provider.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Azure; please don't infer that as my cloud provider."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-013d",
+      "source": "What if someday I changed my cloud provider to Azure? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "cloud_provider",
+        "object": "Azure",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source text explicitly states the change is 'only hypothetical' and does not assert that the user has actually changed their cloud provider to Azure.",
+        "probability": 0.9,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-014a",
+      "source": "Our team tracks issues in Linear.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Linear",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text 'Our team tracks issues in Linear' explicitly states the subject (the speaker/user) performs the action of tracking issues within the tool Linear, which directly entails the predicate 'issue_tracker' with object 'Linear'. The phrase 'tracks issues' is semantically equivalent to the role/function 'issue_tracker'.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Our team tracks issues in Linear."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-014c",
+      "source": "I do not use Jira; please don't infer that as my issue tracker.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Jira",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Jira and requests that others not infer it as their issue tracker, which directly contradicts the assertion claiming the user uses Jira as an issue tracker.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"I do not use Jira; please don't infer that as my issue tracker.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-014d",
+      "source": "What if someday I changed my issue tracker to Jira? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "issue_tracker",
+        "object": "Jira",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The speaker explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed action or current state.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-015a",
+      "source": "We write design proposals in Google Docs.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Google Docs",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user writes design proposals in Google Docs, which establishes Google Docs as a documentation tool used by the user.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "We write design proposals in Google Docs."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-015c",
+      "source": "I do not use Notion; please don't infer that as my documentation tool.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Notion",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Notion and requests that the assistant not infer it as their documentation tool, which directly contradicts the assertion claiming the user uses Notion for documentation.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Notion; please don't infer that as my documentation tool."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-015d",
+      "source": "What if someday I changed my documentation tool to Notion? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "documentation_tool",
+        "object": "Notion",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of using Notion as the documentation tool.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-016a",
+      "source": "Wednesday is my meeting-free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Wednesday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states 'Wednesday is my meeting-free day', which directly affirms the user's Wednesday as a day without meetings, matching the assertion's subject (user), predicate (meeting_free_day), and object (Wednesday). The tense and modality align perfectly.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Wednesday is my meeting-free day."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-016c",
+      "source": "I do not use Monday; please don't infer that as my meeting free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Monday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Monday and warns against inferring it as their free day, directly contradicting the assertion that Monday is the meeting_free_day.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Monday; please don't infer that as my meeting free day."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-016d",
+      "source": "Correction to what I said earlier: my meeting free day is Monday.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object": "Monday",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's meeting-free day is Monday, which directly matches the assertion's subject (user), predicate (meeting_free_day), and object (Monday). The correction context confirms this as a factual statement about the speaker's schedule.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "my meeting free day is Monday"
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-017a",
+      "source": "I normally start work at 08:30.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "08:30",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's normal work start time as 08:30, which directly matches the assertion's subject (user), predicate (work_start), and object (08:30). The phrase 'normally' aligns with the instruction that attributes like habits do not require universal quantification.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I normally start work at 08:30."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-017c",
+      "source": "I do not use 06:00; please don't infer that as my work start.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "06:00",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use 06:00 as a work start time and requests against inferring it as such, which directly contradicts the assertion that the user's work_start is 06:00.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use 06:00; please don't infer that as my work start."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-017d",
+      "source": "What if someday I changed my work start to 06:00? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "work_start",
+        "object": "06:00",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state for the work start time.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-018a",
+      "source": "My pronouns are she/her.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "she/her",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's pronouns as 'she/her', which directly matches the assertion's subject (user), predicate (pronouns), and object (she/her). The statement is a declarative fact about the speaker's identity attributes.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My pronouns are she/her."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-018c",
+      "source": "I do not use they/them; please don't infer that as my pronouns.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "they/them",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use 'they/them' pronouns and requests that others not infer them as their pronouns, which directly contradicts the assertion claiming the user's pronouns are 'they/them'.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use they/them; please don't infer that as my pronouns."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-018d",
+      "source": "What if someday I changed my pronouns to they/them? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "they/them",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the pronoun change is 'only hypothetical' and does not confirm it as a completed fact or current state.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-019a",
+      "source": "I can speak Mandarin fluently.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "Mandarin",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text 'I can speak Mandarin fluently' explicitly confirms the user's ability to speak Mandarin, which directly entails the assertion that the user has spoken Mandarin as a language.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I can speak Mandarin fluently."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-019c",
+      "source": "I do not use German; please don't infer that as my spoken language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "German",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use German and requests that others not infer it as their spoken language, which directly contradicts the assertion claiming German is their spoken language.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use German; please don't infer that as my spoken language."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-019d",
+      "source": "What if someday I changed my spoken language to German? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "German",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the change to German is 'only hypothetical' and does not claim it has occurred or is currently happening. The assertion claims the user's spoken language is German as a fact, which contradicts the speaker's own description of the situation as hypothetical.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "captions",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states a need for captions in video calls, which directly corresponds to the accessibility_need predicate with object 'captions'. The context of 'video calls' aligns with the implied setting of ordinary conversational memory.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I need captions enabled for video calls."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-020c",
+      "source": "I do not use screen magnification; please don't infer that as my accessibility need.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "screen magnification",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly denies using screen magnification and instructs against inferring it as an accessibility need, which directly contradicts the assertion that the user has this need.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"I do not use screen magnification; please don't infer that as my accessibility need.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-020d",
+      "source": "What if someday I changed my accessibility need to screen magnification? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "screen magnification",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no current accessibility need exists for screen magnification; the assertion claims a present need which contradicts the text's denial of current status.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-021a",
+      "source": "I follow a vegetarian diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "vegetarian",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user follows a vegetarian diet, which directly entails the assertion that the user's diet is vegetarian.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I follow a vegetarian diet."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-021c",
+      "source": "I do not use keto; please don't infer that as my diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "keto",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source explicitly states the user does not use keto and requests that others not infer it as their diet, which directly contradicts the assertion claiming the user's diet is keto.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use keto"
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-021d",
+      "source": "Correction to what I said earlier: my diet is keto.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "keto",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states 'my diet is keto', which directly affirms the user's diet is keto.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "my diet is keto"
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanuts",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user has a peanut allergy, which directly matches the subject (user), predicate (allergy), and object (peanuts) in the assertion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I have a peanut allergy."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-022c",
+      "source": "I do not use shellfish; please don't infer that as my allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "shellfish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use shellfish and warns against inferring an allergy from this fact, indicating the lack of usage is a preference or habit rather than a confirmed medical condition.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use shellfish; please don't infer that as my allergy."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-022d",
+      "source": "What if someday I changed my allergy to shellfish? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "shellfish",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The speaker explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of having an allergy.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-023a",
+      "source": "My emergency contact is Noah Chen.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Noah Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 9,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user's emergency contact is Noah Chen, which directly matches the assertion's subject (user), predicate (emergency_contact), and object (Noah Chen). The statement is a declarative fact about the speaker's setting.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My emergency contact is Noah Chen."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-023c",
+      "source": "I do not use Alex Chen; please don't infer that as my emergency contact.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Alex Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use Alex Chen as an emergency contact and requests that others not infer this role, which directly contradicts the assertion that the user holds Alex Chen as their emergency contact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use Alex Chen; please don't infer that as my emergency contact."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-023d",
+      "source": "What if someday I changed my emergency contact to Alex Chen? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Alex Chen",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion that the user currently has Alex Chen as their emergency contact.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-024a",
+      "source": "I have a cat named Pixel.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "cat named Pixel",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states possession of a cat named Pixel, which directly entails the fact that the user has a pet (a cat named Pixel). The subject, relation, and object align perfectly with the source text.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I have a cat named Pixel."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-024c",
+      "source": "I do not use dog named Luna; please don't infer that as my pet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "dog named Luna",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use the dog named Luna and requests that it not be inferred as their pet, which directly contradicts the assertion claiming the user has a pet dog named Luna.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use dog named Luna; please don't infer that as my pet."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-024d",
+      "source": "What if someday I changed my pet to dog named Luna? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pet",
+        "object": "dog named Luna",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of ownership.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "For now this is only hypothetical."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-025a",
+      "source": "Jazz is the music I listen to most.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "jazz",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text 'Jazz is the music I listen to most' semantically equates to the assertion that Jazz is the user's favorite music, as listening most frequently implies it is the favorite.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Jazz is the music I listen to most."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-025c",
+      "source": "I do not use country; please don't infer that as my favorite music.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "country",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states they do not use 'country' and requests that it not be inferred as their favorite music, which directly contradicts the assertion that country is their favorite music.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I do not use country; please don't infer that as my favorite music."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-025d",
+      "source": "What if someday I changed my favorite music to country? For now this is only hypothetical.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "favorite_music",
+        "object": "country",
+        "kind": "triple",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "source_label",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "contradiction",
+        "reason": "The user explicitly states the change to country music is 'only hypothetical' and not current ('For now'), directly contradicting the assertion that country is their favorite music.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"For now this is only hypothetical.\""
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-001c",
+      "source": "I do not use Mina Chen; please don't infer that as my name.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "not Mina Chen",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use Mina Chen; please don't infer that as my name."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-004c",
+      "source": "I do not use Eastern Time; please don't infer that as my timezone.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "not Eastern Time",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use Eastern Time; please don't infer that as my timezone."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-007a",
+      "source": "I use Neovim as my everyday editor.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "Neovim",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_relation",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "database type is not established by the source or a known database name",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I use Neovim as my everyday editor."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-009a",
+      "source": "I belong to the Reliability Platform team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "Reliability Platform team",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_relation",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "team membership does not establish a job role",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I belong to the Reliability Platform team."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-009c",
+      "source": "I do not use Payments; please don't infer that as my team.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": null,
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "empty extracted value cannot establish an assertion",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use Payments; please don't infer that as my team."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-010a",
+      "source": "My manager is Elena Ruiz.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "manager of Elena Ruiz",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_relation",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text states the user's manager is Elena Ruiz, which implies a reporting relationship (user reports to manager). The assertion claims the user's role is 'manager of Elena Ruiz', implying the user manages Elena Ruiz. These are inverse relationships; one cannot be both the subordinate and the superior of the same person simultaneously in this context.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "My manager is Elena Ruiz."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-012c",
+      "source": "I do not use bare metal; please don't infer that as my deploy method.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "deploy_method",
+        "object": "not_bare_metal",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use bare metal; please don't infer that as my deploy method."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-016c",
+      "source": "I do not use Monday; please don't infer that as my meeting free day.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object": "not Monday",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_relation",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use Monday; please don't infer that as my meeting free day."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-017c",
+      "source": "I do not use 06:00; please don't infer that as my work start.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "not 06:00",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_relation",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use 06:00; please don't infer that as my work start."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-018c",
+      "source": "I do not use they/them; please don't infer that as my pronouns.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object": "not they/them",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use they/them; please don't infer that as my pronouns."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-019a",
+      "source": "I can speak Mandarin fluently.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "language_proficiency",
+        "object": "Mandarin",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "review_reason": "supported_equivalent",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source explicitly states the user can speak Mandarin fluently, which directly entails the fact that the user has high language proficiency in Mandarin.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I can speak Mandarin fluently."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-019c",
+      "source": "I do not use German; please don't infer that as my spoken language.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "spoken_language",
+        "object": "not German",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use German; please don't infer that as my spoken language."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "goal",
+        "object": "enable captions for video calls",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "review_reason": "supported_lossy",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states a need ('I need') to enable captions for video calls, which directly corresponds to the stated goal of enabling captions for video calls.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I need captions enabled for video calls."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-021c",
+      "source": "I do not use keto; please don't infer that as my diet.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "diet",
+        "object": "not_keto",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": false,
+      "review_reason": "unsupported_encoding",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "negative value cannot overwrite an affirmative fact identity",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I do not use keto; please don't infer that as my diet."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanut",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "review_reason": "supported_equivalent",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user has a peanut allergy, which directly matches the subject (user), predicate (allergy), and object (peanut) in the assertion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I have a peanut allergy."
+      }
+    },
+    {
+      "case": "synthetic-dev",
+      "turn_id": "dev-025a",
+      "source": "Jazz is the music I listen to most.",
+      "candidate": {
+        "subject": "user",
+        "predicate": "preferred_music_genre",
+        "object": "Jazz",
+        "kind": "triple",
+        "confidence": 1.0,
+        "importance": 5,
+        "assertion_type": "agent_inference"
+      },
+      "expected_accepted": true,
+      "review_reason": "supported_equivalent",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states 'Jazz is the music I listen to most', which directly entails that Jazz is the user's preferred music genre.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "Jazz is the music I listen to most."
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "candidate": {
+        "kind": "triple",
+        "object": "Marketing_Research_class_project",
+        "subject": "user",
+        "predicate": "led_team_for_project",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The user explicitly led the data-analysis team for this class project.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The source text explicitly states the user 'led the data analysis team' for a project described as their 'Marketing Research class project', which directly supports the assertion that the user led the team for that specific project.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team"
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_1:8",
+      "source": "I think I'll start with some scatter plots and heatmaps to visualize the relationships between my customer features. I also want to try out dimensionality reduction techniques like PCA or t-SNE to see if I can identify any clusters or patterns in my high-dimensional data. By the way, I've had some experience with data visualization from my Marketing Research class project, where we had to create reports and presentations to communicate our findings to stakeholders. Do you think I should use any specific color schemes or visual encoding techniques to make my visualizations more effective?",
+      "candidate": {
+        "kind": "triple",
+        "object": "Marketing Research class project",
+        "subject": "user",
+        "predicate": "participated_in_project",
+        "confidence": 0.95,
+        "importance": 5,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The user reports experience producing reports and presentations in this project.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The speaker explicitly states they 'had some experience' from a 'Marketing Research class project', which confirms participation in that project.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I've had some experience with data visualization from my Marketing Research class project"
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "candidate": {
+        "kind": "triple",
+        "object": "effects of social media influencers on consumer purchasing decisions",
+        "subject": "user",
+        "predicate": "presented_poster",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The user explicitly presented a poster on this research topic.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states they 'recently presented a poster' with the specific title 'on my research on the effects of social media influencers on consumer purchasing decisions', which fully matches the subject, predicate, and object in the assertion.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions"
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "candidate": {
+        "kind": "triple",
+        "object": "sourdough starter",
+        "subject": "user",
+        "predicate": "created_sourdough_starter",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The user explicitly created a sourdough starter.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The speaker explicitly states they created the sourdough starter about a month ago, which directly supports the assertion that the user created a sourdough starter.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I actually created my sourdough starter about a month ago"
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "candidate": {
+        "kind": "triple",
+        "object": "1:1:1 (flour:water:starter)",
+        "subject": "sourdough starter",
+        "predicate": "ratio",
+        "confidence": 0.95,
+        "importance": 8,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The explicit starter feeding ratio is 1:1:1 flour:water:starter.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The source text states the ratio is 'usually' 1:1:1, indicating a recurring pattern rather than an absolute fact for every instance. The assertion presents this as a definitive property without the qualifier 'usually', which creates a slight modality mismatch, though the core information aligns.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"The ratio is usually 1:1:1 (flour:water:starter).\""
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:6",
+      "source": "I think I'll try blending whole wheat flour with all-purpose flour first and see how it goes. I'll start with a 25% whole wheat, 75% all-purpose ratio and adjust from there. Thanks for the tips! By the way, I've been experimenting with different baking recipes lately, and I recently tried out a new bread recipe using sourdough starter on Tuesday.",
+      "candidate": {
+        "kind": "triple",
+        "object": "sourdough starter bread recipe",
+        "subject": "user",
+        "predicate": "experimented_with",
+        "confidence": 0.85,
+        "importance": 4,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "The user reports baking experiments and recently trying this recipe.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The speaker explicitly states they 'recently tried out a new bread recipe using sourdough starter on Tuesday', which confirms the completed action of experimenting with the sourdough starter bread recipe.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "\"I've been experimenting with different baking recipes lately, and I recently tried out a new bread recipe using sourdough starter on Tuesday.\""
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "candidate": {
+        "kind": "triple",
+        "object": "fermentation",
+        "subject": "user",
+        "predicate": "attended_workshop",
+        "confidence": 1.0,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": true,
+      "review_reason": "Attendance at a fermentation workshop is explicitly reported.",
+      "baseline_verdict": {
+        "accepted": true,
+        "label": "entailment",
+        "reason": "The user explicitly states they 'recently attended a workshop on fermentation' in the source text, which directly supports the assertion that the user attended a workshop about fermentation.",
+        "probability": 1.0,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I recently attended a workshop on fermentation at a local food co-op"
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_1:6",
+      "source": "I'll definitely take those data preparation steps into consideration. I've also been thinking about how to visualize my data to identify patterns or structures that might help me decide on the number of clusters. Do you have any recommendations on what types of plots or visualizations I should use to visualize my customer data?",
+      "candidate": {
+        "kind": "triple",
+        "object": "data preparation steps",
+        "subject": "user",
+        "predicate": "planned_action",
+        "confidence": 0.95,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Considering preparation steps is not a commitment to perform them.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "entailment",
+        "reason": "The speaker explicitly states 'I'll definitely take those data preparation steps into consideration', which confirms a planned action regarding the subject.",
+        "probability": 0.95,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I'll definitely take those data preparation steps into consideration."
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_2:0",
+      "source": "I'm thinking of baking some chicken wings for tonight's dinner. Can you give me some tips on how to achieve that perfect crispy skin?",
+      "candidate": {
+        "kind": "triple",
+        "object": "baking chicken wings",
+        "subject": "user",
+        "predicate": "planned_activity",
+        "confidence": 0.9,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Thinking of wings is a consideration, not a definite plan.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "The user states they are 'thinking of' baking, which indicates a consideration or intention rather than a completed plan. The assertion requires the subject to have 'planned' the activity, but the text only confirms the thought process without establishing a definite plan.",
+        "probability": 0.5,
+        "backend": "ollama",
+        "model": "qwen3.5:4b-mlx",
+        "evidence": "I'm thinking of baking some chicken wings for tonight's dinner."
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_2:6",
+      "source": "I'm thinking of making some roasted sweet potatoes to go along with the crispy chicken wings and roasted veggies. Do you have any tips on how to achieve that perfect caramelized crust on sweet potatoes using convection?",
+      "candidate": {
+        "kind": "triple",
+        "object": "roasted sweet potatoes",
+        "subject": "user",
+        "predicate": "planned_food_preparation",
+        "confidence": 0.9,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Thinking of sweet potatoes is a consideration, not a definite plan.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "tentative consideration does not establish a definite plan or intention",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I'm thinking of making some roasted sweet potatoes to go along with the crispy chicken wings and roasted veggies. Do you have any tips on how to achieve that perfect caramelized crust on sweet potatoes using convection?"
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_2:8",
+      "source": "I'm thinking of trying out a new bread recipe this weekend, possibly something with whole wheat flour. Do you have any recommendations for whole wheat bread recipes that would pair well with the crispy chicken wings and roasted veggies?",
+      "candidate": {
+        "kind": "triple",
+        "object": "trying out a new bread recipe",
+        "subject": "user",
+        "predicate": "planned_activity",
+        "confidence": 0.85,
+        "importance": 4,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Thinking of a possible bread recipe does not establish a definite plan.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "tentative consideration does not establish a definite plan or intention",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I'm thinking of trying out a new bread recipe this weekend, possibly something with whole wheat flour. Do you have any recommendations for whole wheat bread recipes that would pair well with the crispy chicken wings and roasted veggies?"
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:2",
+      "source": "That's really helpful, thanks. I was thinking of doing a stir-fry with chicken and mixed veggies this week. Do you have a suggestion for a good marinade for the chicken?",
+      "candidate": {
+        "kind": "triple",
+        "object": "stir-fry with chicken and mixed veggies",
+        "subject": "user",
+        "predicate": "planned_meal",
+        "confidence": 0.9,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Thinking of a stir-fry does not establish a definite plan.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "tentative consideration does not establish a definite plan or intention",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "That's really helpful, thanks. I was thinking of doing a stir-fry with chicken and mixed veggies this week. Do you have a suggestion for a good marinade for the chicken?"
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:10",
+      "source": "I'm thinking of making some kimchi fried rice to go with my kimchi. Do you have any suggestions for other Korean-inspired dishes I could make to pair with my kimchi?",
+      "candidate": {
+        "kind": "triple",
+        "object": "kimchi fried rice",
+        "subject": "user",
+        "predicate": "intends_to_cook",
+        "confidence": 0.9,
+        "importance": 6,
+        "assertion_type": "direct_user_statement"
+      },
+      "expected_accepted": false,
+      "review_reason": "Thinking of making kimchi fried rice does not establish an intention.",
+      "baseline_verdict": {
+        "accepted": false,
+        "label": "neutral",
+        "reason": "tentative consideration does not establish a definite plan or intention",
+        "probability": 0.0,
+        "backend": "representation_guard",
+        "model": null,
+        "evidence": "I'm thinking of making some kimchi fried rice to go with my kimchi. Do you have any suggestions for other Korean-inspired dishes I could make to pair with my kimchi?"
+      }
+    }
+  ]
+}

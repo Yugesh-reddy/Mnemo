@@ -1,0 +1,220 @@
+diff --git a/mnemo/extraction.py b/mnemo/extraction.py
+index d7f82cf..ab687d5 100644
+--- a/mnemo/extraction.py
++++ b/mnemo/extraction.py
+@@ -10,6 +10,7 @@ from __future__ import annotations
+ 
+ import asyncio
+ import json
++import re
+ from typing import Any, Protocol, runtime_checkable
+ from uuid import uuid4
+ 
+@@ -59,14 +60,16 @@ class _InvalidExtractionBatch(ValueError):
+ 
+ 
+ _SYSTEM_PROMPT = """Read the user's turn and extract its explicitly stated memory facts.
+-First copy the evidence, then express the SAME meaning as a subject/predicate/object.
+-Return only JSON: {"facts": [{"evidence": "verbatim source clause",
++First select a numbered source span, then express the SAME meaning as a subject/predicate/object.
++Return only JSON: {"facts": [{"evidence_id": 0,
+ "subject": "user", "predicate": "precise_relation", "object": "complete value",
+ "confidence": 0.95, "importance": 7}]}.
+ 
+ For each independent assertion:
+-1. Copy a contiguous evidence span EXACTLY from the turn, including negation,
+-   tense, dates and qualifications. Do not rewrite or invent the quote.
++1. Set evidence_id to the integer ID of a supplied source span containing the
++   assertion, including its negation, tense, dates and qualifications. The runtime
++   copies that span from the original turn. Do not generate an evidence quote.
++   IDs only identify source text; selecting a span does not prove the assertion.
+ 2. subject is the actor/entity; use user for the speaker. predicate is a precise
+    snake_case relationship actually expressed by that span. The vocabulary is open.
+    object contains the complete value and any event context needed to preserve
+@@ -100,25 +103,45 @@ confidence is 0..1. If there are no supported memory facts, return {"facts": []}
+ Do not fill imagined attributes or use predicate names as a menu.
+ 
+ Example user turn: "I bought a kiln in April. I might teach pottery next fall."
++Source spans: [{"id": 0, "text": "I bought a kiln in April."},
++{"id": 1, "text": "I might teach pottery next fall."}]
+ {"facts": [
+- {"evidence": "I bought a kiln in April.", "subject": "user", "predicate": "purchased",
++ {"evidence_id": 0, "subject": "user", "predicate": "purchased",
+   "object": "kiln in April", "confidence": 0.95, "importance": 6},
+- {"evidence": "I might teach pottery next fall.", "subject": "user",
++ {"evidence_id": 1, "subject": "user",
+   "predicate": "considered_teaching",
+   "object": "pottery next fall", "confidence": 0.95, "importance": 5}
+ ]}
+ Example user turn: "I use Postgres for my project."
+-{"facts": [{"evidence": "I use Postgres for my project.", "subject": "user",
++Source spans: [{"id": 0, "text": "I use Postgres for my project."}]
++{"facts": [{"evidence_id": 0, "subject": "user",
+ "predicate": "uses_database", "object": "Postgres", "confidence": 0.95, "importance": 7}]}
+ """
+ 
+ 
++def _source_spans(text: str) -> list[str]:
++    """Deterministic contiguous source chunks, not inferred semantic evidence.
++
++    Sentence punctuation and line breaks keep references short. Abbreviations
++    can split a sentence; all chunks remain literal substrings, and verification
++    still receives the complete original turn.
++    """
++    return [part.strip() for part in re.split(r"(?<=[.!?])\s+|\n+", text) if part.strip()]
++
++
+ def _extraction_messages(
+     text: str, role: str, validation_error: str | None, previous_content: str | None = None
+ ) -> list[dict[str, str]]:
+     messages = [
+         {"role": "system", "content": _SYSTEM_PROMPT},
+-        {"role": "user", "content": f"Turn ({role}): {text}"},
++        {
++            "role": "user",
++            "content": f"Turn ({role}): {text}\n\nSource spans: "
++            + json.dumps(
++                [{"id": i, "text": span} for i, span in enumerate(_source_spans(text))],
++                ensure_ascii=False,
++            ),
++        },
+     ]
+     if validation_error:
+         if previous_content is not None:
+@@ -130,7 +153,7 @@ def _extraction_messages(
+                     "Validator feedback (not source evidence): "
+                     + validation_error
+                     + ". Return the complete corrected facts array using only the original "
+-                    "Turn above. Copy evidence exactly and put the value in object."
++                    "Turn above. Select its evidence_id and put the complete value in object."
+                 ),
+             }
+         )
+@@ -201,7 +224,17 @@ class OllamaExtractor:
+         rejections: list[dict[str, Any]] = []
+         for index, item in enumerate(data["facts"]):
+             try:
+-                fact = ExtractedFact.model_validate(item)
++                normalized = item
++                if isinstance(item, dict) and "evidence_id" in item:
++                    span_id = item["evidence_id"]
++                    spans = _source_spans(source_text)
++                    if type(span_id) is not int or not 0 <= span_id < len(spans):
++                        raise ValueError("evidence_id must identify a supplied source span")
++                    selected = spans[span_id]
++                    if "evidence" in item and item["evidence"] != selected:
++                        raise ValueError("evidence conflicts with selected source span")
++                    normalized = {**item, "evidence": selected}
++                fact = ExtractedFact.model_validate(normalized)
+                 if fact.evidence is None or fact.evidence not in source_text:
+                     raise ValueError("evidence is absent from source")
+                 if fact.object is None or (
+diff --git a/tests/test_extraction_spans.py b/tests/test_extraction_spans.py
+new file mode 100644
+index 0000000..abb4759
+--- /dev/null
++++ b/tests/test_extraction_spans.py
+@@ -0,0 +1,103 @@
++"""Evidence selection copies trusted input and never grants semantic authority."""
++
++import json
++
++import pytest
++
++from mnemo.extraction import ExtractionWorker, OllamaExtractor, OpenAIExtractor
++from mnemo.quality import Verdict
++
++SOURCE = "Résumé: Mina lent me a camera on Monday, and I returned it.\nI may buy one later."
++
++
++@pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
++def test_selected_span_is_copied_exactly_without_model_reproducing_punctuation(provider):
++    extractor = provider(
++        max_retries=0, **({"api_key": "stub"} if provider is OpenAIExtractor else {})
++    )
++    extractor._chat = lambda *args: json.dumps(
++        {
++            "facts": [
++                {
++                    "evidence_id": 0,
++                    "subject": "user",
++                    "predicate": "borrowed",
++                    "object": "camera from Mina on Monday, subsequently returned",
++                }
++            ]
++        }
++    )
++    try:
++        assert extractor.extract(SOURCE)[0].evidence == SOURCE.split("\n")[0]
++    finally:
++        extractor.close()
++
++
++@pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
++def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
++    raw = {
++        "facts": [
++            {
++                "evidence_id": span_id,
++                "evidence": SOURCE,
++                "subject": "user",
++                "predicate": "borrowed",
++                "object": "camera",
++            }
++        ]
++    }
++    with pytest.raises(ValueError, match="evidence_id"):
++        OllamaExtractor._parse(json.dumps(raw), SOURCE)
++
++
++def test_span_reference_does_not_silently_repair_conflicting_quote():
++    raw = {
++        "facts": [
++            {
++                "evidence_id": 1,
++                "evidence": "I bought one later.",
++                "subject": "user",
++                "predicate": "bought",
++                "object": "camera",
++            }
++        ]
++    }
++    with pytest.raises(ValueError, match="conflicts"):
++        OllamaExtractor._parse(json.dumps(raw), SOURCE)
++
++
++async def test_selected_source_span_still_requires_full_turn_semantic_verification(store, db):
++    extractor = OllamaExtractor(max_retries=0)
++    extractor._chat = lambda *args: json.dumps(
++        {
++            "facts": [
++                {
++                    "evidence_id": 0,
++                    "subject": "user",
++                    "predicate": "owns",
++                    "object": "camera",
++                }
++            ]
++        }
++    )
++
++    class RejectOwnership:
++        def verify(self, candidate, source):
++            assert source == SOURCE
++            assert candidate.evidence == SOURCE.split("\n")[0]
++            return Verdict(
++                accepted=False,
++                label="contradiction",
++                probability=1,
++                reason="Borrowing and returning do not establish ownership",
++                backend="stub",
++            )
++
++    try:
++        await store.observe("span-test", SOURCE, "s")
++        await ExtractionWorker(db, store.embedder, extractor, RejectOwnership()).process_one()
++    finally:
++        extractor.close()
++    assert await db.fetchval("SELECT status FROM extraction_job") == "done"
++    assert await db.fetchval("SELECT count(*) FROM memory_event") == 0
++    assert await db.fetchval("SELECT outcome FROM quality_decision") == "rejected"
