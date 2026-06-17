@@ -1,23 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 7821.61it/s]
-Evaluating holdout/e3038f8c: 48 turns
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 151, in <module>
-    main()
-  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 147, in main
-    asyncio.run(run(parser.parse_args()))
-  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval_suite.py", line 135, in run
-    raise RuntimeError("evaluation scored with failed turns; complete report retained")
-RuntimeError: evaluation scored with failed turns; complete report retained

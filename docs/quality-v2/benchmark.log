@@ -1,19 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 9242.20it/s]
-{
-  "latency": {
-    "p50_ms": 2700.3982909955084,
-    "p95_ms": 6904.217999996035,
-    "mean_ms": 3772.7135267981794,
-    "max_ms": 7341.218667002977
-  },
-  "api_cost": {
-    "usd": null,
-    "reason": "No pricing supplied; measured usage is reported separately."
-  },
-  "local_compute_cost": {
-    "usd": null,
-    "reason": "No explicit local USD/hour rate supplied."
-  }
-}

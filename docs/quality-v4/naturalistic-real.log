@@ -1,8 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 7363.06it/s]
-PRECISION / RECALL WRITE-QUALITY EVAL (harbor-voices-naturalistic-200; synthetic)
-  FAILED TURNS PRESENT: their labels remain in the recall denominator.
-  NAIVE : visible 210 | P   1.0% | R   2.4% | F1   1.4% | must-keep   6.2% | false now/history 0/40 | events 216 | 12053.2 ms
-  GATED : visible 142 | P   1.4% | R   2.4% | F1   1.8% | must-keep   6.2% | false now/history 0/0 | events 145 | 1138533.3 ms
-Evaluation scored with failed turns; see each arm's turn_errors.

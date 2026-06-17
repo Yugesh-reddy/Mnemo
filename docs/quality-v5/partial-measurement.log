@@ -1,6 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 7252.91it/s]
-strict 0 writes
-partial 5 writes
-{'sources': 20, 'recovered_sources': 3, 'strict_candidates': 54, 'partial_candidates': 60, 'recovered_candidates': 6, 'rejected_members': 4}
