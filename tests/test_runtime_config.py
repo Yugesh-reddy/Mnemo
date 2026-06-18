@@ -65,3 +65,30 @@ def test_hash_backend_rejects_extraction_components(component):
     builder = build_extractor if component == "extractor" else build_verifier
     with pytest.raises(ValueError, match="backend=hash"):
         builder(settings)
+
+
+@pytest.mark.parametrize("backend", ["hash", "ollama"])
+async def test_disabled_worker_never_constructs_extraction_or_schedules_decay(
+    _disposable_test_db, fake_embedder, monkeypatch, backend
+):
+    import mnemo.runtime as runtime
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("disabled background work must not be constructed or scheduled")
+
+    for name in ("build_extractor", "build_verifier", "scheduled_decay"):
+        monkeypatch.setattr(runtime, name, forbidden)
+    settings = Settings(
+        _env_file=None,
+        dsn=_disposable_test_db,
+        backend=backend,
+        embed_dim=fake_embedder.dim,
+        worker_enabled=False,
+    )
+    async with runtime.background_runtime(
+        settings, embedder=fake_embedder if backend == "ollama" else None
+    ) as state:
+        async with state["pool"].acquire() as conn:
+            assert await conn.fetchval("SELECT 1") == 1
+        assert not state["stop"].is_set()
+    assert state["stop"].is_set()
