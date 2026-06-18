@@ -1,5 +1,12 @@
 # Mnemo — Master Plan
 
+**Execution update (September 21, 2026):** local Tasks 0.1–0.4 are implemented.
+Required-Postgres validation passes 232 tests; three live-Ollama tests skip.
+Lint, a clean-clone install/migrate/eval, wheel checks and locked source-archive
+installation pass. Task 0.5 remains pending because no Git remote is configured.
+See `PROJECT_STATUS.md` for verification details. Later phases are not implemented;
+contract decisions still follow `AGENTS.md` rule 6.
+
 Written September 21, 2026 against checkout `0468977` (working tree: one uncommitted
 `.gitignore` change). This document **supersedes** the three research documents as the
 thing an executing agent follows; they remain as background:
@@ -279,7 +286,7 @@ on a clean machine, and the front page contains no dead links.
 
 **Files:** modify `mnemo/db.py:46-61`; test `tests/test_schema.py`.
 
-- [ ] Write the failing test (needs the maintenance DB like `conftest._disposable_test_db`):
+- [x] Write the failing test (needs the maintenance DB like `conftest._disposable_test_db`):
 
 ```python
 async def test_connect_and_migrate_on_database_without_vector_extension(_disposable_test_db):
@@ -307,8 +314,8 @@ async def test_connect_and_migrate_on_database_without_vector_extension(_disposa
         await admin.close()
 ```
 
-- [ ] Run: `MNEMO_REQUIRE_DB=1 uv run pytest tests/test_schema.py -k without_vector -v` → FAIL with `ValueError: unknown type: public.vector`.
-- [ ] Fix `register_vector`:
+- [x] Run: `MNEMO_REQUIRE_DB=1 uv run pytest tests/test_schema.py -k without_vector -v` → FAIL with `ValueError: unknown type: public.vector`.
+- [x] Fix `register_vector`:
 
 ```python
     except (asyncpg.exceptions.UndefinedObjectError, ValueError):
@@ -317,22 +324,24 @@ async def test_connect_and_migrate_on_database_without_vector_extension(_disposa
         pass
 ```
 
-- [ ] Re-run → PASS. Run the full suite. Commit: `fix: allow connect() before the vector extension exists (fresh-db make migrate)`.
+- [x] Re-run → PASS. Run the full suite. Commit: `fix: allow connect() before the vector extension exists (fresh-db make migrate)`.
 
 ### Task 0.2 — Track the lockfile; make CI use it
 
 **Files:** `.gitignore` (remove `uv.lock`), `.github/workflows/correctness.yml:27`.
 
-- [ ] Remove the `uv.lock` line from `.gitignore`; `git add uv.lock`.
-- [ ] CI: `- run: uv sync --locked --extra dev`.
-- [ ] Commit: `chore: commit uv.lock and install with --locked in CI`.
+- [x] Remove the `uv.lock` line from `.gitignore`; `git add uv.lock`.
+- [x] CI: `- run: uv sync --locked --extra dev`.
+- [x] Use the same locked command for `make install`; include `uv.lock` in the
+  source distribution and verify source installation in `scripts/check-wheel.sh`.
+- [x] Commit: `chore: commit uv.lock and install with --locked in CI`.
 
 ### Task 0.3 — Un-ignore docs; one operating guide
 
 **Files:** `.gitignore` (remove `docs/`, remove the uncommitted `AGENTS.md` line), `CLAUDE.md`.
 
-- [ ] Remove both lines. `git add docs/` (or move `docs/quality-v2..v7` → `docs/archive/quality/` first if you want a lighter tree; update the links in `PROJECT_STATUS.md` / `README.md` accordingly).
-- [ ] Replace `CLAUDE.md` body with a pointer so there is one source of truth:
+- [x] Remove both lines. `git add docs/` (or move `docs/quality-v2..v7` → `docs/archive/quality/` first if you want a lighter tree; update the links in `PROJECT_STATUS.md` / `README.md` accordingly).
+- [x] Replace `CLAUDE.md` body with a pointer so there is one source of truth:
 
 ```markdown
 # CLAUDE.md
@@ -341,21 +350,21 @@ and `docs/MASTER_PLAN.md`.
 @AGENTS.md
 ```
 
-- [ ] Commit: `chore: track docs and lockfile; AGENTS.md is the single operating guide`.
+- [x] Commit: `chore: track docs and lockfile; AGENTS.md is the single operating guide`.
 
 ### Task 0.4 — Remove dead links and stale numbers
 
 **Files:** `README.md`, `PROJECT_SPEC.md:3-6`, `PROJECT_STATUS.md:3-6`, `Makefile:50-51`.
 
-- [ ] `rg -n "CORRECTNESS_PLAN|QUALITY_RELIABILITY_PLAN|demo.tape" .` — replace each reference: the two plans → `docs/MASTER_PLAN.md`; delete the `gif:` Makefile target (or add `docs/demo.tape` — there is none).
-- [ ] README: "200 tests pass" → "`make test-db` (231 tests as of this commit; the number is printed by the run)". Prefer wording that does not need updating.
-- [ ] `mnemo/seed.py:3-6` docstring: describe what it is now (demo seed data), not "before core exists".
-- [ ] `tests/test_eval.py:49-56`: the docstring promises must-keep recall but the assertion is
+- [x] `rg -n "CORRECTNESS_PLAN|QUALITY_RELIABILITY_PLAN|demo.tape" .` — replace each reference: the two plans → `docs/MASTER_PLAN.md`; delete the `gif:` Makefile target (or add `docs/demo.tape` — there is none).
+- [x] README: "200 tests pass" → "`make test-db` (231 tests as of this commit; the number is printed by the run)". Prefer wording that does not need updating.
+- [x] `mnemo/seed.py:3-6` docstring: describe what it is now (demo seed data), not "before core exists".
+- [x] `tests/test_eval.py:49-56`: the docstring promises must-keep recall but the assertion is
   `result["gated"]["recall"] == 1.0`. Add `assert result["gated"]["must_keep_recall"] == 1.0`
   (keep the existing line) so the named field in the README claim is what the test checks.
-- [ ] `tests/test_mcp.py` `EXPECTED_TOOLS`: add `memory_decisions` and `memory_health` so the
+- [x] `tests/test_mcp.py` `EXPECTED_TOOLS`: add `memory_decisions` and `memory_health` so the
   schema-registration test covers all ten tools, not eight.
-- [ ] Commit: `docs: remove dead links and stale counts`.
+- [x] Commit: `docs: remove dead links and stale counts`.
 
 ### Task 0.5 — Push and get one green CI run (your action)
 

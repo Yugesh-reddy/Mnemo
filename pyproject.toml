@@ -38,7 +38,7 @@ packages = ["mnemo", "web", "examples"]
 "migrations" = "mnemo/migrations"
 
 [tool.hatch.build.targets.sdist]
-include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "docker-compose.yml", "pyproject.toml"]
+include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "docker-compose.yml", "pyproject.toml", "uv.lock"]
 
 [project.scripts]
 mnemo-migrate = "mnemo.db:main"

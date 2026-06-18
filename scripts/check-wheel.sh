@@ -38,3 +38,9 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval-suite" --help
 "$mnemo_wheel_env/venv/bin/mnemo-benchmark" --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
+
+# The source archive must support the same locked install as a fresh checkout.
+mkdir "$mnemo_wheel_env/source"
+tar -xzf "$mnemo_checkout"/dist/*.tar.gz -C "$mnemo_wheel_env/source" --strip-components=1
+cd "$mnemo_wheel_env/source"
+UV_PYTHON=3.12 make install

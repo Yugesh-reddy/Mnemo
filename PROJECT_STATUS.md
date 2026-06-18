@@ -16,6 +16,26 @@ and `AGENTS.md` are tracked. `CLAUDE.md` points to the operating guide. Broken
 plan links, the missing demo-recording target and the stale README test count
 are removed. Tests explicitly check must-keep recall and all ten MCP tools.
 
+Verification: `MNEMO_REQUIRE_DB=1 uv run pytest tests/test_schema.py -v` passes
+11 tests; the focused eval/MCP run passes 15. Final `make lint` passes Ruff and
+Black (70 Python files), and `make test-db` reports **232 passed, 3 skipped**.
+The skips require a running Ollama server or the `llama3.2` model. The new
+fresh-database test first reproduced `ValueError: unknown type: public.vector`.
+
+A clean local clone with no `.env`, using an invocation-owned empty database on
+the existing Postgres service, passes `make install`, `make lint`, `make migrate`,
+`make eval`, `uv build` and `bash scripts/check-wheel.sh`. All nine migrations
+apply. The 18-turn synthetic smoke remains naive P/R 60%/90%, gated P/R
+90.9%/100%, with gated must-keep recall 100% and zero false writes. This is not a
+real-conversation extraction result.
+
+Review caught a missing lockfile in the source distribution after the install
+command changed. Its installation failure was reproduced, `uv.lock` was added to
+the source manifest, and the packaging script now checks installation from the
+extracted source archive as well as the wheel. The extended packaging check and
+`uv lock --check` pass; follow-up review found no remaining issues. Historical
+evaluation artifacts, including their raw log whitespace, are preserved.
+
 Hosted CI and branch protection (Task 0.5) remain pending: no Git remote is
 configured. The direct backend, guarded mutation contract and product framing
 changes are not part of this first set of fixes. Extraction quality is unchanged.
