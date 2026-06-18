@@ -1,0 +1,2142 @@
+{
+  "split": "dev",
+  "complete": true,
+  "policy_sha256": "9ca7df14bd5897dae2a2b0dee1281a5dbd1e28341f2020b86de09daf260ff422",
+  "baseline_sha256": "1170ef5987e8e77581ff57977b4db247300395251f75fec53c0238362a922c86",
+  "selection": "user turns with must-keep labels",
+  "scope": "Strict extraction coverage; not verification accuracy or stored-memory recall.",
+  "rows": [
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_2:0",
+      "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+      "labels": [
+        {
+          "predicate": "uses_programming_languages",
+          "value": "Python and R",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "modeling_activity",
+          "value": "building predictive models",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learning_need",
+          "value": "feature engineering",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor",
+          "object": "Python",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "editor",
+          "object": "R",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "uses_programming_languages",
+          "object": "Python, R",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm using Python and R to build predictive models"
+        },
+        {
+          "subject": "user",
+          "predicate": "struggling_with_task",
+          "object": "feature engineering",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm having some trouble with feature engineering"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm using Python and R to build predictive models\", \"subject\": \"user\", \"predicate\": \"uses_programming_languages\", \"object\": \"Python, R\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I'm having some trouble with feature engineering\", \"subject\": \"user\", \"predicate\": \"struggling_with_task\", \"object\": \"feature engineering\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 10550.4325840011,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "labels": [
+        {
+          "predicate": "current_course_project",
+          "value": "solo Data Mining project",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "project_data",
+          "value": "customer purchase data",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "role",
+          "object": "student",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "project_type",
+          "object": "Data Mining class project",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "interest_area",
+          "object": "customer purchase data analysis",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "goal",
+          "object": "identify patterns and trends in customer purchase data",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "planned_technique",
+          "object": "feature engineering",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "is_working_on_project",
+          "object": "solo project for Data Mining class",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been working on a solo project for my Data Mining class"
+        },
+        {
+          "subject": "user",
+          "predicate": "interested_in_applying_techniques",
+          "object": "customer purchase data",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm really interested in applying some of these techniques to my customer purchase data"
+        },
+        {
+          "subject": "user",
+          "predicate": "trying_to_identify_patterns_trends",
+          "object": "patterns and trends",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm trying to identify patterns and trends"
+        },
+        {
+          "subject": "user",
+          "predicate": "thinks_feature_engineering_will_help",
+          "object": "identifying patterns and trends",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I think feature engineering will really help me with that"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've been working on a solo project for my Data Mining class\", \"subject\": \"user\", \"predicate\": \"is_working_on_project\", \"object\": \"solo project for Data Mining class\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I'm really interested in applying some of these techniques to my customer purchase data\", \"subject\": \"user\", \"predicate\": \"interested_in_applying_techniques\", \"object\": \"customer purchase data\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I'm trying to identify patterns and trends\", \"subject\": \"user\", \"predicate\": \"trying_to_identify_patterns_trends\", \"object\": \"patterns and trends\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I think feature engineering will really help me with that\", \"subject\": \"user\", \"predicate\": \"thinks_feature_engineering_will_help\", \"object\": \"identifying patterns and trends\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 14096.547290999297,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "labels": [
+        {
+          "predicate": "current_project",
+          "value": "customer data analysis",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "led_project",
+          "value": "Marketing Research data analysis team",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "marketing_project_topic",
+          "value": "market analysis for a new product launch",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "data analysis",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "role",
+          "object": "team leader",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "working_on_project",
+          "object": "project involving analyzing customer data to identify trends and patterns",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm working on a project that involves analyzing customer data to identify trends and patterns."
+        },
+        {
+          "subject": "user",
+          "predicate": "considered_using",
+          "object": "clustering analysis",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I was thinking of using clustering analysis"
+        },
+        {
+          "subject": "user",
+          "predicate": "had_experience_with_data_analysis",
+          "object": "Marketing Research class project",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I've had some experience with data analysis from my Marketing Research class project"
+        },
+        {
+          "subject": "user",
+          "predicate": "led_team_and_conducted_analysis",
+          "object": "data analysis team for a new product launch",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "where I led the data analysis team and we did a comprehensive market analysis for a new product launch"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm working on a project that involves analyzing customer data to identify trends and patterns.\", \"subject\": \"user\", \"predicate\": \"working_on_project\", \"object\": \"project involving analyzing customer data to identify trends and patterns\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I was thinking of using clustering analysis\", \"subject\": \"user\", \"predicate\": \"considered_using\", \"object\": \"clustering analysis\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've had some experience with data analysis from my Marketing Research class project\", \"subject\": \"user\", \"predicate\": \"had_experience_with_data_analysis\", \"object\": \"Marketing Research class project\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"where I led the data analysis team and we did a comprehensive market analysis for a new product launch\", \"subject\": \"user\", \"predicate\": \"led_team_and_conducted_analysis\", \"object\": \"data analysis team for a new product launch\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 12047.312458998931,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "6d550036",
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "labels": [
+        {
+          "predicate": "research_topic",
+          "value": "social media influencers and consumer purchasing decisions",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "presented_research",
+          "value": "poster at an academic conference on consumer psychology",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "research_interest",
+          "object": "consumer behavior",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "research_focus",
+          "object": "social media influencers on consumer purchasing decisions",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "presented_poster",
+          "object": "effects of social media influencers on consumer purchasing decisions",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "attended_conference",
+          "object": "academic conference on consumer psychology",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "presented_poster",
+          "object": "research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology\", \"subject\": \"user\", \"predicate\": \"presented_poster\", \"object\": \"research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 4502.115833000062,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:0",
+      "source": "I'm looking for some advice on improving my sourdough starter. I tried out a new bread recipe using sourdough starter on Tuesday, but it didn't quite turn out as expected. Do you have any tips on how to get my starter to be more active and produce better results?",
+      "labels": [
+        {
+          "predicate": "baked_tuesday",
+          "value": "sourdough bread",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "did not turn out as expected",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "activity",
+          "object": "baking bread using sourdough starter",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "tried_bread_recipe",
+          "object": "new bread recipe using sourdough starter on Tuesday",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I tried out a new bread recipe using sourdough starter on Tuesday"
+        },
+        {
+          "subject": "bread recipe",
+          "predicate": "did_not_turn_out_as_expected",
+          "object": "as expected",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "it didn't quite turn out as expected"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I tried out a new bread recipe using sourdough starter on Tuesday\", \"subject\": \"user\", \"predicate\": \"tried_bread_recipe\", \"object\": \"new bread recipe using sourdough starter on Tuesday\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"it didn't quite turn out as expected\", \"subject\": \"bread recipe\", \"predicate\": \"did_not_turn_out_as_expected\", \"object\": \"as expected\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 6147.349750001013,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "labels": [
+        {
+          "predicate": "starter_created",
+          "value": "about a month before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_frequency",
+          "value": "once a day",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "starter_flour",
+          "value": "all-purpose flour",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "starter_feeding_ratio",
+          "value": "1:1:1 flour:water:starter",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "sourdough_bread_result",
+          "value": "dense and heavy",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "created_sourdough_starter",
+          "object": "sourdough starter",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "feeding_frequency",
+          "object": "once a day",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "uses_flour",
+          "object": "all-purpose flour",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "uses_ingredient",
+          "object": "water",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "sourdough starter",
+          "predicate": "ratio",
+          "object": "1:1:1 (flour:water:starter)",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "baked_bread",
+          "object": "on Tuesday",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "created_sourdough_starter",
+          "object": "sourdough starter about a month ago",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I actually created my sourdough starter about a month ago"
+        },
+        {
+          "subject": "user",
+          "predicate": "feeds_sourdough_starter",
+          "object": "once a day with all-purpose flour and water",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been feeding it once a day with all-purpose flour and water"
+        },
+        {
+          "subject": "user",
+          "predicate": "uses_ratio",
+          "object": "1:1:1 (flour:water:starter)",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "The ratio is usually 1:1:1 (flour:water:starter)"
+        },
+        {
+          "subject": "user",
+          "predicate": "baked_bread",
+          "object": "dense and heavy on Tuesday",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "On Tuesday, I used it in a recipe and the bread came out dense and heavy"
+        },
+        {
+          "subject": "user",
+          "predicate": "found_disappointing",
+          "object": "bread came out dense and heavy",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 4,
+          "assertion_type": "agent_inference",
+          "evidence": "which was a bit disappointing"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I actually created my sourdough starter about a month ago\", \"subject\": \"user\", \"predicate\": \"created_sourdough_starter\", \"object\": \"sourdough starter about a month ago\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I've been feeding it once a day with all-purpose flour and water\", \"subject\": \"user\", \"predicate\": \"feeds_sourdough_starter\", \"object\": \"once a day with all-purpose flour and water\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"The ratio is usually 1:1:1 (flour:water:starter)\", \"subject\": \"user\", \"predicate\": \"uses_ratio\", \"object\": \"1:1:1 (flour:water:starter)\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"On Tuesday, I used it in a recipe and the bread came out dense and heavy\", \"subject\": \"user\", \"predicate\": \"baked_bread\", \"object\": \"dense and heavy on Tuesday\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"which was a bit disappointing\", \"subject\": \"user\", \"predicate\": \"found_disappointing\", \"object\": \"bread came out dense and heavy\", \"confidence\": 0.95, \"importance\": 4}]}"
+      ],
+      "elapsed_ms": 14723.592166999879,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 5,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 5,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_3:10",
+      "source": "I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\n\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!",
+      "labels": [
+        {
+          "predicate": "planned_dough_change",
+          "value": "gentler mixing and longer fermentation",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_for_sister_birthday",
+          "value": "chocolate cake",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "birthday_cake_result",
+          "value": "amazing",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "baking",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 4,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "activity",
+          "object": "baked chocolate cake",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "thinks_overmixing_dough",
+          "object": "dough",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 4,
+          "assertion_type": "agent_inference",
+          "evidence": "I think I might have been overmixing the dough"
+        },
+        {
+          "subject": "fermentation_time",
+          "predicate": "was_short",
+          "object": "a bit short",
+          "kind": "triple",
+          "confidence": 0.7,
+          "importance": 3,
+          "assertion_type": "agent_inference",
+          "evidence": "maybe the fermentation time was a bit short"
+        },
+        {
+          "subject": "user",
+          "predicate": "plans_to_be_more_gentle_when_mixing_and_increase_fermentation_time",
+          "object": "dough",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'll try to be more gentle when mixing and give the dough more time to ferment next time"
+        },
+        {
+          "subject": "user",
+          "predicate": "has_experimented_with_flour_types",
+          "object": "different types of flour",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been experimenting with different types of flour lately"
+        },
+        {
+          "subject": "user",
+          "predicate": "baked_chocolate_cake",
+          "object": "chocolate cake",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "agent_inference",
+          "evidence": "I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online"
+        },
+        {
+          "subject": "chocolate cake",
+          "predicate": "turned_out_amazing_and_was_loved_by_everyone",
+          "object": "amazing; everyone",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "It turned out amazing, and everyone loved it!"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I think I might have been overmixing the dough\", \"subject\": \"user\", \"predicate\": \"thinks_overmixing_dough\", \"object\": \"dough\", \"confidence\": 0.85, \"importance\": 4}, {\"evidence\": \"maybe the fermentation time was a bit short\", \"subject\": \"fermentation_time\", \"predicate\": \"was_short\", \"object\": \"a bit short\", \"confidence\": 0.7, \"importance\": 3}, {\"evidence\": \"I'll try to be more gentle when mixing and give the dough more time to ferment next time\", \"subject\": \"user\", \"predicate\": \"plans_to_be_more_gentle_when_mixing_and_increase_fermentation_time\", \"object\": \"dough\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been experimenting with different types of flour lately\", \"subject\": \"user\", \"predicate\": \"has_experimented_with_flour_types\", \"object\": \"different types of flour\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online\", \"subject\": \"user\", \"predicate\": \"baked_chocolate_cake\", \"object\": \"chocolate cake\", \"confidence\": 0.95, \"importance\": 8}, {\"evidence\": \"It turned out amazing, and everyone loved it!\", \"subject\": \"chocolate cake\", \"predicate\": \"turned_out_amazing_and_was_loved_by_everyone\", \"object\": \"amazing; everyone\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 17371.33399999948,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_1:0",
+      "source": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+      "labels": [
+        {
+          "predicate": "planned_event",
+          "value": "dinner party next weekend",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "baked_for_sister_birthday",
+          "value": "chocolate cake",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "birthday_cake_ingredient",
+          "value": "espresso powder",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "activity",
+          "object": "hosting dinner party",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "baked",
+          "object": "chocolate cake",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "chocolate cake",
+          "predicate": "purpose",
+          "object": "sister's birthday party",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 4,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "time_reference",
+          "object": "last weekend",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 2,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "seeking_recipe_ideas",
+          "object": "dinner party next weekend",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend."
+        },
+        {
+          "subject": "user",
+          "predicate": "baked_chocolate_cake",
+          "object": "sister's birthday party last weekend",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm looking for some recipe ideas for a dinner party I'm hosting next weekend.\", \"subject\": \"user\", \"predicate\": \"seeking_recipe_ideas\", \"object\": \"dinner party next weekend\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!\", \"subject\": \"user\", \"predicate\": \"baked_chocolate_cake\", \"object\": \"sister's birthday party last weekend\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 6850.1757920003,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_1:4",
+      "source": "I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.",
+      "labels": [
+        {
+          "predicate": "favorite_fruit",
+          "value": "strawberries",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "planned_tart_fruit",
+          "value": "strawberries",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "allergy",
+          "object": "strawberries",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "diet",
+          "object": "low-sugar",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "favorite_food",
+          "object": "strawberries",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "they're my favorite"
+        },
+        {
+          "subject": "user",
+          "predicate": "eating_sweet_treats_lately",
+          "object": "a lot of sweet treats",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been eating a lot of sweet treats lately"
+        },
+        {
+          "subject": "user",
+          "predicate": "consumed",
+          "object": "leftover birthday cake",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "including leftover birthday cake"
+        },
+        {
+          "subject": "user",
+          "predicate": "thinks_strawberries_will_be_change_of_pace",
+          "object": "the tartness of strawberries",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I think the tartness of strawberries will be a nice change of pace"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"they're my favorite\", \"subject\": \"user\", \"predicate\": \"favorite_food\", \"object\": \"strawberries\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I've been eating a lot of sweet treats lately\", \"subject\": \"user\", \"predicate\": \"eating_sweet_treats_lately\", \"object\": \"a lot of sweet treats\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"including leftover birthday cake\", \"subject\": \"user\", \"predicate\": \"consumed\", \"object\": \"leftover birthday cake\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I think the tartness of strawberries will be a nice change of pace\", \"subject\": \"user\", \"predicate\": \"thinks_strawberries_will_be_change_of_pace\", \"object\": \"the tartness of strawberries\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 10381.53633299953,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_1:6",
+      "source": "I was thinking of making a homemade crust, but I'm not sure what type of flour to use. I've been experimenting with different types of flour lately, including whole wheat flour, which I used to make a delicious whole wheat baguette last Saturday. Would whole wheat flour work for a tart crust?",
+      "labels": [
+        {
+          "predicate": "baked_last_saturday",
+          "value": "whole wheat baguette",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "baking_activity",
+          "value": "experimenting with flour types",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "whole_wheat_flour",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 4,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "considered_making",
+          "object": "homemade crust",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 4,
+          "assertion_type": "agent_inference",
+          "evidence": "I was thinking of making a homemade crust"
+        },
+        {
+          "subject": "user",
+          "predicate": "experimenting_with_flour_types",
+          "object": "different types of flour",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been experimenting with different types of flour lately"
+        },
+        {
+          "subject": "user",
+          "predicate": "used_whole_wheat_flour",
+          "object": "whole wheat flour",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "including whole wheat flour"
+        },
+        {
+          "subject": "user",
+          "predicate": "made_baguette",
+          "object": "delicious whole wheat baguette last Saturday",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "which I used to make a delicious whole wheat baguette last Saturday"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I was thinking of making a homemade crust\", \"subject\": \"user\", \"predicate\": \"considered_making\", \"object\": \"homemade crust\", \"confidence\": 0.95, \"importance\": 4}, {\"evidence\": \"I've been experimenting with different types of flour lately\", \"subject\": \"user\", \"predicate\": \"experimenting_with_flour_types\", \"object\": \"different types of flour\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"including whole wheat flour\", \"subject\": \"user\", \"predicate\": \"used_whole_wheat_flour\", \"object\": \"whole wheat flour\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"which I used to make a delicious whole wheat baguette last Saturday\", \"subject\": \"user\", \"predicate\": \"made_baguette\", \"object\": \"delicious whole wheat baguette last Saturday\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 10629.813208000996,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_1:8",
+      "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+      "labels": [
+        {
+          "predicate": "planned_tart_flour",
+          "value": "all-purpose flour",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "owns_appliance",
+          "value": "stand mixer",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "stand_mixer_acquired",
+          "value": "a few weeks before this session",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "stand_mixer",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "activity_duration",
+          "object": "nonstop_since_few_weeks_ago",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 4,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "intends_to_use",
+          "object": "all-purpose flour for the tart crust",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I think I'll stick with all-purpose flour for the tart crust"
+        },
+        {
+          "subject": "user",
+          "predicate": "uses_appliance",
+          "object": "new stand mixer",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been using my new stand mixer nonstop since I got it a few weeks ago"
+        },
+        {
+          "subject": "user",
+          "predicate": "acquired_appliance",
+          "object": "stand mixer a few weeks ago",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "since I got it a few weeks ago"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I think I'll stick with all-purpose flour for the tart crust\", \"subject\": \"user\", \"predicate\": \"intends_to_use\", \"object\": \"all-purpose flour for the tart crust\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been using my new stand mixer nonstop since I got it a few weeks ago\", \"subject\": \"user\", \"predicate\": \"uses_appliance\", \"object\": \"new stand mixer\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"since I got it a few weeks ago\", \"subject\": \"user\", \"predicate\": \"acquired_appliance\", \"object\": \"stand mixer a few weeks ago\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 8547.176792000755,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "labels": [
+        {
+          "predicate": "planned_wings_method",
+          "value": "dry brine and baking powder",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "first_convection_use",
+          "value": "cookies last Thursday",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "convection_roasted_vegetables",
+          "value": "done",
+          "disposition": "forbidden",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "convection_setting",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "intends_to_try",
+          "object": "dry brine method and baking powder trick",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'll definitely try the dry brine method and baking powder trick."
+        },
+        {
+          "subject": "user",
+          "predicate": "has_not_tried",
+          "object": "roasting veggies with convection",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I haven't tried roasting veggies with convection yet."
+        }
+      ],
+      "error": null,
+      "rejections": [
+        {
+          "candidate": {
+            "raw": {
+              "evidence": "I've been experimenting with different types of flour for baking.",
+              "subject": "user",
+              "predicate": "experimenting_with_flour",
+              "object": "different types of flour for baking",
+              "confidence": 0.95,
+              "importance": 7
+            }
+          },
+          "reason": "candidate 1 evidence is absent from source"
+        },
+        {
+          "candidate": {
+            "raw": {
+              "evidence": "I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies.",
+              "subject": "user",
+              "predicate": "used_convection_setting",
+              "object": "oven's convection setting to bake a batch of cookies",
+              "confidence": 0.95,
+              "importance": 8
+            }
+          },
+          "reason": "candidate 3 evidence is absent from source"
+        }
+      ],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'll definitely try the dry brine method and baking powder trick.\", \"subject\": \"user\", \"predicate\": \"intends_to_try\", \"object\": \"dry brine method and baking powder trick\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been experimenting with different types of flour for baking.\", \"subject\": \"user\", \"predicate\": \"experimenting_with_flour\", \"object\": \"different types of flour for baking\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I haven't tried roasting veggies with convection yet.\", \"subject\": \"user\", \"predicate\": \"has_not_tried\", \"object\": \"roasting veggies with convection\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies.\", \"subject\": \"user\", \"predicate\": \"used_convection_setting\", \"object\": \"oven's convection setting to bake a batch of cookies\", \"confidence\": 0.95, \"importance\": 8}]}",
+        "{\"facts\": [{\"evidence\": \"I'll definitely try the dry brine method and baking powder trick.\", \"subject\": \"user\", \"predicate\": \"intends_to_try\", \"object\": \"dry brine method and baking powder trick\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been experimenting with different types of flour for baking.\", \"subject\": \"user\", \"predicate\": \"experimenting_with_flour\", \"object\": \"different types of flour for baking\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I haven't tried roasting veggies with convection yet.\", \"subject\": \"user\", \"predicate\": \"has_not_tried\", \"object\": \"roasting veggies with convection\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies.\", \"subject\": \"user\", \"predicate\": \"used_convection_setting\", \"object\": \"oven's convection setting to bake a batch of cookies\", \"confidence\": 0.95, \"importance\": 8}]}",
+        "{\"facts\": [{\"evidence\": \"I'll definitely try the dry brine method and baking powder trick.\", \"subject\": \"user\", \"predicate\": \"intends_to_try\", \"object\": \"dry brine method and baking powder trick\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been experimenting with different types of flour for baking.\", \"subject\": \"user\", \"predicate\": \"experimenting_with_flour\", \"object\": \"different types of flour for baking\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I haven't tried roasting veggies with convection yet.\", \"subject\": \"user\", \"predicate\": \"has_not_tried\", \"object\": \"roasting veggies with convection\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies.\", \"subject\": \"user\", \"predicate\": \"used_convection_setting\", \"object\": \"oven's convection setting to bake a batch of cookies\", \"confidence\": 0.95, \"importance\": 8}]}"
+      ],
+      "elapsed_ms": 37789.03729200101,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "88432d0a",
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "labels": [
+        {
+          "predicate": "baked_last_thursday",
+          "value": "cookies",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "cookie_result",
+          "value": "crispy outside and chewy inside",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "editor_use",
+          "object": "convection setting",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "used_convection_setting",
+          "object": "oven for baking cookies last Thursday",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday."
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday.\", \"subject\": \"user\", \"predicate\": \"used_convection_setting\", \"object\": \"oven for baking cookies last Thursday\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 4908.7200419999135,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "labels": [
+        {
+          "predicate": "recent_meal_prep",
+          "value": "rice and roasted vegetables",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "tried_restaurant",
+          "value": "Ethiopian restaurant last week",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "restaurant_preference",
+          "value": "liked the Ethiopian restaurant",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "activity",
+          "object": "meal prep",
+          "kind": "triple",
+          "confidence": 0.85,
+          "importance": 4,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "consumed_food",
+          "object": "Ethiopian restaurant",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "looking_for_recipe_ideas",
+          "object": "recipe ideas for meal prep",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm looking for some recipe ideas for meal prep."
+        },
+        {
+          "subject": "user",
+          "predicate": "tried_ethiopian_restaurant",
+          "object": "new Ethiopian restaurant in town",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I tried out a new Ethiopian restaurant in town last week and loved it!"
+        }
+      ],
+      "error": null,
+      "rejections": [
+        {
+          "candidate": {
+            "raw": {
+              "evidence": "I've been doing a lot of rice and roasted veggies lately.",
+              "subject": "user",
+              "predicate": "doing_rice_and_roasted_veggies",
+              "object": "rice and roasted veggies",
+              "confidence": 0.95,
+              "importance": 7
+            }
+          },
+          "reason": "candidate 1 evidence is absent from source"
+        }
+      ],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm looking for some recipe ideas for meal prep.\", \"subject\": \"user\", \"predicate\": \"looking_for_recipe_ideas\", \"object\": \"meal prep\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been doing a lot of rice and roasted veggies lately.\", \"subject\": \"user\", \"predicate\": \"doing_rice_and_roasted_veggies\", \"object\": \"rice and roasted veggies\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I tried out a new Ethiopian restaurant in town last week and loved it!\", \"subject\": \"user\", \"predicate\": \"tried_ethiopian_restaurant\", \"object\": \"new Ethiopian restaurant in town\", \"confidence\": 0.95, \"importance\": 6}]}",
+        "{\"facts\": [{\"evidence\": \"I'm looking for some recipe ideas for meal prep.\", \"subject\": \"user\", \"predicate\": \"looking_for_recipe_ideas\", \"object\": \"recipe ideas for meal prep\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been doing a lot of rice and roasted veggies lately.\", \"subject\": \"user\", \"predicate\": \"doing_rice_and_roasted_veggies\", \"object\": \"rice and roasted veggies\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I tried out a new Ethiopian restaurant in town last week and loved it!\", \"subject\": \"user\", \"predicate\": \"tried_ethiopian_restaurant\", \"object\": \"new Ethiopian restaurant in town\", \"confidence\": 0.95, \"importance\": 6}]}",
+        "{\"facts\": [{\"evidence\": \"I'm looking for some recipe ideas for meal prep.\", \"subject\": \"user\", \"predicate\": \"looking_for_recipe_ideas\", \"object\": \"recipe ideas for meal prep\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been doing a lot of rice and roasted veggies lately.\", \"subject\": \"user\", \"predicate\": \"doing_rice_and_roasted_veggies\", \"object\": \"rice and roasted veggies\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I tried out a new Ethiopian restaurant in town last week and loved it!\", \"subject\": \"user\", \"predicate\": \"tried_ethiopian_restaurant\", \"object\": \"new Ethiopian restaurant in town\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 38904.7685000005,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_2:0",
+      "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+      "labels": [
+        {
+          "predicate": "planned_event",
+          "value": "dinner party this weekend",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_indian_dish",
+          "value": "chicken tikka masala",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_indian_class",
+          "value": "Indian cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "planned_menu",
+          "value": "chicken tikka masala",
+          "disposition": "candidate",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "planned_event",
+          "object": "dinner party",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "learning_experience",
+          "object": "chicken tikka masala",
+          "kind": "triple",
+          "confidence": 1.0,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "planning_dinner_party",
+          "object": "this weekend",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm planning a dinner party for this weekend"
+        },
+        {
+          "subject": "user",
+          "predicate": "considering_serving",
+          "object": "Indian-inspired dish",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm thinking of serving an Indian-inspired dish"
+        },
+        {
+          "subject": "user",
+          "predicate": "learned_making",
+          "object": "perfect chicken tikka masala in a class on Indian cuisine",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I learned how to make a perfect chicken tikka masala in a class on Indian cuisine"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm planning a dinner party for this weekend\", \"subject\": \"user\", \"predicate\": \"planning_dinner_party\", \"object\": \"this weekend\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I'm thinking of serving an Indian-inspired dish\", \"subject\": \"user\", \"predicate\": \"considering_serving\", \"object\": \"Indian-inspired dish\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I learned how to make a perfect chicken tikka masala in a class on Indian cuisine\", \"subject\": \"user\", \"predicate\": \"learned_making\", \"object\": \"perfect chicken tikka masala in a class on Indian cuisine\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 13995.500791999802,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "labels": [
+        {
+          "predicate": "diet_goal",
+          "value": "eat more plant-based food",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "diet",
+          "object": "plant-based",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "participated_in",
+          "object": "vegan cuisine class",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "looking_for",
+          "object": "healthy meal prep ideas",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I'm looking for some healthy meal prep ideas."
+        },
+        {
+          "subject": "user",
+          "predicate": "attended_class",
+          "object": "class on vegan cuisine",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I recently attended a class on vegan cuisine that got me really inspired."
+        }
+      ],
+      "error": null,
+      "rejections": [
+        {
+          "candidate": {
+            "raw": {
+              "evidence": "I've been trying to eat more plant-based lately.",
+              "subject": "user",
+              "predicate": "trying_to_eat_more",
+              "object": "plant-based",
+              "confidence": 0.95,
+              "importance": 7
+            }
+          },
+          "reason": "candidate 1 evidence is absent from source"
+        }
+      ],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I'm looking for some healthy meal prep ideas.\", \"subject\": \"user\", \"predicate\": \"looking_for\", \"object\": \"healthy meal prep ideas\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been trying to eat more plant-based lately.\", \"subject\": \"user\", \"predicate\": \"trying_to_eat_more\", \"object\": \"plant-based\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I recently attended a class on vegan cuisine that got me really inspired.\", \"subject\": \"user\", \"predicate\": \"attended_class\", \"object\": \"class on vegan cuisine\", \"confidence\": 0.95, \"importance\": 6}]}",
+        "{\"facts\": [{\"evidence\": \"I'm looking for some healthy meal prep ideas.\", \"subject\": \"user\", \"predicate\": \"looking_for\", \"object\": \"healthy meal prep ideas\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been trying to eat more plant-based lately.\", \"subject\": \"user\", \"predicate\": \"trying_to_eat_more\", \"object\": \"plant-based\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I recently attended a class on vegan cuisine that got me really inspired.\", \"subject\": \"user\", \"predicate\": \"attended_class\", \"object\": \"class on vegan cuisine\", \"confidence\": 0.95, \"importance\": 6}]}",
+        "{\"facts\": [{\"evidence\": \"I'm looking for some healthy meal prep ideas.\", \"subject\": \"user\", \"predicate\": \"looking_for\", \"object\": \"healthy meal prep ideas\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I've been trying to eat more plant-based lately.\", \"subject\": \"user\", \"predicate\": \"trying_to_eat_more\", \"object\": \"plant-based\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I recently attended a class on vegan cuisine that got me really inspired.\", \"subject\": \"user\", \"predicate\": \"attended_class\", \"object\": \"class on vegan cuisine\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 38319.63437499871,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "labels": [
+        {
+          "predicate": "food_interest",
+          "value": "tempeh",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "attended_fermentation_workshop",
+          "value": "local food co-op fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "learned_fermented_foods",
+          "value": "sauerkraut and kimchi",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "dietary_interest",
+          "object": "tempeh",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "participated_in_workshop",
+          "object": "fermentation workshop at local food co-op",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "learned_skill",
+          "object": "making sauerkraut and kimchi",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "intends_to_try",
+          "object": "tempeh",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been meaning to try tempeh for a while now"
+        },
+        {
+          "subject": "user",
+          "predicate": "attended_workshop",
+          "object": "workshop on fermentation at a local food co-op",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I recently attended a workshop on fermentation at a local food co-op"
+        },
+        {
+          "subject": "user",
+          "predicate": "learned_to_make",
+          "object": "sauerkraut and kimchi",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "where I learned how to make my own sauerkraut and kimchi"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've been meaning to try tempeh for a while now\", \"subject\": \"user\", \"predicate\": \"intends_to_try\", \"object\": \"tempeh\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I recently attended a workshop on fermentation at a local food co-op\", \"subject\": \"user\", \"predicate\": \"attended_workshop\", \"object\": \"workshop on fermentation at a local food co-op\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"where I learned how to make my own sauerkraut and kimchi\", \"subject\": \"user\", \"predicate\": \"learned_to_make\", \"object\": \"sauerkraut and kimchi\", \"confidence\": 0.95, \"importance\": 6}]}"
+      ],
+      "elapsed_ms": 14510.657458000424,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 2
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:8",
+      "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+      "labels": [
+        {
+          "predicate": "diet_goal",
+          "value": "incorporate more fermented foods",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "learned_vegan_dish",
+          "value": "vegan lasagna with cashew ricotta",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        },
+        {
+          "predicate": "attended_vegan_class",
+          "value": "vegan cuisine class",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "diet",
+          "object": "vegan",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "activity",
+          "object": "attended vegan cuisine class",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "wants_to_incorporate",
+          "object": "more fermented foods into my diet",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been wanting to try to incorporate more fermented foods into my diet"
+        },
+        {
+          "subject": "user",
+          "predicate": "attended_class",
+          "object": "class on vegan cuisine",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I recently attended a class on vegan cuisine"
+        },
+        {
+          "subject": "user",
+          "predicate": "learned_how_to_make",
+          "object": "delicious vegan lasagna with a cashew-based ricotta cheese substitute",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've been wanting to try to incorporate more fermented foods into my diet\", \"subject\": \"user\", \"predicate\": \"wants_to_incorporate\", \"object\": \"more fermented foods into my diet\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I recently attended a class on vegan cuisine\", \"subject\": \"user\", \"predicate\": \"attended_class\", \"object\": \"class on vegan cuisine\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute\", \"subject\": \"user\", \"predicate\": \"learned_how_to_make\", \"object\": \"delicious vegan lasagna with a cashew-based ricotta cheese substitute\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 10759.310957999332,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 3,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "labels": [
+        {
+          "predicate": "cooking_goal",
+          "value": "cook more at home and use purchased ingredients",
+          "disposition": "truth",
+          "subject": "user",
+          "importance": 6
+        },
+        {
+          "predicate": "cooked_korean_dish",
+          "value": "bibimbap from cooking class online recipe library",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "goal",
+          "object": "cook more at home",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 7,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "goal",
+          "object": "use up all ingredients bought",
+          "kind": "triple",
+          "confidence": 0.9,
+          "importance": 6,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        },
+        {
+          "subject": "user",
+          "predicate": "experience",
+          "object": "Korean bibimbap recipe from cooking class's online recipe library",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 8,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "tries_to_cook_at_home",
+          "object": "more at home",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've been trying to cook more at home"
+        },
+        {
+          "subject": "user",
+          "predicate": "wants_to_use_up_ingredients",
+          "object": "all the ingredients I buy",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "I want to make sure I'm using up all the ingredients I buy"
+        },
+        {
+          "subject": "user",
+          "predicate": "tried_out_recipe",
+          "object": "Korean bibimbap from the cooking class's online recipe library",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library"
+        },
+        {
+          "subject": "user",
+          "predicate": "found_amazing",
+          "object": "Korean bibimbap",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 7,
+          "assertion_type": "agent_inference",
+          "evidence": "it was amazing"
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've been trying to cook more at home\", \"subject\": \"user\", \"predicate\": \"tries_to_cook_at_home\", \"object\": \"more at home\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I want to make sure I'm using up all the ingredients I buy\", \"subject\": \"user\", \"predicate\": \"wants_to_use_up_ingredients\", \"object\": \"all the ingredients I buy\", \"confidence\": 0.95, \"importance\": 7}, {\"evidence\": \"I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library\", \"subject\": \"user\", \"predicate\": \"tried_out_recipe\", \"object\": \"Korean bibimbap from the cooking class's online recipe library\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"it was amazing\", \"subject\": \"user\", \"predicate\": \"found_amazing\", \"object\": \"Korean bibimbap\", \"confidence\": 0.95, \"importance\": 7}]}"
+      ],
+      "elapsed_ms": 13003.845499999443,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 2,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    },
+    {
+      "case": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:6",
+      "source": "That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out.",
+      "labels": [
+        {
+          "predicate": "made_fermented_food",
+          "value": "kimchi at a fermentation workshop",
+          "disposition": "must_keep",
+          "subject": "user",
+          "importance": 9
+        }
+      ],
+      "before": [
+        {
+          "subject": "user",
+          "predicate": "allergy",
+          "object": "none stated",
+          "kind": "triple",
+          "confidence": 0.5,
+          "importance": 1,
+          "assertion_type": "direct_user_statement",
+          "evidence": null
+        }
+      ],
+      "before_rejections": [],
+      "after": [
+        {
+          "subject": "user",
+          "predicate": "made_kimchi",
+          "object": "from a workshop I attended on fermentation",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 6,
+          "assertion_type": "agent_inference",
+          "evidence": "I've actually made kimchi before from a workshop I attended on fermentation."
+        },
+        {
+          "subject": "user",
+          "predicate": "did_not_know_add_ingredients",
+          "object": "seafood or garlic scapes to create different flavor profiles",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 4,
+          "assertion_type": "agent_inference",
+          "evidence": "I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles."
+        },
+        {
+          "subject": "user",
+          "predicate": "will_try_out",
+          "object": "that",
+          "kind": "triple",
+          "confidence": 0.95,
+          "importance": 3,
+          "assertion_type": "agent_inference",
+          "evidence": "I'll have to try that out."
+        }
+      ],
+      "error": null,
+      "rejections": [],
+      "raw_attempts": [
+        "{\"facts\": [{\"evidence\": \"I've actually made kimchi before from a workshop I attended on fermentation.\", \"subject\": \"user\", \"predicate\": \"made_kimchi\", \"object\": \"from a workshop I attended on fermentation\", \"confidence\": 0.95, \"importance\": 6}, {\"evidence\": \"I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles.\", \"subject\": \"user\", \"predicate\": \"did_not_know_add_ingredients\", \"object\": \"seafood or garlic scapes to create different flavor profiles\", \"confidence\": 0.95, \"importance\": 4}, {\"evidence\": \"I'll have to try that out.\", \"subject\": \"user\", \"predicate\": \"will_try_out\", \"object\": \"that\", \"confidence\": 0.95, \"importance\": 3}]}"
+      ],
+      "elapsed_ms": 10537.190416000158,
+      "before_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      },
+      "after_coverage": {
+        "strict_target_matches": 0,
+        "targets": 1,
+        "strict_must_keep_matches": 0,
+        "must_keep_targets": 1
+      }
+    }
+  ],
+  "usage": {
+    "requests": 26,
+    "input_tokens": 25772,
+    "output_tokens": 5174,
+    "unmetered_requests": 0
+  },
+  "totals": {
+    "before": {
+      "strict_target_matches": 0,
+      "targets": 45,
+      "strict_must_keep_matches": 0,
+      "must_keep_targets": 24
+    },
+    "after": {
+      "strict_target_matches": 0,
+      "targets": 45,
+      "strict_must_keep_matches": 0,
+      "must_keep_targets": 24
+    }
+  }
+}

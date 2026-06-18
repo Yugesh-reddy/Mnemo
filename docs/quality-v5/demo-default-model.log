@@ -1,0 +1,79 @@
+uv run python examples/agent.py demo
+Demo namespace: demo-79a99f479509 (set MNEMO_NAMESPACE for the web UI)
+=== Mnemo demo — see → blame → revert → behavior change ===
+
+[turn 1] User: "I use Postgres for my project."
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/yugesh/Desktop/Projects/Mnemo/examples/agent.py:180 in demo           │
+│                                                                              │
+│   177 @app.command()                                                         │
+│   178 def demo() -> None:                                                    │
+│   179 │   """Run the scripted §10 rollback scenario end to end."""           │
+│ ❱ 180 │   asyncio.run(_scenario(stop_before_revert=False))                   │
+│   181                                                                        │
+│   182                                                                        │
+│   183 @app.command()                                                         │
+│                                                                              │
+│ /Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/ │
+│ python3.12/asyncio/runners.py:195 in run                                     │
+│                                                                              │
+│   192 │   │   │   "asyncio.run() cannot be called from a running event       │
+│       loop")                                                                 │
+│   193 │                                                                      │
+│   194 │   with Runner(debug=debug, loop_factory=loop_factory) as runner:     │
+│ ❱ 195 │   │   return runner.run(main)                                        │
+│   196                                                                        │
+│   197                                                                        │
+│   198 def _cancel_all_tasks(loop):                                           │
+│                                                                              │
+│ /Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/ │
+│ python3.12/asyncio/runners.py:118 in run                                     │
+│                                                                              │
+│   115 │   │                                                                  │
+│   116 │   │   self._interrupt_count = 0                                      │
+│   117 │   │   try:                                                           │
+│ ❱ 118 │   │   │   return self._loop.run_until_complete(task)                 │
+│   119 │   │   except exceptions.CancelledError:                              │
+│   120 │   │   │   if self._interrupt_count > 0:                              │
+│   121 │   │   │   │   uncancel = getattr(task, "uncancel", None)             │
+│                                                                              │
+│ /Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/ │
+│ python3.12/asyncio/base_events.py:691 in run_until_complete                  │
+│                                                                              │
+│    688 │   │   if not future.done():                                         │
+│    689 │   │   │   raise RuntimeError('Event loop stopped before Future      │
+│        completed.')                                                          │
+│    690 │   │                                                                 │
+│ ❱  691 │   │   return future.result()                                        │
+│    692 │                                                                     │
+│    693 │   def stop(self):                                                   │
+│    694 │   │   """Stop running the event loop.                               │
+│                                                                              │
+│ /Users/yugesh/Desktop/Projects/Mnemo/examples/agent.py:141 in _scenario      │
+│                                                                              │
+│   138 │   │   store = MnemoStore(conn, embedder,                             │
+│       namespace=f"demo-{uuid4().hex[:12]}")                                  │
+│   139 │   │   worker = ExtractionWorker(conn, embedder, extractor)           │
+│   140 │   │   print(f"Demo namespace: {store.namespace} (set MNEMO_NAMESPACE │
+│       for the web UI)")                                                      │
+│ ❱ 141 │   │   await run_scenario(store, worker, say=print,                   │
+│       stop_before_revert=stop_before_revert)                                 │
+│   142 │   finally:                                                           │
+│   143 │   │   await conn.close()                                             │
+│   144                                                                        │
+│                                                                              │
+│ /Users/yugesh/Desktop/Projects/Mnemo/examples/agent.py:68 in run_scenario    │
+│                                                                              │
+│    65 │   │   fact_id, subject, predicate = db.fact_id, db.subject,          │
+│       db.predicate                                                           │
+│    66 │   │   stored = db.value                                              │
+│    67 │   else:                                                              │
+│ ❱  68 │   │   raise RuntimeError(                                            │
+│    69 │   │   │   "The extraction pipeline did not produce a database fact;  │
+│       "                                                                      │
+│    70 │   │   │   "inspect memory_decisions/health."                         │
+│    71 │   │   )                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+RuntimeError: The extraction pipeline did not produce a database fact; inspect 
+memory_decisions/health.
+make: *** [demo] Error 1

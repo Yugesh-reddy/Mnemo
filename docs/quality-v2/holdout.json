@@ -1,0 +1,2934 @@
+{
+  "split": "holdout",
+  "policy_sha256": "77bbf4e83088a4a740bc4b6da38a38bd214dc9528551f424eeada7f54280708a",
+  "complete": true,
+  "cases": {
+    "gpt4_15e38248": {
+      "naive": {
+        "stored": 45,
+        "precision": 0.022222222222222223,
+        "recall": 0.043478260869565216,
+        "f1": 0.029411764705882353,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.02,
+        "historical_recall": 0.04,
+        "unsupported_writes": 49,
+        "visible_facts": 45,
+        "total_events": 50,
+        "total_rows": 95,
+        "storage_bytes": 909312,
+        "latency_ms": 3344.2655419930816,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 50,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 50
+          },
+          "verifier": {
+            "nli_requests": 0
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "coffee table",
+            "predicate": "has_feature",
+            "object_text": "metal legs",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "material",
+            "object_text": "wooden",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "mattress",
+            "predicate": "expected_arrival_date",
+            "object_text": "next Wednesday",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "assembled_bookshelf",
+            "object_text": "IKEA bookshelf",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "bedroom_aesthetic",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "completed_assembly_timeframe",
+            "object_text": "two months ago",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "considered_design_factor",
+            "object_text": "overall_aesthetic_living_room",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "couch_pillow_status",
+            "object_text": "worn out",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "fixed",
+            "object_text": "wobbly leg on kitchen table",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "recommendations for throw pillows",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "had_experience_with",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "has_acquisition",
+            "object_text": "new coffee table",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "has_color_scheme",
+            "object_text": "future sectional sofa",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "has_furniture",
+            "object_text": "3-seater couch",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intended_purchase",
+            "object_text": "Navy Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intends_to_purchase",
+            "object_text": "throw pillows",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interested_in_bedside_tables",
+            "object_text": "bedside tables with metal or glass accents",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_idea",
+            "object_text": "velvet pillows in rich hues",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_product",
+            "object_text": "Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_color_scheme",
+            "object_text": "beige, gray, white",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style_preference",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "needs_throws_pillows",
+            "object_text": "couch",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "ordered_mattress",
+            "object_text": "Casper",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "owns",
+            "object_text": "coffee table (wooden with metal legs)",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_item",
+            "object_text": "bookshelf",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_item_materials",
+            "object_text": "wooden with metal legs",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_mattress",
+            "object_text": "Casper mattress",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "pillow_search_criteria",
+            "object_text": "affordable and stylish",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_action",
+            "object_text": "order swatches or samples",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "object_text": "check_out_West_Elm_throw_pillow_collection",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_initial_purchase_quantity",
+            "object_text": "two pillows",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "object_text": "West Elm, CB2",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_purchase",
+            "object_text": "modern table lamp",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_reorganization",
+            "object_text": "kitchen cabinets",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_to_purchase",
+            "object_text": "light gray or beige pillow",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "prefers_color",
+            "object_text": "Navy",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchased_from_store",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_source",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_time",
+            "object_text": "last Thursday",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_timeframe",
+            "object_text": "three weeks ago",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "rearranged_furniture",
+            "object_text": "living room",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "rearranged_living_room",
+            "object_text": null,
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "object_text": "coffee table",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "selected_item_size",
+            "object_text": "20\" x 20\"",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "needs_throws_pillows",
+            "op": "ADD",
+            "object_text": "couch",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"]}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "rearranged_living_room",
+            "op": "ADD",
+            "object_text": null,
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"]}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "ordered_mattress",
+            "op": "ADD",
+            "object_text": "Casper",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"]}",
+            "seq": 3
+          },
+          {
+            "subject": "mattress",
+            "predicate": "expected_arrival_date",
+            "op": "ADD",
+            "object_text": "next Wednesday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"]}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_to_purchase",
+            "op": "ADD",
+            "object_text": "light gray or beige pillow",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:2\"]}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "has_color_scheme",
+            "op": "ADD",
+            "object_text": "future sectional sofa",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:2\"]}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_purchase",
+            "op": "ADD",
+            "object_text": "modern table lamp",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:4\"]}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "interested_in_bedside_tables",
+            "op": "ADD",
+            "object_text": "bedside tables with metal or glass accents",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:6\"]}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_mattress",
+            "op": "ADD",
+            "object_text": "Casper mattress",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:6\"]}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "bedroom_aesthetic",
+            "op": "ADD",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:6\"]}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "intends_to_purchase",
+            "op": "ADD",
+            "object_text": "throw pillows",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"]}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "assembled_bookshelf",
+            "op": "ADD",
+            "object_text": "IKEA bookshelf",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"]}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "completed_assembly_timeframe",
+            "op": "ADD",
+            "object_text": "two months ago",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"]}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "had_experience_with",
+            "op": "ADD",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:2\"]}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "has_furniture",
+            "op": "ADD",
+            "object_text": "3-seater couch",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:4\"]}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "selected_item_size",
+            "op": "ADD",
+            "object_text": "20\" x 20\"",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_initial_purchase_quantity",
+            "op": "ADD",
+            "object_text": "two pillows",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_item",
+            "op": "ADD",
+            "object_text": "coffee table",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 18
+          },
+          {
+            "subject": "user",
+            "predicate": "purchased_from_store",
+            "op": "ADD",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 19
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_item_materials",
+            "op": "ADD",
+            "object_text": "wooden with metal legs",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 20
+          },
+          {
+            "subject": "user",
+            "predicate": "owns_item",
+            "op": "UPDATE",
+            "object_text": "bookshelf",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"]}",
+            "seq": 21
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "op": "ADD",
+            "object_text": "West Elm's throw pillow collection",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:8\"]}",
+            "seq": 22
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "op": "ADD",
+            "object_text": "check_out_West_Elm_throw_pillow_collection",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:10\"]}",
+            "seq": 23
+          },
+          {
+            "subject": "user",
+            "predicate": "considered_design_factor",
+            "op": "ADD",
+            "object_text": "color_of_walls",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:10\"]}",
+            "seq": 24
+          },
+          {
+            "subject": "user",
+            "predicate": "considered_design_factor",
+            "op": "UPDATE",
+            "object_text": "overall_aesthetic_living_room",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:10\"]}",
+            "seq": 25
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "op": "ADD",
+            "object_text": "coffee table from West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"]}",
+            "seq": 26
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_timeframe",
+            "op": "ADD",
+            "object_text": "three weeks ago",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"]}",
+            "seq": 27
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style_preference",
+            "op": "ADD",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"]}",
+            "seq": 28
+          },
+          {
+            "subject": "user",
+            "predicate": "couch_pillow_status",
+            "op": "ADD",
+            "object_text": "worn out",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"]}",
+            "seq": 29
+          },
+          {
+            "subject": "user",
+            "predicate": "pillow_search_criteria",
+            "op": "ADD",
+            "object_text": "affordable and stylish",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"]}",
+            "seq": 30
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "op": "UPDATE",
+            "object_text": "coffee table",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"]}",
+            "seq": 31
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_source",
+            "op": "ADD",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"]}",
+            "seq": 32
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "has_feature",
+            "op": "ADD",
+            "object_text": "metal legs",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"]}",
+            "seq": 33
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "material",
+            "op": "ADD",
+            "object_text": "wooden",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"]}",
+            "seq": 34
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_time",
+            "op": "ADD",
+            "object_text": "last Thursday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"]}",
+            "seq": 35
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_product",
+            "op": "ADD",
+            "object_text": "Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:4\"]}",
+            "seq": 36
+          },
+          {
+            "subject": "user",
+            "predicate": "prefers_color",
+            "op": "ADD",
+            "object_text": "Navy",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:4\"]}",
+            "seq": 37
+          },
+          {
+            "subject": "user",
+            "predicate": "intended_purchase",
+            "op": "ADD",
+            "object_text": "Navy Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:6\"]}",
+            "seq": 38
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_action",
+            "op": "ADD",
+            "object_text": "buy navy throw blanket",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:8\"]}",
+            "seq": 39
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "recommendations for throw pillows",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:0\"]}",
+            "seq": 40
+          },
+          {
+            "subject": "user",
+            "predicate": "has_acquisition",
+            "op": "ADD",
+            "object_text": "new coffee table",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:0\"]}",
+            "seq": 41
+          },
+          {
+            "subject": "user",
+            "predicate": "rearranged_furniture",
+            "op": "ADD",
+            "object_text": "living room",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:0\"]}",
+            "seq": 42
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style",
+            "op": "ADD",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"]}",
+            "seq": 43
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_color_scheme",
+            "op": "ADD",
+            "object_text": "beige, gray, white",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"]}",
+            "seq": 44
+          },
+          {
+            "subject": "user",
+            "predicate": "owns",
+            "op": "ADD",
+            "object_text": "coffee table (wooden with metal legs)",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"]}",
+            "seq": 45
+          },
+          {
+            "subject": "user",
+            "predicate": "fixed",
+            "op": "ADD",
+            "object_text": "wobbly leg on kitchen table",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"]}",
+            "seq": 46
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_idea",
+            "op": "ADD",
+            "object_text": "velvet pillows in rich hues",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:4\"]}",
+            "seq": 47
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "op": "UPDATE",
+            "object_text": "West Elm, CB2",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:6\"]}",
+            "seq": 48
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_action",
+            "op": "UPDATE",
+            "object_text": "order swatches or samples",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:8\"]}",
+            "seq": 49
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_reorganization",
+            "op": "ADD",
+            "object_text": "kitchen cabinets",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:10\"]}",
+            "seq": 50
+          }
+        ],
+        "retrieval_probes": [
+          {
+            "turn_id": "answer_8858d9dc_2:0",
+            "query": "user assembled_bookshelf IKEA bookshelf for home office",
+            "k": 5,
+            "session_id": "answer_8858d9dc_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 49.64795900741592,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "assembled_bookshelf",
+                "object": "IKEA bookshelf",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_item",
+                "object": "bookshelf",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "rearranged_furniture",
+                "object": "living room",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style_preference",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_1:2",
+            "query": "user coffee_table_brand West Elm",
+            "k": 5,
+            "session_id": "answer_8858d9dc_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 28.01983300014399,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "purchase_source",
+                "object": "West Elm",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchased_from_store",
+                "object": "West Elm",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "had_experience_with",
+                "object": "West Elm",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "has_acquisition",
+                "object": "new coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_1:2",
+            "query": "user coffee_table_delivery_time last Thursday",
+            "k": 5,
+            "session_id": "answer_8858d9dc_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 21.502707997569814,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchase_time",
+                "object": "last Thursday",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "mattress",
+                "predicate": "expected_arrival_date",
+                "object": "next Wednesday",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "has_acquisition",
+                "object": "new coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchase_timeframe",
+                "object": "three weeks ago",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user coffee_table_legs metal",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 22.583166995900683,
+            "results": [
+              {
+                "subject": "coffee table",
+                "predicate": "has_feature",
+                "object": "metal legs",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "fixed",
+                "object": "wobbly leg on kitchen table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_item_materials",
+                "object": "wooden with metal legs",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns",
+                "object": "coffee table (wooden with metal legs)",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user coffee_table_material wood",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 24.295583003549837,
+            "results": [
+              {
+                "subject": "coffee table",
+                "predicate": "material",
+                "object": "wooden",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "has_acquisition",
+                "object": "new coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style_preference",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_item_materials",
+                "object": "wooden with metal legs",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user completed_home_repair tightened wobbly kitchen-table leg screw",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 23.462416007532738,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "fixed",
+                "object": "wobbly leg on kitchen table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "rearranged_furniture",
+                "object": "living room",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_item_materials",
+                "object": "wooden with metal legs",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "couch_pillow_status",
+                "object": "worn out",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_2:4",
+            "query": "user couch_size standard three-seater",
+            "k": 5,
+            "session_id": "answer_8858d9dc_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 19.940666999900714,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "has_furniture",
+                "object": "3-seater couch",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "pillow_search_criteria",
+                "object": "affordable and stylish",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "rearranged_furniture",
+                "object": "living room",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "bedroom_aesthetic",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_3:0",
+            "query": "user expected_mattress_arrival next Wednesday",
+            "k": 5,
+            "session_id": "answer_8858d9dc_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 19.03166700503789,
+            "results": [
+              {
+                "subject": "mattress",
+                "predicate": "expected_arrival_date",
+                "object": "next Wednesday",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "ordered_mattress",
+                "object": "Casper",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchase_time",
+                "object": "last Thursday",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_mattress",
+                "object": "Casper mattress",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "bedroom_aesthetic",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user living_room_colors beige, gray and white",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 20.450832991627976,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "living_room_color_scheme",
+                "object": "beige, gray, white",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style_preference",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "has_color_scheme",
+                "object": "future sectional sofa",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "bedroom_aesthetic",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considered_design_factor",
+                "object": "overall_aesthetic_living_room",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_3:0",
+            "query": "user mattress_order_brand Casper",
+            "k": 5,
+            "session_id": "answer_8858d9dc_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 18.376540989265777,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "ordered_mattress",
+                "object": "Casper",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "owns_mattress",
+                "object": "Casper mattress",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "pillow_search_criteria",
+                "object": "affordable and stylish",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "mattress",
+                "predicate": "expected_arrival_date",
+                "object": "next Wednesday",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "bedroom_aesthetic",
+                "object": "modern",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          }
+        ],
+        "retrieval_probe_usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 10,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 10
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        }
+      },
+      "gated": {
+        "stored": 27,
+        "precision": 0.037037037037037035,
+        "recall": 0.043478260869565216,
+        "f1": 0.039999999999999994,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.034482758620689655,
+        "historical_recall": 0.04,
+        "unsupported_writes": 28,
+        "visible_facts": 27,
+        "total_events": 29,
+        "total_rows": 211,
+        "storage_bytes": 1474560,
+        "latency_ms": 165090.98408299906,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 50,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 50
+          },
+          "verifier": {
+            "requests": 34,
+            "input_tokens": 9876,
+            "output_tokens": 3141,
+            "unmetered_requests": 0,
+            "nli_requests": 49
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "coffee table",
+            "predicate": "has_feature",
+            "object_text": "metal legs",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "material",
+            "object_text": "wooden",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "mattress",
+            "predicate": "expected_arrival_date",
+            "object_text": "next Wednesday",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "assembled_bookshelf",
+            "object_text": "IKEA bookshelf",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "completed_assembly_timeframe",
+            "object_text": "two months ago",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "couch_pillow_status",
+            "object_text": "worn out",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intended_purchase",
+            "object_text": "Navy Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intends_to_purchase",
+            "object_text": "throw pillows",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_idea",
+            "object_text": "velvet pillows in rich hues",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_product",
+            "object_text": "Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_color_scheme",
+            "object_text": "beige, gray, white",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style_preference",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "ordered_mattress",
+            "object_text": "Casper",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "pillow_search_criteria",
+            "object_text": "affordable and stylish",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_action",
+            "object_text": "order swatches or samples",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_initial_purchase_quantity",
+            "object_text": "two pillows",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "object_text": "West Elm, CB2",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_purchase",
+            "object_text": "modern table lamp",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_reorganization",
+            "object_text": "kitchen cabinets",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_to_purchase",
+            "object_text": "light gray or beige pillow",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchased_from_store",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_source",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_time",
+            "object_text": "last Thursday",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_timeframe",
+            "object_text": "three weeks ago",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "object_text": "coffee table",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "selected_item_size",
+            "object_text": "20\" x 20\"",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "ordered_mattress",
+            "op": "ADD",
+            "object_text": "Casper",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"], \"cache_ids\": [\"e6078b18-0d93-4ca2-96ee-4369b365d4ed\"], \"session_id\": \"answer_8858d9dc_3\"}",
+            "seq": 1
+          },
+          {
+            "subject": "mattress",
+            "predicate": "expected_arrival_date",
+            "op": "ADD",
+            "object_text": "next Wednesday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:0\"], \"cache_ids\": [\"e6078b18-0d93-4ca2-96ee-4369b365d4ed\"], \"session_id\": \"answer_8858d9dc_3\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_to_purchase",
+            "op": "ADD",
+            "object_text": "light gray or beige pillow",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:2\"], \"cache_ids\": [\"5d752482-c32a-4296-9776-82efd94cd666\"], \"session_id\": \"answer_8858d9dc_3\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_purchase",
+            "op": "ADD",
+            "object_text": "modern table lamp",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_3:4\"], \"cache_ids\": [\"1267276c-1bfc-4685-8a92-4d1f63176ebc\"], \"session_id\": \"answer_8858d9dc_3\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "intends_to_purchase",
+            "op": "ADD",
+            "object_text": "throw pillows",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"], \"cache_ids\": [\"1b401870-404f-4947-a6b4-40e96aa71256\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "assembled_bookshelf",
+            "op": "ADD",
+            "object_text": "IKEA bookshelf",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"], \"cache_ids\": [\"1b401870-404f-4947-a6b4-40e96aa71256\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "completed_assembly_timeframe",
+            "op": "ADD",
+            "object_text": "two months ago",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:0\"], \"cache_ids\": [\"1b401870-404f-4947-a6b4-40e96aa71256\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "selected_item_size",
+            "op": "ADD",
+            "object_text": "20\" x 20\"",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"], \"cache_ids\": [\"146683ac-1208-4335-855a-73843c1601ce\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_initial_purchase_quantity",
+            "op": "ADD",
+            "object_text": "two pillows",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"], \"cache_ids\": [\"146683ac-1208-4335-855a-73843c1601ce\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "purchased_from_store",
+            "op": "ADD",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:6\"], \"cache_ids\": [\"146683ac-1208-4335-855a-73843c1601ce\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "op": "ADD",
+            "object_text": "West Elm's throw pillow collection",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_2:8\"], \"cache_ids\": [\"e6fdacec-688a-45dd-99b7-8fe37c13fc9d\"], \"session_id\": \"answer_8858d9dc_2\"}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "op": "ADD",
+            "object_text": "coffee table from West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"], \"cache_ids\": [\"cc4ee6c9-e712-4ef4-bfed-d699eb0de218\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_timeframe",
+            "op": "ADD",
+            "object_text": "three weeks ago",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"], \"cache_ids\": [\"cc4ee6c9-e712-4ef4-bfed-d699eb0de218\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style_preference",
+            "op": "ADD",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"], \"cache_ids\": [\"cc4ee6c9-e712-4ef4-bfed-d699eb0de218\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "couch_pillow_status",
+            "op": "ADD",
+            "object_text": "worn out",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"], \"cache_ids\": [\"cc4ee6c9-e712-4ef4-bfed-d699eb0de218\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "pillow_search_criteria",
+            "op": "ADD",
+            "object_text": "affordable and stylish",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:0\"], \"cache_ids\": [\"cc4ee6c9-e712-4ef4-bfed-d699eb0de218\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "recent_purchase",
+            "op": "UPDATE",
+            "object_text": "coffee table",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"], \"cache_ids\": [\"30ae9e93-10a9-4cf9-a0db-d842120285a5\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_source",
+            "op": "ADD",
+            "object_text": "West Elm",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"], \"cache_ids\": [\"30ae9e93-10a9-4cf9-a0db-d842120285a5\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 18
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "has_feature",
+            "op": "ADD",
+            "object_text": "metal legs",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"], \"cache_ids\": [\"30ae9e93-10a9-4cf9-a0db-d842120285a5\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 19
+          },
+          {
+            "subject": "coffee table",
+            "predicate": "material",
+            "op": "ADD",
+            "object_text": "wooden",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"], \"cache_ids\": [\"30ae9e93-10a9-4cf9-a0db-d842120285a5\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 20
+          },
+          {
+            "subject": "user",
+            "predicate": "purchase_time",
+            "op": "ADD",
+            "object_text": "last Thursday",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:2\"], \"cache_ids\": [\"30ae9e93-10a9-4cf9-a0db-d842120285a5\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 21
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_product",
+            "op": "ADD",
+            "object_text": "Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:4\"], \"cache_ids\": [\"35f9f660-672d-4bc1-a264-0d14c253be77\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 22
+          },
+          {
+            "subject": "user",
+            "predicate": "intended_purchase",
+            "op": "ADD",
+            "object_text": "Navy Grid Velvet Pillow Cover",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_1:6\"], \"cache_ids\": [\"ee4e585e-fbe7-45a4-959c-0adf3c06c48d\"], \"session_id\": \"answer_8858d9dc_1\"}",
+            "seq": 23
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_style",
+            "op": "ADD",
+            "object_text": "modern",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"], \"cache_ids\": [\"b3689e60-d29d-4865-993f-8d8d39907ac2\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 24
+          },
+          {
+            "subject": "user",
+            "predicate": "living_room_color_scheme",
+            "op": "ADD",
+            "object_text": "beige, gray, white",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:2\"], \"cache_ids\": [\"b3689e60-d29d-4865-993f-8d8d39907ac2\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 25
+          },
+          {
+            "subject": "user",
+            "predicate": "likes_idea",
+            "op": "ADD",
+            "object_text": "velvet pillows in rich hues",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:4\"], \"cache_ids\": [\"870733c8-7e15-4f5b-9dda-e8374c4c8f6e\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 26
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "op": "UPDATE",
+            "object_text": "West Elm, CB2",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:6\"], \"cache_ids\": [\"68c4dd74-64a4-4dbd-ae12-5840b4543b5c\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 27
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_action",
+            "op": "ADD",
+            "object_text": "order swatches or samples",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:8\"], \"cache_ids\": [\"3c303314-d2af-4a46-9677-ccdf45672902\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 28
+          },
+          {
+            "subject": "user",
+            "predicate": "planning_reorganization",
+            "op": "ADD",
+            "object_text": "kitchen cabinets",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_8858d9dc_4:10\"], \"cache_ids\": [\"9988e5a5-886d-440c-b33a-babbc0fbbaf5\"], \"session_id\": \"answer_8858d9dc_4\"}",
+            "seq": 29
+          }
+        ],
+        "retrieval_probes": [
+          {
+            "turn_id": "answer_8858d9dc_2:0",
+            "query": "user assembled_bookshelf IKEA bookshelf for home office",
+            "k": 5,
+            "session_id": "answer_8858d9dc_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 25.693791001685895,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "assembled_bookshelf",
+                "object": "IKEA bookshelf",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "selected_item_size",
+                "object": "20\" x 20\"",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "completed_assembly_timeframe",
+                "object": "two months ago",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_1:2",
+            "query": "user coffee_table_brand West Elm",
+            "k": 5,
+            "session_id": "answer_8858d9dc_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 17.54975000221748,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "purchase_source",
+                "object": "West Elm",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style_preference",
+                "object": "modern",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "pillow_search_criteria",
+                "object": "affordable and stylish",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "coffee table",
+                "predicate": "has_feature",
+                "object": "metal legs",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_1:2",
+            "query": "user coffee_table_delivery_time last Thursday",
+            "k": 5,
+            "session_id": "answer_8858d9dc_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 16.371249992516823,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "recent_purchase",
+                "object": "coffee table",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchase_time",
+                "object": "last Thursday",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "purchase_timeframe",
+                "object": "three weeks ago",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "couch_pillow_status",
+                "object": "worn out",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "coffee table",
+                "predicate": "has_feature",
+                "object": "metal legs",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user coffee_table_legs metal",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 18.44787500158418,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "living_room_color_scheme",
+                "object": "beige, gray, white",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style",
+                "object": "modern",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user coffee_table_material wood",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 18.778625002596527,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "living_room_color_scheme",
+                "object": "beige, gray, white",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style",
+                "object": "modern",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "likes_idea",
+                "object": "velvet pillows in rich hues",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planning_reorganization",
+                "object": "kitchen cabinets",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_action",
+                "object": "order swatches or samples",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user completed_home_repair tightened wobbly kitchen-table leg screw",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 19.31795799464453,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "planning_reorganization",
+                "object": "kitchen cabinets",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style",
+                "object": "modern",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_2:4",
+            "query": "user couch_size standard three-seater",
+            "k": 5,
+            "session_id": "answer_8858d9dc_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 19.257167004980147,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "selected_item_size",
+                "object": "20\" x 20\"",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_initial_purchase_quantity",
+                "object": "two pillows",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "assembled_bookshelf",
+                "object": "IKEA bookshelf",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "intends_to_purchase",
+                "object": "throw pillows",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_3:0",
+            "query": "user expected_mattress_arrival next Wednesday",
+            "k": 5,
+            "session_id": "answer_8858d9dc_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 16.572207998251542,
+            "results": [
+              {
+                "subject": "mattress",
+                "predicate": "expected_arrival_date",
+                "object": "next Wednesday",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "ordered_mattress",
+                "object": "Casper",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planning_to_purchase",
+                "object": "light gray or beige pillow",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planning_purchase",
+                "object": "modern table lamp",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_4:2",
+            "query": "user living_room_colors beige, gray and white",
+            "k": 5,
+            "session_id": "answer_8858d9dc_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 18.63091700943187,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "living_room_color_scheme",
+                "object": "beige, gray, white",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "living_room_style",
+                "object": "modern",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "likes_idea",
+                "object": "velvet pillows in rich hues",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planning_reorganization",
+                "object": "kitchen cabinets",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_8858d9dc_3:0",
+            "query": "user mattress_order_brand Casper",
+            "k": 5,
+            "session_id": "answer_8858d9dc_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 16.87645800120663,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "ordered_mattress",
+                "object": "Casper",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "mattress",
+                "predicate": "expected_arrival_date",
+                "object": "next Wednesday",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planning_to_purchase",
+                "object": "light gray or beige pillow",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          }
+        ],
+        "retrieval_probe_usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 10,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 10
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        }
+      },
+      "decisions": [
+        {
+          "turn_id": "answer_8858d9dc_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"couch\", \"subject\": \"user\", \"predicate\": \"needs_throws_pillows\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('needs' instead of 'need') and fails to capture the specific context of 'throw pillows' mentioned in the source; it only vaguely references 'couch'. The source explicitly states the user is looking for recommendations for throw pillows for their couch, whereas the hypothesis incorrectly frames the need as an action performed on the couch itself.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('needs' instead of 'need') and fails to capture the specific context of 'throw pillows' mentioned in the source; it only vaguely references 'couch'. The source explicitly states the user is looking for recommendations for throw pillows for their couch, whereas the hypothesis incorrectly frames the need as an action performed on the couch itself.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some recommendations on throw pillows for my couch.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"rearranged_living_room\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "empty extracted value cannot establish an assertion",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Casper\", \"subject\": \"user\", \"predicate\": \"ordered_mattress\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.53; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user 'ordered one from Casper', which directly entails that the ordered mattress is Casper.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I just got a new coffee table and rearranged my living room, and now the old pillows are looking a bit worn out. By the way, I've been meaning to get a new mattress for ages, and last week I finally took the plunge and ordered one from Casper.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.53, \"novelty\": 1.0, \"transient\": true, \"importance\": 8, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"next Wednesday\", \"subject\": \"mattress\", \"predicate\": \"expected_arrival_date\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.30; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm looking for some recommendations on throw pillows for my couch. I just got a new coffee table and rearranged my living room, and now the old pillows are looking a bit worn out. By the way, I've been meaning to get a new mattress for ages, and last week I finally took the plunge and ordered one from Casper. It's supposed to arrive next Wednesday, and I'm really looking forward to getting a good night's sleep.\", \"probability\": 0.9968672394752502}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.30168541938667215, \"novelty\": 0.37228473128890727, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"light gray or beige pillow\", \"subject\": \"user\", \"predicate\": \"planning_to_purchase\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.44; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm thinking of getting a light gray or beige pillow to match the color scheme I have in mind for my future sectional sofa. Do you know any brands that offer a wide range of gray or beige throw pillows with wooden or metal accents?\", \"probability\": 0.9925712943077087}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4407507164534879, \"novelty\": 0.46916905484495974, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"future sectional sofa\", \"subject\": \"user\", \"predicate\": \"has_color_scheme\", \"confidence\": 0.85, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('My' instead of 'I') and incorrectly asserts that the user's color scheme IS the future sectional sofa, whereas the source text only states the user is thinking of matching pillows TO a future sectional sofa.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('My' instead of 'I') and incorrectly asserts that the user's color scheme IS the future sectional sofa, whereas the source text only states the user is thinking of matching pillows TO a future sectional sofa.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm thinking of getting a light gray or beige pillow to match the color scheme I have in mind for my future sectional sofa.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"modern table lamp\", \"subject\": \"user\", \"predicate\": \"planning_purchase\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm thinking of getting a modern table lamp with a metallic accent to match the metal legs of my new coffee table. Do you have any recommendations for lamps with a similar aesthetic?\", \"probability\": 0.9922177791595459}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4098117686687752, \"novelty\": 0.36603922889591745, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"bedside tables with metal or glass accents\", \"subject\": \"user\", \"predicate\": \"interested_in_bedside_tables\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses interest and asks for recommendations regarding specific types of bedside tables (metal or glass), but the hypothesis incorrectly frames this as a completed fact ('My interested in... is...') with an ungrammatical structure that does not accurately reflect the user's stated intent.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses interest and asks for recommendations regarding specific types of bedside tables (metal or glass), but the hypothesis incorrectly frames this as a completed fact ('My interested in... is...') with an ungrammatical structure that does not accurately reflect the user's stated intent.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm interested in exploring more options for bedside tables that would complement my new Casper mattress and modern aesthetic. Can you recommend some bedside tables with metal or glass accents that would fit well with my bedroom decor?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Casper mattress\", \"subject\": \"user\", \"predicate\": \"owns_mattress\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I'm interested in exploring more options for bedside tables that would complement my new Casper mattress and modern aesthetic. Can you recommend some bedside tables with metal or glass accents that would fit well with my bedroom decor?\", \"probability\": 0.9952783584594727}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"modern\", \"subject\": \"user\", \"predicate\": \"bedroom_aesthetic\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I'm interested in exploring more options for bedside tables that would complement my new Casper mattress and modern aesthetic. Can you recommend some bedside tables with metal or glass accents that would fit well with my bedroom decor?\", \"probability\": 0.9974417686462402}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_3:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"throw pillows\", \"subject\": \"user\", \"predicate\": \"intends_to_purchase\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.31; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm thinking of getting some new throw pillows for my couch, can you recommend some good online stores that sell a wide variety of patterns and fabrics? Oh, and speaking of organizing, I finally assembled that IKEA bookshelf for my home office about two months ago, and it's been a game-changer for my productivity.\", \"probability\": 0.994217038154602}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.30578721260792563, \"novelty\": 0.2859573753597521, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"IKEA bookshelf\", \"subject\": \"user\", \"predicate\": \"assembled_bookshelf\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.48; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm thinking of getting some new throw pillows for my couch, can you recommend some good online stores that sell a wide variety of patterns and fabrics? Oh, and speaking of organizing, I finally assembled that IKEA bookshelf for my home office about two months ago, and it's been a game-changer for my productivity.\", \"probability\": 0.997605562210083}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4842441945787257, \"novelty\": 0.48081398192908564, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"two months ago\", \"subject\": \"user\", \"predicate\": \"completed_assembly_timeframe\", \"confidence\": 1.0, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm thinking of getting some new throw pillows for my couch, can you recommend some good online stores that sell a wide variety of patterns and fabrics? Oh, and speaking of organizing, I finally assembled that IKEA bookshelf for my home office about two months ago, and it's been a game-changer for my productivity.\", \"probability\": 0.9946275353431702}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4295883635673994, \"novelty\": 0.4319612118913314, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"West Elm\", \"subject\": \"user\", \"predicate\": \"had_experience_with\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('My had experience') and fails to accurately capture the specific object of the experience (West Elm) as stated in the source text.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('My had experience') and fails to accurately capture the specific object of the experience (West Elm) as stated in the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've had a good experience with them when I bought my coffee table\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"3-seater couch\", \"subject\": \"user\", \"predicate\": \"has_furniture\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('My' instead of 'I') and incorrectly frames the user's possession as a completed fact with specific subject-predicate-object structure, whereas the source text is a request for recommendations regarding an existing item without asserting definitive ownership or quantity.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('My' instead of 'I') and incorrectly frames the user's possession as a completed fact with specific subject-predicate-object structure, whereas the source text is a request for recommendations regarding an existing item without asserting definitive ownership or quantity.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Can you recommend some throw pillow sizes? I have a standard 3-seater couch, and I'm not sure what size would work best. Also, do you think two or three throw pillows would be enough, or should I consider more?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"20\\\" x 20\\\"\", \"subject\": \"user\", \"predicate\": \"selected_item_size\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.44; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll go with the 20\\\" x 20\\\" size, and I'll probably start with two pillows to see how it looks. Do you have any recommendations for patterns or designs that would complement my new coffee table? I got it from West Elm, and it's a wooden one with metal legs, so I want to find something that will tie in with that aesthetic. Also, speaking of organization, I've been loving my new bookshelf in my home office - it's really helped me stay organized and focused.\", \"probability\": 0.9966220855712891}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.43610760755009126, \"novelty\": 0.45369202516697105, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"two pillows\", \"subject\": \"user\", \"predicate\": \"planned_initial_purchase_quantity\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's intention to start with two pillows ('I'll probably start with two pillows'), which directly matches the hypothesis claim about the planned initial purchase quantity.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'll probably start with two pillows\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4133809868116553, \"novelty\": 0.24460328937218445, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"coffee table\", \"subject\": \"user\", \"predicate\": \"owns_item\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a direct statement by the user that they own a wooden coffee table with metal legs from West Elm. The hypothesis incorrectly frames this as 'My owns item is coffee table,' which misrepresents the grammatical structure and specific details (wooden/metal) of the original assertion.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a direct statement by the user that they own a wooden coffee table with metal legs from West Elm. The hypothesis incorrectly frames this as 'My owns item is coffee table,' which misrepresents the grammatical structure and specific details (wooden/metal) of the original assertion.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I got it from West Elm, and it's a wooden one with metal legs\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"West Elm\", \"subject\": \"user\", \"predicate\": \"purchased_from_store\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.48; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll go with the 20\\\" x 20\\\" size, and I'll probably start with two pillows to see how it looks. Do you have any recommendations for patterns or designs that would complement my new coffee table? I got it from West Elm, and it's a wooden one with metal legs, so I want to find something that will tie in with that aesthetic. Also, speaking of organization, I've been loving my new bookshelf in my home office - it's really helped me stay organized and focused.\", \"probability\": 0.9957470297813416}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4756604768048925, \"novelty\": 0.4522015893496417, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"wooden with metal legs\", \"subject\": \"user\", \"predicate\": \"owns_item_materials\", \"confidence\": 1.0, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('My owns') and lacks the specific 'coffee table' context present in the source text regarding the wooden item with metal legs, making it an unrelated or malformed statement rather than a direct entailment.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('My owns') and lacks the specific 'coffee table' context present in the source text regarding the wooden item with metal legs, making it an unrelated or malformed statement rather than a direct entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I got it from West Elm, and it's a wooden one with metal legs\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"bookshelf\", \"subject\": \"user\", \"predicate\": \"owns_item\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text states the user 'has been loving' a new bookshelf in their home office and that it 'helped them stay organized', which describes an experience or opinion rather than a direct statement of ownership ('owns_item'). The hypothesis asserts 'My owns item is bookshelf', which is grammatically incorrect and does not match the specific phrasing or definitive nature of the source's claim about the bookshelf.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user 'has been loving' a new bookshelf in their home office and that it 'helped them stay organized', which describes an experience or opinion rather than a direct statement of ownership ('owns_item'). The hypothesis asserts 'My owns item is bookshelf', which is grammatically incorrect and does not match the specific phrasing or definitive nature of the source's claim about the bookshelf.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been loving my new bookshelf in my home office - it's really helped me stay organized and focused.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"West Elm's throw pillow collection\", \"subject\": \"user\", \"predicate\": \"planned_visit\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll check out West Elm's throw pillow collection and see what catches my eye. I've had a good experience with them so far, so I'm hoping to find something that will tie in nicely with my coffee table. Do you think I should consider the color of my walls when choosing a throw pillow design, or should I focus more on the coffee table and couch?\", \"probability\": 0.9951636791229248}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3881494336341016, \"novelty\": 0.29383144544700535, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"check_out_West_Elm_throw_pillow_collection\", \"subject\": \"user\", \"predicate\": \"planned_activity\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source explicitly states the user's intention to 'check out West Elm's throw pillow collection', which directly matches the subject-predicate-object structure of the hypothesis.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's intention to 'check out West Elm's throw pillow collection', which directly matches the subject-predicate-object structure of the hypothesis.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm going to check out West Elm's throw pillow collection\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"color_of_walls\", \"subject\": \"user\", \"predicate\": \"considered_design_factor\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a hypothetical plan ('I'm going to check out...') and asks for advice on whether to consider the coffee table's legs, but it does not state that the user has already considered the color of walls as a design factor. The hypothesis asserts this as a completed fact ('is'), which cannot be confirmed by the source text due to the lack of explicit confirmation and the presence of alternative considerations mentioned.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a hypothetical plan ('I'm going to check out...') and asks for advice on whether to consider the coffee table's legs, but it does not state that the user has already considered the color of walls as a design factor. The hypothesis asserts this as a completed fact ('is'), which cannot be confirmed by the source text due to the lack of explicit confirmation and the presence of alternative considerations mentioned.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm going to check out West Elm's throw pillow collection and see what catches my eye. I'll keep in mind the color of my walls and the overall aesthetic I'm going for in my living room.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"overall_aesthetic_living_room\", \"subject\": \"user\", \"predicate\": \"considered_design_factor\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I'm going to check out West Elm's throw pillow collection and see what catches my eye. I'll keep in mind the color of my walls and the overall aesthetic I'm going for in my living room. Do you think I should also consider the style of my coffee table's legs when choosing a throw pillow design? For example, since my coffee table has metal legs, should I look for throw pillows with metal accents or a more industrial vibe?\", \"probability\": 0.9920085668563843}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_2:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"coffee table from West Elm\", \"subject\": \"user\", \"predicate\": \"recent_purchase\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.25; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I need some help finding new throw pillows for my couch. I just got a new coffee table from West Elm about three weeks ago, and it's really made my living room feel modern, but my old pillows are looking worn out. Can you give me some recommendations on where to find some affordable and stylish ones?\", \"probability\": 0.9962217807769775}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.25133767037728316, \"novelty\": 0.20445890125761057, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"three weeks ago\", \"subject\": \"user\", \"predicate\": \"purchase_timeframe\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.24; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the specific temporal fact ('three weeks ago') asserted by the user in the source text regarding their purchase timeframe.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I just got a new coffee table from West Elm about three weeks ago\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.2357734419590353, \"novelty\": 0.28591147319678445, \"transient\": true, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"modern\", \"subject\": \"user\", \"predicate\": \"living_room_style_preference\", \"confidence\": 0.9, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.33; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states that the new coffee table has made their living room feel 'modern', which directly supports the hypothesis about their style preference.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"it's really made my living room feel modern\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3349052155217862, \"novelty\": 0.3496840517392873, \"transient\": true, \"importance\": 8, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"worn out\", \"subject\": \"user\", \"predicate\": \"couch_pillow_status\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.30; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's own assertion regarding the condition of their couch pillows.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my old pillows are looking worn out\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.30386504979475437, \"novelty\": 0.3795501659825147, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"affordable and stylish\", \"subject\": \"user\", \"predicate\": \"pillow_search_criteria\", \"confidence\": 0.9, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.32; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states their need for 'affordable and stylish' pillows in the source text, which directly matches the subject-predicate-object structure of the hypothesis.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I need some help finding new throw pillows for my couch... Can you give me some recommendations on where to find some affordable and stylish ones?\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.31598821593941184, \"novelty\": 0.286627386464706, \"transient\": true, \"importance\": 8, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"coffee table\", \"subject\": \"user\", \"predicate\": \"recent_purchase\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.53; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user 'just got' a coffee table from West Elm and spent hours browsing for it, confirming the recent purchase of a coffee table as the subject.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I just got my coffee table from them.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.53, \"novelty\": 1.0, \"transient\": true, \"importance\": 8, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"West Elm\", \"subject\": \"user\", \"predicate\": \"purchase_source\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.22; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states they purchased a coffee table from West Elm and are now considering pillows from the same store to match the aesthetic, confirming West Elm as their purchase source.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I just got my coffee table from them... I'm thinking of getting pillows with a similar modern aesthetic to match the table.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.215799223557846, \"novelty\": 0.08599741185948684, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"metal legs\", \"subject\": \"coffee table\", \"predicate\": \"has_feature\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.24; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the coffee table was delivered with metal legs, which directly supports the hypothesis that the coffee table has metal legs as a feature.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"it was delivered last Thursday\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.2423623596885733, \"novelty\": 0.3078745322952444, \"transient\": true, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"wooden\", \"subject\": \"coffee table\", \"predicate\": \"material\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.24; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the coffee table was delivered and describes it as having 'metal legs' while being searched for a 'perfect wooden coffee table', confirming the material is wood.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I just got my coffee table from them... find the perfect wooden coffee table with metal legs\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.2407016990316169, \"novelty\": 0.30233899677205645, \"transient\": true, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"last Thursday\", \"subject\": \"user\", \"predicate\": \"purchase_time\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.24; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user spent hours browsing and received a delivery 'last Thursday', which directly supports the hypothesis that the user's purchase time was last Thursday.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"it was delivered last Thursday\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.237458945514921, \"novelty\": 0.15819648504973682, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Grid Velvet Pillow Cover\", \"subject\": \"user\", \"predicate\": \"likes_product\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately extracts the subject (user), predicate (likes_product), and object (Grid Velvet Pillow Cover) from the source text's direct statement 'I like the sound of the Grid Velvet Pillow Cover'. The phrase 'My likes product' in the hypothesis is a grammatically imperfect but semantically faithful representation of the user's expressed preference.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I like the sound of the Grid Velvet Pillow Cover\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4064024590991342, \"novelty\": 0.35467486366378065, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Navy\", \"subject\": \"user\", \"predicate\": \"prefers_color\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source explicitly states a preference for the Navy color of the pillow cover and plans to add navy accents, which directly supports the hypothesis that the user's preferred color is Navy.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states a preference for the Navy color of the pillow cover and plans to add navy accents, which directly supports the hypothesis that the user's preferred color is Navy.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I like the sound of the Grid Velvet Pillow Cover, especially the Navy color.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Navy Grid Velvet Pillow Cover\", \"subject\": \"user\", \"predicate\": \"intended_purchase\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.34; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's intention to purchase the 'Navy Grid Velvet Pillow Cover' and asks for advice on adding a rug to tie things together, confirming the specific item as the intended purchase.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"I think I'll go with the Navy Grid Velvet Pillow Cover.\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.34132102396915565, \"novelty\": 0.13773674656385226, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"buy navy throw blanket\", \"subject\": \"user\", \"predicate\": \"planned_action\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a tentative plan ('I think I'll start...') and asks for an opinion, which does not establish the completed fact required for entailment. The hypothesis asserts this as a definitive planned action without the necessary context of uncertainty or future intent.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a tentative plan ('I think I'll start...') and asks for an opinion, which does not establish the completed fact required for entailment. The hypothesis asserts this as a definitive planned action without the necessary context of uncertainty or future intent.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll start with a smaller navy accent, like a navy throw blanket, to test the color in the space before committing to a rug.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_1:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"recommendations for throw pillows\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user is looking for recommendations and believes new pillows would tie the room together, but does not explicitly state that their specific goal is 'recommendations for throw pillows' as a singular objective; the hypothesis simplifies the context into a direct statement of goal which is not fully entailed.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user is looking for recommendations and believes new pillows would tie the room together, but does not explicitly state that their specific goal is 'recommendations for throw pillows' as a singular objective; the hypothesis simplifies the context into a direct statement of goal which is not fully entailed.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some recommendations on throw pillows for my living room. I just got a new coffee table and rearranged the furniture, and I think some new pillows would really tie the room together.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"new coffee table\", \"subject\": \"user\", \"predicate\": \"has_acquisition\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis contains a grammatical error ('My has acquisition') and fails to capture the specific object 'new coffee table' as the direct object of the predicate in the source text; it only mentions 'new coffee table' as an object without proper syntactic alignment.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis contains a grammatical error ('My has acquisition') and fails to capture the specific object 'new coffee table' as the direct object of the predicate in the source text; it only mentions 'new coffee table' as an object without proper syntactic alignment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just got a new coffee table\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"living room\", \"subject\": \"user\", \"predicate\": \"rearranged_furniture\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user rearranged furniture in the context of a living room and seeking recommendations, but does not explicitly assert that the rearranged furniture constitutes the living room itself; the hypothesis makes a definitive claim about the identity of the rearranged furniture which is not fully supported by the source text.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user rearranged furniture in the context of a living room and seeking recommendations, but does not explicitly assert that the rearranged furniture constitutes the living room itself; the hypothesis makes a definitive claim about the identity of the rearranged furniture which is not fully supported by the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just got a new coffee table and rearranged the furniture, and I think some new pillows would really tie the room together.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"modern\", \"subject\": \"user\", \"predicate\": \"living_room_style\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.32; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's living room has a 'modern feel' and that the coffee table added 'modernity', which fully supports the hypothesis that the user's living room style is modern.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My living room has a modern feel\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.32146110101841624, \"novelty\": 0.0715370033947208, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"beige, gray, white\", \"subject\": \"user\", \"predicate\": \"living_room_color_scheme\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the specific color scheme (beige, gray, white) explicitly mentioned by the user in the source text as the dominant scheme for their living room.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"the dominant color scheme is a mix of neutral tones like beige, gray, and white\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4254991831093886, \"novelty\": 0.2849972770312954, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"coffee table (wooden with metal legs)\", \"subject\": \"user\", \"predicate\": \"owns\", \"confidence\": 0.9, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis incorrectly states 'My owns' as the subject and predicate combination, whereas the source text clearly identifies 'I' as the owner of the coffee table. The hypothesis fails to capture the correct grammatical structure and semantic meaning of the source's assertion about ownership.",
+          "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis incorrectly states 'My owns' as the subject and predicate combination, whereas the source text clearly identifies 'I' as the owner of the coffee table. The hypothesis fails to capture the correct grammatical structure and semantic meaning of the source's assertion about ownership.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"The new coffee table is wooden with metal legs\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:2",
+          "candidate": "{\"kind\": \"planned\", \"object\": \"wobbly leg on kitchen table\", \"subject\": \"user\", \"predicate\": \"fixed\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text explicitly states the user 'finally got around to fixing' the wobbly leg and successfully tightened the screw, whereas the hypothesis claims the fixed leg is still wobbly.",
+          "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user 'finally got around to fixing' the wobbly leg and successfully tightened the screw, whereas the hypothesis claims the fixed leg is still wobbly.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I finally got around to fixing the wobbly leg on my kitchen table last weekend - it was driving me crazy for months, and all it took was a few minutes with a screwdriver to tighten the screw.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"velvet pillows in rich hues\", \"subject\": \"user\", \"predicate\": \"likes_idea\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.37; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's direct assertion found in the source text regarding their preference for velvet pillows in rich hues.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I like the idea of velvet pillows in rich hues.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.37008137503477256, \"novelty\": 0.23360458344924195, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"West Elm, CB2\", \"subject\": \"user\", \"predicate\": \"planned_visit\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.60; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's intention to check out options from West Elm and CB2, which directly entails the hypothesis that the user's planned visit includes these locations.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'll check out the options from West Elm and CB2.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"order swatches or samples\", \"subject\": \"user\", \"predicate\": \"planned_action\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.35; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll start with one pillow in a bold, rich color and see how it looks in the space. I'll probably order a few swatches or samples to see which one I like best.\", \"probability\": 0.9963790774345398}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3473340279784102, \"novelty\": 0.42444675992803393, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"kitchen cabinets\", \"subject\": \"user\", \"predicate\": \"planning_reorganization\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm also thinking of reorganizing my kitchen cabinets to improve the flow and make more space for my cooking utensils and gadgets. Do you have any tips or suggestions on how to maximize storage in a kitchen?\", \"probability\": 0.9936023354530334}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4286933116387064, \"novelty\": 0.4289777054623547, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_8858d9dc_4:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        }
+      ],
+      "metadata": {
+        "dataset": "longmemeval-adapter",
+        "dataset_version": "1.0.0",
+        "split": "holdout",
+        "turns": 42,
+        "synthetic": false,
+        "mode": "candidate_replay",
+        "candidate_preparation_ms": 158910.92604100413,
+        "shared_candidate_usage": {
+          "requests": 42,
+          "input_tokens": 37676,
+          "output_tokens": 2916,
+          "unmetered_requests": 0
+        },
+        "shared_candidate_cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "model_names": {
+          "extractor": "qwen3.5:4b-mlx",
+          "embedder": "nomic-embed-text",
+          "verifier": "cross-encoder/nli-deberta-v3-small"
+        },
+        "gate_config": {
+          "backend": "ollama",
+          "extractor_model": "qwen3.5:4b-mlx",
+          "embed_model": "nomic-embed-text",
+          "embed_dim": 768,
+          "verifier_backend": "cross_encoder",
+          "verifier_model": "cross-encoder/nli-deberta-v3-small",
+          "verifier_entailment_threshold": 0.99,
+          "verifier_fallback_backend": "ollama",
+          "verifier_fallback_model": null,
+          "verifier_timeout_seconds": 20.0,
+          "verifier_max_retries": 1,
+          "extractor_timeout_seconds": 120.0,
+          "extractor_max_retries": 2,
+          "confidence_floor": 0.5,
+          "w_imp": 0.4,
+          "w_spec": 0.3,
+          "w_nov": 0.3,
+          "w_src": 0.4,
+          "transient_penalty": 0.15,
+          "durable_cutoff": 0.7,
+          "ephemeral_floor": 0.45,
+          "predicate_vocab": [
+            "name",
+            "role",
+            "preferred_database",
+            "uses_database",
+            "preferred_language",
+            "primary_language",
+            "team_lead",
+            "ship_day",
+            "location",
+            "timezone",
+            "deploy_method",
+            "goal",
+            "currently_debugging",
+            "dislikes"
+          ],
+          "session_ttl_seconds": 86400.0,
+          "update_sim": 0.9,
+          "dedup_sim": 0.92,
+          "pipeline_version": "2026-09-10-v4",
+          "fingerprint": "793b4eeda648a729d49277c6db3e021708df1336c891022bdf9f3badadd34cdb"
+        },
+        "fingerprints": {
+          "dataset": "26f7496957de0276139cc65e64cf887ae810e70accbde118925adbf5ac8e2e01",
+          "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+          "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+          "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+          "config": "793b4eeda648a729d49277c6db3e021708df1336c891022bdf9f3badadd34cdb"
+        },
+        "cleanup_errors": []
+      }
+    }
+  }
+}

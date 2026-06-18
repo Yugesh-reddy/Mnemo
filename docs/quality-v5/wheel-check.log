@@ -1,0 +1,99 @@
+Using CPython 3.12.12
+Creating virtual environment at: /var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/tmp.bW7ZdkpdNk/venv
+Activate with: source /var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/tmp.bW7ZdkpdNk/venv/bin/activate
+Using Python 3.12.12 environment at: /var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/tmp.bW7ZdkpdNk/venv
+Resolved 41 packages in 252ms
+Prepared 1 package in 6ms
+Installed 41 packages in 50ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + asyncpg==0.31.0
+ + attrs==26.1.0
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + click==8.5.0
+ + cryptography==50.0.1
+ + fastapi==0.141.1
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + httpx-sse==0.4.3
+ + idna==3.19
+ + jinja2==3.1.6
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + markdown-it-py==4.2.0
+ + markupsafe==3.0.3
+ + mcp==1.30.0
+ + mdurl==0.1.2
+ + mnemo==0.0.1 (from file:///Users/yugesh/Desktop/Projects/Mnemo/dist/mnemo-0.0.1-py3-none-any.whl)
+ + pycparser==3.0
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + pydantic-settings==2.15.0
+ + pygments==2.21.0
+ + pyjwt==2.14.0
+ + python-dotenv==1.2.3
+ + python-multipart==0.0.32
+ + referencing==0.37.0
+ + rich==15.0.0
+ + rpds-py==2026.6.3
+ + shellingham==1.5.4
+ + sse-starlette==3.4.11
+ + starlette==1.6.0
+ + typer==0.27.2
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uvicorn==0.53.0
+Installed wheel: runtime imports, migrations, data and templates verified
+usage: mnemo-worker [-h] [--health]
+
+Run extraction and scheduled decay until SIGINT/SIGTERM.
+
+options:
+  -h, --help  show this help message and exit
+  --health
+usage: mnemo-audit-eval [-h] [--dataset {benchmark,smoke,naturalistic}]
+                        [--review REVIEW] --output OUTPUT
+                        report
+
+Source-linked failure attribution for saved evaluation reports; no model
+calls.
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --dataset {benchmark,smoke,naturalistic}
+  --review REVIEW
+  --output OUTPUT
+usage: mnemo-eval-suite [-h] [--manifest MANIFEST] [--split {dev,holdout}]
+                        [--frozen-policy FROZEN_POLICY] --output OUTPUT
+                        [--resume]
+
+Evaluate source-reviewed conversations in isolated stores with frozen splits.
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST
+  --split {dev,holdout}
+  --frozen-policy FROZEN_POLICY
+  --output OUTPUT
+  --resume
+usage: mnemo-benchmark [-h] [--samples SAMPLES] [--warmup WARMUP]
+                       [--prices PRICES]
+                       [--local-usd-per-hour LOCAL_USD_PER_HOUR] --output
+                       OUTPUT
+
+Controlled serial worker workload with measured latency and explicit pricing.
+
+options:
+  -h, --help            show this help message and exit
+  --samples SAMPLES
+  --warmup WARMUP
+  --prices PRICES
+  --local-usd-per-hour LOCAL_USD_PER_HOUR
+  --output OUTPUT
+No pending migrations; schema is up to date.

@@ -1,0 +1,26 @@
+........................................................................ [ 39%]
+........................................................................ [ 78%]
+.........F..............................                                 [100%]
+=================================== FAILURES ===================================
+_______________ test_live_extraction_reconciles_a_database_fact ________________
+
+store = <mnemo.core.MnemoStore object at 0x10edbe300>
+db = <asyncpg.connection.Connection object at 0x10eceae40>
+
+    @pytest.mark.skipif(not _llama_present(), reason="llama3.2 instruct model not available")
+    async def test_live_extraction_reconciles_a_database_fact(
+        store: MnemoStore, db: asyncpg.Connection
+    ) -> None:
+        from mnemo.extraction import build_extractor
+    
+        worker = ExtractionWorker(db, store.embedder, build_extractor())
+        await store.observe("t1", "I use Postgres for my project.", SESSION, role="user")
+        assert await worker.process_one() is True
+    
+        facts = await store.search("database", session_id=SESSION)
+>       assert facts, "live extractor produced no fact for a clear database statement"
+E       AssertionError: live extractor produced no fact for a clear database statement
+E       assert []
+
+tests/test_twotier.py:287: AssertionError
+1 failed, 183 passed in 35.35s

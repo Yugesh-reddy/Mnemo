@@ -1,0 +1,131 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+________ test_retry_explains_quote_failure_to_provider[OllamaExtractor] ________
+
+extractor_class = <class 'mnemo.extraction.OllamaExtractor'>
+
+    @pytest.mark.parametrize("extractor_class", [OllamaExtractor, OpenAIExtractor])
+    def test_retry_explains_quote_failure_to_provider(extractor_class):
+        from types import SimpleNamespace
+    
+        kwargs = {"api_key": "test"} if extractor_class is OpenAIExtractor else {}
+        extractor = extractor_class(model="stub", max_retries=1, **kwargs)
+        source = "I own a stand mixer."
+        requests = []
+    
+        def respond(url, *, json):
+            requests.append(json)
+            evidence = "I own an editor." if len(requests) == 1 else source
+            content = __import__("json").dumps(
+                {
+                    "facts": [
+                        {
+                            "subject": "user",
+                            "predicate": "owns_appliance",
+                            "object": "stand mixer",
+                            "evidence": evidence,
+                        }
+                    ]
+                }
+            )
+            payload = (
+                {"message": {"content": content}}
+                if extractor_class is OllamaExtractor
+                else {"choices": [{"message": {"content": content}}]}
+            )
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: payload)
+    
+        extractor._client.post = respond
+        try:
+            assert extractor.extract(source)[0].object == "stand mixer"
+            assert len(requests) == 2
+>           assert "evidence is absent from source" in requests[1]["messages"][-1]["content"]
+E           AssertionError: assert 'evidence is absent from source' in 'Turn (user): I own a stand mixer.'
+
+tests/test_extraction_evidence.py:173: AssertionError
+________ test_retry_explains_quote_failure_to_provider[OpenAIExtractor] ________
+
+extractor_class = <class 'mnemo.extraction.OpenAIExtractor'>
+
+    @pytest.mark.parametrize("extractor_class", [OllamaExtractor, OpenAIExtractor])
+    def test_retry_explains_quote_failure_to_provider(extractor_class):
+        from types import SimpleNamespace
+    
+        kwargs = {"api_key": "test"} if extractor_class is OpenAIExtractor else {}
+        extractor = extractor_class(model="stub", max_retries=1, **kwargs)
+        source = "I own a stand mixer."
+        requests = []
+    
+        def respond(url, *, json):
+            requests.append(json)
+            evidence = "I own an editor." if len(requests) == 1 else source
+            content = __import__("json").dumps(
+                {
+                    "facts": [
+                        {
+                            "subject": "user",
+                            "predicate": "owns_appliance",
+                            "object": "stand mixer",
+                            "evidence": evidence,
+                        }
+                    ]
+                }
+            )
+            payload = (
+                {"message": {"content": content}}
+                if extractor_class is OllamaExtractor
+                else {"choices": [{"message": {"content": content}}]}
+            )
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: payload)
+    
+        extractor._client.post = respond
+        try:
+            assert extractor.extract(source)[0].object == "stand mixer"
+            assert len(requests) == 2
+>           assert "evidence is absent from source" in requests[1]["messages"][-1]["content"]
+E           AssertionError: assert 'evidence is absent from source' in 'Turn (user): I own a stand mixer.'
+
+tests/test_extraction_evidence.py:173: AssertionError
+___________ test_provider_retries_an_assertion_without_a_value[None] ___________
+
+value = None
+
+    @pytest.mark.parametrize("value", [None, ""])
+    def test_provider_retries_an_assertion_without_a_value(value):
+        source = "I made kimchi at a fermentation workshop."
+        extractor = OllamaExtractor(model="stub", max_retries=1)
+        replies = iter([value, "kimchi at a fermentation workshop"])
+        extractor._chat = lambda *args: json.dumps({"facts": [{
+            "subject": "user", "predicate": "made", "object": next(replies), "evidence": source,
+        }]})
+        try:
+>           assert extractor.extract(source)[0].object == "kimchi at a fermentation workshop"
+E           AssertionError: assert None == 'kimchi at a fermentation workshop'
+E            +  where None = ExtractedFact(subject='user', predicate='made', object=None, kind='triple', confidence=1.0, importance=5, assertion_type='agent_inference', evidence='I made kimchi at a fermentation workshop.').object
+
+tests/test_extraction_evidence.py:188: AssertionError
+_____________ test_provider_retries_an_assertion_without_a_value[] _____________
+
+value = ''
+
+    @pytest.mark.parametrize("value", [None, ""])
+    def test_provider_retries_an_assertion_without_a_value(value):
+        source = "I made kimchi at a fermentation workshop."
+        extractor = OllamaExtractor(model="stub", max_retries=1)
+        replies = iter([value, "kimchi at a fermentation workshop"])
+        extractor._chat = lambda *args: json.dumps({"facts": [{
+            "subject": "user", "predicate": "made", "object": next(replies), "evidence": source,
+        }]})
+        try:
+>           assert extractor.extract(source)[0].object == "kimchi at a fermentation workshop"
+E           AssertionError: assert '' == 'kimchi at a ...tion workshop'
+E             
+E             - kimchi at a fermentation workshop
+
+tests/test_extraction_evidence.py:188: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_extraction_evidence.py::test_retry_explains_quote_failure_to_provider[OllamaExtractor]
+FAILED tests/test_extraction_evidence.py::test_retry_explains_quote_failure_to_provider[OpenAIExtractor]
+FAILED tests/test_extraction_evidence.py::test_provider_retries_an_assertion_without_a_value[None]
+FAILED tests/test_extraction_evidence.py::test_provider_retries_an_assertion_without_a_value[]
+4 failed, 4 deselected in 0.11s

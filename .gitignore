@@ -18,12 +18,6 @@ venv/
 .coverage
 htmlcov/
 
-# uv
-uv.lock
-
-# Local notes and eval artifacts
-docs/
-
 # OS / editor
 .DS_Store
 .idea/

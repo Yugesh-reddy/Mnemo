@@ -1,0 +1,46 @@
+..F......                                                                [100%]
+=================================== FAILURES ===================================
+__ test_complete_saved_baseline_scores_all_targets_and_all_historical_writes ___
+
+tmp_path = PosixPath('/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/pytest-of-yugesh/pytest-28/test_complete_saved_baseline_s0')
+
+    def test_complete_saved_baseline_scores_all_targets_and_all_historical_writes(tmp_path):
+        from mnemo.eval_equivalence import score
+    
+        root = Path(__file__).resolve().parents[1]
+        paths = [
+            root / name
+            for name in (
+                "docs/quality-v5/extraction-partial-dev.json",
+                "docs/quality-v6/mustkeep-review.json",
+                "docs/quality-v6/independent-review.json",
+                "docs/quality-v6/baseline-complete.json",
+            )
+        ]
+        result = score(*paths)
+        assert len(result["targets"]) == 24
+        assert result["unique_target_denominator"] == 23
+        assert result["historical_write_review"] == {
+            "total": 51,
+            "supported": 50,
+            "unsupported": 0,
+            "ambiguous": 1,
+            "supported_precision": 50 / 51,
+        }
+        assert result["unique_complete_by_stage"]["retrieved"] == 16
+        replay = json.loads(paths[-1].read_text())
+        replay["cases"]["88432d0a"]["decisions"] = [
+            d for d in replay["cases"]["88432d0a"]["decisions"] if d["outcome"] != "rejected"
+        ]
+        changed = tmp_path / "missing-rejections.json"
+        changed.write_text(json.dumps(replay))
+>       with pytest.raises(ValueError, match="missing reviewed candidate decisions"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'missing reviewed candidate decisions'
+E         Actual message: 'incomplete raw extraction rejection evidence'
+
+tests/test_eval_equivalence.py:67: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_eval_equivalence.py::test_complete_saved_baseline_scores_all_targets_and_all_historical_writes
+1 failed, 8 passed in 0.11s

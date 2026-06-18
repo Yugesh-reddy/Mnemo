@@ -1,0 +1,146 @@
+FF..FFF.                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects[I've been restoring a wooden canoe lately, and Mira is helping.-I've been restoring a wooden canoe lately.] _
+
+source = "I've been restoring a wooden canoe lately, and Mira is helping."
+quote = "I've been restoring a wooden canoe lately."
+
+    @pytest.mark.parametrize(
+        ("source", "quote"),
+        [
+            (SOURCE, QUOTE),
+            ("Zoë repaired the café sign, then went home.", "Zoë repaired the café sign!"),
+        ],
+    )
+    def test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects(source, quote):
+        raw = {**ASSERTION, "evidence": quote}
+        with pytest.raises(ValueError) as error:
+            OllamaExtractor._parse(json.dumps({"facts": [raw]}), source)
+>       assert "Exact source substring option: " + json.dumps(quote[:-1], ensure_ascii=False) in str(
+            error.value
+        )
+E       assert ('Exact source substring option: ' + '"I\'ve been restoring a wooden canoe lately"') in 'candidate 0 evidence is absent from source'
+E        +  where '"I\'ve been restoring a wooden canoe lately"' = <function dumps at 0x1019a0ae0>("I've been restoring a wooden canoe lately", ensure_ascii=False)
+E        +    where <function dumps at 0x1019a0ae0> = json.dumps
+E        +  and   'candidate 0 evidence is absent from source' = str(_InvalidExtractionBatch('candidate 0 evidence is absent from source'))
+E        +    where _InvalidExtractionBatch('candidate 0 evidence is absent from source') = <ExceptionInfo _InvalidExtractionBatch('candidate 0 evidence is absent from source') tblen=2>.value
+
+tests/test_extraction_quote_feedback.py:34: AssertionError
+_ test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects[Zo\xeb repaired the caf\xe9 sign, then went home.-Zo\xeb repaired the caf\xe9 sign!] _
+
+source = 'Zoë repaired the café sign, then went home.'
+quote = 'Zoë repaired the café sign!'
+
+    @pytest.mark.parametrize(
+        ("source", "quote"),
+        [
+            (SOURCE, QUOTE),
+            ("Zoë repaired the café sign, then went home.", "Zoë repaired the café sign!"),
+        ],
+    )
+    def test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects(source, quote):
+        raw = {**ASSERTION, "evidence": quote}
+        with pytest.raises(ValueError) as error:
+            OllamaExtractor._parse(json.dumps({"facts": [raw]}), source)
+>       assert "Exact source substring option: " + json.dumps(quote[:-1], ensure_ascii=False) in str(
+            error.value
+        )
+E       assert ('Exact source substring option: ' + '"Zoë repaired the café sign"') in 'candidate 0 evidence is absent from source'
+E        +  where '"Zoë repaired the café sign"' = <function dumps at 0x1019a0ae0>('Zoë repaired the café sign', ensure_ascii=False)
+E        +    where <function dumps at 0x1019a0ae0> = json.dumps
+E        +  and   'candidate 0 evidence is absent from source' = str(_InvalidExtractionBatch('candidate 0 evidence is absent from source'))
+E        +    where _InvalidExtractionBatch('candidate 0 evidence is absent from source') = <ExceptionInfo _InvalidExtractionBatch('candidate 0 evidence is absent from source') tblen=2>.value
+
+tests/test_extraction_quote_feedback.py:34: AssertionError
+____________ test_no_suggestion_for_nonmatching_or_empty_prefix[.] _____________
+
+quote = '.'
+
+    @pytest.mark.parametrize("quote", ["I have enrolled.", "Invented place.", "."])
+    def test_no_suggestion_for_nonmatching_or_empty_prefix(quote):
+>       with pytest.raises(ValueError) as error:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_quote_feedback.py:43: Failed
+_ test_retry_receives_hint_without_changing_first_prompt_or_output_contract[OllamaExtractor] _
+
+provider = <class 'mnemo.extraction.OllamaExtractor'>
+
+    @pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
+    def test_retry_receives_hint_without_changing_first_prompt_or_output_contract(provider):
+        extractor = provider(max_retries=1, **({"api_key": "stub"} if provider is OpenAIExtractor else {}))
+        requests = []
+    
+        def respond(url, *, json):
+            requests.append(json)
+            reply = {**ASSERTION, "evidence": QUOTE if len(requests) == 1 else QUOTE[:-1]}
+            content = __import__("json").dumps({"facts": [reply]})
+            payload = (
+                {"message": {"content": content}}
+                if provider is OllamaExtractor
+                else {"choices": [{"message": {"content": content}}]}
+            )
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: payload)
+    
+        extractor._client.post = respond
+        try:
+            facts = extractor.extract(SOURCE)
+        finally:
+            extractor.close()
+        assert len(requests) == 2
+        first = requests[0]["messages"]
+        manifest = json.loads(
+            (Path(__file__).resolve().parents[1] / "docs/quality-v7/experiment-manifest.json").read_text()
+        )
+        assert len(first) == 2
+        assert hashlib.sha256(first[0]["content"].encode()).hexdigest() == manifest["initial_prompt_sha256"]
+        assert first[1] == {"role": "user", "content": f"Turn (user): {SOURCE}"}
+>       assert "Exact source substring option" in requests[1]["messages"][-1]["content"]
+E       AssertionError: assert 'Exact source substring option' in 'Validator feedback (not source evidence): candidate 0 evidence is absent from source. Return the complete corrected facts array using only the original Turn above. Copy evidence exactly and put the value in object.'
+
+tests/test_extraction_quote_feedback.py:81: AssertionError
+_ test_retry_receives_hint_without_changing_first_prompt_or_output_contract[OpenAIExtractor] _
+
+provider = <class 'mnemo.extraction.OpenAIExtractor'>
+
+    @pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
+    def test_retry_receives_hint_without_changing_first_prompt_or_output_contract(provider):
+        extractor = provider(max_retries=1, **({"api_key": "stub"} if provider is OpenAIExtractor else {}))
+        requests = []
+    
+        def respond(url, *, json):
+            requests.append(json)
+            reply = {**ASSERTION, "evidence": QUOTE if len(requests) == 1 else QUOTE[:-1]}
+            content = __import__("json").dumps({"facts": [reply]})
+            payload = (
+                {"message": {"content": content}}
+                if provider is OllamaExtractor
+                else {"choices": [{"message": {"content": content}}]}
+            )
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: payload)
+    
+        extractor._client.post = respond
+        try:
+            facts = extractor.extract(SOURCE)
+        finally:
+            extractor.close()
+        assert len(requests) == 2
+        first = requests[0]["messages"]
+        manifest = json.loads(
+            (Path(__file__).resolve().parents[1] / "docs/quality-v7/experiment-manifest.json").read_text()
+        )
+        assert len(first) == 2
+        assert hashlib.sha256(first[0]["content"].encode()).hexdigest() == manifest["initial_prompt_sha256"]
+        assert first[1] == {"role": "user", "content": f"Turn (user): {SOURCE}"}
+>       assert "Exact source substring option" in requests[1]["messages"][-1]["content"]
+E       AssertionError: assert 'Exact source substring option' in 'Validator feedback (not source evidence): candidate 0 evidence is absent from source. Return the complete corrected facts array using only the original Turn above. Copy evidence exactly and put the value in object.'
+
+tests/test_extraction_quote_feedback.py:81: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_extraction_quote_feedback.py::test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects[I've been restoring a wooden canoe lately, and Mira is helping.-I've been restoring a wooden canoe lately.]
+FAILED tests/test_extraction_quote_feedback.py::test_terminal_punctuation_error_offers_literal_prefix_but_still_rejects[Zo\xeb repaired the caf\xe9 sign, then went home.-Zo\xeb repaired the caf\xe9 sign!]
+FAILED tests/test_extraction_quote_feedback.py::test_no_suggestion_for_nonmatching_or_empty_prefix[.]
+FAILED tests/test_extraction_quote_feedback.py::test_retry_receives_hint_without_changing_first_prompt_or_output_contract[OllamaExtractor]
+FAILED tests/test_extraction_quote_feedback.py::test_retry_receives_hint_without_changing_first_prompt_or_output_contract[OpenAIExtractor]
+5 failed, 3 passed in 0.35s

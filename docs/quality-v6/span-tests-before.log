@@ -1,0 +1,216 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+_ test_selected_span_is_copied_exactly_without_model_reproducing_punctuation[OllamaExtractor] _
+
+provider = <class 'mnemo.extraction.OllamaExtractor'>
+
+    @pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
+    def test_selected_span_is_copied_exactly_without_model_reproducing_punctuation(provider):
+        extractor = provider(max_retries=0, **({"api_key": "stub"} if provider is OpenAIExtractor else {}))
+        extractor._chat = lambda *args: json.dumps({"facts": [{
+            "evidence_id": 0, "subject": "user", "predicate": "borrowed",
+            "object": "camera from Mina on Monday, subsequently returned",
+        }]})
+        try:
+>           assert extractor.extract(SOURCE)[0].evidence == SOURCE.split("\n")[0]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_extraction_spans.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mnemo.extraction.OllamaExtractor object at 0x107e7fec0>
+text = 'Résumé: Mina lent me a camera on Monday, and I returned it.\nI may buy one later.'
+role = 'user'
+
+    def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
+        last_error = None
+        content = None
+        for attempt in range(self.max_retries + 1):
+            content = self._chat(text, role, last_error, content)
+            try:
+                return self._parse(content, text)
+            except ValueError as exc:
+                last_error = str(exc)
+                if (
+                    attempt == self.max_retries
+                    and isinstance(exc, _InvalidExtractionBatch)
+                    and exc.batch
+                ):
+                    return exc.batch
+>       raise ValueError(f"extractor output rejected after retries: {last_error}")
+E       ValueError: extractor output rejected after retries: candidate 0 evidence is absent from source
+
+mnemo/extraction.py:171: ValueError
+_ test_selected_span_is_copied_exactly_without_model_reproducing_punctuation[OpenAIExtractor] _
+
+provider = <class 'mnemo.extraction.OpenAIExtractor'>
+
+    @pytest.mark.parametrize("provider", [OllamaExtractor, OpenAIExtractor])
+    def test_selected_span_is_copied_exactly_without_model_reproducing_punctuation(provider):
+        extractor = provider(max_retries=0, **({"api_key": "stub"} if provider is OpenAIExtractor else {}))
+        extractor._chat = lambda *args: json.dumps({"facts": [{
+            "evidence_id": 0, "subject": "user", "predicate": "borrowed",
+            "object": "camera from Mina on Monday, subsequently returned",
+        }]})
+        try:
+>           assert extractor.extract(SOURCE)[0].evidence == SOURCE.split("\n")[0]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_extraction_spans.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mnemo.extraction.OpenAIExtractor object at 0x107f72e10>
+text = 'Résumé: Mina lent me a camera on Monday, and I returned it.\nI may buy one later.'
+role = 'user'
+
+    def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
+        last_error = None
+        content = None
+        for attempt in range(self.max_retries + 1):
+            content = self._chat(text, role, last_error, content)
+            try:
+                return OllamaExtractor._parse(content, text)
+            except ValueError as exc:
+                last_error = str(exc)
+                if (
+                    attempt == self.max_retries
+                    and isinstance(exc, _InvalidExtractionBatch)
+                    and exc.batch
+                ):
+                    return exc.batch
+>       raise ValueError(f"extractor output rejected after retries: {last_error}")
+E       ValueError: extractor output rejected after retries: candidate 0 evidence is absent from source
+
+mnemo/extraction.py:263: ValueError
+_ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[True] _
+
+span_id = True
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+__ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[-1] __
+
+span_id = -1
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+_ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[1.5] __
+
+span_id = 1.5
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+__ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[0] ___
+
+span_id = '0'
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+_ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[999] __
+
+span_id = 999
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+_ test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[None] _
+
+span_id = None
+
+    @pytest.mark.parametrize("span_id", [True, -1, 1.5, "0", 999, None])
+    def test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote(span_id):
+        raw = {"facts": [{"evidence_id": span_id, "evidence": SOURCE,
+                          "subject": "user", "predicate": "borrowed", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="evidence_id"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_extraction_spans.py:30: Failed
+________ test_span_reference_does_not_silently_repair_conflicting_quote ________
+
+    def test_span_reference_does_not_silently_repair_conflicting_quote():
+        raw = {"facts": [{"evidence_id": 1, "evidence": "I bought one later.",
+                          "subject": "user", "predicate": "bought", "object": "camera"}]}
+>       with pytest.raises(ValueError, match="conflicts"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'conflicts'
+E         Actual message: 'candidate 0 evidence is absent from source'
+
+tests/test_extraction_spans.py:37: AssertionError
+___ test_selected_source_span_still_requires_full_turn_semantic_verification ___
+
+store = <mnemo.core.MnemoStore object at 0x10c0ff3b0>
+db = <asyncpg.connection.Connection object at 0x10c064320>
+
+    async def test_selected_source_span_still_requires_full_turn_semantic_verification(store, db):
+        extractor = OllamaExtractor(max_retries=0)
+        extractor._chat = lambda *args: json.dumps({"facts": [{
+            "evidence_id": 0, "subject": "user", "predicate": "owns", "object": "camera",
+        }]})
+    
+        class RejectOwnership:
+            def verify(self, candidate, source):
+                assert source == SOURCE
+                assert candidate.evidence == SOURCE.split("\n")[0]
+                return Verdict(accepted=False, label="contradiction", probability=1,
+                               reason="Borrowing and returning do not establish ownership", backend="stub")
+    
+        try:
+            await store.observe("span-test", SOURCE, "s")
+            await ExtractionWorker(db, store.embedder, extractor, RejectOwnership()).process_one()
+        finally:
+            extractor.close()
+>       assert await db.fetchval("SELECT status FROM extraction_job") == "done"
+E       AssertionError: assert 'pending' == 'done'
+E         
+E         - done
+E         + pending
+
+tests/test_extraction_spans.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_extraction_spans.py::test_selected_span_is_copied_exactly_without_model_reproducing_punctuation[OllamaExtractor]
+FAILED tests/test_extraction_spans.py::test_selected_span_is_copied_exactly_without_model_reproducing_punctuation[OpenAIExtractor]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[True]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[-1]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[1.5]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[0]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[999]
+FAILED tests/test_extraction_spans.py::test_invalid_span_reference_cannot_fall_back_to_a_valid_supplied_quote[None]
+FAILED tests/test_extraction_spans.py::test_span_reference_does_not_silently_repair_conflicting_quote
+FAILED tests/test_extraction_spans.py::test_selected_source_span_still_requires_full_turn_semantic_verification
+10 failed in 0.31s

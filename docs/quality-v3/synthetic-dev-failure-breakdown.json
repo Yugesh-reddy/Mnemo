@@ -1,0 +1,440 @@
+{
+  "dataset": "mnemo-synthetic-quality-corpus",
+  "original_metrics": {
+    "stored": 18,
+    "precision": 0.6111111111111112,
+    "recall": 0.44,
+    "f1": 0.5116279069767442,
+    "false": 0,
+    "must_keep_recall": 0.625,
+    "false_writes": 0,
+    "historical_precision": 0.6818181818181818,
+    "historical_recall": 0.5,
+    "unsupported_writes": 7,
+    "visible_facts": 18,
+    "total_events": 22,
+    "total_rows": 340,
+    "storage_bytes": 1777664,
+    "latency_ms": 375301.4327909914,
+    "usage": {
+      "extractor": {},
+      "embedder": {
+        "requests": 97,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 97
+      },
+      "verifier": {
+        "requests": 33,
+        "input_tokens": 13061,
+        "output_tokens": 2824,
+        "unmetered_requests": 0,
+        "nli_requests": 11
+      }
+    },
+    "cost": {
+      "usd": null,
+      "reason": "No pricing supplied; measured usage is reported separately."
+    },
+    "historical_by_split": {
+      "dev": {
+        "precision": 0.6818181818181818,
+        "recall": 0.5,
+        "false_writes": 0,
+        "unsupported_writes": 7
+      }
+    },
+    "retrieval_probes": [
+      {
+        "turn_id": "dev-020a",
+        "query": "user accessibility_need captions",
+        "k": 5,
+        "session_id": "dev-session-04",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 51.802792004309595,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "accessibility_need",
+            "object": "captions_enabled_for_video_calls",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-022a",
+        "query": "user allergy peanuts",
+        "k": 5,
+        "session_id": "dev-session-05",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 27.17966701311525,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "allergy",
+            "object": "peanut",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-021d",
+        "query": "user diet keto",
+        "k": 5,
+        "session_id": "dev-session-05-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 43.46491600153968,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "diet",
+            "object": "keto",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-023a",
+        "query": "user emergency_contact Noah Chen",
+        "k": 5,
+        "session_id": "dev-session-05",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 43.96324999106582,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "emergency_contact",
+            "object": "Noah Chen",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-016d",
+        "query": "user meeting_free_day Monday",
+        "k": 5,
+        "session_id": "dev-session-04-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 45.037042000330985,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "meeting_free_day",
+            "object": "Monday",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-001d",
+        "query": "user name Maya Chen revised",
+        "k": 5,
+        "session_id": "dev-session-01-followup",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 41.72820900566876,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-011d",
+        "query": "user on_call_day Saturday",
+        "k": 5,
+        "session_id": "dev-session-03-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 43.38379199907649,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "on_call_day",
+            "object": "Saturday",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-006d",
+        "query": "user preferred_database MongoDB",
+        "k": 5,
+        "session_id": "dev-session-02-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 42.1279590082122,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_language",
+            "object": "TypeScript",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      }
+    ],
+    "retrieval_probe_usage": {
+      "extractor": {},
+      "embedder": {
+        "requests": 8,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 8
+      },
+      "verifier": {
+        "requests": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 0,
+        "nli_requests": 0
+      }
+    }
+  },
+  "unmatched_count": 7,
+  "reviewed_count": 0,
+  "review_categories": {},
+  "must_keep_targets": 8,
+  "strict_missing_must_keep": 3,
+  "missing_by_cause": {
+    "extraction_fidelity_or_label_mismatch": 3
+  },
+  "misses": [
+    {
+      "turn_id": "dev-020a",
+      "source": "I need captions enabled for video calls.",
+      "target": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "captions"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "turn_id": "dev-020a",
+          "candidate": {
+            "kind": "triple",
+            "object": "captions_enabled_for_video_calls",
+            "subject": "user",
+            "predicate": "accessibility_need",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "direct_user_statement"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.48; demoted",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The user explicitly states a need for captions in video calls, which directly entails the accessibility_need of captions being enabled for that context.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I need captions enabled for video calls.",
+            "probability": 1.0
+          },
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4800335352440576, \"novelty\": 0.46677845081352554, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        }
+      ],
+      "source_writes": [
+        {
+          "subject": "user",
+          "predicate": "accessibility_need",
+          "op": "ADD",
+          "object_text": "captions_enabled_for_video_calls",
+          "object_number": null,
+          "object_json": null,
+          "source_span": "{\"turn_ids\": [\"dev-020a\"], \"cache_ids\": [\"8dd39b24-bfd6-4074-81d7-62a971db2a90\"], \"session_id\": \"dev-session-04\"}",
+          "seq": 16
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "source_review": {
+        "category": "label_qualification_mismatch",
+        "reason": "Captions retained with video-call scope; exact captions target does not match qualified value.",
+        "reviewer": "Codex; single reviewer, provisional"
+      }
+    },
+    {
+      "turn_id": "dev-022a",
+      "source": "I have a peanut allergy.",
+      "target": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanuts"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "turn_id": "dev-022a",
+          "candidate": {
+            "kind": "triple",
+            "object": "peanut",
+            "subject": "user",
+            "predicate": "allergy",
+            "confidence": 1.0,
+            "importance": 9,
+            "assertion_type": "direct_user_statement"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.59; demoted",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the user has a peanut allergy, which directly matches the subject (user), predicate (allergy), and object (peanut) in the assertion.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I have a peanut allergy.",
+            "probability": 1.0
+          },
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5890870677671814, \"novelty\": 0.563623559223938, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+        }
+      ],
+      "source_writes": [
+        {
+          "subject": "user",
+          "predicate": "allergy",
+          "op": "ADD",
+          "object_text": "peanut",
+          "object_number": null,
+          "object_json": null,
+          "source_span": "{\"turn_ids\": [\"dev-022a\"], \"cache_ids\": [\"3d54dc5b-dc74-499b-b719-0afc05c017a2\"], \"session_id\": \"dev-session-05\"}",
+          "seq": 19
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "source_review": {
+        "category": "label_equivalence",
+        "reason": "Peanut and peanuts differ only by number; source-supported allergy is retained.",
+        "reviewer": "Codex; single reviewer, provisional"
+      }
+    },
+    {
+      "turn_id": "dev-001d",
+      "source": "Correction to what I said earlier: my name is Maya Chen revised.",
+      "target": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Maya Chen revised"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "turn_id": "dev-001d",
+          "candidate": {
+            "kind": "triple",
+            "object": "Maya Chen",
+            "subject": "user",
+            "predicate": "name",
+            "confidence": 0.95,
+            "importance": 10,
+            "assertion_type": "direct_user_statement"
+          },
+          "outcome": "accepted",
+          "reason": "entailment; score=1.00; accepted",
+          "verification": {
+            "label": "entailment",
+            "model": "cross-encoder/nli-deberta-v3-small",
+            "reason": "NLI entailment passed threshold",
+            "backend": "cross_encoder",
+            "accepted": true,
+            "evidence": "Correction to what I said earlier: my name is Maya Chen revised.",
+            "probability": 0.9919041991233826
+          },
+          "score_components": "{\"spec\": 1.0, \"score\": 1.0, \"novelty\": 1.0, \"transient\": false, \"importance\": 10, \"from_assistant\": false}"
+        }
+      ],
+      "source_writes": [
+        {
+          "subject": "user",
+          "predicate": "name",
+          "op": "ADD",
+          "object_text": "Maya Chen",
+          "object_number": null,
+          "object_json": null,
+          "source_span": "{\"turn_ids\": [\"dev-001d\"], \"cache_ids\": [\"70187a5c-9ab8-4323-ba5d-90e473cc6659\"], \"session_id\": \"dev-session-01-followup\"}",
+          "seq": 1
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "source_review": {
+        "category": "ambiguous_source",
+        "reason": "Maya Chen revised is an ambiguous synthetic correction; the extractor keeps Maya Chen. Independent annotation is needed.",
+        "reviewer": "Codex; single reviewer, provisional"
+      }
+    }
+  ],
+  "limitations": [
+    "Source review is not independent human adjudication.",
+    "Original strict metrics are preserved. Source-scoped equivalences do not rewrite labels or inflate the published score.",
+    "This run replays saved user candidates; extraction is not repeated. Same-session probes do not establish durable retention."
+  ]
+}

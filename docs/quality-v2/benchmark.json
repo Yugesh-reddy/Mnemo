@@ -1,0 +1,269 @@
+{
+  "measured_at": "2026-09-11T12:42:16.681852+00:00",
+  "policy_sha256": "77bbf4e83088a4a740bc4b6da38a38bd214dc9528551f424eeada7f54280708a",
+  "samples": 25,
+  "warmup_samples": 2,
+  "load_model": "closed-loop serial; one outstanding observation and one worker",
+  "concurrency": 1,
+  "percentile_method": "nearest rank",
+  "measurement_seconds": 94.33062558399979,
+  "throughput_observations_per_second": 0.26502527514500507,
+  "latency": {
+    "p50_ms": 2700.3982909955084,
+    "p95_ms": 6904.217999996035,
+    "mean_ms": 3772.7135267981794,
+    "max_ms": 7341.218667002977
+  },
+  "observe_latency": {
+    "p50_ms": 20.398624998051673,
+    "p95_ms": 35.68437500507571,
+    "mean_ms": 23.363778320490383,
+    "max_ms": 37.11112499877345
+  },
+  "processing_latency": {
+    "p50_ms": 2681.0017910029273,
+    "p95_ms": 6887.376874990878,
+    "mean_ms": 3749.349748477689,
+    "max_ms": 7306.477457997971
+  },
+  "requests": [
+    {
+      "sample": 0,
+      "source_turn": "dev-001a",
+      "observe_ms": 20.07562499784399,
+      "processing_ms": 2776.27412500442,
+      "total_ms": 2796.349750002264
+    },
+    {
+      "sample": 1,
+      "source_turn": "dev-002a",
+      "observe_ms": 15.158000009250827,
+      "processing_ms": 2539.597249997314,
+      "total_ms": 2554.755250006565
+    },
+    {
+      "sample": 2,
+      "source_turn": "dev-003a",
+      "observe_ms": 14.406957998289727,
+      "processing_ms": 2862.857125001028,
+      "total_ms": 2877.264082999318
+    },
+    {
+      "sample": 3,
+      "source_turn": "dev-004a",
+      "observe_ms": 17.56691699847579,
+      "processing_ms": 2501.6227080050157,
+      "total_ms": 2519.1896250034915
+    },
+    {
+      "sample": 4,
+      "source_turn": "dev-005a",
+      "observe_ms": 18.065333002596162,
+      "processing_ms": 2625.2914590004366,
+      "total_ms": 2643.3567920030328
+    },
+    {
+      "sample": 5,
+      "source_turn": "dev-006a",
+      "observe_ms": 16.33899999433197,
+      "processing_ms": 2590.676583000459,
+      "total_ms": 2607.0155829947907
+    },
+    {
+      "sample": 6,
+      "source_turn": "dev-007a",
+      "observe_ms": 19.677749995025806,
+      "processing_ms": 2620.5453339935048,
+      "total_ms": 2640.2230839885306
+    },
+    {
+      "sample": 7,
+      "source_turn": "dev-008a",
+      "observe_ms": 16.841125005157664,
+      "processing_ms": 6887.376874990878,
+      "total_ms": 6904.217999996035
+    },
+    {
+      "sample": 8,
+      "source_turn": "dev-009a",
+      "observe_ms": 33.86212499754038,
+      "processing_ms": 2726.2690829957137,
+      "total_ms": 2760.131207993254
+    },
+    {
+      "sample": 9,
+      "source_turn": "dev-010a",
+      "observe_ms": 17.55625000805594,
+      "processing_ms": 2541.8169170006877,
+      "total_ms": 2559.3731670087436
+    },
+    {
+      "sample": 10,
+      "source_turn": "dev-011a",
+      "observe_ms": 34.74120900500566,
+      "processing_ms": 7306.477457997971,
+      "total_ms": 7341.218667002977
+    },
+    {
+      "sample": 11,
+      "source_turn": "dev-012a",
+      "observe_ms": 27.915250000660308,
+      "processing_ms": 5436.026207986288,
+      "total_ms": 5463.941457986948
+    },
+    {
+      "sample": 12,
+      "source_turn": "dev-013a",
+      "observe_ms": 25.66637498966884,
+      "processing_ms": 2619.5600840001134,
+      "total_ms": 2645.2264589897823
+    },
+    {
+      "sample": 13,
+      "source_turn": "dev-014a",
+      "observe_ms": 18.464291002601385,
+      "processing_ms": 6132.184709000285,
+      "total_ms": 6150.649000002886
+    },
+    {
+      "sample": 14,
+      "source_turn": "dev-015a",
+      "observe_ms": 37.11112499877345,
+      "processing_ms": 6650.0454589986475,
+      "total_ms": 6687.156583997421
+    },
+    {
+      "sample": 15,
+      "source_turn": "dev-016a",
+      "observe_ms": 35.68437500507571,
+      "processing_ms": 2571.2566249858355,
+      "total_ms": 2606.940999990911
+    },
+    {
+      "sample": 16,
+      "source_turn": "dev-017a",
+      "observe_ms": 20.398624998051673,
+      "processing_ms": 2808.403167000506,
+      "total_ms": 2828.8017919985577
+    },
+    {
+      "sample": 17,
+      "source_turn": "dev-018a",
+      "observe_ms": 23.440417004167102,
+      "processing_ms": 2511.90095799393,
+      "total_ms": 2535.3413749980973
+    },
+    {
+      "sample": 18,
+      "source_turn": "dev-019a",
+      "observe_ms": 24.804000000585802,
+      "processing_ms": 2640.242458990542,
+      "total_ms": 2665.046458991128
+    },
+    {
+      "sample": 19,
+      "source_turn": "dev-020a",
+      "observe_ms": 21.515499989618547,
+      "processing_ms": 5577.876459006802,
+      "total_ms": 5599.391958996421
+    },
+    {
+      "sample": 20,
+      "source_turn": "dev-021a",
+      "observe_ms": 19.396499992581084,
+      "processing_ms": 2681.0017910029273,
+      "total_ms": 2700.3982909955084
+    },
+    {
+      "sample": 21,
+      "source_turn": "dev-022a",
+      "observe_ms": 19.53608299663756,
+      "processing_ms": 2594.1282919957303,
+      "total_ms": 2613.664374992368
+    },
+    {
+      "sample": 22,
+      "source_turn": "dev-023a",
+      "observe_ms": 21.81237500917632,
+      "processing_ms": 5209.315916988999,
+      "total_ms": 5231.128291998175
+    },
+    {
+      "sample": 23,
+      "source_turn": "dev-024a",
+      "observe_ms": 28.448958008084446,
+      "processing_ms": 5725.010209003813,
+      "total_ms": 5753.459167011897
+    },
+    {
+      "sample": 24,
+      "source_turn": "dev-025a",
+      "observe_ms": 35.61029200500343,
+      "processing_ms": 2597.9864580003778,
+      "total_ms": 2633.596750005381
+    }
+  ],
+  "usage": {
+    "extractor": {
+      "requests": 25,
+      "input_tokens": 16664,
+      "output_tokens": 1412,
+      "unmetered_requests": 0
+    },
+    "embedder": {
+      "requests": 45,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "unmetered_requests": 45
+    },
+    "verifier": {
+      "requests": 8,
+      "input_tokens": 1742,
+      "output_tokens": 604,
+      "unmetered_requests": 0,
+      "nli_requests": 25
+    }
+  },
+  "warmup_usage": {
+    "extractor": {
+      "requests": 2,
+      "input_tokens": 1334,
+      "output_tokens": 113,
+      "unmetered_requests": 0
+    },
+    "embedder": {
+      "requests": 3,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "unmetered_requests": 3
+    },
+    "verifier": {
+      "requests": 1,
+      "input_tokens": 215,
+      "output_tokens": 69,
+      "unmetered_requests": 0,
+      "nli_requests": 2
+    }
+  },
+  "api_cost": {
+    "usd": null,
+    "reason": "No pricing supplied; measured usage is reported separately."
+  },
+  "local_compute_cost": {
+    "usd": null,
+    "reason": "No explicit local USD/hour rate supplied."
+  },
+  "models": {
+    "extractor": "qwen3.5:4b-mlx",
+    "embedder": "nomic-embed-text",
+    "verifier": "cross-encoder/nli-deberta-v3-small",
+    "verifier_backend": "cross_encoder",
+    "fallback_backend": "ollama"
+  },
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "limitations": [
+    "Not a saturation or concurrent-worker capacity benchmark.",
+    "Run without other model workloads; OS activity is not isolated.",
+    "API and local-compute estimates are separate, not automatically summed."
+  ]
+}

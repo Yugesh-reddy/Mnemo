@@ -119,7 +119,7 @@ also retained with their errors and remain in recall denominators. A report with
 failed turns has status `scored_with_errors`; it is not a successful pipeline run.
 
 See [recorded evidence](docs/evaluation), [annotation scope and attribution](mnemo/data/README.md),
-and [the detailed implementation plan](docs/CORRECTNESS_PLAN.md).
+and [the master implementation plan](docs/MASTER_PLAN.md).
 
 The original real-model 200-turn synthetic run achieved **25% final precision and
 16% recall**, with **one explicitly false historical write**. Total storage grew
@@ -140,10 +140,10 @@ has **0/9 exact must-keep**, with four retrieved equivalents and one unsupported
 assertion among 25 writes. Extraction failures remain in both complete reports.
 Zero forbidden-list matches does not establish zero false memories.
 
-**200 tests pass with Postgres required and zero skips.** These establish
-regressions, while real-model memory reliability remains unmet. The controlled
-benchmark retains failed jobs, retries, warmups and usage; missing prices remain
-unknown. Consolidation stays deferred.
+**Run `make test-db` for the current test and skip counts with Postgres required.**
+These tests establish regressions, while real-model memory reliability remains
+unmet. The controlled benchmark retains failed jobs, retries, warmups and usage;
+missing prices remain unknown. Consolidation stays deferred.
 
 ```bash
 # Use the configured real extraction, embedding and verifier backends
@@ -161,8 +161,7 @@ after further development. `--probe-retrieval` in the evaluation CLI distinguish
 missing current assertions from failures to retrieve stored assertions, without
 reinforcing memory. The benchmark reports separate API and local-compute
 estimates; prices that have not been supplied remain unknown.
-The [detailed quality plan](docs/QUALITY_RELIABILITY_PLAN.md) records acceptance
-gaps and the next development cycle.
+The [master plan](docs/MASTER_PLAN.md) records acceptance gaps and the planned fixes.
 
 ## Memory semantics
 

@@ -19,6 +19,8 @@ EXPECTED_TOOLS = {
     "memory_diff",
     "memory_log",
     "memory_observe",
+    "memory_decisions",
+    "memory_health",
 }
 
 

@@ -1,0 +1,3953 @@
+{
+  "dataset": "harbor-voices-naturalistic-200",
+  "original_metrics": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "f1": 0.017777777777777778,
+    "false": 0,
+    "false_writes": 0,
+    "historical_by_split": {},
+    "historical_precision": 0.013793103448275862,
+    "historical_recall": 0.021505376344086023,
+    "latency_ms": 1138533.3092499932,
+    "must_keep_recall": 0.0625,
+    "precision": 0.014084507042253521,
+    "recall": 0.024096385542168676,
+    "retrieval_probe_usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 32,
+        "unmetered_requests": 32
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 0,
+        "nli_requests": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      }
+    },
+    "retrieval_probes": [
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 68.2655840064399,
+        "query": "user accessibility_need captions enabled on video calls",
+        "results": [
+          {
+            "object": "Eli Patel",
+            "predicate": "emergency_contact_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "image descriptions and keyboard navigation for catalog page",
+            "predicate": "is_checking",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "The catalog preview moved from May 16 to May 19. We need the extra time for accessibility checks, and Priya agreed to the change.",
+            "predicate": "",
+            "source": "fast_cache",
+            "subject": "",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-02"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 43.585084000369534,
+        "query": "user allergy peanuts",
+        "results": [
+          {
+            "object": "peanut",
+            "predicate": "has_allergy",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-05",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-05-08"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 58.583249992807396,
+        "query": "user archive_image_format TIFF",
+        "results": [
+          {
+            "object": "TIFF originals",
+            "predicate": "not_changing_file_format",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "image descriptions and keyboard navigation for catalog page",
+            "predicate": "is_checking",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "jazz while editing last week",
+            "predicate": "listened_to_genre",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-06"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 60.76779200520832,
+        "query": "user archive_review_meeting May 2 with Priya",
+        "results": [
+          {
+            "object": "review meeting on May 2 with Priya",
+            "predicate": "has_confirmed_meeting",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Omar for 51 minutes on April 24",
+            "predicate": "had_interview_with",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "exhibition in June",
+            "predicate": "considering_exhibition",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "archive vs exhibition launch",
+            "predicate": "clarifies_topic",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Omar's terminal job and ferry schedule changes",
+            "predicate": "discussed_topics",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-07",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-07-08"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 58.741000000736676,
+        "query": "user backup_schedule Thursday afternoon",
+        "results": [
+          {
+            "object": "every Thursday afternoon",
+            "predicate": "runs_backup",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "external SSD for project backups on April 28",
+            "predicate": "paid_90_dollars_from_equipment_budget",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "audio and transcript from the backup",
+            "predicate": "verified_opening",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "external SSD for project backups on April 28",
+            "predicate": "purchased",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "photo dates",
+            "predicate": "found_photo_dates",
+            "source": "semantic",
+            "subject": "volunteers",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-08",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-08-08"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 75.38779100286774,
+        "query": "user catalog_preview_date May 19",
+        "results": [
+          {
+            "object": "The catalog preview moved from May 16 to May 19. We need the extra time for accessibility checks, and Priya agreed to the change.",
+            "predicate": "",
+            "source": "fast_cache",
+            "subject": "",
+            "tier": "session"
+          },
+          {
+            "object": "image descriptions and keyboard navigation for catalog page",
+            "predicate": "is_checking",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "catalog metadata and the browsing page",
+            "predicate": "assigns_updates_to_location",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "jazz while editing last week",
+            "predicate": "listened_to_genre",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "notes that were actually useful",
+            "predicate": "wants_to_review_notes",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-00"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 76.86595799168572,
+        "query": "user completed_interview Lena Ortiz in Cedar Room on April 13",
+        "results": [
+          {
+            "object": "interview with Lena",
+            "predicate": "completed_interview",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "74 minutes of audio in Cedar Room on April 13",
+            "predicate": "recorded_audio",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Lena's surname on the intake sheet",
+            "predicate": "identified_spelling_mistake",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "one story off the public website until she reviews the transcript",
+            "predicate": "requested_restriction",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "transcript",
+            "predicate": "has_not_finished_transcripting",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-04",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-04-00"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 43.36804201011546,
+        "query": "user consent_form_version 3",
+        "results": [
+          {
+            "object": "version 3",
+            "predicate": "has_consent_form_version",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "to scan them",
+            "predicate": "has_not_received_permission",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "large-print copy of the prompts",
+            "predicate": "will_bring",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-02",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-02-10"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 51.529917007428594,
+        "query": "user emergency_contact Eli Patel",
+        "results": [
+          {
+            "object": "Eli Patel",
+            "predicate": "emergency_contact_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Eli Patel and Alex Chen",
+            "predicate": "explicitly_forbids_merging_contacts",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Saturday volunteer handoff",
+            "predicate": "staying_put",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-10"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 51.2437500001397,
+        "query": "user first_interview Lena Ortiz on April 13",
+        "results": [
+          {
+            "object": "first interview to April 13",
+            "predicate": "moved_interview_date",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "until after the first interview",
+            "predicate": "decides_to_leave_intake_as_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "on the 10th",
+            "predicate": "has_family_commitment",
+            "source": "semantic",
+            "subject": "Lena",
+            "tier": "session"
+          },
+          {
+            "object": "April 13, 2 to 4 pm in Cedar Room",
+            "predicate": "has_reservation",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-03",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-03-02"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 59.127042011823505,
+        "query": "user first_interview_accessibility large-print prompts",
+        "results": [
+          {
+            "object": "large-print copy of the prompts",
+            "predicate": "will_bring",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "library's Cedar Room",
+            "predicate": "scheduled_interview_location",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "April 10 with Lena Ortiz",
+            "predicate": "booked_interview",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "by the window",
+            "predicate": "wants_table_position",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Zoom H5 recorder from the media desk yesterday",
+            "predicate": "borrowed_device",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-02",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-02-18"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 45.95645899826195,
+        "query": "user first_interview_release_condition written approval received; cleared for publication",
+        "results": [
+          {
+            "object": "on May 2",
+            "predicate": "held_archive_review",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "May 16",
+            "predicate": "planned_public_catalog_preview",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "cleared material (not June exhibition)",
+            "predicate": "clarified_material_scope",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Priya Nair",
+            "predicate": "has_manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-09",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-09-04"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 60.04662500345148,
+        "query": "user first_interview_room Cedar Room",
+        "results": [
+          {
+            "object": "April 13, 2 to 4 pm in Cedar Room",
+            "predicate": "has_reservation",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "first interview to April 13",
+            "predicate": "moved_interview_date",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "until after the first interview",
+            "predicate": "decides_to_leave_intake_as_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "front desk",
+            "predicate": "confirmed_with",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "recording setup",
+            "predicate": "handles_recording_setup",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-03",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-03-04"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 43.80170800141059,
+        "query": "user first_transcript_review_deadline April 18",
+        "results": [
+          {
+            "object": "transcript",
+            "predicate": "has_not_finished_transcripting",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "one story off the public website until she reviews the transcript",
+            "predicate": "requested_restriction",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "74 minutes of audio in Cedar Room on April 13",
+            "predicate": "recorded_audio",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "interview with Lena",
+            "predicate": "completed_interview",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "words and names over polished audio",
+            "predicate": "prioritizes_content_over_audio_quality",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-04",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-04-14"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 41.932874999474734,
+        "query": "user location Boston",
+        "results": [
+          {
+            "object": "Boston",
+            "predicate": "lives_in",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "America/New_York",
+            "predicate": "work_timezone_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-01",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-01-06"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 58.94550000084564,
+        "query": "user manager Priya Nair",
+        "results": [
+          {
+            "object": "Priya Nair",
+            "predicate": "has_manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "Theo",
+            "predicate": "has_volunteer",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-09",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-09-02"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 51.90966700320132,
+        "query": "user meeting_free_day Monday",
+        "results": [
+          {
+            "object": "Monday",
+            "predicate": "requests_monday_be_free",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "review meeting on May 2 with Priya",
+            "predicate": "has_confirmed_meeting",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Omar for 51 minutes on April 24",
+            "predicate": "had_interview_with",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "two volunteers on Wednesday afternoon",
+            "predicate": "plans_to_try_with_volunteers",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-07",
+        "stage": "retrieval_or_session_filter",
+        "turn_id": "harbor-07-18"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 51.889291004044935,
+        "query": "user name Asha Patel",
+        "results": [
+          {
+            "object": "Asha Patel",
+            "predicate": "is_named",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-01",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-01-00"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 45.021499987342395,
+        "query": "user next_interview Omar Haddad on April 24",
+        "results": [
+          {
+            "object": "phone interview",
+            "predicate": "prefers_interview_type",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "transcript review on April 18",
+            "predicate": "completed_transcript_review",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "interviews",
+            "predicate": "identified_table",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "interview_id, participant_name, and rights_status",
+            "predicate": "specified_export_columns",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Cedar Room",
+            "predicate": "not_coming_to_location",
+            "source": "semantic",
+            "subject": "Omar",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-06",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-06-04"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 51.064583007246256,
+        "query": "user omar_recording_date April 24",
+        "results": [
+          {
+            "object": "Omar for 51 minutes on April 24",
+            "predicate": "had_interview_with",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Omar's terminal job and ferry schedule changes",
+            "predicate": "discussed_topics",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "review meeting on May 2 with Priya",
+            "predicate": "has_confirmed_meeting",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "route number",
+            "predicate": "asked_question_about",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "him",
+            "predicate": "sent_email_to",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-07",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-07-04"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 54.96379200485535,
+        "query": "user omar_route_number 17",
+        "results": [
+          {
+            "object": "route 17",
+            "predicate": "provided_corrected_route",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Priya Nair",
+            "predicate": "has_manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Theo",
+            "predicate": "has_volunteer",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "on May 2",
+            "predicate": "held_archive_review",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "route number",
+            "predicate": "replied_with_route_number",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-09",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-09-06"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 73.25954199768603,
+        "query": "user preferred_database PostgreSQL",
+        "results": [
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "PostgreSQL over MongoDB for this catalog",
+            "predicate": "prefers_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "preference regarding database choice",
+            "predicate": "clarified_preference",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Priya Nair",
+            "predicate": "has_manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Python for own scripts",
+            "predicate": "primary_language",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-09",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-09-12"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 62.38449999364093,
+        "query": "user primary_language Python",
+        "results": [
+          {
+            "object": "Python for own scripts",
+            "predicate": "primary_language",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "I use Python for imports and SQL for catalog queries. Neither statement means I've switched my preferred programming language.",
+            "predicate": "",
+            "source": "fast_cache",
+            "subject": "",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-06",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-06-14"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 44.353334000334144,
+        "query": "user project Harbor Voices",
+        "results": [
+          {
+            "object": "Harbor Voices",
+            "predicate": "coordinates_project",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "side project at the library, not a new department",
+            "predicate": "interviews_status",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-01",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-01-00"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 50.25204199773725,
+        "query": "user project_email harbor-voices@example.org",
+        "results": [
+          {
+            "object": "harbor-voices@example.org",
+            "predicate": "specified_project_email",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "harbor-voices@example.org",
+            "predicate": "instructed_scheduling_method",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-16"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 62.57295800605789,
+        "query": "user project_extension Harbor Voices for another month approved on May 2",
+        "results": [
+          {
+            "object": "Harbor Voices for another month",
+            "predicate": "approved_continuing",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "on May 2",
+            "predicate": "held_archive_review",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "May 16",
+            "predicate": "planned_public_catalog_preview",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Theo",
+            "predicate": "has_volunteer",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "an exhibition",
+            "predicate": "did_not_approve",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-09",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-09-00"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 58.380874994327314,
+        "query": "user rights_note_position directly below the title",
+        "results": [
+          {
+            "object": "rights note directly below the title",
+            "predicate": "moved_note_position",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "rights note without a hint",
+            "predicate": "did_not_notice_rights_note",
+            "source": "semantic",
+            "subject": "volunteers",
+            "tier": "session"
+          },
+          {
+            "object": "one-page review brief",
+            "predicate": "requested_review_brief",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "150 dollars per month",
+            "predicate": "has_transcription_ceiling",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "60",
+            "predicate": "did_not_reduce_transcription_ceiling_to",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-08",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-08-02"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 46.82929199771024,
+        "query": "user role community archivist",
+        "results": [
+          {
+            "object": "community archivist",
+            "predicate": "job_title",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "side project at the library, not a new department",
+            "predicate": "interviews_status",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "the database",
+            "predicate": "stores_final_catalog_records_in",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-01",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-01-02"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 60.92587499006186,
+        "query": "user timezone America/New_York",
+        "results": [
+          {
+            "object": "America/New_York",
+            "predicate": "work_timezone_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Boston",
+            "predicate": "lives_in",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "cleaning the old spreadsheets",
+            "predicate": "needs_time_block_for",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-01",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-01-06"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 74.14062500174623,
+        "query": "user transcription_budget_usd 150",
+        "results": [
+          {
+            "object": "150 dollars per month",
+            "predicate": "has_transcription_ceiling",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "external SSD for project backups on April 28",
+            "predicate": "paid_90_dollars_from_equipment_budget",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "60",
+            "predicate": "did_not_reduce_transcription_ceiling_to",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "audio and transcript from the backup",
+            "predicate": "verified_opening",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-08",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-08-06"
+      },
+      {
+        "in_current": true,
+        "k": 5,
+        "latency_ms": 41.23633400013205,
+        "query": "user uses_database PostgreSQL",
+        "results": [
+          {
+            "object": "PostgreSQL",
+            "predicate": "uses_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          },
+          {
+            "object": "PostgreSQL over MongoDB for this catalog",
+            "predicate": "prefers_database",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "preference regarding database choice",
+            "predicate": "clarified_preference",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Priya Nair",
+            "predicate": "has_manager",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Python for own scripts",
+            "predicate": "primary_language",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "durable"
+          }
+        ],
+        "retrieved": true,
+        "session_id": "harbor-session-09",
+        "stage": "retrieved",
+        "turn_id": "harbor-09-14"
+      },
+      {
+        "in_current": false,
+        "k": 5,
+        "latency_ms": 65.46279200119898,
+        "query": "user volunteer_handoff_day Saturday",
+        "results": [
+          {
+            "object": "Saturday volunteer handoff",
+            "predicate": "staying_put",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "recurring handoff",
+            "predicate": "not_moving_to_tuesday",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "Eli Patel",
+            "predicate": "emergency_contact_is",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "harbor-voices@example.org",
+            "predicate": "specified_project_email",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          },
+          {
+            "object": "harbor-voices@example.org",
+            "predicate": "instructed_scheduling_method",
+            "source": "semantic",
+            "subject": "user",
+            "tier": "session"
+          }
+        ],
+        "retrieved": false,
+        "session_id": "harbor-session-10",
+        "stage": "upstream_or_label_mismatch",
+        "turn_id": "harbor-10-08"
+      }
+    ],
+    "storage_bytes": 3743744,
+    "stored": 142,
+    "total_events": 145,
+    "total_rows": 989,
+    "turn_errors": [
+      {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-01",
+        "stage": "extraction",
+        "turn_id": "harbor-01-10"
+      },
+      {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-06",
+        "stage": "extraction",
+        "turn_id": "harbor-06-00"
+      },
+      {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-06",
+        "stage": "extraction",
+        "turn_id": "harbor-06-12"
+      },
+      {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-10",
+        "stage": "extraction",
+        "turn_id": "harbor-10-00"
+      },
+      {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-10",
+        "stage": "extraction",
+        "turn_id": "harbor-10-04"
+      }
+    ],
+    "unsupported_writes": 143,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 246,
+        "unmetered_requests": 246
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 71403,
+        "nli_requests": 3,
+        "output_tokens": 14927,
+        "requests": 174,
+        "unmetered_requests": 0
+      }
+    },
+    "visible_facts": 142
+  },
+  "unmatched_count": 143,
+  "reviewed_count": 0,
+  "review_categories": {},
+  "must_keep_targets": 32,
+  "strict_missing_must_keep": 30,
+  "missing_by_cause": {
+    "extraction_fidelity_or_label_mismatch": 29,
+    "extraction_error": 1
+  },
+  "misses": [
+    {
+      "turn_id": "harbor-10-02",
+      "source": "The captions requirement still applies to our video calls. For the catalog page itself, we're checking image descriptions and keyboard navigation.",
+      "target": {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object": "captions enabled on video calls"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "captions requirement for video calls",
+            "subject": "user",
+            "evidence": "The captions requirement still applies to our video calls.",
+            "predicate": "has_requirement_applied",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The speaker explicitly states that the captions requirement applies to their video calls, which entails that they have this requirement applied.",
+          "score_components": null,
+          "turn_id": "harbor-10-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states that the captions requirement applies to their video calls, which entails that they have this requirement applied.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "\"The captions requirement still applies to our video calls.\"",
+            "probability": 0.95
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "image descriptions and keyboard navigation for catalog page",
+            "subject": "user",
+            "evidence": "For the catalog page itself, we're checking image descriptions and keyboard navigation.",
+            "predicate": "is_checking",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39934469728363914, \"novelty\": 0.3311489909454638, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-10-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'we're checking image descriptions and keyboard navigation' in the context of the catalog page, which directly matches the assertion's subject (user), predicate (is_checking), and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"For the catalog page itself, we're checking image descriptions and keyboard navigation.\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "image descriptions and keyboard navigation for catalog page",
+          "op": "ADD",
+          "predicate": "is_checking",
+          "seq": 134,
+          "source_span": "{\"evidence\": {\"end\": 146, \"text\": \"For the catalog page itself, we're checking image descriptions and keyboard navigation.\", \"start\": 59, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-02\"], \"cache_ids\": [\"c546b0e2-4379-47ce-89d0-8287b6b6115a\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-05-08",
+      "source": "For the volunteer lunch, remember that I have a peanut allergy. It isn't simply a food preference.",
+      "target": {
+        "subject": "user",
+        "predicate": "allergy",
+        "object": "peanuts"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "peanut",
+            "subject": "user",
+            "evidence": "I have a peanut allergy.",
+            "predicate": "has_allergy",
+            "confidence": 0.95,
+            "importance": 8,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.50; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5005444243331785, \"novelty\": 0.40181474777726145, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+          "turn_id": "harbor-05-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source explicitly states the user has a peanut allergy and clarifies it is not merely a preference, which fully supports the assertion that the user has an allergy to peanuts.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "For the volunteer lunch, remember that I have a peanut allergy. It isn't simply a food preference.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "peanut",
+          "op": "ADD",
+          "predicate": "has_allergy",
+          "seq": 72,
+          "source_span": "{\"evidence\": {\"end\": 63, \"text\": \"I have a peanut allergy.\", \"start\": 39, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-05-08\"], \"cache_ids\": [\"047087db-e789-4315-8cf8-dde2514a246e\"], \"session_id\": \"harbor-session-05\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-10-06",
+      "source": "We aren't changing the TIFF originals. The description updates belong in catalog metadata and the browsing page.",
+      "target": {
+        "subject": "user",
+        "predicate": "archive_image_format",
+        "object": "TIFF"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "TIFF originals",
+            "subject": "user",
+            "evidence": "We aren't changing the TIFF originals.",
+            "predicate": "not_changing_file_format",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.40512595678403623, \"novelty\": 0.2170865226134543, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-10-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source explicitly states 'We aren't changing the TIFF originals', which directly entails the user's assertion that they are not changing the file format of TIFF originals.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"We aren't changing the TIFF originals\"",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "catalog metadata and the browsing page",
+            "subject": "user",
+            "evidence": "The description updates belong in catalog metadata and the browsing page.",
+            "predicate": "assigns_updates_to_location",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.38498731400895037, \"novelty\": 0.2832910466965012, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-10-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states that description updates belong in catalog metadata and the browsing page, which directly entails the user assigning those updates to that location.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"The description updates belong in catalog metadata and the browsing page.\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "TIFF originals",
+          "op": "ADD",
+          "predicate": "not_changing_file_format",
+          "seq": 135,
+          "source_span": "{\"evidence\": {\"end\": 38, \"text\": \"We aren't changing the TIFF originals.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-06\"], \"cache_ids\": [\"679fae2a-b7a8-4ae3-8ed5-7feead6bad52\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "catalog metadata and the browsing page",
+          "op": "ADD",
+          "predicate": "assigns_updates_to_location",
+          "seq": 136,
+          "source_span": "{\"evidence\": {\"end\": 112, \"text\": \"The description updates belong in catalog metadata and the browsing page.\", \"start\": 39, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-06\"], \"cache_ids\": [\"679fae2a-b7a8-4ae3-8ed5-7feead6bad52\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-07-08",
+      "source": "We do have a confirmed review meeting on May 2 with Priya. That's about the archive, not an exhibition launch.",
+      "target": {
+        "subject": "user",
+        "predicate": "archive_review_meeting",
+        "object": "May 2 with Priya"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "review meeting on May 2 with Priya",
+            "subject": "user",
+            "evidence": "We do have a confirmed review meeting on May 2 with Priya.",
+            "predicate": "has_confirmed_meeting",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4291905993240844, \"novelty\": 0.2973019977469481, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-07-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'We do have a confirmed review meeting on May 2 with Priya', which directly matches the assertion's subject (user), predicate (has_confirmed_meeting), and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "We do have a confirmed review meeting on May 2 with Priya.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "archive vs exhibition launch",
+            "subject": "user",
+            "evidence": "That's about the archive, not an exhibition launch.",
+            "predicate": "clarifies_topic",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39161559548644614, \"novelty\": 0.30538531828815385, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-07-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states 'That's about the archive, not an exhibition launch', which directly confirms the user's intent to clarify the topic distinction between the two subjects.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"That's about the archive, not an exhibition launch.\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "review meeting on May 2 with Priya",
+          "op": "ADD",
+          "predicate": "has_confirmed_meeting",
+          "seq": 92,
+          "source_span": "{\"evidence\": {\"end\": 58, \"text\": \"We do have a confirmed review meeting on May 2 with Priya.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-07-08\"], \"cache_ids\": [\"be4dc540-ad4a-4836-b64a-0559f6e5f6ee\"], \"session_id\": \"harbor-session-07\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "archive vs exhibition launch",
+          "op": "ADD",
+          "predicate": "clarifies_topic",
+          "seq": 93,
+          "source_span": "{\"evidence\": {\"end\": 110, \"text\": \"That's about the archive, not an exhibition launch.\", \"start\": 59, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-07-08\"], \"cache_ids\": [\"be4dc540-ad4a-4836-b64a-0559f6e5f6ee\"], \"session_id\": \"harbor-session-07\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-08-08",
+      "source": "I run a backup every Thursday afternoon. The SSD is stored in the locked cabinet after each backup.",
+      "target": {
+        "subject": "user",
+        "predicate": "backup_schedule",
+        "object": "Thursday afternoon"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "every Thursday afternoon",
+            "subject": "user",
+            "evidence": "I run a backup every Thursday afternoon.",
+            "predicate": "runs_backup",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.45; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4533571766229193, \"novelty\": 0.37785725540973103, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-08-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the user runs a backup every Thursday afternoon, which directly matches the assertion's subject, predicate, and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I run a backup every Thursday afternoon.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "SSD after each backup",
+            "subject": "user",
+            "evidence": "The SSD is stored in the locked cabinet after each backup.",
+            "predicate": "stores_in_locked_cabinet",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39531335714207966, \"novelty\": 0.31771119047359886, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-08-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source explicitly states the SSD is stored in a locked cabinet after each backup, which directly entails the user's action of storing the SSD in a locked cabinet after each backup.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The SSD is stored in the locked cabinet after each backup.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "every Thursday afternoon",
+          "op": "ADD",
+          "predicate": "runs_backup",
+          "seq": 110,
+          "source_span": "{\"evidence\": {\"end\": 40, \"text\": \"I run a backup every Thursday afternoon.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-08\"], \"cache_ids\": [\"2f995036-3657-482f-8f38-6c78dfbcf327\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "SSD after each backup",
+          "op": "ADD",
+          "predicate": "stores_in_locked_cabinet",
+          "seq": 111,
+          "source_span": "{\"evidence\": {\"end\": 99, \"text\": \"The SSD is stored in the locked cabinet after each backup.\", \"start\": 41, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-08\"], \"cache_ids\": [\"2f995036-3657-482f-8f38-6c78dfbcf327\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-10-00",
+      "source": "The catalog preview moved from May 16 to May 19. We need the extra time for accessibility checks, and Priya agreed to the change.",
+      "target": {
+        "subject": "user",
+        "predicate": "catalog_preview_date",
+        "object": "May 19"
+      },
+      "cause": "extraction_error",
+      "decisions": [
+        {
+          "candidate": {},
+          "outcome": "error",
+          "reason": "ValueError",
+          "score_components": null,
+          "turn_id": "harbor-10-00",
+          "verification": null
+        },
+        {
+          "candidate": {},
+          "outcome": "error",
+          "reason": "ValueError",
+          "score_components": null,
+          "turn_id": "harbor-10-00",
+          "verification": null
+        },
+        {
+          "candidate": {},
+          "outcome": "error",
+          "reason": "ValueError",
+          "score_components": null,
+          "turn_id": "harbor-10-00",
+          "verification": null
+        }
+      ],
+      "source_writes": [],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": {
+        "attempts": 3,
+        "error": "ValueError: ValueError: extractor output rejected after retries: candidate 1 evidence is absent from source",
+        "session_id": "harbor-session-10",
+        "stage": "extraction",
+        "turn_id": "harbor-10-00"
+      }
+    },
+    {
+      "turn_id": "harbor-04-00",
+      "source": "The interview with Lena is finished. We recorded 74 minutes of audio in Cedar Room on April 13.",
+      "target": {
+        "subject": "user",
+        "predicate": "completed_interview",
+        "object": "Lena Ortiz in Cedar Room on April 13"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "interview with Lena",
+            "subject": "user",
+            "evidence": "The interview with Lena is finished.",
+            "predicate": "completed_interview",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.38781807212440655, \"novelty\": 0.159393573748022, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-04-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'The interview with Lena is finished', which directly entails the user's completed_interview action on that specific object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"The interview with Lena is finished.\"",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "74 minutes of audio in Cedar Room on April 13",
+            "subject": "user",
+            "evidence": "We recorded 74 minutes of audio in Cedar Room on April 13.",
+            "predicate": "recorded_audio",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.37605814497723666, \"novelty\": 0.2535271499241222, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-04-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that the interview with Lena is finished and specifies the exact duration (74 minutes), location (Cedar Room), and date (April 13) of the recording, which fully matches the assertion's subject, predicate, and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"We recorded 74 minutes of audio in Cedar Room on April 13.\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "interview with Lena",
+          "op": "ADD",
+          "predicate": "completed_interview",
+          "seq": 53,
+          "source_span": "{\"evidence\": {\"end\": 36, \"text\": \"The interview with Lena is finished.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-04-00\"], \"cache_ids\": [\"835fe089-a404-4729-8b4f-1e86647bfc29\"], \"session_id\": \"harbor-session-04\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "74 minutes of audio in Cedar Room on April 13",
+          "op": "ADD",
+          "predicate": "recorded_audio",
+          "seq": 54,
+          "source_span": "{\"evidence\": {\"end\": 95, \"text\": \"We recorded 74 minutes of audio in Cedar Room on April 13.\", \"start\": 37, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-04-00\"], \"cache_ids\": [\"835fe089-a404-4729-8b4f-1e86647bfc29\"], \"session_id\": \"harbor-session-04\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-02-10",
+      "source": "Our consent form is version 3. The library requires the participant's signature before recording begins.",
+      "target": {
+        "subject": "user",
+        "predicate": "consent_form_version",
+        "object": "3"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "version 3",
+            "subject": "user",
+            "evidence": "Our consent form is version 3.",
+            "predicate": "has_consent_form_version",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.47; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4712183121066448, \"novelty\": 0.4373943736888162, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-02-10",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'Our consent form is version 3', which directly entails that the user (the speaker) has a consent form of version 3.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Our consent form is version 3.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "participant's signature before recording begins",
+            "subject": "library",
+            "evidence": "The library requires the participant's signature before recording begins.",
+            "predicate": "requires_signature_before_recording",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.40019196539591656, \"novelty\": 0.33397321798638857, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-02-10",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that the library requires a participant's signature before recording begins, which directly matches the assertion's subject (library), predicate (requires_signature_before_recording), and object (participant's signature before recording begins). The tense and modality align perfectly.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The library requires the participant's signature before recording begins.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "version 3",
+          "op": "ADD",
+          "predicate": "has_consent_form_version",
+          "seq": 29,
+          "source_span": "{\"evidence\": {\"end\": 30, \"text\": \"Our consent form is version 3.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-02-10\"], \"cache_ids\": [\"52ee6868-e67a-4048-bb63-22c3d103d811\"], \"session_id\": \"harbor-session-02\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "participant's signature before recording begins",
+          "op": "ADD",
+          "predicate": "requires_signature_before_recording",
+          "seq": 30,
+          "source_span": "{\"evidence\": {\"end\": 104, \"text\": \"The library requires the participant's signature before recording begins.\", \"start\": 31, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-02-10\"], \"cache_ids\": [\"52ee6868-e67a-4048-bb63-22c3d103d811\"], \"session_id\": \"harbor-session-02\"}",
+          "subject": "library"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-10-10",
+      "source": "My emergency contact is still Eli Patel. Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+      "target": {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object": "Eli Patel"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Eli Patel",
+            "subject": "user",
+            "evidence": "My emergency contact is still Eli Patel.",
+            "predicate": "emergency_contact_is",
+            "confidence": 0.95,
+            "importance": 8,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3868597404713995, \"novelty\": 0.022865801571331335, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+          "turn_id": "harbor-10-10",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'My emergency contact is still Eli Patel', which directly affirms the user's emergency contact is Eli Patel.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "My emergency contact is still Eli Patel.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Eli Patel and Alex Chen",
+            "subject": "user",
+            "evidence": "Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+            "predicate": "explicitly_forbids_merging_contacts",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4302697397593869, \"novelty\": 0.30089913253128986, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-10-10",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The user explicitly states that Eli Patel is the emergency contact and Alex Chen is the equipment vendor's contact, then directly instructs not to merge them, which constitutes an explicit prohibition against merging those two contacts.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "My emergency contact is still Eli Patel. Alex Chen is the equipment vendor's contact, so please don't merge those two people.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Eli Patel",
+          "op": "ADD",
+          "predicate": "emergency_contact_is",
+          "seq": 139,
+          "source_span": "{\"evidence\": {\"end\": 40, \"text\": \"My emergency contact is still Eli Patel.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-10\"], \"cache_ids\": [\"fe1112c4-c5d4-4b74-948b-3d77d6e758c2\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Eli Patel and Alex Chen",
+          "op": "ADD",
+          "predicate": "explicitly_forbids_merging_contacts",
+          "seq": 140,
+          "source_span": "{\"evidence\": {\"end\": 125, \"text\": \"Alex Chen is the equipment vendor's contact, so please don't merge those two people.\", \"start\": 41, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-10\"], \"cache_ids\": [\"fe1112c4-c5d4-4b74-948b-3d77d6e758c2\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-03-02",
+      "source": "We also moved the first interview to April 13. Lena has a family commitment on the 10th; the person and room are unchanged.",
+      "target": {
+        "subject": "user",
+        "predicate": "first_interview",
+        "object": "Lena Ortiz on April 13"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "first interview to April 13",
+            "subject": "user",
+            "evidence": "We also moved the first interview to April 13.",
+            "predicate": "moved_interview_date",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.43101364861409647, \"novelty\": 0.30337882871365507, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-03-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'We also moved the first interview to April 13', which directly confirms the user's action of moving the date.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "We also moved the first interview to April 13.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "on the 10th",
+            "subject": "Lena",
+            "evidence": "Lena has a family commitment on the 10th;",
+            "predicate": "has_family_commitment",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.40456914055746585, \"novelty\": 0.34856380185821945, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-03-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that Lena has a family commitment on the 10th, which directly supports the assertion about her having a family commitment on that date.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Lena has a family commitment on the 10th",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "unchanged",
+            "subject": "person and room",
+            "evidence": "the person and room are unchanged.",
+            "predicate": "are_unchanged",
+            "confidence": 0.95,
+            "importance": 4,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.35; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3450743977654678, \"novelty\": 0.4169146592182259, \"transient\": false, \"importance\": 4, \"from_assistant\": false}",
+          "turn_id": "harbor-03-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'the person and room are unchanged', which directly matches the assertion's subject-predicate-object structure.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "the person and room are unchanged",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "first interview to April 13",
+          "op": "ADD",
+          "predicate": "moved_interview_date",
+          "seq": 38,
+          "source_span": "{\"evidence\": {\"end\": 46, \"text\": \"We also moved the first interview to April 13.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-03-02\"], \"cache_ids\": [\"f20d3c9b-e28c-4fad-86d5-4bdbe314d4ea\"], \"session_id\": \"harbor-session-03\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "on the 10th",
+          "op": "ADD",
+          "predicate": "has_family_commitment",
+          "seq": 39,
+          "source_span": "{\"evidence\": {\"end\": 88, \"text\": \"Lena has a family commitment on the 10th;\", \"start\": 47, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-03-02\"], \"cache_ids\": [\"f20d3c9b-e28c-4fad-86d5-4bdbe314d4ea\"], \"session_id\": \"harbor-session-03\"}",
+          "subject": "Lena"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "unchanged",
+          "op": "ADD",
+          "predicate": "are_unchanged",
+          "seq": 40,
+          "source_span": "{\"evidence\": {\"end\": 123, \"text\": \"the person and room are unchanged.\", \"start\": 89, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-03-02\"], \"cache_ids\": [\"f20d3c9b-e28c-4fad-86d5-4bdbe314d4ea\"], \"session_id\": \"harbor-session-03\"}",
+          "subject": "person and room"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-02-18",
+      "source": "Those work. I'll bring a large-print copy of the prompts because Lena asked for one.",
+      "target": {
+        "subject": "user",
+        "predicate": "first_interview_accessibility",
+        "object": "large-print prompts"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "large-print copy of the prompts",
+            "subject": "user",
+            "evidence": "I'll bring a large-print copy of the prompts",
+            "predicate": "will_bring",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4150629287878267, \"novelty\": 0.3835430959594224, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-02-18",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states 'I'll bring', which is a future tense declaration of intent matching the assertion's 'will_bring' predicate regarding the object 'large-print copy of the prompts'. The context confirms this refers to the user.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I'll bring a large-print copy of the prompts",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "large-print copy of the prompts",
+            "subject": "Lena",
+            "evidence": "because Lena asked for one",
+            "predicate": "asked_for",
+            "confidence": 0.95,
+            "importance": 4,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.27; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.26910848210683913, \"novelty\": 0.1636949403561303, \"transient\": false, \"importance\": 4, \"from_assistant\": false}",
+          "turn_id": "harbor-02-18",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states that Lena asked for a large-print copy of the prompts, which directly supports the assertion that Lena asked_for a large-print copy of the prompts.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Lena asked for one",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "large-print copy of the prompts",
+          "op": "ADD",
+          "predicate": "will_bring",
+          "seq": 34,
+          "source_span": "{\"evidence\": {\"end\": 56, \"text\": \"I'll bring a large-print copy of the prompts\", \"start\": 12, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-02-18\"], \"cache_ids\": [\"d506bf64-8b80-49b8-941b-ac8565a91cb8\"], \"session_id\": \"harbor-session-02\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "large-print copy of the prompts",
+          "op": "ADD",
+          "predicate": "asked_for",
+          "seq": 35,
+          "source_span": "{\"evidence\": {\"end\": 83, \"text\": \"because Lena asked for one\", \"start\": 57, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-02-18\"], \"cache_ids\": [\"d506bf64-8b80-49b8-941b-ac8565a91cb8\"], \"session_id\": \"harbor-session-02\"}",
+          "subject": "Lena"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-09-04",
+      "source": "Lena has now cleared the previously restricted story for publication. I saved her written approval with the interview record.",
+      "target": {
+        "subject": "user",
+        "predicate": "first_interview_release_condition",
+        "object": "written approval received; cleared for publication"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "previously restricted story",
+            "subject": "user",
+            "evidence": "Lena has now cleared the previously restricted story for publication.",
+            "predicate": "cleared_story_for_publication",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that Lena (a third party) cleared the story and saved the approval, but it does not explicitly state that the user performed this action or holds the authority to do so. The assertion claims the user as the subject of the predicate 'cleared_story_for_publication', which cannot be confirmed from the text where Lena is the actor.",
+          "score_components": null,
+          "turn_id": "harbor-09-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that Lena (a third party) cleared the story and saved the approval, but it does not explicitly state that the user performed this action or holds the authority to do so. The assertion claims the user as the subject of the predicate 'cleared_story_for_publication', which cannot be confirmed from the text where Lena is the actor.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "Lena has now cleared the previously restricted story for publication.",
+            "probability": 0.5
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "her written approval",
+            "subject": "user",
+            "evidence": "I saved her written approval with the interview record.",
+            "predicate": "saved_approval_with_record",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that the user 'saved' her approval with the interview record, which supports the assertion about saving approval with a record. However, the source does not explicitly confirm that this action was completed in the present tense as a finished fact ('has now cleared' implies completion for the story, but 'I saved' is reported past tense relative to the utterance; without explicit confirmation of current state or further context, we cannot definitively entail the full assertion as an ongoing or absolute fact about the user's current status. The source text confirms the action occurred, but does not explicitly confirm the user's current state or the permanence of this action in the present moment.",
+          "score_components": null,
+          "turn_id": "harbor-09-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that the user 'saved' her approval with the interview record, which supports the assertion about saving approval with a record. However, the source does not explicitly confirm that this action was completed in the present tense as a finished fact ('has now cleared' implies completion for the story, but 'I saved' is reported past tense relative to the utterance; without explicit confirmation of current state or further context, we cannot definitively entail the full assertion as an ongoing or absolute fact about the user's current status. The source text confirms the action occurred, but does not explicitly confirm the user's current state or the permanence of this action in the present moment.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "I saved her written approval with the interview record.",
+            "probability": 0.5
+          }
+        }
+      ],
+      "source_writes": [],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-03-04",
+      "source": "The reservation on April 13 is still 2 to 4 pm in Cedar Room. I confirmed it with the front desk.",
+      "target": {
+        "subject": "user",
+        "predicate": "first_interview_room",
+        "object": "Cedar Room"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "April 13, 2 to 4 pm in Cedar Room",
+            "subject": "user",
+            "evidence": "The reservation on April 13 is still 2 to 4 pm in Cedar Room.",
+            "predicate": "has_reservation",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4004815520667372, \"novelty\": 0.20160517355579066, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-03-04",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states the reservation details for April 13 (2 to 4 pm in Cedar Room) and confirms it with the front desk, which fully supports the assertion that the user has this specific reservation.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The reservation on April 13 is still 2 to 4 pm in Cedar Room. I confirmed it with the front desk.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "front desk",
+            "subject": "user",
+            "evidence": "I confirmed it with the front desk.",
+            "predicate": "confirmed_with",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.41440070931875317, \"novelty\": 0.3813356977291773, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-03-04",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states they 'confirmed it with the front desk', which directly entails the predicate 'confirmed_with' applied to the subject 'user' and object 'front desk'.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I confirmed it with the front desk.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "April 13, 2 to 4 pm in Cedar Room",
+          "op": "ADD",
+          "predicate": "has_reservation",
+          "seq": 41,
+          "source_span": "{\"evidence\": {\"end\": 61, \"text\": \"The reservation on April 13 is still 2 to 4 pm in Cedar Room.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-03-04\"], \"cache_ids\": [\"f80d1a7b-3e4e-40a8-b9c1-3229a7d70698\"], \"session_id\": \"harbor-session-03\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "front desk",
+          "op": "ADD",
+          "predicate": "confirmed_with",
+          "seq": 42,
+          "source_span": "{\"evidence\": {\"end\": 97, \"text\": \"I confirmed it with the front desk.\", \"start\": 62, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-03-04\"], \"cache_ids\": [\"f80d1a7b-3e4e-40a8-b9c1-3229a7d70698\"], \"session_id\": \"harbor-session-03\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-04-14",
+      "source": "My review deadline for that draft is April 18. I promised to send Lena a readable copy before asking about publication.",
+      "target": {
+        "subject": "user",
+        "predicate": "first_transcript_review_deadline",
+        "object": "April 18"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "April 18",
+            "subject": "user",
+            "evidence": "My review deadline for that draft is April 18.",
+            "predicate": "has_review_deadline",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text explicitly states 'My review deadline for that draft is April 18', which directly confirms the user's review deadline is April 18.",
+          "score_components": null,
+          "turn_id": "harbor-04-14",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'My review deadline for that draft is April 18', which directly confirms the user's review deadline is April 18.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "My review deadline for that draft is April 18.",
+            "probability": 0.95
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Lena",
+            "subject": "user",
+            "evidence": "I promised to send Lena a readable copy before asking about publication.",
+            "predicate": "promised_to_send_readable_copy",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3817162254874894, \"novelty\": 0.2723874182916314, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-04-14",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I promised to send Lena a readable copy', which directly entails the assertion that the user promised to send a readable copy to Lena.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I promised to send Lena a readable copy before asking about publication.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Lena",
+          "op": "ADD",
+          "predicate": "promised_to_send_readable_copy",
+          "seq": 64,
+          "source_span": "{\"evidence\": {\"end\": 119, \"text\": \"I promised to send Lena a readable copy before asking about publication.\", \"start\": 47, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-04-14\"], \"cache_ids\": [\"822465cc-2b39-4bf7-9a8e-023ae2bc5c6f\"], \"session_id\": \"harbor-session-04\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-01-06",
+      "source": "I live in Boston, and my work timezone is America/New_York. Please keep the timezone in invitations even when everyone seems local.",
+      "target": {
+        "subject": "user",
+        "predicate": "location",
+        "object": "Boston"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Boston",
+            "subject": "user",
+            "evidence": "I live in Boston",
+            "predicate": "lives_in",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.49; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.48553024499524966, \"novelty\": 0.4851008166508324, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I live in Boston', which directly entails the assertion that the user lives in Boston.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I live in Boston",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "America/New_York",
+            "subject": "user",
+            "evidence": "my work timezone is America/New_York",
+            "predicate": "work_timezone_is",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.47; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.46788811537934344, \"novelty\": 0.4262937179311449, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the user's work timezone is America/New_York, which directly matches the assertion's subject, predicate, and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "my work timezone is America/New_York",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Boston",
+          "op": "ADD",
+          "predicate": "lives_in",
+          "seq": 6,
+          "source_span": "{\"evidence\": {\"end\": 16, \"text\": \"I live in Boston\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-06\"], \"cache_ids\": [\"f78b1956-3404-4818-aa84-304a6c0cd452\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "America/New_York",
+          "op": "ADD",
+          "predicate": "work_timezone_is",
+          "seq": 7,
+          "source_span": "{\"evidence\": {\"end\": 58, \"text\": \"my work timezone is America/New_York\", \"start\": 22, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-06\"], \"cache_ids\": [\"f78b1956-3404-4818-aa84-304a6c0cd452\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-09-02",
+      "source": "The manager relationship hasn't changed: Priya Nair is still my manager. Morgan ran part of the meeting because I was presenting the sample page.",
+      "target": {
+        "subject": "user",
+        "predicate": "manager",
+        "object": "Priya Nair"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Priya Nair",
+            "subject": "user",
+            "evidence": "The manager relationship hasn't changed: Priya Nair is still my manager.",
+            "predicate": "has_manager",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-09-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'Priya Nair is still my manager,' which directly confirms the user's manager relationship with Priya Nair.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Priya Nair is still my manager",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "sample page",
+            "subject": "user",
+            "evidence": "Morgan ran part of the meeting because I was presenting the sample page.",
+            "predicate": "presented_sample_page",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.37; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.36989718231158664, \"novelty\": 0.2329906077052888, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-09-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I was presenting the sample page', which confirms the user performed the action of presenting the sample page.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"I was presenting the sample page\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Priya Nair",
+          "op": "UPDATE",
+          "predicate": "has_manager",
+          "seq": 122,
+          "source_span": "{\"evidence\": {\"end\": 72, \"text\": \"The manager relationship hasn't changed: Priya Nair is still my manager.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-02\"], \"cache_ids\": [\"437ec597-f21a-4dfb-8b62-21c7d9c67e3a\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "sample page",
+          "op": "ADD",
+          "predicate": "presented_sample_page",
+          "seq": 123,
+          "source_span": "{\"evidence\": {\"end\": 145, \"text\": \"Morgan ran part of the meeting because I was presenting the sample page.\", \"start\": 73, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-02\"], \"cache_ids\": [\"437ec597-f21a-4dfb-8b62-21c7d9c67e3a\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-01-00",
+      "source": "I'm Asha Patel. I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront. I need help keeping the practical details straight.",
+      "target": {
+        "subject": "user",
+        "predicate": "name",
+        "object": "Asha Patel"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Asha Patel",
+            "subject": "user",
+            "evidence": "I'm Asha Patel.",
+            "predicate": "is_named",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I'm Asha Patel', which directly entails the assertion that the user is named Asha Patel.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I'm Asha Patel.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Harbor Voices",
+            "subject": "user",
+            "evidence": "I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront.",
+            "predicate": "coordinates_project",
+            "confidence": 0.95,
+            "importance": 8,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.55; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5540212766408207, \"novelty\": 0.5800709221360687, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+          "turn_id": "harbor-01-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I'm coordinating Harbor Voices', which directly entails the assertion that the user coordinates the project 'Harbor Voices'. The predicate 'coordinates_project' matches the verb 'coordinating' in tense and modality, and the object matches exactly.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I'm coordinating Harbor Voices",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Asha Patel",
+          "op": "ADD",
+          "predicate": "is_named",
+          "seq": 1,
+          "source_span": "{\"evidence\": {\"end\": 15, \"text\": \"I'm Asha Patel.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-00\"], \"cache_ids\": [\"a4c1be9f-8f71-4f88-b3e3-a80356775150\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Harbor Voices",
+          "op": "ADD",
+          "predicate": "coordinates_project",
+          "seq": 2,
+          "source_span": "{\"evidence\": {\"end\": 112, \"text\": \"I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront.\", \"start\": 16, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-00\"], \"cache_ids\": [\"a4c1be9f-8f71-4f88-b3e3-a80356775150\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-06-04",
+      "source": "Our next interview is with Omar Haddad on April 24. He worked at the ferry terminal for thirty years.",
+      "target": {
+        "subject": "user",
+        "predicate": "next_interview",
+        "object": "Omar Haddad on April 24"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Omar Haddad on April 24",
+            "subject": "user",
+            "evidence": "Our next interview is with Omar Haddad on April 24.",
+            "predicate": "scheduled_interview_with",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that the user's next interview with Omar Haddad is scheduled for April 24, which supports a planned or future action but does not confirm it as an ordinary conversational memory of a completed event.",
+          "score_components": null,
+          "turn_id": "harbor-06-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that the user's next interview with Omar Haddad is scheduled for April 24, which supports a planned or future action but does not confirm it as an ordinary conversational memory of a completed event.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "Our next interview is with Omar Haddad on April 24.",
+            "probability": 0.5
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "ferry terminal for thirty years",
+            "subject": "user",
+            "evidence": "He worked at the ferry terminal for thirty years.",
+            "predicate": "stated_work_history",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that Omar Haddad worked at the ferry terminal, but it does not mention the user's work history or any statement made by the user regarding their employment.",
+          "score_components": null,
+          "turn_id": "harbor-06-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that Omar Haddad worked at the ferry terminal, but it does not mention the user's work history or any statement made by the user regarding their employment.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "Our next interview is with Omar Haddad on April 24. He worked at the ferry terminal for thirty years.",
+            "probability": 0.5
+          }
+        }
+      ],
+      "source_writes": [],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-07-04",
+      "source": "Morgan noticed that one audio filename used April 23 by mistake. The interview was April 24; please keep that correction attached to Omar's recording.",
+      "target": {
+        "subject": "user",
+        "predicate": "omar_recording_date",
+        "object": "April 24"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "April 23",
+            "subject": "user",
+            "evidence": "Morgan noticed that one audio filename used April 23 by mistake.",
+            "predicate": "noticed_filename_error",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that Morgan noticed an error regarding a filename used on April 23, but it does not explicitly state that the user (Morgan) personally noticed this error or that the user is the one who made the mistake. The subject of the assertion is 'user', which could refer to Morgan, but the text only attributes the noticing action to Morgan, not necessarily the user as a whole entity in the context of the assertion's specific claim about the user noticing it.",
+          "score_components": null,
+          "turn_id": "harbor-07-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that Morgan noticed an error regarding a filename used on April 23, but it does not explicitly state that the user (Morgan) personally noticed this error or that the user is the one who made the mistake. The subject of the assertion is 'user', which could refer to Morgan, but the text only attributes the noticing action to Morgan, not necessarily the user as a whole entity in the context of the assertion's specific claim about the user noticing it.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "Morgan noticed that one audio filename used April 23 by mistake.",
+            "probability": 0.5
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Omar's recording",
+            "subject": "user",
+            "evidence": "The interview was April 24; please keep that correction attached to Omar's recording.",
+            "predicate": "requested_correction_attachment",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "rejected",
+          "reason": "The source text states that the user requested a correction be attached to Omar's recording, but it does not confirm whether this request was successfully completed or if the attachment actually occurred.",
+          "score_components": null,
+          "turn_id": "harbor-07-04",
+          "verification": {
+            "label": "neutral",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text states that the user requested a correction be attached to Omar's recording, but it does not confirm whether this request was successfully completed or if the attachment actually occurred.",
+            "backend": "ollama",
+            "accepted": false,
+            "evidence": "Morgan noticed that one audio filename used April 23 by mistake. The interview was April 24; please keep that correction attached to Omar's recording.",
+            "probability": 0.5
+          }
+        }
+      ],
+      "source_writes": [],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-09-06",
+      "source": "Omar replied with the route number too. His answer was route 17, not route 70 as the automatic transcript guessed.",
+      "target": {
+        "subject": "user",
+        "predicate": "omar_route_number",
+        "object": "17"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "route number",
+            "subject": "user",
+            "evidence": "Omar replied with the route number too.",
+            "predicate": "replied_with_route_number",
+            "confidence": 0.95,
+            "importance": 4,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.27; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.27039885383467493, \"novelty\": 0.16799617944891632, \"transient\": false, \"importance\": 4, \"from_assistant\": false}",
+          "turn_id": "harbor-09-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that Omar (the user) replied with the route number '17', which satisfies the predicate 'replied_with_route_number' and object 'route number'. The additional detail about the automatic transcript's error does not negate the fact of the reply.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Omar replied with the route number too.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "route 17",
+            "subject": "user",
+            "evidence": "His answer was route 17, not route 70 as the automatic transcript guessed.",
+            "predicate": "provided_corrected_route",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4083558260267842, \"novelty\": 0.36118608675594743, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-09-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that Omar (the user) provided the corrected route number '17', directly confirming the action of providing a corrected route.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Omar replied with the route number too.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "route number",
+          "op": "ADD",
+          "predicate": "replied_with_route_number",
+          "seq": 124,
+          "source_span": "{\"evidence\": {\"end\": 39, \"text\": \"Omar replied with the route number too.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-06\"], \"cache_ids\": [\"bc14e35a-f533-42f8-8cfd-38fadf371321\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "route 17",
+          "op": "ADD",
+          "predicate": "provided_corrected_route",
+          "seq": 125,
+          "source_span": "{\"evidence\": {\"end\": 114, \"text\": \"His answer was route 17, not route 70 as the automatic transcript guessed.\", \"start\": 40, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-06\"], \"cache_ids\": [\"bc14e35a-f533-42f8-8cfd-38fadf371321\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-09-12",
+      "source": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both. That is an actual preference, unlike my earlier statement about what the library already used.",
+      "target": {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object": "PostgreSQL"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "PostgreSQL over MongoDB for this catalog",
+            "subject": "user",
+            "evidence": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both.",
+            "predicate": "prefers_database",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39678131911758346, \"novelty\": 0.18927106372527835, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-09-12",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I prefer PostgreSQL to MongoDB', which directly matches the assertion's subject (user), predicate (prefers_database), and object (PostgreSQL over MongoDB). The phrase 'That is an actual preference' confirms the status of this preference as a fact about the speaker.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "preference regarding database choice",
+            "subject": "user",
+            "evidence": "That is an actual preference, unlike my earlier statement about what the library already used.",
+            "predicate": "clarified_preference",
+            "confidence": 0.85,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.37; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3700071230842809, \"novelty\": 0.2333570769476031, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-09-12",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states 'That is an actual preference' and confirms the current stance ('now that I've worked with both'), which fully supports the assertion of a clarified preference regarding database choice.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "That is an actual preference",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "PostgreSQL over MongoDB for this catalog",
+          "op": "ADD",
+          "predicate": "prefers_database",
+          "seq": 129,
+          "source_span": "{\"evidence\": {\"end\": 79, \"text\": \"I prefer PostgreSQL to MongoDB for this catalog now that I've worked with both.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-12\"], \"cache_ids\": [\"bf9530d5-9608-4a0a-852e-4926e107ceee\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "preference regarding database choice",
+          "op": "ADD",
+          "predicate": "clarified_preference",
+          "seq": 130,
+          "source_span": "{\"evidence\": {\"end\": 174, \"text\": \"That is an actual preference, unlike my earlier statement about what the library already used.\", \"start\": 80, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-12\"], \"cache_ids\": [\"bf9530d5-9608-4a0a-852e-4926e107ceee\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-06-14",
+      "source": "For my own scripts, Python is still my primary language. The SQL work is part of the catalog maintenance.",
+      "target": {
+        "subject": "user",
+        "predicate": "primary_language",
+        "object": "Python"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Python for own scripts",
+            "subject": "user",
+            "evidence": "For my own scripts, Python is still my primary language.",
+            "predicate": "primary_language",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "accepted",
+          "reason": "entailment; score=0.71; accepted",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.7135270248990941, \"novelty\": 0.4450900829969805, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-06-14",
+          "verification": {
+            "label": "entailment",
+            "model": "cross-encoder/nli-deberta-v3-small",
+            "reason": "NLI entailment passed threshold",
+            "backend": "cross_encoder",
+            "accepted": true,
+            "evidence": "For my own scripts, Python is still my primary language. The SQL work is part of the catalog maintenance.",
+            "probability": 0.9958261251449585
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "SQL for catalog maintenance",
+            "subject": "user",
+            "evidence": "The SQL work is part of the catalog maintenance.",
+            "predicate": "performs_work_in",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39390994567286386, \"novelty\": 0.31303315224287964, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-06-14",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that 'The SQL work is part of the catalog maintenance,' which directly entails that the user performs SQL work for this purpose.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "\"The SQL work is part of the catalog maintenance.\"",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Python for own scripts",
+          "op": "ADD",
+          "predicate": "primary_language",
+          "seq": 82,
+          "source_span": "{\"evidence\": {\"end\": 56, \"text\": \"For my own scripts, Python is still my primary language.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-06-14\"], \"cache_ids\": [\"651cf0a3-c4cf-4c4a-929d-59eb541eb6d1\"], \"session_id\": \"harbor-session-06\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "SQL for catalog maintenance",
+          "op": "ADD",
+          "predicate": "performs_work_in",
+          "seq": 83,
+          "source_span": "{\"evidence\": {\"end\": 105, \"text\": \"The SQL work is part of the catalog maintenance.\", \"start\": 57, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-06-14\"], \"cache_ids\": [\"651cf0a3-c4cf-4c4a-929d-59eb541eb6d1\"], \"session_id\": \"harbor-session-06\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-01-00",
+      "source": "I'm Asha Patel. I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront. I need help keeping the practical details straight.",
+      "target": {
+        "subject": "user",
+        "predicate": "project",
+        "object": "Harbor Voices"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Asha Patel",
+            "subject": "user",
+            "evidence": "I'm Asha Patel.",
+            "predicate": "is_named",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I'm Asha Patel', which directly entails the assertion that the user is named Asha Patel.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I'm Asha Patel.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Harbor Voices",
+            "subject": "user",
+            "evidence": "I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront.",
+            "predicate": "coordinates_project",
+            "confidence": 0.95,
+            "importance": 8,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.55; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5540212766408207, \"novelty\": 0.5800709221360687, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+          "turn_id": "harbor-01-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I'm coordinating Harbor Voices', which directly entails the assertion that the user coordinates the project 'Harbor Voices'. The predicate 'coordinates_project' matches the verb 'coordinating' in tense and modality, and the object matches exactly.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I'm coordinating Harbor Voices",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Asha Patel",
+          "op": "ADD",
+          "predicate": "is_named",
+          "seq": 1,
+          "source_span": "{\"evidence\": {\"end\": 15, \"text\": \"I'm Asha Patel.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-00\"], \"cache_ids\": [\"a4c1be9f-8f71-4f88-b3e3-a80356775150\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Harbor Voices",
+          "op": "ADD",
+          "predicate": "coordinates_project",
+          "seq": 2,
+          "source_span": "{\"evidence\": {\"end\": 112, \"text\": \"I'm coordinating Harbor Voices, an oral-history project about our neighborhood's old waterfront.\", \"start\": 16, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-00\"], \"cache_ids\": [\"a4c1be9f-8f71-4f88-b3e3-a80356775150\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-10-16",
+      "source": "One last detail for that note: the project email is harbor-voices@example.org. Use that address for participant scheduling, not my personal inbox.",
+      "target": {
+        "subject": "user",
+        "predicate": "project_email",
+        "object": "harbor-voices@example.org"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "harbor-voices@example.org",
+            "subject": "user",
+            "evidence": "the project email is harbor-voices@example.org",
+            "predicate": "specified_project_email",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3995167573600919, \"novelty\": 0.19838919120030651, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-10-16",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The user explicitly states the project email is 'harbor-voices@example.org' and instructs to use it for participant scheduling, which directly entails that the user has specified this project email.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "the project email is harbor-voices@example.org",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "harbor-voices@example.org",
+            "subject": "user",
+            "evidence": "Use that address for participant scheduling, not my personal inbox.",
+            "predicate": "instructed_scheduling_method",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.37543567095446734, \"novelty\": 0.2514522365148911, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-10-16",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The user explicitly instructs to use 'harbor-voices@example.org' for participant scheduling, which directly entails that the user instructed this specific email address as the scheduling method.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Use that address for participant scheduling",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "harbor-voices@example.org",
+          "op": "ADD",
+          "predicate": "specified_project_email",
+          "seq": 142,
+          "source_span": "{\"evidence\": {\"end\": 77, \"text\": \"the project email is harbor-voices@example.org\", \"start\": 31, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-16\"], \"cache_ids\": [\"07c00b3c-e5a3-4fa8-87f1-aeadc75a1e43\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "harbor-voices@example.org",
+          "op": "ADD",
+          "predicate": "instructed_scheduling_method",
+          "seq": 143,
+          "source_span": "{\"evidence\": {\"end\": 146, \"text\": \"Use that address for participant scheduling, not my personal inbox.\", \"start\": 79, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-16\"], \"cache_ids\": [\"07c00b3c-e5a3-4fa8-87f1-aeadc75a1e43\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-09-00",
+      "source": "We held the archive review on May 2. Priya approved continuing Harbor Voices for another month, but didn't approve an exhibition.",
+      "target": {
+        "subject": "user",
+        "predicate": "project_extension",
+        "object": "Harbor Voices for another month approved on May 2"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "on May 2",
+            "subject": "user",
+            "evidence": "We held the archive review on May 2.",
+            "predicate": "held_archive_review",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.41794840180447423, \"novelty\": 0.2598280060149143, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-09-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'We held the archive review on May 2', which directly matches the subject (user), predicate (held_archive_review), and object (on May 2) in the assertion.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "We held the archive review on May 2.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Harbor Voices for another month",
+            "subject": "user",
+            "evidence": "Priya approved continuing Harbor Voices for another month",
+            "predicate": "approved_continuing",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.39091567863873483, \"novelty\": 0.3030522621291162, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-09-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that 'Priya approved continuing Harbor Voices for another month', which directly entails the assertion that the user (identified as Priya in context) approved continuing Harbor Voices for another month.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "Priya approved continuing Harbor Voices for another month",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "an exhibition",
+            "subject": "user",
+            "evidence": "but didn't approve an exhibition",
+            "predicate": "did_not_approve",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.38788152091827016, \"novelty\": 0.2929384030609006, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-09-00",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that the user (Priya) 'didn't approve an exhibition', which directly matches the assertion's subject, predicate, and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "but didn't approve an exhibition",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "on May 2",
+          "op": "ADD",
+          "predicate": "held_archive_review",
+          "seq": 119,
+          "source_span": "{\"evidence\": {\"end\": 36, \"text\": \"We held the archive review on May 2.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-00\"], \"cache_ids\": [\"be0b1025-5720-4d5c-ad28-506feb87b05b\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Harbor Voices for another month",
+          "op": "ADD",
+          "predicate": "approved_continuing",
+          "seq": 120,
+          "source_span": "{\"evidence\": {\"end\": 94, \"text\": \"Priya approved continuing Harbor Voices for another month\", \"start\": 37, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-00\"], \"cache_ids\": [\"be0b1025-5720-4d5c-ad28-506feb87b05b\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "an exhibition",
+          "op": "ADD",
+          "predicate": "did_not_approve",
+          "seq": 121,
+          "source_span": "{\"evidence\": {\"end\": 128, \"text\": \"but didn't approve an exhibition\", \"start\": 96, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-09-00\"], \"cache_ids\": [\"be0b1025-5720-4d5c-ad28-506feb87b05b\"], \"session_id\": \"harbor-session-09\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-08-02",
+      "source": "We moved the rights note directly below the title. I don't want to hide it in a hover tooltip.",
+      "target": {
+        "subject": "user",
+        "predicate": "rights_note_position",
+        "object": "directly below the title"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "rights note directly below the title",
+            "subject": "user",
+            "evidence": "We moved the rights note directly below the title.",
+            "predicate": "moved_note_position",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.40; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3981612991273782, \"novelty\": 0.32720433042459407, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-08-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states 'We moved the rights note directly below the title,' which directly confirms the predicate 'moved_note_position' with the specified object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "We moved the rights note directly below the title.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "it in a hover tooltip",
+            "subject": "user",
+            "evidence": "I don't want to hide it in a hover tooltip.",
+            "predicate": "declined_hiding_in_tooltip",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.41862647484736343, \"novelty\": 0.39542158282454487, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-08-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The speaker explicitly states they do not want to hide the rights note in a hover tooltip, which directly entails that they declined this action.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I don't want to hide it in a hover tooltip.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "rights note directly below the title",
+          "op": "ADD",
+          "predicate": "moved_note_position",
+          "seq": 104,
+          "source_span": "{\"evidence\": {\"end\": 50, \"text\": \"We moved the rights note directly below the title.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-02\"], \"cache_ids\": [\"e7c6adb6-a218-40f8-a76f-0019af32c194\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "it in a hover tooltip",
+          "op": "ADD",
+          "predicate": "declined_hiding_in_tooltip",
+          "seq": 105,
+          "source_span": "{\"evidence\": {\"end\": 94, \"text\": \"I don't want to hide it in a hover tooltip.\", \"start\": 51, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-02\"], \"cache_ids\": [\"e7c6adb6-a218-40f8-a76f-0019af32c194\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-01-02",
+      "source": "My job title is community archivist. The interviews are a side project at the library, rather than a new department.",
+      "target": {
+        "subject": "user",
+        "predicate": "role",
+        "object": "community archivist"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "community archivist",
+            "subject": "user",
+            "evidence": "My job title is community archivist.",
+            "predicate": "job_title",
+            "confidence": 0.95,
+            "importance": 8,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.52; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5189755999521426, \"novelty\": 0.46325199984047527, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+          "turn_id": "harbor-01-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'My job title is community archivist', which directly matches the assertion's subject (user), predicate (job_title), and object (community archivist). The additional context about interviews being a side project does not negate the stated job title.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "My job title is community archivist.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "side project at the library, not a new department",
+            "subject": "user",
+            "evidence": "The interviews are a side project at the library, rather than a new department.",
+            "predicate": "interviews_status",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.46; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.45650613315395466, \"novelty\": 0.388353777179849, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-02",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states that interviews are a side project at the library and not a new department, which directly matches the assertion's claim about their status.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The interviews are a side project at the library, rather than a new department.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "community archivist",
+          "op": "ADD",
+          "predicate": "job_title",
+          "seq": 3,
+          "source_span": "{\"evidence\": {\"end\": 36, \"text\": \"My job title is community archivist.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-02\"], \"cache_ids\": [\"22d49a59-a857-4106-8164-a1e5c7986fb7\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "side project at the library, not a new department",
+          "op": "ADD",
+          "predicate": "interviews_status",
+          "seq": 4,
+          "source_span": "{\"evidence\": {\"end\": 116, \"text\": \"The interviews are a side project at the library, rather than a new department.\", \"start\": 37, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-02\"], \"cache_ids\": [\"22d49a59-a857-4106-8164-a1e5c7986fb7\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-01-06",
+      "source": "I live in Boston, and my work timezone is America/New_York. Please keep the timezone in invitations even when everyone seems local.",
+      "target": {
+        "subject": "user",
+        "predicate": "timezone",
+        "object": "America/New_York"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Boston",
+            "subject": "user",
+            "evidence": "I live in Boston",
+            "predicate": "lives_in",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.49; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.48553024499524966, \"novelty\": 0.4851008166508324, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'I live in Boston', which directly entails the assertion that the user lives in Boston.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "I live in Boston",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "America/New_York",
+            "subject": "user",
+            "evidence": "my work timezone is America/New_York",
+            "predicate": "work_timezone_is",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.47; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.46788811537934344, \"novelty\": 0.4262937179311449, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-01-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the user's work timezone is America/New_York, which directly matches the assertion's subject, predicate, and object.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "my work timezone is America/New_York",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Boston",
+          "op": "ADD",
+          "predicate": "lives_in",
+          "seq": 6,
+          "source_span": "{\"evidence\": {\"end\": 16, \"text\": \"I live in Boston\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-06\"], \"cache_ids\": [\"f78b1956-3404-4818-aa84-304a6c0cd452\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "America/New_York",
+          "op": "ADD",
+          "predicate": "work_timezone_is",
+          "seq": 7,
+          "source_span": "{\"evidence\": {\"end\": 58, \"text\": \"my work timezone is America/New_York\", \"start\": 22, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-01-06\"], \"cache_ids\": [\"f78b1956-3404-4818-aa84-304a6c0cd452\"], \"session_id\": \"harbor-session-01\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-08-06",
+      "source": "The transcription ceiling is still 150 dollars per month. The SSD purchase didn't reduce it to 60.",
+      "target": {
+        "subject": "user",
+        "predicate": "transcription_budget_usd",
+        "object": "150"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "150 dollars per month",
+            "subject": "user",
+            "evidence": "The transcription ceiling is still 150 dollars per month.",
+            "predicate": "has_transcription_ceiling",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.37885702543007427, \"novelty\": 0.1295234181002477, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-08-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the transcription ceiling is 150 dollars per month and confirms that a specific SSD purchase did not change this value to 60, directly supporting the assertion.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The transcription ceiling is still 150 dollars per month.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "60",
+            "subject": "user",
+            "evidence": "The SSD purchase didn't reduce it to 60.",
+            "predicate": "did_not_reduce_transcription_ceiling_to",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.36; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3568894176208233, \"novelty\": 0.18963139206941115, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-08-06",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the transcription ceiling is 150 dollars and that the SSD purchase did not reduce it to 60, which directly entails the user's action of not reducing the ceiling to 60.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The SSD purchase didn't reduce it to 60.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "150 dollars per month",
+          "op": "ADD",
+          "predicate": "has_transcription_ceiling",
+          "seq": 108,
+          "source_span": "{\"evidence\": {\"end\": 57, \"text\": \"The transcription ceiling is still 150 dollars per month.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-06\"], \"cache_ids\": [\"878fbeab-e4e5-4c72-96d9-a71783381349\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "60",
+          "op": "ADD",
+          "predicate": "did_not_reduce_transcription_ceiling_to",
+          "seq": 109,
+          "source_span": "{\"evidence\": {\"end\": 98, \"text\": \"The SSD purchase didn't reduce it to 60.\", \"start\": 58, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-08-06\"], \"cache_ids\": [\"878fbeab-e4e5-4c72-96d9-a71783381349\"], \"session_id\": \"harbor-session-08\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    },
+    {
+      "turn_id": "harbor-10-08",
+      "source": "The Saturday volunteer handoff is staying put. The date change for the preview doesn't move that recurring handoff to Tuesday.",
+      "target": {
+        "subject": "user",
+        "predicate": "volunteer_handoff_day",
+        "object": "Saturday"
+      },
+      "cause": "extraction_fidelity_or_label_mismatch",
+      "decisions": [
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "Saturday volunteer handoff",
+            "subject": "user",
+            "evidence": "The Saturday volunteer handoff is staying put.",
+            "predicate": "staying_put",
+            "confidence": 0.95,
+            "importance": 6,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.36; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3588925451791499, \"novelty\": 0.19630848393049982, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+          "turn_id": "harbor-10-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states 'The Saturday volunteer handoff is staying put', which directly confirms the user's action of staying put regarding that specific event.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The Saturday volunteer handoff is staying put.",
+            "probability": 1.0
+          }
+        },
+        {
+          "candidate": {
+            "kind": "triple",
+            "object": "recurring handoff",
+            "subject": "user",
+            "evidence": "The date change for the preview doesn't move that recurring handoff to Tuesday.",
+            "predicate": "not_moving_to_tuesday",
+            "confidence": 0.95,
+            "importance": 7,
+            "assertion_type": "agent_inference"
+          },
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4186294722665641, \"novelty\": 0.26209824088854716, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+          "turn_id": "harbor-10-08",
+          "verification": {
+            "label": "entailment",
+            "model": "qwen3.5:4b-mlx",
+            "reason": "The source text explicitly states the recurring handoff is 'staying put' and that a date change does not move it to Tuesday, which directly entails the assertion that the user's recurring handoff is not moving to Tuesday.",
+            "backend": "ollama",
+            "accepted": true,
+            "evidence": "The Saturday volunteer handoff is staying put. The date change for the preview doesn't move that recurring handoff to Tuesday.",
+            "probability": 1.0
+          }
+        }
+      ],
+      "source_writes": [
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "Saturday volunteer handoff",
+          "op": "ADD",
+          "predicate": "staying_put",
+          "seq": 137,
+          "source_span": "{\"evidence\": {\"end\": 46, \"text\": \"The Saturday volunteer handoff is staying put.\", \"start\": 0, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-08\"], \"cache_ids\": [\"fa68d60a-3c58-49bf-839e-b996cc952170\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        },
+        {
+          "object_json": null,
+          "object_number": null,
+          "object_text": "recurring handoff",
+          "op": "ADD",
+          "predicate": "not_moving_to_tuesday",
+          "seq": 138,
+          "source_span": "{\"evidence\": {\"end\": 126, \"text\": \"The date change for the preview doesn't move that recurring handoff to Tuesday.\", \"start\": 47, \"offset_unit\": \"unicode_codepoint\"}, \"turn_ids\": [\"harbor-10-08\"], \"cache_ids\": [\"fa68d60a-3c58-49bf-839e-b996cc952170\"], \"session_id\": \"harbor-session-10\"}",
+          "subject": "user"
+        }
+      ],
+      "later_same_identity_writes": [],
+      "review": [],
+      "target_review": [],
+      "turn_error": null
+    }
+  ],
+  "limitations": [
+    "Source review is not independent human adjudication.",
+    "Saved retrieval probes describe their recorded query/session only; there is no simulated passage of time or TTL-expiry experiment.",
+    "Original strict metrics are preserved. Source-scoped equivalences do not rewrite labels or inflate the published score."
+  ]
+}

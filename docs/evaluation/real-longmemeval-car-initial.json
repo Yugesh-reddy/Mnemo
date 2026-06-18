@@ -1,0 +1,434 @@
+{
+  "decisions": [
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"get car wax and detailing done\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.84; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8400000000000001, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_3:0",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's stated intention found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm thinking of getting a car wax and detailing done soon\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:1",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"car owner\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text describes the user's personal experience with a car and dealership but does not explicitly state their profession or role. The hypothesis claims the user works as a car owner, which is semantically distinct from being a consumer of car services.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:2",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text describes the user's personal experience with a car and dealership but does not explicitly state their profession or role. The hypothesis claims the user works as a car owner, which is semantically distinct from being a consumer of car services.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been doing some research and found a local detailer with great reviews. I was thinking of taking my car there, but I'm also considering other options. By the way, I recently had an issue with my car's GPS system on 3/22, and I had to take it back to the dealership to get it fixed. They replaced the entire system, and now it's working flawlessly. Have you heard of any common issues with GPS systems in newer cars?\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:3",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Honda Civic\", \"subject\": \"user\", \"predicate\": \"car_model\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text contains a direct question asking about wax products for the user's 'silver Honda Civic', which implies ownership but does not explicitly state it as a completed fact. The hypothesis asserts this as a definitive fact ('My car model is Honda Civic'). Since questions and hypothetical inquiries do not establish completed facts, and the source only asks about the car rather than confirming its identity as an absolute truth, there is no entailment.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:4",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a direct question asking about wax products for the user's 'silver Honda Civic', which implies ownership but does not explicitly state it as a completed fact. The hypothesis asserts this as a definitive fact ('My car model is Honda Civic'). Since questions and hypothetical inquiries do not establish completed facts, and the source only asks about the car rather than confirming its identity as an absolute truth, there is no entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"do you know if there are any specific car wax products that are better suited for cars with advanced paint finishes, like my silver Honda Civic?\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:5",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"improve gas mileage\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.88; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_3:6",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's intent to ask for tips on how to 'improve my gas mileage even further', which fully entails the hypothesis that the user's goal is to improve gas mileage.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Do you have any tips on how to improve my gas mileage even further?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:7",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"safe driver\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user paid a premium online using their bank's mobile app and observed a decrease in premium due to a safe driving record. This describes an action taken by the user (paying) and a result of that action (premium decrease), but it does not explicitly state the user's current profession or role as 'safe driver.' The hypothesis claims the user works as a safe driver, which is a specific professional identity claim not supported by the source text. While the user has a 'safe driving record,' this refers to their driving behavior history, not their job title.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:8",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user paid a premium online using their bank's mobile app and observed a decrease in premium due to a safe driving record. This describes an action taken by the user (paying) and a result of that action (premium decrease), but it does not explicitly state the user's current profession or role as 'safe driver.' The hypothesis claims the user works as a safe driver, which is a specific professional identity claim not supported by the source text. While the user has a 'safe driving record,' this refers to their driving behavior history, not their job title.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just paid my premium online using my bank's mobile app, and I was happy to see that my premium had decreased by $20 per month due to my safe driving record.\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:9",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"friend of Emily\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text states the user helped a friend named Emily move and used their car for that purpose. The hypothesis claims the user works as a friend of Emily. Being a friend is not equivalent to working as a friend; the source describes a past event involving a friendship, while the hypothesis asserts a professional role relationship which is not supported by the text.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:10",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user helped a friend named Emily move and used their car for that purpose. The hypothesis claims the user works as a friend of Emily. Being a friend is not equivalent to working as a friend; the source describes a past event involving a friendship, while the hypothesis asserts a professional role relationship which is not supported by the text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I recently helped my friend Emily move to her new apartment\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_3:11",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Honda Civic\", \"subject\": \"user\", \"predicate\": \"car_model\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.50; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.49906483367417087, \"novelty\": 0.5302161122472364, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_1:0",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user owns a 'silver Honda Civic', which fully entails the hypothesis that the user's car model is 'Honda Civic'.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've got a new car, a silver Honda Civic\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:1",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"5-day trip to Yellowstone National Park\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.92; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.9200000000000002, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_1:2",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated plan found in the source text, matching the subject (user), predicate (goal), and object (5-day trip to Yellowstone National Park).\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm planning a 5-day trip from my hometown to Yellowstone National Park.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:3",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Honda Civic\", \"subject\": \"user\", \"predicate\": \"car_model\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "duplicate",
+      "reason": "entailment; score=0.64; duplicate",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_1:4",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's car model as 'Honda Civic' in direct response to the question about fuel efficiency, which fully supports the hypothesis.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"I'm a bit concerned about the fuel efficiency of my new car on these long drives... Can you tell me how to optimize my Honda Civic's fuel efficiency\\\"\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:5",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"employee\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text contains a rhetorical question about gas station choices and mentions earning points, but it does not explicitly state the user's job title or role. The hypothesis claims the user works as an employee, which is an unrelated inference not supported by the text.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:6",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a rhetorical question about gas station choices and mentions earning points, but it does not explicitly state the user's job title or role. The hypothesis claims the user works as an employee, which is an unrelated inference not supported by the text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been using the Shell gas station near my office to fill up, and I've been earning points through their rewards program. Do you think I should fill up at Shell stations along the way to maximize my rewards or should I look for cheaper gas prices at other stations?\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:7",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"balance loyalty to Shell with finding cheaper options\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text expresses a tentative plan ('I think I'll try') and conditional actions ('when they're competitive'), whereas the hypothesis states the goal as an absolute fact ('My goal is'). The source describes a strategy to achieve balance, not necessarily that the balance itself is the defined goal.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:8",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a tentative plan ('I think I'll try') and conditional actions ('when they're competitive'), whereas the hypothesis states the goal as an absolute fact ('My goal is'). The source describes a strategy to achieve balance, not necessarily that the balance itself is the defined goal.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll try to balance my loyalty to Shell with finding cheaper options along the way.\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:9",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"protect car's paint job and interior\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.88; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_1:10",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated goal found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm thinking of getting a car wax and detailing done before my trip to protect my car's paint job and interior.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_1:11",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"March 15th\", \"subject\": \"user\", \"predicate\": \"car_service_date\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text contains a hypothetical clause ('I'm thinking of getting...') and a direct statement about a past event ('just got my car serviced for the first time on March 15th'). The hypothesis asserts this date as a completed fact ('is'), which contradicts the source's framing of the service as a recent past experience rather than an established, timeless fact. Furthermore, the source explicitly states it is 'thinking of getting' detailed soon, implying the detailing event has not occurred yet, while the hypothesis treats the car service date as a definitive current attribute.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:0",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a hypothetical clause ('I'm thinking of getting...') and a direct statement about a past event ('just got my car serviced for the first time on March 15th'). The hypothesis asserts this date as a completed fact ('is'), which contradicts the source's framing of the service as a recent past experience rather than an established, timeless fact. Furthermore, the source explicitly states it is 'thinking of getting' detailed soon, implying the detailing event has not occurred yet, while the hypothesis treats the car service date as a definitive current attribute.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just got my car serviced for the first time on March 15th\", \"probability\": 0.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:1",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"maintain car's appearance and protect paint\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source speaker asks for advice on a plan to maintain the car's appearance, but does not state that this is their current goal or fact; the hypothesis incorrectly asserts it as a completed fact about the user.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:2",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source speaker asks for advice on a plan to maintain the car's appearance, but does not state that this is their current goal or fact; the hypothesis incorrectly asserts it as a completed fact about the user.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Do you think it's a good idea to get a wax and detailing done every 3-4 months to maintain the car's appearance and protect the paint?\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:3",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"32 miles per gallon\", \"subject\": \"user\", \"predicate\": \"current_gas_mileage\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.38; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.3799169663279418, \"novelty\": 0.5330565544264727, \"transient\": false, \"importance\": 4, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_2:4",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the specific fact (subject: user, predicate: current_gas_mileage, value: 32 mpg) explicitly confirmed by the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've been getting around 32 miles per gallon\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:5",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"office worker\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text mentions the user is near their office and uses a gas station there, but it does not explicitly state the user's job title or role. The hypothesis claims the user works as an 'office worker', which is an inference not fully supported by the specific wording in the source.",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:6",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text mentions the user is near their office and uses a gas station there, but it does not explicitly state the user's job title or role. The hypothesis claims the user works as an 'office worker', which is an inference not fully supported by the specific wording in the source.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've also been using the rewards program at the Shell gas station near my office to earn points.\", \"probability\": 0.1}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:7",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"redeeming points from credit card\", \"subject\": \"user\", \"predicate\": \"activity\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.45; demoted",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4541981052219458, \"novelty\": 0.5139936840731528, \"transient\": false, \"importance\": 6, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_2:8",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the subject's activity as described in the source text without adding new information or contradicting facts.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've also been redeeming points from my credit card to get rewards.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:9",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"find a good detailer in my area\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.88; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "answer_4be1b6b4_2:10",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's stated goal found in the source text without adding new information or contradicting the original statement.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I was wondering if you could help me find a good detailer in my area\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "answer_4be1b6b4_2:11",
+      "verification": null
+    }
+  ],
+  "gated": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "f1": 0.0625,
+    "false": 0,
+    "false_writes": 0,
+    "historical_precision": 0.125,
+    "historical_recall": 0.03571428571428571,
+    "latency_ms": 182924.07437499787,
+    "must_keep_recall": 0.2,
+    "precision": 0.25,
+    "recall": 0.03571428571428571,
+    "storage_bytes": 1155072,
+    "stored": 4,
+    "total_events": 8,
+    "total_rows": 120,
+    "unsupported_writes": 7,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 27,
+        "unmetered_requests": 27
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 4999,
+        "output_tokens": 1839,
+        "requests": 18,
+        "unmetered_requests": 0
+      }
+    },
+    "visible_facts": 4
+  },
+  "metadata": {
+    "candidate_preparation_ms": 201778.78679199785,
+    "dataset": "longmemeval-adapter",
+    "dataset_version": "1.0.0",
+    "fingerprints": {
+      "config": "edd55fbf3513421e06b25542606a94cd0f07830c50c73686d13f8537fbbbffee",
+      "dataset": "cd621e675d0699553ffb4c2a6b866d710e3d5b07a937070d1cb3bb5b801b2507",
+      "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+      "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+      "verifier": "eec45c9e1e4ef8d1faf64ab715db7b0bb81340106260e98bbdbe8003bc2803af"
+    },
+    "gate_config": {
+      "backend": "ollama",
+      "confidence_floor": 0.5,
+      "dedup_sim": 0.92,
+      "durable_cutoff": 0.7,
+      "embed_dim": 768,
+      "embed_model": "nomic-embed-text",
+      "ephemeral_floor": 0.45,
+      "extractor_model": "qwen3.5:4b-mlx",
+      "fingerprint": "edd55fbf3513421e06b25542606a94cd0f07830c50c73686d13f8537fbbbffee",
+      "pipeline_version": "2026-09-08-v1",
+      "predicate_vocab": [
+        "name",
+        "role",
+        "preferred_database",
+        "preferred_language",
+        "team_lead",
+        "ship_day",
+        "location",
+        "timezone",
+        "deploy_method",
+        "goal",
+        "currently_debugging",
+        "dislikes"
+      ],
+      "session_ttl_seconds": 86400.0,
+      "transient_penalty": 0.15,
+      "update_sim": 0.9,
+      "verifier_backend": "ollama",
+      "verifier_entailment_threshold": 0.99,
+      "verifier_fallback_backend": "none",
+      "verifier_fallback_model": null,
+      "verifier_model": "cross-encoder/nli-deberta-v3-small",
+      "w_imp": 0.4,
+      "w_nov": 0.3,
+      "w_spec": 0.3,
+      "w_src": 0.4
+    },
+    "mode": "candidate_replay",
+    "model_names": {
+      "embedder": "nomic-embed-text",
+      "extractor": "qwen3.5:4b-mlx",
+      "verifier": "qwen3.5:4b-mlx"
+    },
+    "shared_candidate_usage": {
+      "input_tokens": 20511,
+      "output_tokens": 1183,
+      "requests": 36,
+      "unmetered_requests": 0
+    },
+    "split": "external",
+    "synthetic": false,
+    "turns": 36
+  },
+  "naive": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "f1": 0.05714285714285715,
+    "false": 0,
+    "false_writes": 1,
+    "historical_precision": 0.058823529411764705,
+    "historical_recall": 0.03571428571428571,
+    "latency_ms": 1086.2143330014078,
+    "must_keep_recall": 0.2,
+    "precision": 0.14285714285714285,
+    "recall": 0.03571428571428571,
+    "storage_bytes": 630784,
+    "stored": 7,
+    "total_events": 17,
+    "total_rows": 24,
+    "unsupported_writes": 15,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 19,
+        "unmetered_requests": 19
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {}
+    },
+    "visible_facts": 7
+  }
+}

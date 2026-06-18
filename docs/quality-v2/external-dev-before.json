@@ -1,0 +1,2645 @@
+{
+  "split": "dev",
+  "policy_sha256": "401d56f747cace1857608beebea8219692a84ad8b0760a965bd2b4d0e004f6dc",
+  "complete": true,
+  "cases": {
+    "6d550036": {
+      "naive": {
+        "stored": 4,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 20,
+        "visible_facts": 4,
+        "total_events": 20,
+        "total_rows": 24,
+        "storage_bytes": 688128,
+        "latency_ms": 16169.374832999893,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 21,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 21
+          },
+          "verifier": {
+            "nli_requests": 0
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "learning about social identity in influencer marketing",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object_text": "Tableau",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "object_text": "researcher",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "object_text": "Python, R",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "data visualization tools",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_4:0\"]}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "create effective dashboards in Tableau and Power BI",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_4:2\"]}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "op": "ADD",
+            "object_text": "Tableau",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_4:4\"]}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "create a dashboard for case competition presentation",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_4:6\"]}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "ADD",
+            "object_text": "Python, R",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:0\"]}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "ADD",
+            "object_text": "student",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"]}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns and trends in customer purchase data",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:2\"]}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns in customer purchase data",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:4\"]}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "present findings to professor and classmates",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:6\"]}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:8\"]}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "UPDATE",
+            "object_text": "data analysis team leader",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:0\"]}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "determine optimal number of clusters for k-means clustering",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:2\"]}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns or structures to decide on number of clusters",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:4\"]}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns or structures in customer data to decide on the number of clusters",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:6\"]}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "UPDATE",
+            "object_text": "Marketing Research class project student",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:8\"]}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "visualize customer data and high-dimensional data using dimensionality reduction techniques",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_1:10\"]}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "UPDATE",
+            "object_text": "researcher",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:0\"]}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "understand credibility and trust factors in social media influencers",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:2\"]}",
+            "seq": 18
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "understand how influencers demonstrate authenticity and how consumers perceive it",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:4\"]}",
+            "seq": 19
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "learning about social identity in influencer marketing",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:6\"]}",
+            "seq": 20
+          }
+        ]
+      },
+      "gated": {
+        "stored": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 5,
+        "visible_facts": 2,
+        "total_events": 5,
+        "total_rows": 140,
+        "storage_bytes": 1245184,
+        "latency_ms": 97170.97858300258,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 27,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 27
+          },
+          "verifier": {
+            "requests": 17,
+            "input_tokens": 4851,
+            "output_tokens": 1820,
+            "unmetered_requests": 0,
+            "nli_requests": 21
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "learning about social identity in influencer marketing",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "object_text": "Python, R",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "create a dashboard for case competition presentation",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_4:6\"], \"cache_ids\": [\"1ff02a4c-5207-4fb9-8a16-171ed267c324\"], \"session_id\": \"answer_ec904b3c_4\"}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "ADD",
+            "object_text": "Python, R",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:0\"], \"cache_ids\": [\"320b8b22-42c5-4625-9585-8e0d2368d07b\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "identify patterns in customer purchase data",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_2:4\"], \"cache_ids\": [\"1f8509d8-d6c3-481f-8e23-1559be1e0ca7\"], \"session_id\": \"answer_ec904b3c_2\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "understand how influencers demonstrate authenticity and how consumers perceive it",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:4\"], \"cache_ids\": [\"d4fab633-1d1f-4f09-8c53-70a0de06d13f\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "learning about social identity in influencer marketing",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_ec904b3c_3:6\"], \"cache_ids\": [\"5d90fe70-1dbb-4f29-8daa-67aa548e7733\"], \"session_id\": \"answer_ec904b3c_3\"}",
+            "seq": 5
+          }
+        ]
+      },
+      "decisions": [
+        {
+          "turn_id": "answer_ec904b3c_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"data visualization tools\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis incorrectly identifies the user's specific goal as 'data visualization tools' rather than 'help with data visualization tools'. The source text indicates the user is seeking recommendations for tools to aid a presentation, not that their primary objective is the tools themselves.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis incorrectly identifies the user's specific goal as 'data visualization tools' rather than 'help with data visualization tools'. The source text indicates the user is seeking recommendations for tools to aid a presentation, not that their primary objective is the tools themselves.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some help with data visualization tools.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"create effective dashboards in Tableau and Power BI\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a tentative plan ('I think I'll start') rather than a definitive fact, while the hypothesis states it as a current goal. The source asks for tips on creating dashboards but does not explicitly assert that this is their specific goal, making the relationship neutral.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a tentative plan ('I think I'll start') rather than a definitive fact, while the hypothesis states it as a current goal. The source asks for tips on creating dashboards but does not explicitly assert that this is their specific goal, making the relationship neutral.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll start with Tableau and Power BI, they seem like great options.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Tableau\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.85, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source explicitly states the user's preference for Tableau by saying 'I'll start with Tableau first', which directly supports the hypothesis that the user prefers Tableau.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user's preference for Tableau by saying 'I'll start with Tableau first', which directly supports the hypothesis that the user prefers Tableau.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll start with Tableau first since it seems to be more user-friendly.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"create a dashboard for case competition presentation\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.92; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm trying to create a dashboard for my case competition presentation, and I think I can use Tableau to visualize some key metrics. I was wondering if you could help me brainstorm some ideas for the types of charts and visualizations I could use to showcase our team's analysis and recommendations.\", \"probability\": 0.9970353841781616}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.9200000000000002, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:8",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_4:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Python, R\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.52; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?\", \"probability\": 0.996503472328186}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.5179299960758722, \"novelty\": 0.593099986919574, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"student\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text states the user is working on a project for their 'Data Mining class', which implies they are currently a student in that context. However, the hypothesis makes an absolute claim ('I work as student') implying this is their primary or permanent profession. The source only confirms current academic status regarding a specific class, not a lifelong career role.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user is working on a project for their 'Data Mining class', which implies they are currently a student in that context. However, the hypothesis makes an absolute claim ('I work as student') implying this is their primary or permanent profession. The source only confirms current academic status regarding a specific class, not a lifelong career role.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been working on a solo project for my Data Mining class\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"identify patterns and trends in customer purchase data\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.92, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text states the user's interest and intent to apply techniques to customer purchase data, but it does not explicitly state that this is their definitive goal. The hypothesis presents this as a completed fact ('My goal is...'), which lacks the necessary certainty from the source text.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user's interest and intent to apply techniques to customer purchase data, but it does not explicitly state that this is their definitive goal. The hypothesis presents this as a completed fact ('My goal is...'), which lacks the necessary certainty from the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"identify patterns in customer purchase data\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated goal found in the source text without adding new information or contradicting it.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I want to present my findings in a way that's easy to understand for my professor and classmates.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"present findings to professor and classmates\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a question asking for advice on whether to create a formal presentation or written report, which implies the user is considering multiple options rather than stating a single definitive goal. The hypothesis asserts a specific singular goal without the necessary context of alternatives mentioned in the source.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a question asking for advice on whether to create a formal presentation or written report, which implies the user is considering multiple options rather than stating a single definitive goal. The hypothesis asserts a specific singular goal without the necessary context of alternatives mentioned in the source.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Do you have any tips on how to effectively present my findings to my professor and classmates? Should I create a formal presentation or a written report?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis directly restates the user's stated intention found in the source text regarding creating a formal presentation with specific structural and content requirements.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated intention found in the source text regarding creating a formal presentation with specific structural and content requirements.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll create a formal presentation with a clear structure and focus on highlighting the key findings and insights from my analysis.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:10",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_2:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"data analysis team leader\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user 'led' the data analysis team in a past class project, whereas the hypothesis claims the user currently 'works' as a data analysis team leader. The tense shift from past ('led') to present ('work') and the context of a specific past event versus current employment status constitute a contradiction rather than simple entailment.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user 'led' the data analysis team in a past class project, whereas the hypothesis claims the user currently 'works' as a data analysis team leader. The tense shift from past ('led') to present ('work') and the context of a specific past event versus current employment status constitute a contradiction rather than simple entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team\", \"probability\": 0.3}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"determine optimal number of clusters for k-means clustering\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses uncertainty and asks for suggestions regarding the number of clusters, whereas the hypothesis states a definitive goal as if it were an established fact; the source does not confirm the user's specific intent to determine the optimal number.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses uncertainty and asks for suggestions regarding the number of clusters, whereas the hypothesis states a definitive goal as if it were an established fact; the source does not confirm the user's specific intent to determine the optimal number.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I was thinking of using k-means clustering initially, but I'm not sure about the number of clusters. Can you suggest any methods to determine the optimal number of clusters?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"identify patterns or structures to decide on number of clusters\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a hypothetical plan ('I think I'll try...') and asks for recommendations regarding data preparation methods (normalize/scale), which are not completed facts. The hypothesis asserts the user's goal as a definitive fact without the necessary context of these being exploratory or advisory in nature.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a hypothetical plan ('I think I'll try...') and asks for recommendations regarding data preparation methods (normalize/scale), which are not completed facts. The hypothesis asserts the user's goal as a definitive fact without the necessary context of these being exploratory or advisory in nature.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll try the elbow method and silhouette analysis first. I'll also take a look at the data visualization to see if I can identify any patterns or structures that might help me decide on the number of clusters. By the way, do you have any recommendations on how to prepare my data for clustering? Should I normalize or scale my data?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"identify patterns or structures in customer data to decide on the number of clusters\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a future intention ('I'll definitely take...') and a current thought process ('I've also been thinking about'), whereas the hypothesis asserts this as a completed fact ('My goal is'). The source does not explicitly state 'My goal is' as a definitive present-tense fact, only that it is being considered or thought about.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a future intention ('I'll definitely take...') and a current thought process ('I've also been thinking about'), whereas the hypothesis asserts this as a completed fact ('My goal is'). The source does not explicitly state 'My goal is' as a definitive present-tense fact, only that it is being considered or thought about.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll definitely take those data preparation steps into consideration. I've also been thinking about how to visualize my data to identify patterns or structures that might help me decide on the number of clusters.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Marketing Research class project student\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text describes the user's past experience ('had some experience... from my Marketing Research class project'), whereas the hypothesis asserts a current professional role ('work as'). The source does not confirm the user currently works in this capacity; it only references a past academic project.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text describes the user's past experience ('had some experience... from my Marketing Research class project'), whereas the hypothesis asserts a current professional role ('work as'). The source does not confirm the user currently works in this capacity; it only references a past academic project.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've had some experience with data visualization from my Marketing Research class project\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"visualize customer data and high-dimensional data using dimensionality reduction techniques\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a future intention ('I think I'll try out') rather than stating a current or completed goal. The hypothesis asserts this as a definitive present goal ('My goal is...'). While the content overlaps, the shift from tentative plan to stated fact constitutes a contradiction in modality and status.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a future intention ('I think I'll try out') rather than stating a current or completed goal. The hypothesis asserts this as a definitive present goal ('My goal is...'). While the content overlaps, the shift from tentative plan to stated fact constitutes a contradiction in modality and status.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll try out some of these visualization techniques and see what works best for my customer data.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_1:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"researcher\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source speaker explicitly states they presented research at an academic conference and are looking to expand on it, which confirms their role as a researcher.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source speaker explicitly states they presented research at an academic conference and are looking to expand on it, which confirms their role as a researcher.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"understand credibility and trust factors in social media influencers\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a request for information regarding credibility and trust factors in social media influencers, which constitutes a question or inquiry rather than a completed fact. The hypothesis states the user's goal to understand these same factors. While the topic overlaps, the source does not assert that the user's goal is specifically to understand these factors; it merely asks for information on them. Therefore, the hypothesis cannot be entailed from the source text as the source lacks the specific subject-predicate-object structure of a goal statement.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a request for information regarding credibility and trust factors in social media influencers, which constitutes a question or inquiry rather than a completed fact. The hypothesis states the user's goal to understand these same factors. While the topic overlaps, the source does not assert that the user's goal is specifically to understand these factors; it merely asks for information on them. Therefore, the hypothesis cannot be entailed from the source text as the source lacks the specific subject-predicate-object structure of a goal statement.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Can you provide more information on the credibility and trust factors mentioned in the systematic review by Hussain and Ali? I'm particularly interested in how social media influencers establish credibility with their followers.\", \"probability\": 0.0}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"understand how influencers demonstrate authenticity and how consumers perceive it\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis explicitly restates the user's stated goal found in the source text, matching the subject (user), predicate (goal), and object (understand how influencers demonstrate authenticity and how consumers perceive it).\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm particularly interested in the role of authenticity in establishing credibility. Can you provide more information on how influencers can demonstrate authenticity on social media, and how consumers perceive authenticity in influencer marketing?\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"learning about social identity in influencer marketing\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm interested in learning more about the role of social identity in influencer marketing. Can you provide more information on how social identity theory can explain the effectiveness of social media influencer marketing, and how influencers can leverage social identity to build a stronger connection with their audience?\", \"probability\": 0.9921241402626038}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"researcher\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I'd like to explore more about the role of social identity in influencer marketing, particularly in the context of my research on the effects of social media influencers on consumer purchasing decisions. Can you provide more information on how influencers can use social identity to increase brand awareness and drive sales?\", \"probability\": 0.9900126457214355}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_ec904b3c_3:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        }
+      ],
+      "metadata": {
+        "dataset": "longmemeval-adapter",
+        "dataset_version": "1.0.0",
+        "split": "dev",
+        "turns": 44,
+        "synthetic": false,
+        "mode": "candidate_replay",
+        "candidate_preparation_ms": 112449.54333400528,
+        "shared_candidate_usage": {
+          "requests": 44,
+          "input_tokens": 29986,
+          "output_tokens": 1385,
+          "unmetered_requests": 0
+        },
+        "shared_candidate_cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "model_names": {
+          "extractor": "qwen3.5:4b-mlx",
+          "embedder": "nomic-embed-text",
+          "verifier": "cross-encoder/nli-deberta-v3-small"
+        },
+        "gate_config": {
+          "backend": "ollama",
+          "extractor_model": "qwen3.5:4b-mlx",
+          "embed_model": "nomic-embed-text",
+          "embed_dim": 768,
+          "verifier_backend": "cross_encoder",
+          "verifier_model": "cross-encoder/nli-deberta-v3-small",
+          "verifier_entailment_threshold": 0.99,
+          "verifier_fallback_backend": "ollama",
+          "verifier_fallback_model": null,
+          "verifier_timeout_seconds": 20.0,
+          "verifier_max_retries": 1,
+          "extractor_timeout_seconds": 120.0,
+          "extractor_max_retries": 2,
+          "confidence_floor": 0.5,
+          "w_imp": 0.4,
+          "w_spec": 0.3,
+          "w_nov": 0.3,
+          "w_src": 0.4,
+          "transient_penalty": 0.15,
+          "durable_cutoff": 0.7,
+          "ephemeral_floor": 0.45,
+          "predicate_vocab": [
+            "name",
+            "role",
+            "preferred_database",
+            "preferred_language",
+            "team_lead",
+            "ship_day",
+            "location",
+            "timezone",
+            "deploy_method",
+            "goal",
+            "currently_debugging",
+            "dislikes"
+          ],
+          "session_ttl_seconds": 86400.0,
+          "update_sim": 0.9,
+          "dedup_sim": 0.92,
+          "pipeline_version": "2026-09-09-v3",
+          "fingerprint": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "fingerprints": {
+          "dataset": "1fc85344b671349ae9a26dff907ced18125405debb9aeb064f94503035f7e36e",
+          "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+          "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+          "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+          "config": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "cleanup_errors": []
+      }
+    },
+    "88432d0a": {
+      "naive": {
+        "stored": 9,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 19,
+        "visible_facts": 9,
+        "total_events": 19,
+        "total_rows": 28,
+        "storage_bytes": 647168,
+        "latency_ms": 441.9454580056481,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 19,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 19
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "object_text": "baking bread using sourdough starter",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "created_sourdough_starter",
+            "object_text": "sourdough starter",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "experience",
+            "object_text": "sourdough starters",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "favorite_food",
+            "object_text": "strawberries",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "create Italian bread",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "object_text": "host",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "object_text": "convection_setting",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_flour",
+            "object_text": "whole wheat flour",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_setting",
+            "object_text": "convection",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "baking bread using sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:0\"]}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "created_sourdough_starter",
+            "op": "ADD",
+            "object_text": "sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:2\"]}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "switch to whole wheat flour for sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:4\"]}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "experimenting with different baking recipes",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:6\"]}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "ADD",
+            "object_text": "home_baker",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:8\"]}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "bake chocolate cake for sister's birthday party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:10\"]}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "UPDATE",
+            "object_text": "host",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:0\"]}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "favorite_food",
+            "op": "ADD",
+            "object_text": "strawberries",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:4\"]}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_flour",
+            "op": "ADD",
+            "object_text": "whole wheat flour",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:6\"]}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "ADD",
+            "object_text": "stand_mixer",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:8\"]}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "UPDATE",
+            "object_text": "convection_setting",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_2:2\"]}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "add more flavor to roasted vegetables",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_2:4\"]}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "get perfect crumb and crust on focaccia",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_2:10\"]}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make rustic Italian bread",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:0\"]}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "browning and crisping the crust",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:2\"]}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_setting",
+            "op": "ADD",
+            "object_text": "convection",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:4\"]}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "add more complexity to the flavor",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:6\"]}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "experience",
+            "op": "ADD",
+            "object_text": "sourdough starters",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:8\"]}",
+            "seq": 18
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "create Italian bread",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:10\"]}",
+            "seq": 19
+          }
+        ]
+      },
+      "gated": {
+        "stored": 4,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 4,
+        "visible_facts": 4,
+        "total_events": 4,
+        "total_rows": 152,
+        "storage_bytes": 1179648,
+        "latency_ms": 120018.32258299692,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 28,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 28
+          },
+          "verifier": {
+            "requests": 15,
+            "input_tokens": 4209,
+            "output_tokens": 1684,
+            "unmetered_requests": 0,
+            "nli_requests": 19
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "object_text": "baking bread using sourdough starter",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "favorite_food",
+            "object_text": "strawberries",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "object_text": "stand_mixer",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_setting",
+            "object_text": "convection",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "baking bread using sourdough starter",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_3:0\"], \"cache_ids\": [\"db0d9433-f9bb-4652-9696-e0e35aa0ce64\"], \"session_id\": \"answer_733e443a_3\"}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "favorite_food",
+            "op": "ADD",
+            "object_text": "strawberries",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:4\"], \"cache_ids\": [\"f77c2cb2-81a0-4978-a578-6a2b810fe080\"], \"session_id\": \"answer_733e443a_1\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "ADD",
+            "object_text": "stand_mixer",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_1:8\"], \"cache_ids\": [\"0fb4d1b7-9243-459d-b1a7-cee82960e0c6\"], \"session_id\": \"answer_733e443a_1\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_setting",
+            "op": "ADD",
+            "object_text": "convection",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_733e443a_4:4\"], \"cache_ids\": [\"00e55ae3-7fa8-410f-b340-1425b818a5e3\"], \"session_id\": \"answer_733e443a_4\"}",
+            "seq": 4
+          }
+        ]
+      },
+      "decisions": [
+        {
+          "turn_id": "answer_733e443a_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"baking bread using sourdough starter\", \"subject\": \"user\", \"predicate\": \"activity\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.52; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's specific activity mentioned in the source text without adding external information or altering the meaning.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I tried out a new bread recipe using sourdough starter on Tuesday\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.52, \"novelty\": 1.0, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_733e443a_3:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"sourdough starter\", \"subject\": \"user\", \"predicate\": \"created_sourdough_starter\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis restates the core fact that the user created a sourdough starter, which is explicitly confirmed in the source text.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis restates the core fact that the user created a sourdough starter, which is explicitly confirmed in the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I actually created my sourdough starter about a month ago\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"switch to whole wheat flour for sourdough starter\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.6, \"importance\": 3, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text presents a hypothetical inquiry about future actions ('I think I might switch'), whereas the hypothesis states it as a completed fact ('My goal is'). The speaker is asking for advice on whether to switch, not declaring that they have already decided or achieved the goal.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text presents a hypothetical inquiry about future actions ('I think I might switch'), whereas the hypothesis states it as a completed fact ('My goal is'). The speaker is asking for advice on whether to switch, not declaring that they have already decided or achieved the goal.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I might switch to using whole wheat flour for my sourdough starter.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"experimenting with different baking recipes\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text describes a specific plan to blend flours and adjust ratios for a single attempt, whereas the hypothesis claims the user's general goal is 'experimenting with different baking recipes.' While the user mentions experimenting in the past tense ('I've been experimenting'), the primary assertion is about a specific future action (blending flours) rather than the broad goal stated in the hypothesis. The hypothesis misrepresents the specific intent of the current plan as a general goal.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text describes a specific plan to blend flours and adjust ratios for a single attempt, whereas the hypothesis claims the user's general goal is 'experimenting with different baking recipes.' While the user mentions experimenting in the past tense ('I've been experimenting'), the primary assertion is about a specific future action (blending flours) rather than the broad goal stated in the hypothesis. The hypothesis misrepresents the specific intent of the current plan as a general goal.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll try blending whole wheat flour with all-purpose flour first and see how it goes.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"home_baker\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"The bread recipe I tried on Tuesday was a sourdough bread recipe using my starter, and I have to say it didn't quite turn out as expected. The bread came out dense and heavy, which was a bit disappointing. I think it might be due to my starter not being active enough, but I'm not sure.\", \"probability\": 0.9992432594299316}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"bake chocolate cake for sister's birthday party\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\\n\\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!\", \"probability\": 0.9922397136688232}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_3:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"host\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text states the user is 'hosting' a dinner party next weekend and mentions hosting a sister's birthday party last weekend, implying a temporary role for specific events. The hypothesis claims the user 'works as host,' which implies a professional occupation or permanent role that is not supported by the source text.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user is 'hosting' a dinner party next weekend and mentions hosting a sister's birthday party last weekend, implying a temporary role for specific events. The hypothesis claims the user 'works as host,' which implies a professional occupation or permanent role that is not supported by the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some recipe ideas for a dinner party I'm hosting next weekend.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:2",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"strawberries\", \"subject\": \"user\", \"predicate\": \"favorite_food\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.\", \"probability\": 0.9947010278701782}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3782399207725196, \"novelty\": 0.5274664025750653, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_733e443a_1:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"whole wheat flour\", \"subject\": \"user\", \"predicate\": \"uses_flour\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source speaker expresses uncertainty about the specific type of flour to use for a tart crust and only confirms using whole wheat flour for a baguette made last Saturday; the hypothesis asserts as a completed fact that the user's current flour usage is whole wheat, which contradicts the speaker's stated uncertainty.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source speaker expresses uncertainty about the specific type of flour to use for a tart crust and only confirms using whole wheat flour for a baguette made last Saturday; the hypothesis asserts as a completed fact that the user's current flour usage is whole wheat, which contradicts the speaker's stated uncertainty.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm not sure what type of flour to use.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"stand_mixer\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.36; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.\", \"probability\": 0.9941927790641785}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3614065665850503, \"novelty\": 0.47135522195016766, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_733e443a_1:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:10",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_1:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:0",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"convection_setting\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user used the convection setting 'last Thursday' as a completed past event, whereas the hypothesis presents it as a general present habitual action ('I use'). While the specific instance supports the possibility of the habit, the source does not confirm the ongoing or repeated nature of the action, making the relationship neutral rather than entailing.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user used the convection setting 'last Thursday' as a completed past event, whereas the hypothesis presents it as a general present habitual action ('I use'). While the specific instance supports the possibility of the habit, the source does not confirm the ongoing or repeated nature of the action, making the relationship neutral rather than entailing.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"add more flavor to roasted vegetables\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a tentative intention ('thinking of trying out') and asks for recommendations, which does not establish the completed fact required by the hypothesis that 'My goal is add more flavor'. The subject in the hypothesis refers to the user (source speaker), but the source only states a potential action rather than a definitive goal.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a tentative intention ('thinking of trying out') and asks for recommendations, which does not establish the completed fact required by the hypothesis that 'My goal is add more flavor'. The subject in the hypothesis refers to the user (source speaker), but the source only states a potential action rather than a definitive goal.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I was thinking of trying out some new herbs and spices to add more flavor to my roasted vegetables.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:6",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:8",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"get perfect crumb and crust on focaccia\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a plan to try a recipe and asks for tips regarding the 'perfect crumb and crust', which represents a request for information rather than an established fact about the user's current goal. The hypothesis asserts this as a completed state ('My goal is...'). While related in topic, the source does not confirm that the user's ultimate goal is specifically to achieve perfect texture; it only asks how to do so.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a plan to try a recipe and asks for tips regarding the 'perfect crumb and crust', which represents a request for information rather than an established fact about the user's current goal. The hypothesis asserts this as a completed state ('My goal is...'). While related in topic, the source does not confirm that the user's ultimate goal is specifically to achieve perfect texture; it only asks how to do so.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Can you give me some tips on how to get the perfect crumb and crust on the focaccia?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_2:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make rustic Italian bread\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source speaker states they are 'thinking of trying out' a recipe and 'considering' using flour, indicating an intention or plan rather than a completed fact. The hypothesis asserts the goal as a present reality ('My goal is make...'), which contradicts the tentative nature of the source text where the action has not yet been decided.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source speaker states they are 'thinking of trying out' a recipe and 'considering' using flour, indicating an intention or plan rather than a completed fact. The hypothesis asserts the goal as a present reality ('My goal is make...'), which contradicts the tentative nature of the source text where the action has not yet been decided.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm thinking of trying out a new recipe for a rustic Italian bread this weekend.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"browning and crisping the crust\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "The source speaker expresses a conditional intention ('I'll definitely consider') regarding using higher protein flour but asks for an opinion on whether convection settings would help with browning and crisping the crust. This is a request for advice about potential outcomes, not a statement of fact that the user's goal is currently to brown and crisp the crust. The hypothesis asserts this as a definitive fact ('My goal is...'), which does not follow from the source text where the goal is merely being discussed as a possibility or subject of inquiry.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source speaker expresses a conditional intention ('I'll definitely consider') regarding using higher protein flour but asks for an opinion on whether convection settings would help with browning and crisping the crust. This is a request for advice about potential outcomes, not a statement of fact that the user's goal is currently to brown and crisp the crust. The hypothesis asserts this as a definitive fact ('My goal is...'), which does not follow from the source text where the goal is merely being discussed as a possibility or subject of inquiry.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll definitely consider using a higher protein flour for this recipe. Do you think the convection setting on my oven would help with browning and crisping the crust?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"convection\", \"subject\": \"user\", \"predicate\": \"uses_setting\", \"confidence\": 0.85, \"importance\": 3, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.32; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states the user has used the 'convection setting' on their oven as a completed fact (evidenced by baking cookies last Thursday), which fully supports the hypothesis that the user's setting is convection.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've had good results with the convection setting on my oven\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.31729615592305677, \"novelty\": 0.4576538530768559, \"transient\": false, \"importance\": 3, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_733e443a_4:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"add more complexity to the flavor\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a question asking for advice on using a sourdough starter, which is a hypothetical inquiry rather than a completed fact. The hypothesis states a definitive goal ('My goal is add...') as if it were an established fact. While the user mentions 'trying' and asks 'Do you think I could', these do not confirm that adding complexity to flavor is their actual or certain goal; they are merely inquiring about a potential method within a recipe context.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a question asking for advice on using a sourdough starter, which is a hypothetical inquiry rather than a completed fact. The hypothesis states a definitive goal ('My goal is add...') as if it were an established fact. While the user mentions 'trying' and asks 'Do you think I could', these do not confirm that adding complexity to flavor is their actual or certain goal; they are merely inquiring about a potential method within a recipe context.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm thinking of trying a slower rise for this Italian bread recipe. Do you think I could use my sourdough starter instead of commercial yeast to add more complexity to the flavor?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"sourdough starters\", \"subject\": \"user\", \"predicate\": \"experience\", \"confidence\": 0.85, \"importance\": 3, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis incorrectly frames the user's past experience as a current state of being ('is'), whereas the source text describes a completed history with mixed results and future intentions to improve.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis incorrectly frames the user's past experience as a current state of being ('is'), whereas the source text describes a completed history with mixed results and future intentions to improve.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've had some experience with sourdough starters\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"create Italian bread\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text contains a question about adjusting ingredients for an Italian bread recipe and mentions the user's intent to keep tips in mind, but it does not explicitly state 'My goal is create Italian bread' as a completed fact. The hypothesis asserts a specific subject-predicate-object structure that is only implied or partially referenced in the source without full syntactic or semantic confirmation.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a question about adjusting ingredients for an Italian bread recipe and mentions the user's intent to keep tips in mind, but it does not explicitly state 'My goal is create Italian bread' as a completed fact. The hypothesis asserts a specific subject-predicate-object structure that is only implied or partially referenced in the source without full syntactic or semantic confirmation.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll definitely keep those tips in mind when creating the preferment. Since I'm planning to use a slower rise for this Italian bread recipe, do you think I should adjust the yeast amount or the salt content to compensate for the longer fermentation time?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_733e443a_4:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        }
+      ],
+      "metadata": {
+        "dataset": "longmemeval-adapter",
+        "dataset_version": "1.0.0",
+        "split": "dev",
+        "turns": 48,
+        "synthetic": false,
+        "mode": "candidate_replay",
+        "candidate_preparation_ms": 100643.32216599723,
+        "shared_candidate_usage": {
+          "requests": 48,
+          "input_tokens": 29415,
+          "output_tokens": 1256,
+          "unmetered_requests": 0
+        },
+        "shared_candidate_cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "model_names": {
+          "extractor": "qwen3.5:4b-mlx",
+          "embedder": "nomic-embed-text",
+          "verifier": "cross-encoder/nli-deberta-v3-small"
+        },
+        "gate_config": {
+          "backend": "ollama",
+          "extractor_model": "qwen3.5:4b-mlx",
+          "embed_model": "nomic-embed-text",
+          "embed_dim": 768,
+          "verifier_backend": "cross_encoder",
+          "verifier_model": "cross-encoder/nli-deberta-v3-small",
+          "verifier_entailment_threshold": 0.99,
+          "verifier_fallback_backend": "ollama",
+          "verifier_fallback_model": null,
+          "verifier_timeout_seconds": 20.0,
+          "verifier_max_retries": 1,
+          "extractor_timeout_seconds": 120.0,
+          "extractor_max_retries": 2,
+          "confidence_floor": 0.5,
+          "w_imp": 0.4,
+          "w_spec": 0.3,
+          "w_nov": 0.3,
+          "w_src": 0.4,
+          "transient_penalty": 0.15,
+          "durable_cutoff": 0.7,
+          "ephemeral_floor": 0.45,
+          "predicate_vocab": [
+            "name",
+            "role",
+            "preferred_database",
+            "preferred_language",
+            "team_lead",
+            "ship_day",
+            "location",
+            "timezone",
+            "deploy_method",
+            "goal",
+            "currently_debugging",
+            "dislikes"
+          ],
+          "session_ttl_seconds": 86400.0,
+          "update_sim": 0.9,
+          "dedup_sim": 0.92,
+          "pipeline_version": "2026-09-09-v3",
+          "fingerprint": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "fingerprints": {
+          "dataset": "2a8bd42bb1588cd6c6f1d6bf1fe7c3d3e48bea6d8cc85f7c768453974a83bc96",
+          "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+          "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+          "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+          "config": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "cleanup_errors": []
+      }
+    },
+    "d23cf73b": {
+      "naive": {
+        "stored": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 22,
+        "visible_facts": 5,
+        "total_events": 22,
+        "total_rows": 27,
+        "storage_bytes": 712704,
+        "latency_ms": 1014.371500001289,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 22,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 22
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "dietary_trend",
+            "object_text": "plant-based",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "experience_level",
+            "object_text": "teff flour",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "make Korean-inspired dishes to pair with kimchi",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "object_text": "participant in fermentation workshop",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "object_text": "cooking class's online recipe library",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "recipe ideas for meal prep",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:0\"]}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "misir wot recipe",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:2\"]}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make injera bread from scratch",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:4\"]}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "experience_level",
+            "op": "ADD",
+            "object_text": "teff flour",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:6\"]}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "experiment with different ratios and ingredients",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:10\"]}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "dinner party menu planning",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:0\"]}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "signature cocktail for dinner party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:2\"]}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make saffron-infused simple syrup",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:4\"]}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "get most out of expensive spice",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:6\"]}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make Indian-inspired dishes for dinner party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:10\"]}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "healthy meal prep ideas",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:0\"]}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "dietary_trend",
+            "op": "ADD",
+            "object_text": "plant-based",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:0\"]}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "ADD",
+            "object_text": "participant",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:6\"]}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "incorporate more fermented foods into diet",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:8\"]}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "learning about cashew-based cheese substitutes",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:10\"]}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "cook more at home",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"]}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "uses_database",
+            "op": "ADD",
+            "object_text": "cooking class's online recipe library",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"]}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "stir-fry with chicken and mixed veggies",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:2\"]}",
+            "seq": 18
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make kimchi at home",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:4\"]}",
+            "seq": 19
+          },
+          {
+            "subject": "user",
+            "predicate": "role",
+            "op": "UPDATE",
+            "object_text": "participant in fermentation workshop",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:6\"]}",
+            "seq": 20
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make kimchi",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:8\"]}",
+            "seq": 21
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make Korean-inspired dishes to pair with kimchi",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:10\"]}",
+            "seq": 22
+          }
+        ]
+      },
+      "gated": {
+        "stored": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.0,
+        "historical_recall": 0.0,
+        "unsupported_writes": 10,
+        "visible_facts": 2,
+        "total_events": 10,
+        "total_rows": 158,
+        "storage_bytes": 1327104,
+        "latency_ms": 128159.21441600949,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 34,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 34
+          },
+          "verifier": {
+            "requests": 16,
+            "input_tokens": 4208,
+            "output_tokens": 1456,
+            "unmetered_requests": 0,
+            "nli_requests": 22
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "user",
+            "predicate": "dietary_trend",
+            "object_text": "plant-based",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "object_text": "make Korean-inspired dishes to pair with kimchi",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "ADD",
+            "object_text": "recipe ideas for meal prep",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_4:0\"], \"cache_ids\": [\"8936b720-3705-4141-ac59-8ae59497f63e\"], \"session_id\": \"answer_5a0d28f8_4\"}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "dinner party menu planning",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:0\"], \"cache_ids\": [\"5a01b20e-5301-4e20-b788-489894742198\"], \"session_id\": \"answer_5a0d28f8_2\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "get most out of expensive spice",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:6\"], \"cache_ids\": [\"c3355f3b-3f17-4457-b027-105995b5ea0b\"], \"session_id\": \"answer_5a0d28f8_2\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make Indian-inspired dishes for dinner party",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_2:10\"], \"cache_ids\": [\"b690524e-c4eb-4111-a56d-8ad1c8ab0fdb\"], \"session_id\": \"answer_5a0d28f8_2\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "dietary_trend",
+            "op": "ADD",
+            "object_text": "plant-based",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:0\"], \"cache_ids\": [\"a02c424c-a0e2-4474-b62a-ef5bc3fc0a7d\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "incorporate more fermented foods into diet",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:8\"], \"cache_ids\": [\"fbb7ecc9-b94b-4df4-8cc8-424a5f39d2ba\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "learning about cashew-based cheese substitutes",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_1:10\"], \"cache_ids\": [\"f9c76764-79a1-47c2-b698-62972dda2555\"], \"session_id\": \"answer_5a0d28f8_1\"}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "cook more at home",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:0\"], \"cache_ids\": [\"8aac933f-5c8d-4372-a9b4-351d77ee5f2a\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "stir-fry with chicken and mixed veggies",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:2\"], \"cache_ids\": [\"1d4da691-a342-4673-8dd4-427c943e0155\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "goal",
+            "op": "UPDATE",
+            "object_text": "make Korean-inspired dishes to pair with kimchi",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_5a0d28f8_3:10\"], \"cache_ids\": [\"336e8a18-631d-4223-9574-4177d2df59ac\"], \"session_id\": \"answer_5a0d28f8_3\"}",
+            "seq": 10
+          }
+        ]
+      },
+      "decisions": [
+        {
+          "turn_id": "answer_5a0d28f8_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"recipe ideas for meal prep\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.84; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's stated goal found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm looking for some recipe ideas for meal prep.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8400000000000001, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"misir wot recipe\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a desire to try dishes and asks for a recipe, but does not explicitly state that the user's specific goal is obtaining the misir wot recipe; it remains a request within a broader context of trying Ethiopian food.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a desire to try dishes and asks for a recipe, but does not explicitly state that the user's specific goal is obtaining the misir wot recipe; it remains a request within a broader context of trying Ethiopian food.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Do you have a simple recipe for that?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make injera bread from scratch\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a desire to make injera bread but frames it as a question and a hypothetical future action ('I'd love'), whereas the hypothesis asserts this as a current fact ('My goal is'). The source does not confirm the user's specific intent or state that they have set this as their goal, only that they are curious about recipes for the purpose of potentially making it.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a desire to make injera bread but frames it as a question and a hypothetical future action ('I'd love'), whereas the hypothesis asserts this as a current fact ('My goal is'). The source does not confirm the user's specific intent or state that they have set this as their goal, only that they are curious about recipes for the purpose of potentially making it.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'd love to make it from scratch to go with the misir wot\", \"probability\": 0.0}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"teff flour\", \"subject\": \"user\", \"predicate\": \"experience_level\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user has never worked with teff flour before, implying a lack of experience, while the hypothesis incorrectly asserts that the user's experience level IS teff flour (a category error and factual mismatch).",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user has never worked with teff flour before, implying a lack of experience, while the hypothesis incorrectly asserts that the user's experience level IS teff flour (a category error and factual mismatch).\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've never worked with teff flour before\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:8",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"experiment with different ratios and ingredients\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a future intention ('I'll make sure to...') rather than a current completed fact or definitive goal statement. The hypothesis asserts 'My goal is...', which implies a present state of being or a fixed objective, whereas the source only states a plan for the future action.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a future intention ('I'll make sure to...') rather than a current completed fact or definitive goal statement. The hypothesis asserts 'My goal is...', which implies a present state of being or a fixed objective, whereas the source only states a plan for the future action.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'm ready to give it a try! I'll make sure to adjust the recipe accordingly and experiment with different ratios and ingredients.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_4:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"dinner party menu planning\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.\", \"probability\": 0.9918023943901062}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"signature cocktail for dinner party\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"Can you give me some suggestions for a signature cocktail for the dinner party? Maybe something that incorporates Indian spices or flavors?\", \"probability\": 0.9944064617156982}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make saffron-infused simple syrup\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "NLI did not establish entailment",
+          "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I like the sound of the Saffron Gin Fizz and the Mumbai Mule. Can you give me some more information on how to make the saffron-infused simple syrup for the Saffron Gin Fizz?\", \"probability\": 0.9964113831520081}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"get most out of expensive spice\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.84; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"What's the best way to store saffron threads and how long do they last? I want to make sure I'm getting the most out of this expensive spice.\", \"probability\": 0.9965237975120544}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8400000000000001, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:8",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make Indian-inspired dishes for dinner party\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I'm planning to make a few other Indian-inspired dishes for my dinner party, including naan bread and saag paneer. Can you give me some tips on how to make perfect naan bread at home?\", \"probability\": 0.9907667636871338}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_2:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"healthy meal prep ideas\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The hypothesis incorrectly identifies the speaker as 'My' (first person) while the source text uses 'I'm' in a context where the user is asking for third-party suggestions ('meal prep ideas') rather than stating their own goal directly; additionally, the hypothesis lacks the necessary object 'healthy meal prep ideas' to form a complete triple matching the source's intent.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis incorrectly identifies the speaker as 'My' (first person) while the source text uses 'I'm' in a context where the user is asking for third-party suggestions ('meal prep ideas') rather than stating their own goal directly; additionally, the hypothesis lacks the necessary object 'healthy meal prep ideas' to form a complete triple matching the source's intent.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some healthy meal prep ideas.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"plant-based\", \"subject\": \"user\", \"predicate\": \"dietary_trend\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.44; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they have been trying to eat more plant-based and were inspired by vegan cuisine, which directly supports the hypothesis that their dietary trend is plant-based.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've been trying to eat more plant-based lately\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4428691462722263, \"novelty\": 0.4762304875740877, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:2",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:4",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "extractor found no atomic facts",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"participant\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "The source text describes the user's past experience attending a workshop and learning to make food, but it does not explicitly state their current profession or role as 'participant'. The hypothesis claims the user works as a participant, which is an unrelated inference not supported by the specific details in the source.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text describes the user's past experience attending a workshop and learning to make food, but it does not explicitly state their current profession or role as 'participant'. The hypothesis claims the user works as a participant, which is an unrelated inference not supported by the specific details in the source.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"incorporate more fermented foods into diet\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.\", \"probability\": 0.9978833794593811}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"learning about cashew-based cheese substitutes\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.84; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's expressed goal found in the source text regarding learning about cashew-based cheese substitutes.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm interested in learning more about cashew-based cheese substitutes.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8400000000000001, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_1:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"cook more at home\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.73; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated goal found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I've been trying to cook more at home\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.7299999999999999, \"novelty\": 1.0, \"transient\": true, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"cooking class's online recipe library\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user 'tried out' a recipe from the library in the past tense, indicating an action completed and finished. The hypothesis claims the user currently 'uses' the library as an ongoing habit or method. While the source implies usage occurred once, it does not establish that the user actively uses the library for general purposes (the predicate 'uses_database' implies a continuous relationship). Therefore, the hypothesis is not fully entailed by the specific past-tense event described in the source.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user 'tried out' a recipe from the library in the past tense, indicating an action completed and finished. The hypothesis claims the user currently 'uses' the library as an ongoing habit or method. While the source implies usage occurred once, it does not establish that the user actively uses the library for general purposes (the predicate 'uses_database' implies a continuous relationship). Therefore, the hypothesis is not fully entailed by the specific past-tense event described in the source.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"stir-fry with chicken and mixed veggies\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.76; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis accurately restates the user's stated cooking plan found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I was thinking of doing a stir-fry with chicken and mixed veggies this week.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.76, \"novelty\": 1.0, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make kimchi at home\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a tentative thought ('thinking of adding') and asks for suggestions, indicating an open inquiry rather than a confirmed goal. The hypothesis states the user's goal as a definitive fact without negation or uncertainty markers.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a tentative thought ('thinking of adding') and asks for suggestions, indicating an open inquiry rather than a confirmed goal. The hypothesis states the user's goal as a definitive fact without negation or uncertainty markers.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I was thinking of adding some kimchi to my stir-fry for an extra kick. Do you have any suggestions on how to make kimchi at home?\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"participant in fermentation workshop\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "The source states the user attended a workshop in the past tense ('I've actually made... from a workshop I attended'), whereas the hypothesis claims the user currently 'works' as a participant. Attendance at an event does not entail current employment or ongoing participation.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source states the user attended a workshop in the past tense ('I've actually made... from a workshop I attended'), whereas the hypothesis claims the user currently 'works' as a participant. Attendance at an event does not entail current employment or ongoing participation.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've actually made kimchi before from a workshop I attended on fermentation.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make kimchi\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source expresses a tentative plan ('thinking of making') and asks for suggestions, which does not establish the completed fact required for entailment. The hypothesis states 'My goal is make kimchi' as a definitive assertion of intent without the necessary negation or uncertainty markers found in the source text.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source expresses a tentative plan ('thinking of making') and asks for suggestions, which does not establish the completed fact required for entailment. The hypothesis states 'My goal is make kimchi' as a definitive assertion of intent without the necessary negation or uncertainty markers found in the source text.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm thinking of making a big batch of kimchi this weekend and experimenting with different flavor profiles.\", \"probability\": 0.1}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"make Korean-inspired dishes to pair with kimchi\", \"subject\": \"user\", \"predicate\": \"goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.88; accepted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The hypothesis directly restates the user's stated goal found in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm thinking of making some kimchi fried rice to go with my kimchi. Do you have any suggestions for other Korean-inspired dishes I could make to pair with my kimchi?\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_5a0d28f8_3:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        }
+      ],
+      "metadata": {
+        "dataset": "longmemeval-adapter",
+        "dataset_version": "1.0.0",
+        "split": "dev",
+        "turns": 48,
+        "synthetic": false,
+        "mode": "candidate_replay",
+        "candidate_preparation_ms": 309622.343791998,
+        "shared_candidate_usage": {
+          "requests": 48,
+          "input_tokens": 31381,
+          "output_tokens": 1421,
+          "unmetered_requests": 0
+        },
+        "shared_candidate_cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "model_names": {
+          "extractor": "qwen3.5:4b-mlx",
+          "embedder": "nomic-embed-text",
+          "verifier": "cross-encoder/nli-deberta-v3-small"
+        },
+        "gate_config": {
+          "backend": "ollama",
+          "extractor_model": "qwen3.5:4b-mlx",
+          "embed_model": "nomic-embed-text",
+          "embed_dim": 768,
+          "verifier_backend": "cross_encoder",
+          "verifier_model": "cross-encoder/nli-deberta-v3-small",
+          "verifier_entailment_threshold": 0.99,
+          "verifier_fallback_backend": "ollama",
+          "verifier_fallback_model": null,
+          "verifier_timeout_seconds": 20.0,
+          "verifier_max_retries": 1,
+          "extractor_timeout_seconds": 120.0,
+          "extractor_max_retries": 2,
+          "confidence_floor": 0.5,
+          "w_imp": 0.4,
+          "w_spec": 0.3,
+          "w_nov": 0.3,
+          "w_src": 0.4,
+          "transient_penalty": 0.15,
+          "durable_cutoff": 0.7,
+          "ephemeral_floor": 0.45,
+          "predicate_vocab": [
+            "name",
+            "role",
+            "preferred_database",
+            "preferred_language",
+            "team_lead",
+            "ship_day",
+            "location",
+            "timezone",
+            "deploy_method",
+            "goal",
+            "currently_debugging",
+            "dislikes"
+          ],
+          "session_ttl_seconds": 86400.0,
+          "update_sim": 0.9,
+          "dedup_sim": 0.92,
+          "pipeline_version": "2026-09-09-v3",
+          "fingerprint": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "fingerprints": {
+          "dataset": "02ae99d2ec2a3d5fd2747fb131674ea1dc79f5e2272c5d3727492d6ce74fdb49",
+          "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+          "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+          "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+          "config": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a"
+        },
+        "cleanup_errors": []
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 """Demo seed data.
 
 Inserts a few facts directly via SQL — fact row + ADD event + HEAD pointer — so
-``memory_current`` returns rows before the core ``add()`` op exists (that lands in
-M2; this seed is refactored to use it then if useful). Idempotent: re-running skips
-facts that already exist. Reusable by tests (call ``seed(conn)`` on any connection).
+``memory_current`` has demo data without requiring a model server. Idempotent:
+re-running skips facts that already exist. Reusable by tests (call ``seed(conn)``
+on any connection).
 """
 
 from __future__ import annotations

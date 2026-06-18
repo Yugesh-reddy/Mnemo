@@ -1,0 +1,6 @@
+{
+  "model": "cross-encoder/nli-deberta-v3-small",
+  "snapshot": "/Users/yugesh/.cache/huggingface/hub/models--cross-encoder--nli-deberta-v3-small/snapshots/fa2804872c3b4bd748f38c0185cc85775361e735",
+  "revision": "fa2804872c3b4bd748f38c0185cc85775361e735",
+  "prior_revision": "fa2804872c3b4bd748f38c0185cc85775361e735"
+}

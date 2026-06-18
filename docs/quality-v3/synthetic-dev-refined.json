@@ -1,0 +1,1518 @@
+{
+  "gated": {
+    "stored": 19,
+    "precision": 0.5263157894736842,
+    "recall": 0.4,
+    "f1": 0.45454545454545453,
+    "false": 0,
+    "must_keep_recall": 0.625,
+    "false_writes": 0,
+    "historical_precision": 0.625,
+    "historical_recall": 0.5,
+    "unsupported_writes": 9,
+    "visible_facts": 19,
+    "total_events": 24,
+    "total_rows": 343,
+    "storage_bytes": 1810432,
+    "latency_ms": 285854.4902499998,
+    "usage": {
+      "extractor": {},
+      "embedder": {
+        "requests": 99,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 99
+      },
+      "verifier": {
+        "requests": 38,
+        "input_tokens": 15047,
+        "output_tokens": 3266,
+        "unmetered_requests": 0,
+        "nli_requests": 15
+      }
+    },
+    "cost": {
+      "usd": null,
+      "reason": "No pricing supplied; measured usage is reported separately."
+    },
+    "historical_by_split": {
+      "dev": {
+        "precision": 0.625,
+        "recall": 0.5,
+        "false_writes": 0,
+        "unsupported_writes": 9
+      }
+    },
+    "current_assertions": [
+      {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "object_text": "captions_enabled_for_video_calls",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "allergy",
+        "object_text": "peanut",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "diet",
+        "object_text": "keto",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "editor",
+        "object_text": "fish",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "object_text": "Noah Chen",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "location",
+        "object_text": "Portland",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "manager",
+        "object_text": "Elena Ruiz",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "object_text": "Monday",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "name",
+        "object_text": "Maya Chen",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "object_text": "Saturday",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "pet_ownership",
+        "object_text": "Pixel",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "object_text": "MongoDB",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "object_text": "TypeScript",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_music_genre",
+        "object_text": "Jazz",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "pronouns",
+        "object_text": "she/her",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "role",
+        "object_text": "site reliability engineer",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "start_work_time",
+        "object_text": "08:30",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "team",
+        "object_text": "Reliability Platform team",
+        "object_number": null,
+        "object_json": null
+      },
+      {
+        "subject": "user",
+        "predicate": "uses_database",
+        "object_text": "Linear",
+        "object_number": null,
+        "object_json": null
+      }
+    ],
+    "writes": [
+      {
+        "subject": "user",
+        "predicate": "name",
+        "op": "ADD",
+        "object_text": "Maya Chen",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-001d\"], \"cache_ids\": [\"dda94e90-a830-4b02-8422-1e833145bf07\"], \"session_id\": \"dev-session-01-followup\"}",
+        "seq": 1
+      },
+      {
+        "subject": "user",
+        "predicate": "role",
+        "op": "ADD",
+        "object_text": "site reliability engineer",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-002a\"], \"cache_ids\": [\"212228dc-ca66-4755-9f0a-144e018173bf\"], \"session_id\": \"dev-session-01\"}",
+        "seq": 2
+      },
+      {
+        "subject": "user",
+        "predicate": "location",
+        "op": "ADD",
+        "object_text": "Portland",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-003a\"], \"cache_ids\": [\"77066c28-b1f3-4174-b99e-813ba79c3fb1\"], \"session_id\": \"dev-session-01\"}",
+        "seq": 3
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_language",
+        "op": "ADD",
+        "object_text": "TypeScript",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-005a\"], \"cache_ids\": [\"38f96e0c-5993-4dc3-a612-8be59c14c9a2\"], \"session_id\": \"dev-session-01\"}",
+        "seq": 4
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "op": "ADD",
+        "object_text": "PostgreSQL",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-006a\"], \"cache_ids\": [\"6ef9ffb4-ba6b-48dc-9954-48584b136cb7\"], \"session_id\": \"dev-session-02\"}",
+        "seq": 5
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_database",
+        "op": "UPDATE",
+        "object_text": "MongoDB",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-006d\"], \"cache_ids\": [\"6bc0311b-d90f-46e5-bbd5-5a442e2c63c0\"], \"session_id\": \"dev-session-02-followup\"}",
+        "seq": 6
+      },
+      {
+        "subject": "user",
+        "predicate": "editor",
+        "op": "ADD",
+        "object_text": "Neovim",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-007a\"], \"cache_ids\": [\"1222e2c7-0d2f-4903-80a5-af5dd377444a\"], \"session_id\": \"dev-session-02\"}",
+        "seq": 7
+      },
+      {
+        "subject": "user",
+        "predicate": "editor",
+        "op": "UPDATE",
+        "object_text": "fish",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-008a\"], \"cache_ids\": [\"a98ad544-c01b-4a60-bd43-f06a86cd1853\"], \"session_id\": \"dev-session-02\"}",
+        "seq": 8
+      },
+      {
+        "subject": "user",
+        "predicate": "team",
+        "op": "ADD",
+        "object_text": "Reliability Platform team",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-009a\"], \"cache_ids\": [\"4fa41a92-87da-4466-b9cd-fce8114c94c4\"], \"session_id\": \"dev-session-02\"}",
+        "seq": 9
+      },
+      {
+        "subject": "user",
+        "predicate": "manager",
+        "op": "ADD",
+        "object_text": "Elena Ruiz",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-010a\"], \"cache_ids\": [\"613ad308-d5f6-4c9f-ab4d-69dbf786640d\"], \"session_id\": \"dev-session-02\"}",
+        "seq": 10
+      },
+      {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "op": "ADD",
+        "object_text": "Tuesday",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-011a\"], \"cache_ids\": [\"a9233e34-018f-49c4-b191-3d63eb228dda\"], \"session_id\": \"dev-session-03\"}",
+        "seq": 11
+      },
+      {
+        "subject": "user",
+        "predicate": "on_call_day",
+        "op": "UPDATE",
+        "object_text": "Saturday",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-011d\"], \"cache_ids\": [\"3cc8177a-7574-4cda-b58d-77c59d8ea992\"], \"session_id\": \"dev-session-03-followup\"}",
+        "seq": 12
+      },
+      {
+        "subject": "user",
+        "predicate": "uses_database",
+        "op": "ADD",
+        "object_text": "Linear",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-014a\"], \"cache_ids\": [\"abe6ae41-04b2-4ae7-b0f4-6e595c8f2815\"], \"session_id\": \"dev-session-03\"}",
+        "seq": 13
+      },
+      {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "op": "ADD",
+        "object_text": "Wednesday",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-016a\"], \"cache_ids\": [\"cf10b5d6-fc74-45be-a899-d80daf6888f7\"], \"session_id\": \"dev-session-04\"}",
+        "seq": 14
+      },
+      {
+        "subject": "user",
+        "predicate": "meeting_free_day",
+        "op": "UPDATE",
+        "object_text": "Monday",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-016d\"], \"cache_ids\": [\"436facec-4a1f-4fa9-bf9e-96e7705cadae\"], \"session_id\": \"dev-session-04-followup\"}",
+        "seq": 15
+      },
+      {
+        "subject": "user",
+        "predicate": "start_work_time",
+        "op": "ADD",
+        "object_text": "08:30",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-017a\"], \"cache_ids\": [\"c4f4bb91-9f30-4855-9f94-5115c1421ac6\"], \"session_id\": \"dev-session-04\"}",
+        "seq": 16
+      },
+      {
+        "subject": "user",
+        "predicate": "pronouns",
+        "op": "ADD",
+        "object_text": "she/her",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-018a\"], \"cache_ids\": [\"e1d9f931-bcdc-40cb-a441-425749fc4810\"], \"session_id\": \"dev-session-04\"}",
+        "seq": 17
+      },
+      {
+        "subject": "user",
+        "predicate": "accessibility_need",
+        "op": "ADD",
+        "object_text": "captions_enabled_for_video_calls",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-020a\"], \"cache_ids\": [\"41530b5f-1ae0-4606-bab2-cd9b78a1ff13\"], \"session_id\": \"dev-session-04\"}",
+        "seq": 18
+      },
+      {
+        "subject": "user",
+        "predicate": "diet",
+        "op": "ADD",
+        "object_text": "vegetarian",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-021a\"], \"cache_ids\": [\"0df345ec-bad9-4498-bc41-32b0c286f9f9\"], \"session_id\": \"dev-session-05\"}",
+        "seq": 19
+      },
+      {
+        "subject": "user",
+        "predicate": "diet",
+        "op": "UPDATE",
+        "object_text": "keto",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-021d\"], \"cache_ids\": [\"2d0913a9-ce4c-4d45-a80b-645dd8843b06\"], \"session_id\": \"dev-session-05-followup\"}",
+        "seq": 20
+      },
+      {
+        "subject": "user",
+        "predicate": "allergy",
+        "op": "ADD",
+        "object_text": "peanut",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-022a\"], \"cache_ids\": [\"69a84153-1c94-4eab-9903-906a8102b3fb\"], \"session_id\": \"dev-session-05\"}",
+        "seq": 21
+      },
+      {
+        "subject": "user",
+        "predicate": "emergency_contact",
+        "op": "ADD",
+        "object_text": "Noah Chen",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-023a\"], \"cache_ids\": [\"bb916df5-0063-42eb-bc60-24c408c5fe50\"], \"session_id\": \"dev-session-05\"}",
+        "seq": 22
+      },
+      {
+        "subject": "user",
+        "predicate": "pet_ownership",
+        "op": "ADD",
+        "object_text": "Pixel",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-024a\"], \"cache_ids\": [\"02cd9add-8594-4d32-9c69-c94d4a5343ec\"], \"session_id\": \"dev-session-05\"}",
+        "seq": 23
+      },
+      {
+        "subject": "user",
+        "predicate": "preferred_music_genre",
+        "op": "ADD",
+        "object_text": "Jazz",
+        "object_number": null,
+        "object_json": null,
+        "source_span": "{\"turn_ids\": [\"dev-025a\"], \"cache_ids\": [\"b5fb199e-a6ae-4073-82e8-6850c432f8bd\"], \"session_id\": \"dev-session-05\"}",
+        "seq": 24
+      }
+    ],
+    "retrieval_probes": [
+      {
+        "turn_id": "dev-020a",
+        "query": "user accessibility_need captions",
+        "k": 5,
+        "session_id": "dev-session-04",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 41.22520799865015,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "accessibility_need",
+            "object": "captions_enabled_for_video_calls",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-022a",
+        "query": "user allergy peanuts",
+        "k": 5,
+        "session_id": "dev-session-05",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 27.9660420055734,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "allergy",
+            "object": "peanut",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-021d",
+        "query": "user diet keto",
+        "k": 5,
+        "session_id": "dev-session-05-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 40.98487499868497,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "diet",
+            "object": "keto",
+            "tier": "session",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-023a",
+        "query": "user emergency_contact Noah Chen",
+        "k": 5,
+        "session_id": "dev-session-05",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 45.45999999390915,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "emergency_contact",
+            "object": "Noah Chen",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-016d",
+        "query": "user meeting_free_day Monday",
+        "k": 5,
+        "session_id": "dev-session-04-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 47.88312499294989,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "meeting_free_day",
+            "object": "Monday",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-001d",
+        "query": "user name Maya Chen revised",
+        "k": 5,
+        "session_id": "dev-session-01-followup",
+        "in_current": false,
+        "retrieved": false,
+        "stage": "upstream_or_label_mismatch",
+        "latency_ms": 45.413166997605,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-011d",
+        "query": "user on_call_day Saturday",
+        "k": 5,
+        "session_id": "dev-session-03-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 42.23329201340675,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "on_call_day",
+            "object": "Saturday",
+            "tier": "session",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      },
+      {
+        "turn_id": "dev-006d",
+        "query": "user preferred_database MongoDB",
+        "k": 5,
+        "session_id": "dev-session-02-followup",
+        "in_current": true,
+        "retrieved": true,
+        "stage": "retrieved",
+        "latency_ms": 46.33891599951312,
+        "results": [
+          {
+            "subject": "user",
+            "predicate": "preferred_database",
+            "object": "MongoDB",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "preferred_language",
+            "object": "TypeScript",
+            "tier": "durable",
+            "source": "semantic"
+          },
+          {
+            "subject": "user",
+            "predicate": "name",
+            "object": "Maya Chen",
+            "tier": "durable",
+            "source": "semantic"
+          }
+        ]
+      }
+    ],
+    "retrieval_probe_usage": {
+      "extractor": {},
+      "embedder": {
+        "requests": 8,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 8
+      },
+      "verifier": {
+        "requests": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unmetered_requests": 0,
+        "nli_requests": 0
+      }
+    }
+  },
+  "decisions": [
+    {
+      "turn_id": "dev-001a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text expresses a request to be called 'Maya Chen' in project notes, which establishes a preference or setting for how the user is addressed in that context. It does not explicitly state as a completed fact that the user's name is Maya Chen, nor does it confirm that the request has been fulfilled. The assertion treats this as a definitive identity fact ('My name is Maya Chen'), which exceeds the scope of the source text's request.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a request to be called 'Maya Chen' in project notes, which establishes a preference or setting for how the user is addressed in that context. It does not explicitly state as a completed fact that the user's name is Maya Chen, nor does it confirm that the request has been fulfilled. The assertion treats this as a definitive identity fact ('My name is Maya Chen'), which exceeds the scope of the source text's request.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Call me Maya Chen in project notes.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-001b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-001c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-001d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 10, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=1.00; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"Correction to what I said earlier: my name is Maya Chen revised.\", \"probability\": 0.9919041991233826}",
+      "score_components": "{\"spec\": 1.0, \"score\": 1.0, \"novelty\": 1.0, \"transient\": false, \"importance\": 10, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-002a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"site reliability engineer\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.84; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"I work as a site reliability engineer.\", \"probability\": 0.9961662292480469}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8441229520552768, \"novelty\": 0.6137431735175892, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-002b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-002c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-002d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"product designer\", \"subject\": \"user\", \"predicate\": \"considered_role\", \"confidence\": 0.9, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change to product designer is 'only hypothetical' and does not confirm any actual consideration or action taken by the user.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change to product designer is 'only hypothetical' and does not confirm any actual consideration or action taken by the user.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-003a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Portland\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.74; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"My home base is Portland.\", \"probability\": 0.9925453066825867}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.7387522215953678, \"novelty\": 0.5291740719845593, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-003b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-003c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-003d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Seattle\", \"subject\": \"user\", \"predicate\": \"hypothetical_location\", \"confidence\": 0.8, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states the location change is 'only hypothetical' and conditional ('What if someday'), which does not establish a completed fact or current state required for entailment.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states the location change is 'only hypothetical' and conditional ('What if someday'), which does not establish a completed fact or current state required for entailment.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-004a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Pacific Time\", \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text contains a request to schedule the user in Pacific Time, which establishes an intention or preference but does not explicitly confirm that the action has been completed. The assertion treats this as a factual state ('My timezone is Pacific Time'), whereas the source only indicates a desire for scheduling without confirming execution.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text contains a request to schedule the user in Pacific Time, which establishes an intention or preference but does not explicitly confirm that the action has been completed. The assertion treats this as a factual state ('My timezone is Pacific Time'), whereas the source only indicates a desire for scheduling without confirming execution.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Please schedule me in Pacific Time.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-004b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-004c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-004d",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "extractor found no atomic facts",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-005a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"TypeScript\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.98, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.83; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"TypeScript is my preferred programming language.\", \"probability\": 0.9983976483345032}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8287109851537353, \"novelty\": 0.5623699505124509, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-005b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-005c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-005d",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-006a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PostgreSQL\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.75; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"For durable services I prefer PostgreSQL.\", \"probability\": 0.992779552936554}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.7458876077353541, \"novelty\": 0.4196253591178467, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-006b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-006c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-006d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MongoDB\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.92; accepted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI entailment passed threshold\", \"backend\": \"cross_encoder\", \"accepted\": true, \"evidence\": \"Correction to what I said earlier: my preferred database is MongoDB.\", \"probability\": 0.9970295429229736}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.9200000000000002, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-007a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Neovim\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.50; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source explicitly states 'I use Neovim as my everyday editor', which directly entails that the user's role/function is 'editor' with the object 'Neovim'. The phrase 'everyday editor' confirms the predicate 'editor' applies to the subject 'user' regarding the object 'Neovim'.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I use Neovim as my everyday editor.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.49888912935702434, \"novelty\": 0.5296304311900811, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-007b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-007c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-007d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Emacs\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change to Emacs is 'only hypothetical' and does not confirm it has occurred or been decided as a fact.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change to Emacs is 'only hypothetical' and does not confirm it has occurred or been decided as a fact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical\\\"\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-008a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"fish\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.60; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states their interactive shell is 'fish', which functionally serves as their text editor. The assertion correctly identifies the user's role in this context.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My interactive shell is fish.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-008b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-008c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_shell\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-008d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PowerShell\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change to PowerShell is 'only hypothetical' and does not confirm it has been done or established as a current fact.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change to PowerShell is 'only hypothetical' and does not confirm it has been done or established as a current fact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical.\\\"\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-009a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Reliability Platform team\", \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.45; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's membership in the Reliability Platform team, which directly matches the assertion's subject (user), predicate (team), and object (Reliability Platform team). The interpretation of 'belong to' as a relationship with 'team' is semantically equivalent to the stated 'team' relation.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I belong to the Reliability Platform team.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.45247226327791346, \"novelty\": 0.2415742109263781, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-009b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-009c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-009d",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-010a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Elena Ruiz\", \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.56; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states 'My manager is Elena Ruiz', which directly affirms the user's manager role as Elena Ruiz. The assertion correctly identifies the subject (user), predicate (manager), and object (Elena Ruiz) without adding unsupported exclusivity or temporal constraints.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My manager is Elena Ruiz.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.563583767904831, \"novelty\": 0.47861255968276994, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-010b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-010c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-010d",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.5, \"importance\": 1, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-011a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Tuesday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.48; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's regular on-call handoff day is Tuesday, which directly entails the assertion that the user's on_call_day is Tuesday.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"My regular on-call handoff is Tuesday.\\\"\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4786953943690981, \"novelty\": 0.4623179812303271, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-011b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-011c",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states they do not use Saturday and requests no inference regarding it as an on-call day, but this does not confirm that Saturday is definitively a meeting-free day; it only indicates the user's preference or current usage pattern without establishing it as a fixed fact for all contexts.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they do not use Saturday and requests no inference regarding it as an on-call day, but this does not confirm that Saturday is definitively a meeting-free day; it only indicates the user's preference or current usage pattern without establishing it as a fixed fact for all contexts.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I do not use Saturday\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-011d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.64; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly corrects a previous statement to assert that the user's on call day is Saturday, which directly matches the assertion's subject, predicate, and object.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my on call day is Saturday\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-012a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Kubernetes\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text describes a deployment action ('We deploy...'), while the assertion claims a habitual usage relationship ('uses_database'). Deployment is not equivalent to using a database as a resource; Kubernetes is an orchestration platform, not a database itself.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text describes a deployment action ('We deploy...'), while the assertion claims a habitual usage relationship ('uses_database'). Deployment is not equivalent to using a database as a resource; Kubernetes is an orchestration platform, not a database itself.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"We deploy the API on Kubernetes.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-012b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-012c",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not_bare_metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-012d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"bare metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no actual deployment method change has occurred.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no actual deployment method change has occurred.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical.\\\"\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-013a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Cloud\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"Our production account is on Google Cloud.\", \"probability\": 0.9941852688789368}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-013b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-013c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-013d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Azure\", \"subject\": \"user\", \"predicate\": \"cloud_provider\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change is 'only hypothetical' and does not assert that the user has actually changed their cloud provider to Azure.",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change is 'only hypothetical' and does not assert that the user has actually changed their cloud provider to Azure.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical.\\\"\", \"probability\": 0.9}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-014a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Linear\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.68; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text 'Our team tracks issues in Linear' implies that the speaker (user) is part of the team and uses the tool Linear to track issues, which entails the assertion that the user uses the database Linear.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Our team tracks issues in Linear.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.6838529771424031, \"novelty\": 0.3461765904746772, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-014b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-014c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-014d",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-015a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Docs\", \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The source text states that design proposals are written in Google Docs, which implies usage of the application but does not explicitly confirm the user's role as a database administrator or their general use of Google Docs as a database tool. The assertion claims 'I use the database Google Docs,' which conflates the document management service with a database function and lacks explicit confirmation of the user's intent to treat it as such.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states that design proposals are written in Google Docs, which implies usage of the application but does not explicitly confirm the user's role as a database administrator or their general use of Google Docs as a database tool. The assertion claims 'I use the database Google Docs,' which conflates the document management service with a database function and lacks explicit confirmation of the user's intent to treat it as such.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"We write design proposals in Google Docs.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-015b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-015c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-015d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Notion\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change to Notion is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of being an editor.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change to Notion is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of being an editor.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical\\\"\", \"probability\": 0.1}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-016a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Wednesday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.48; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states 'Wednesday is my meeting-free day', which directly affirms the user's Wednesday as a day without meetings, matching the assertion's subject (user), predicate (meeting_free_day), and object (Wednesday). The phrase 'my' confirms the speaker relationship.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Wednesday is my meeting-free day.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.47507411973881836, \"novelty\": 0.3169137324627277, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-016b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-016c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-016d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Monday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.64; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's meeting-free day is Monday, which directly matches the assertion's subject (user), predicate (meeting_free_day), and object (Monday). The correction context confirms this as a factual statement about the speaker's schedule.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my meeting free day is Monday\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-017a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"08:30\", \"subject\": \"user\", \"predicate\": \"start_work_time\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.45; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's normal start time for work is 08:30, which directly matches the assertion's subject (user), predicate (start_work_time), and object (08:30). The use of 'normally' aligns with the instruction that attributes like habits do not require universal quantification.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I normally start work at 08:30.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4527695068729291, \"novelty\": 0.3758983562430972, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-017b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-017c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"work_start_time\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-017d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"06:00\", \"subject\": \"user\", \"predicate\": \"work_start_time\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the proposed change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state for the work start time.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the proposed change is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state for the work start time.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-018a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"she/her\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 1.0, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.41; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's pronouns as 'she/her', which directly matches the assertion's subject (user), predicate (pronouns), and object (she/her). The statement is a declarative fact about the speaker's identity attributes.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My pronouns are she/her.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4073057524610786, \"novelty\": 0.4910191748702618, \"transient\": false, \"importance\": 5, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-018b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-018c",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not they/them\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 1.0, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-018d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"they/them\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"What if someday I changed my pronouns to they/them? For now this is only hypothetical.\", \"probability\": 0.9932843446731567}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-019a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Mandarin\", \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "NLI did not establish entailment",
+      "verification": "{\"label\": \"neutral\", \"model\": \"cross-encoder/nli-deberta-v3-small\", \"reason\": \"NLI did not establish entailment\", \"backend\": \"cross_encoder\", \"accepted\": false, \"evidence\": \"I can speak Mandarin fluently.\", \"probability\": 0.9949894547462463}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-019b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-019c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-019d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"German\", \"subject\": \"user\", \"predicate\": \"primary_language\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the hypothetical nature of switching to German ('For now this is only hypothetical') and implies the current state is not German, whereas the assertion claims German as the primary language without qualification.",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the hypothetical nature of switching to German ('For now this is only hypothetical') and implies the current state is not German, whereas the assertion claims German as the primary language without qualification.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical\", \"probability\": 0.95}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-020a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"captions_enabled_for_video_calls\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.48; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states a need for captions in video calls, which directly entails the accessibility_need of captions being enabled for that context.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I need captions enabled for video calls.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4800335352440576, \"novelty\": 0.46677845081352554, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-020b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-020c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-020d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"screen magnification\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no current accessibility need exists for screen magnification; the assertion claims a present need which contradicts the text's denial of current status.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states the change is 'only hypothetical' and asks 'What if', indicating no current accessibility need exists for screen magnification; the assertion claims a present need which contradicts the text's denial of current status.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-021a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"vegetarian\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 1.0, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.53; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user follows a vegetarian diet, which directly entails the assertion that the user's diet is vegetarian.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I follow a vegetarian diet.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.5322375751342453, \"novelty\": 0.5074585837808174, \"transient\": false, \"importance\": 8, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-021b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-021c",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"not_keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "negative value cannot overwrite an affirmative fact identity",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-021d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.64; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states 'my diet is keto', which directly affirms the user's diet is keto.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"my diet is keto\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-022a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"peanut\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.59; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user has a peanut allergy, which directly matches the subject (user), predicate (allergy), and object (peanut) in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I have a peanut allergy.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.5890870677671814, \"novelty\": 0.563623559223938, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-022b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-022c",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states they do not use shellfish and warns against inferring an allergy from this fact, indicating the lack of usage is a preference or habit rather than a confirmed medical condition.",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they do not use shellfish and warns against inferring an allergy from this fact, indicating the lack of usage is a preference or habit rather than a confirmed medical condition.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I do not use shellfish; please don't infer that as my allergy.\", \"probability\": 0.95}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-022d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The speaker explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of having an allergy.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of having an allergy.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-023a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Noah Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 1.0, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.52; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user's emergency contact is Noah Chen, which directly matches the assertion's subject (user), predicate (emergency_contact), and object (Noah Chen). The interpretation of 'emergency contact' as a stored fact aligns with the instruction that attributes like contacts are facts about the speaker.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"My emergency contact is Noah Chen.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.519733354970095, \"novelty\": 0.33244451656698326, \"transient\": false, \"importance\": 9, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-023b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-023c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-023d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Alex Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.5, \"importance\": 3, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion that the user currently has Alex Chen as their emergency contact.",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the change is 'only hypothetical' and uses conditional phrasing ('What if'), which negates the assertion that the user currently has Alex Chen as their emergency contact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.95}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-024a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Pixel\", \"subject\": \"user\", \"predicate\": \"pet_ownership\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.37; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states possession of a cat named Pixel, which directly entails the fact that the user owns the pet 'Pixel'. The predicate 'pet_ownership' accurately reflects the relationship described in the source text.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I have a cat named Pixel.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.37079326315649586, \"novelty\": 0.5026442105216529, \"transient\": false, \"importance\": 4, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-024b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-024c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"has_pet\", \"confidence\": 0.95, \"importance\": 3, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-024d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Luna\", \"subject\": \"user\", \"predicate\": \"pet_name\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"agent_inference\"}",
+      "outcome": "rejected",
+      "reason": "The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of having a pet named Luna.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the situation is 'only hypothetical' and uses conditional phrasing ('What if'), which does not establish a completed fact or current state of having a pet named Luna.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"For now this is only hypothetical.\", \"probability\": 0.5}",
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-025a",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jazz\", \"subject\": \"user\", \"predicate\": \"preferred_music_genre\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "demoted",
+      "reason": "entailment; score=0.41; demoted",
+      "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states 'Jazz is the music I listen to most', which directly entails that Jazz is the user's preferred music genre.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"Jazz is the music I listen to most.\", \"probability\": 1.0}",
+      "score_components": "{\"spec\": 0.2, \"score\": 0.4072802278842056, \"novelty\": 0.3576007596140186, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+    },
+    {
+      "turn_id": "dev-025b",
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-025c",
+      "candidate": "{\"kind\": \"triple\", \"object\": null, \"subject\": \"user\", \"predicate\": \"uses_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "empty extracted value cannot establish an assertion",
+      "verification": null,
+      "score_components": null
+    },
+    {
+      "turn_id": "dev-025d",
+      "candidate": "{\"kind\": \"triple\", \"object\": \"unknown\", \"subject\": \"user\", \"predicate\": \"favorite_music_genre\", \"confidence\": 0.5, \"importance\": 2, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "The user explicitly states the change to country music is 'only hypothetical' and does not claim it has occurred yet; therefore, no completed favorite_music_genre can be inferred.",
+      "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states the change to country music is 'only hypothetical' and does not claim it has occurred yet; therefore, no completed favorite_music_genre can be inferred.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"\\\"For now this is only hypothetical.\\\"\", \"probability\": 0.5}",
+      "score_components": null
+    }
+  ],
+  "metadata": {
+    "dataset": "mnemo-synthetic-quality-corpus",
+    "dataset_version": "1.0.0",
+    "split": "dev",
+    "turns": 100,
+    "synthetic": true,
+    "mode": "candidate_replay",
+    "candidate_preparation_ms": 0.23824999516364187,
+    "shared_candidate_usage": {},
+    "shared_candidate_cost": {
+      "usd": null,
+      "reason": "No pricing supplied; measured usage is reported separately."
+    },
+    "model_names": {
+      "extractor": "_MaterializedExtractor",
+      "embedder": "nomic-embed-text",
+      "verifier": "cross-encoder/nli-deberta-v3-small"
+    },
+    "gate_config": {
+      "backend": "ollama",
+      "extractor_model": "qwen3.5:4b-mlx",
+      "embed_model": "nomic-embed-text",
+      "embed_dim": 768,
+      "verifier_backend": "cross_encoder",
+      "verifier_model": "cross-encoder/nli-deberta-v3-small",
+      "verifier_entailment_threshold": 0.99,
+      "verifier_fallback_backend": "ollama",
+      "verifier_fallback_model": null,
+      "verifier_timeout_seconds": 20.0,
+      "verifier_max_retries": 1,
+      "extractor_timeout_seconds": 120.0,
+      "extractor_max_retries": 2,
+      "confidence_floor": 0.5,
+      "w_imp": 0.4,
+      "w_spec": 0.3,
+      "w_nov": 0.3,
+      "w_src": 0.4,
+      "transient_penalty": 0.15,
+      "durable_cutoff": 0.7,
+      "ephemeral_floor": 0.45,
+      "predicate_vocab": [
+        "name",
+        "role",
+        "preferred_database",
+        "uses_database",
+        "preferred_language",
+        "primary_language",
+        "team_lead",
+        "ship_day",
+        "location",
+        "timezone",
+        "deploy_method",
+        "goal",
+        "currently_debugging",
+        "dislikes"
+      ],
+      "session_ttl_seconds": 86400.0,
+      "update_sim": 0.9,
+      "dedup_sim": 0.92,
+      "pipeline_version": "2026-09-11-v5",
+      "fingerprint": "1f8507a2d393ca163798f34e0b0220056e88861d4f4c1d4062af9a5e2c4de863"
+    },
+    "fingerprints": {
+      "dataset": "214bbc3d0cd7b6a1a87d0d1bd2274e445d6d264b6e9bde368ea42ee3461efcc7",
+      "extractor": "1df526f0b74173beb660e4ba97d431703b1dacd46142fc23facf3fc7b916cece",
+      "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+      "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+      "config": "1f8507a2d393ca163798f34e0b0220056e88861d4f4c1d4062af9a5e2c4de863"
+    },
+    "cleanup_errors": [],
+    "saved_candidate_replay": {
+      "source_report": "docs/quality-v3/synthetic-dev.json",
+      "source_report_sha256": "1be1689f17c64c3e9ed764238189dd1325ae858a052b2e2934a97f6ad7f54b80",
+      "scope": "Gated user candidates only; original naive comparison remains in source report.",
+      "original_extractor": "qwen3.5:4b-mlx",
+      "extraction_repeated": false
+    },
+    "policy_sha256": "936820b9a45d529a0094236880ae40f1b7ddedba7ae2ba0c55c8a973689fd5b2",
+    "policy_changed_during_run": false
+  }
+}

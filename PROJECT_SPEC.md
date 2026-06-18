@@ -1,9 +1,9 @@
 # Mnemo — Project Spec (single source of truth, v4)
 
 The September 9, 2026 correctness amendment in §14 supersedes earlier wording
-where indicated. The implementation plan is in `docs/CORRECTNESS_PLAN.md`;
+where indicated. The implementation plan is in `docs/MASTER_PLAN.md`;
 executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
-The September 11 quality work follows `docs/QUALITY_RELIABILITY_PLAN.md`;
+The quality work is summarized in `docs/MASTER_PLAN.md`;
 `docs/quality-v5/README.md` records partial extraction recovery and its development measurements;
 `docs/quality-v4/README.md` records the evidence-grounded extraction cycle;
 `docs/quality-v3/README.md` records the preceding structured-verification cycle;

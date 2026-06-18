@@ -1,0 +1,3182 @@
+{
+  "decisions": [
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.88; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8799999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-001a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"subject, relation, and object occur in one factual clause\", \"backend\": \"heuristic\", \"accepted\": true, \"evidence\": \"Call me Maya Chen in project notes.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-001b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Mina Chen\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-001c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Maya Chen revised\", \"subject\": \"user\", \"predicate\": \"name\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.92; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.9200000000000002, \"novelty\": 1.0, \"transient\": false, \"importance\": 8, \"from_assistant\": false}",
+      "turn_id": "dev-001d",
+      "verification": "{\"label\": \"entailment\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"subject, relation, and object occur in one factual clause\", \"backend\": \"heuristic\", \"accepted\": true, \"evidence\": \"Correction to what I said earlier: my name is Maya Chen revised.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"site reliability engineer\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.87; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.872003707960248, \"novelty\": 0.9733456932008266, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-002a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"subject, relation, and object occur in one factual clause\", \"backend\": \"heuristic\", \"accepted\": true, \"evidence\": \"I work as a site reliability engineer.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-002b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"product designer\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-002c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"product designer\", \"subject\": \"user\", \"predicate\": \"role\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-002d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Portland\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-003a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-003b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Seattle\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-003c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Seattle\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-003d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Pacific Time\", \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-004a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-004b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Eastern Time\", \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-004c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Eastern Time\", \"subject\": \"user\", \"predicate\": \"timezone\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "matching assertion is hypothetical",
+      "score_components": null,
+      "turn_id": "dev-004d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"matching assertion is hypothetical\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my timezone to Eastern Time?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"TypeScript\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-005a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-005b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Java\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "matching assertion is denied",
+      "score_components": null,
+      "turn_id": "dev-005c",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"matching assertion is denied\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Java;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Java\", \"subject\": \"user\", \"predicate\": \"preferred_language\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-005d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PostgreSQL\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "accepted",
+      "reason": "entailment; score=0.87; accepted",
+      "score_components": "{\"spec\": 1.0, \"score\": 0.8718055999320387, \"novelty\": 0.972685333106796, \"transient\": false, \"importance\": 7, \"from_assistant\": false}",
+      "turn_id": "dev-006a",
+      "verification": "{\"label\": \"entailment\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"subject, relation, and object occur in one factual clause\", \"backend\": \"heuristic\", \"accepted\": true, \"evidence\": \"For durable services I prefer PostgreSQL.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-006b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MongoDB\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "matching assertion is denied",
+      "score_components": null,
+      "turn_id": "dev-006c",
+      "verification": "{\"label\": \"contradiction\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"matching assertion is denied\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use MongoDB;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MongoDB\", \"subject\": \"user\", \"predicate\": \"preferred_database\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-006d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Neovim\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-007a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I use Neovim as my everyday editor.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-007b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Emacs\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-007c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Emacs;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Emacs\", \"subject\": \"user\", \"predicate\": \"editor\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-007d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my editor to Emacs?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"fish\", \"subject\": \"user\", \"predicate\": \"shell\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-008a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My interactive shell is fish.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-008b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PowerShell\", \"subject\": \"user\", \"predicate\": \"shell\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-008c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use PowerShell;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PowerShell\", \"subject\": \"user\", \"predicate\": \"shell\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-008d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my shell to PowerShell?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Reliability Platform\", \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-009a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I belong to the Reliability Platform team.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-009b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Payments\", \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-009c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Payments;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Payments\", \"subject\": \"user\", \"predicate\": \"team\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-009d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my team to Payments?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Elena Ruiz\", \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-010a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My manager is Elena Ruiz.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-010b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jordan Lee\", \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-010c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Jordan Lee;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jordan Lee\", \"subject\": \"user\", \"predicate\": \"manager\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-010d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my manager to Jordan Lee?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Tuesday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-011a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My regular on-call handoff is Tuesday.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-011b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-011c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Saturday;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Saturday\", \"subject\": \"user\", \"predicate\": \"on_call_day\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-011d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my on call day is Saturday.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Kubernetes\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-012a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-012b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"bare metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-012c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"bare metal\", \"subject\": \"user\", \"predicate\": \"deploy_method\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate relation is unsupported",
+      "score_components": null,
+      "turn_id": "dev-012d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate relation is unsupported\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Cloud\", \"subject\": \"user\", \"predicate\": \"cloud_provider\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-013a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Our production account is on Google Cloud.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-013b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Azure\", \"subject\": \"user\", \"predicate\": \"cloud_provider\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-013c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Azure;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Azure\", \"subject\": \"user\", \"predicate\": \"cloud_provider\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-013d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my cloud provider to Azure?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Linear\", \"subject\": \"user\", \"predicate\": \"issue_tracker\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-014a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Our team tracks issues in Linear.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-014b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jira\", \"subject\": \"user\", \"predicate\": \"issue_tracker\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-014c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Jira;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Jira\", \"subject\": \"user\", \"predicate\": \"issue_tracker\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-014d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my issue tracker to Jira?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Google Docs\", \"subject\": \"user\", \"predicate\": \"documentation_tool\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-015a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"We write design proposals in Google Docs.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-015b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Notion\", \"subject\": \"user\", \"predicate\": \"documentation_tool\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-015c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Notion;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Notion\", \"subject\": \"user\", \"predicate\": \"documentation_tool\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-015d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my documentation tool to Notion?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Wednesday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-016a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Wednesday is my meeting-free day.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-016b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Monday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-016c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Monday;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Monday\", \"subject\": \"user\", \"predicate\": \"meeting_free_day\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-016d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my meeting free day is Monday.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"08:30\", \"subject\": \"user\", \"predicate\": \"work_start\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-017a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I normally start work at 08:30.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-017b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"06:00\", \"subject\": \"user\", \"predicate\": \"work_start\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-017c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use 06:00;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"06:00\", \"subject\": \"user\", \"predicate\": \"work_start\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-017d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my work start to 06:00?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"she/her\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-018a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My pronouns are she/her.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-018b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"they/them\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-018c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use they/them;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"they/them\", \"subject\": \"user\", \"predicate\": \"pronouns\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-018d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my pronouns to they/them?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Mandarin\", \"subject\": \"user\", \"predicate\": \"spoken_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-019a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I can speak Mandarin fluently.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-019b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"German\", \"subject\": \"user\", \"predicate\": \"spoken_language\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-019c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use German;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"German\", \"subject\": \"user\", \"predicate\": \"spoken_language\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-019d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my spoken language to German?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"captions\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-020a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I need captions enabled for video calls.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-020b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"screen magnification\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-020c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use screen magnification;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"screen magnification\", \"subject\": \"user\", \"predicate\": \"accessibility_need\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-020d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my accessibility need to screen magnification?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"vegetarian\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-021a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I follow a vegetarian diet.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-021b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-021c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use keto;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"keto\", \"subject\": \"user\", \"predicate\": \"diet\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-021d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my diet is keto.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"peanuts\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.95, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "candidate object is absent from source",
+      "score_components": null,
+      "turn_id": "dev-022a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"candidate object is absent from source\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": null, \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-022b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-022c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use shellfish;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"shellfish\", \"subject\": \"user\", \"predicate\": \"allergy\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-022d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my allergy to shellfish?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Noah Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.95, \"importance\": 9, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-023a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My emergency contact is Noah Chen.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-023b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Alex Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-023c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Alex Chen;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Alex Chen\", \"subject\": \"user\", \"predicate\": \"emergency_contact\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-023d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my emergency contact to Alex Chen?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"cat named Pixel\", \"subject\": \"user\", \"predicate\": \"pet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-024a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I have a cat named Pixel.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-024b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"dog named Luna\", \"subject\": \"user\", \"predicate\": \"pet\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-024c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use dog named Luna;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"dog named Luna\", \"subject\": \"user\", \"predicate\": \"pet\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-024d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my pet to dog named Luna?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"jazz\", \"subject\": \"user\", \"predicate\": \"favorite_music\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-025a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Jazz is the music I listen to most.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "dev-025b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"country\", \"subject\": \"user\", \"predicate\": \"favorite_music\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-025c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use country;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"country\", \"subject\": \"user\", \"predicate\": \"favorite_music\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "dev-025d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my favorite music to country?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"ceramics\", \"subject\": \"user\", \"predicate\": \"hobby\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-026a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I spend weekends making ceramics.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-026b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"skydiving\", \"subject\": \"user\", \"predicate\": \"hobby\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-026c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use skydiving;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"skydiving\", \"subject\": \"user\", \"predicate\": \"hobby\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-026d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my hobby is skydiving.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"half marathon\", \"subject\": \"user\", \"predicate\": \"running_goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-027a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"My training goal is a half marathon.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-027b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"ultramarathon\", \"subject\": \"user\", \"predicate\": \"running_goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-027c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use ultramarathon;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"ultramarathon\", \"subject\": \"user\", \"predicate\": \"running_goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-027d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my running goal to ultramarathon?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Japanese\", \"subject\": \"user\", \"predicate\": \"learning_goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-028a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I am actively learning Japanese.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-028b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Icelandic\", \"subject\": \"user\", \"predicate\": \"learning_goal\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-028c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Icelandic;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Icelandic\", \"subject\": \"user\", \"predicate\": \"learning_goal\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-028d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my learning goal to Icelandic?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"email\", \"subject\": \"user\", \"predicate\": \"notification_preference\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-029a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Send important account alerts by email.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-029b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SMS\", \"subject\": \"user\", \"predicate\": \"notification_preference\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-029c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use SMS;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SMS\", \"subject\": \"user\", \"predicate\": \"notification_preference\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-029d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my notification preference to SMS?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"before 18:00\", \"subject\": \"user\", \"predicate\": \"contact_window\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-030a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Please contact me before 18:00 local time.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-030b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"after midnight\", \"subject\": \"user\", \"predicate\": \"contact_window\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-030c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use after midnight;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"after midnight\", \"subject\": \"user\", \"predicate\": \"contact_window\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-030d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my contact window to after midnight?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"YYYY-MM-DD\", \"subject\": \"user\", \"predicate\": \"date_format\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-031a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I prefer dates formatted as YYYY-MM-DD.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-031b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MM/DD/YY\", \"subject\": \"user\", \"predicate\": \"date_format\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-031c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use MM/DD/YY;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"MM/DD/YY\", \"subject\": \"user\", \"predicate\": \"date_format\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-031d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my date format is MM/DD/YY.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Celsius\", \"subject\": \"user\", \"predicate\": \"temperature_unit\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-032a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Show weather temperatures in Celsius.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-032b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Fahrenheit\", \"subject\": \"user\", \"predicate\": \"temperature_unit\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-032c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Fahrenheit;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Fahrenheit\", \"subject\": \"user\", \"predicate\": \"temperature_unit\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-032d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my temperature unit to Fahrenheit?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"USD\", \"subject\": \"user\", \"predicate\": \"currency\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-033a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Use USD in my expense reports.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-033b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"EUR\", \"subject\": \"user\", \"predicate\": \"currency\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-033c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use EUR;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"EUR\", \"subject\": \"user\", \"predicate\": \"currency\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-033d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my currency to EUR?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"aisle\", \"subject\": \"user\", \"predicate\": \"flight_seat\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-034a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I prefer an aisle seat when flying.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-034b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"middle\", \"subject\": \"user\", \"predicate\": \"flight_seat\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-034c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use middle;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"middle\", \"subject\": \"user\", \"predicate\": \"flight_seat\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-034d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my flight seat to middle?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"quiet room\", \"subject\": \"user\", \"predicate\": \"hotel_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-035a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"For hotels, please request a quiet room.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-035b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"party floor\", \"subject\": \"user\", \"predicate\": \"hotel_need\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-035c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use party floor;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"party floor\", \"subject\": \"user\", \"predicate\": \"hotel_need\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-035d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my hotel need to party floor?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"PDX\", \"subject\": \"user\", \"predicate\": \"home_airport\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-036a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"PDX is my home airport.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-036b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SFO\", \"subject\": \"user\", \"predicate\": \"home_airport\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-036c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use SFO;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SFO\", \"subject\": \"user\", \"predicate\": \"home_airport\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-036d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my home airport is SFO.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Juniper\", \"subject\": \"user\", \"predicate\": \"project_codename\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-037a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"The current migration is codenamed Juniper.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-037b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Cedar\", \"subject\": \"user\", \"predicate\": \"project_codename\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-037c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Cedar;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Cedar\", \"subject\": \"user\", \"predicate\": \"project_codename\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-037d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my project codename to Cedar?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"GitHub\", \"subject\": \"user\", \"predicate\": \"repository_host\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-038a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"We host the project repository on GitHub.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-038b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Bitbucket\", \"subject\": \"user\", \"predicate\": \"repository_host\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-038c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Bitbucket;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Bitbucket\", \"subject\": \"user\", \"predicate\": \"repository_host\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-038d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my repository host to Bitbucket?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"daily at 02:00 UTC\", \"subject\": \"user\", \"predicate\": \"backup_schedule\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-039a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Database backups run daily at 02:00 UTC.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-039b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"weekly\", \"subject\": \"user\", \"predicate\": \"backup_schedule\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-039c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use weekly;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"weekly\", \"subject\": \"user\", \"predicate\": \"backup_schedule\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-039d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my backup schedule to weekly?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"30 days\", \"subject\": \"user\", \"predicate\": \"retention_period\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-040a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Application logs are retained for 30 days.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-040b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"forever\", \"subject\": \"user\", \"predicate\": \"retention_period\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-040c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use forever;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"forever\", \"subject\": \"user\", \"predicate\": \"retention_period\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-040d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my retention period to forever?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Core Infrastructure\", \"subject\": \"user\", \"predicate\": \"service_owner\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-041a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Core Infrastructure owns the gateway service.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-041b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Marketing\", \"subject\": \"user\", \"predicate\": \"service_owner\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-041c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Marketing;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Marketing\", \"subject\": \"user\", \"predicate\": \"service_owner\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-041d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my service owner is Marketing.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"#incidents\", \"subject\": \"user\", \"predicate\": \"incident_channel\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-042a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"We coordinate outages in #incidents.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-042b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"#random\", \"subject\": \"user\", \"predicate\": \"incident_channel\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-042c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use #random;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"#random\", \"subject\": \"user\", \"predicate\": \"incident_channel\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-042d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my incident channel to #random?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Thursday\", \"subject\": \"user\", \"predicate\": \"release_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-043a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Our normal release day is Thursday.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-043b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Sunday\", \"subject\": \"user\", \"predicate\": \"release_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-043c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use Sunday;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"Sunday\", \"subject\": \"user\", \"predicate\": \"release_day\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-043d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my release day to Sunday?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"pytest\", \"subject\": \"user\", \"predicate\": \"test_framework\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-044a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"This Python service uses pytest.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-044b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"JUnit\", \"subject\": \"user\", \"predicate\": \"test_framework\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-044c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use JUnit;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"JUnit\", \"subject\": \"user\", \"predicate\": \"test_framework\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-044d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my test framework to JUnit?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"uv\", \"subject\": \"user\", \"predicate\": \"package_manager\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-045a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"We manage Python environments with uv.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-045b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"conda\", \"subject\": \"user\", \"predicate\": \"package_manager\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-045c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use conda;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"conda\", \"subject\": \"user\", \"predicate\": \"package_manager\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-045d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my package manager to conda?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"REST\", \"subject\": \"user\", \"predicate\": \"api_style\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-046a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"The public integration uses a REST API.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-046b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SOAP\", \"subject\": \"user\", \"predicate\": \"api_style\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-046c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use SOAP;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"SOAP\", \"subject\": \"user\", \"predicate\": \"api_style\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-046d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Correction to what I said earlier: my api style is SOAP.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"us-central1\", \"subject\": \"user\", \"predicate\": \"data_region\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-047a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Customer backups stay in us-central1.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-047b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"europe-west1\", \"subject\": \"user\", \"predicate\": \"data_region\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-047c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use europe-west1;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"europe-west1\", \"subject\": \"user\", \"predicate\": \"data_region\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-047d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my data region to europe-west1?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"enterprise\", \"subject\": \"user\", \"predicate\": \"support_tier\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-048a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Our account has enterprise support.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-048b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"free\", \"subject\": \"user\", \"predicate\": \"support_tier\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-048c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use free;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"free\", \"subject\": \"user\", \"predicate\": \"support_tier\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-048d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my support tier to free?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"15th\", \"subject\": \"user\", \"predicate\": \"invoice_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-049a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Invoices should be issued on the 15th.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-049b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"last day\", \"subject\": \"user\", \"predicate\": \"invoice_day\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-049c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use last day;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"last day\", \"subject\": \"user\", \"predicate\": \"invoice_day\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-049d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my invoice day to last day?\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"July\", \"subject\": \"user\", \"predicate\": \"fiscal_year_start\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-050a",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"Our fiscal year starts in July.\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{}",
+      "outcome": "rejected",
+      "reason": "assistant turns are excluded",
+      "score_components": null,
+      "turn_id": "held_out-050b",
+      "verification": null
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"January\", \"subject\": \"user\", \"predicate\": \"fiscal_year_start\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-050c",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"I do not use January;\", \"probability\": 1.0}"
+    },
+    {
+      "candidate": "{\"kind\": \"triple\", \"object\": \"January\", \"subject\": \"user\", \"predicate\": \"fiscal_year_start\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+      "outcome": "rejected",
+      "reason": "heuristic has no rule for candidate relation",
+      "score_components": null,
+      "turn_id": "held_out-050d",
+      "verification": "{\"label\": \"neutral\", \"model\": \"mnemo-clause-rules-v1\", \"reason\": \"heuristic has no rule for candidate relation\", \"backend\": \"heuristic\", \"accepted\": false, \"evidence\": \"What if someday I changed my fiscal year start to January?\", \"probability\": 1.0}"
+    }
+  ],
+  "gated": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "current_assertions": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen revised",
+        "predicate": "name",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PostgreSQL",
+        "predicate": "preferred_database",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "predicate": "role",
+        "subject": "user"
+      }
+    ],
+    "f1": 0.07547169811320754,
+    "false": 0,
+    "false_writes": 0,
+    "historical_by_split": {
+      "dev": {
+        "false_writes": 0,
+        "precision": 1.0,
+        "recall": 0.13333333333333333,
+        "unsupported_writes": 0
+      },
+      "held_out": {
+        "false_writes": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "unsupported_writes": 0
+      }
+    },
+    "historical_precision": 1.0,
+    "historical_recall": 0.06666666666666667,
+    "latency_ms": 1271.3177499826998,
+    "must_keep_recall": 0.07692307692307693,
+    "precision": 0.6666666666666666,
+    "recall": 0.04,
+    "storage_bytes": 2555904,
+    "stored": 3,
+    "total_events": 4,
+    "total_rows": 607,
+    "unsupported_writes": 0,
+    "usage": {
+      "embedder": {},
+      "extractor": {},
+      "verifier": {}
+    },
+    "visible_facts": 3,
+    "writes": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "op": "ADD",
+        "predicate": "name",
+        "seq": 1,
+        "source_span": "{\"turn_ids\": [\"dev-001a\"], \"cache_ids\": [\"e7ec455f-ee5f-43fe-9cbc-e78ff3f30656\"], \"session_id\": \"dev-session-01\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen revised",
+        "op": "UPDATE",
+        "predicate": "name",
+        "seq": 2,
+        "source_span": "{\"turn_ids\": [\"dev-001d\"], \"cache_ids\": [\"b586cae5-408c-434f-848a-a9ca4d7c5d0a\"], \"session_id\": \"dev-session-01-followup\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "op": "ADD",
+        "predicate": "role",
+        "seq": 3,
+        "source_span": "{\"turn_ids\": [\"dev-002a\"], \"cache_ids\": [\"e262e64c-9b30-4ca0-8428-9715e62f3247\"], \"session_id\": \"dev-session-01\"}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PostgreSQL",
+        "op": "ADD",
+        "predicate": "preferred_database",
+        "seq": 4,
+        "source_span": "{\"turn_ids\": [\"dev-006a\"], \"cache_ids\": [\"80316b53-e036-424d-b1ad-8ad682443a77\"], \"session_id\": \"dev-session-02\"}",
+        "subject": "user"
+      }
+    ]
+  },
+  "metadata": {
+    "candidate_preparation_ms": 2.9117499943822622,
+    "cleanup_errors": [],
+    "dataset": "mnemo-synthetic-quality-corpus",
+    "dataset_version": "1.0.0",
+    "fingerprints": {
+      "config": "bff97df82c4c2f10892f0c195e66a4bcb8f19e55726cd8d7745175b4425b2556",
+      "dataset": "0e145bac3ea5514e5dc70178a14fbb31265116db5e4326c99456d9a9ff6645ec",
+      "embedder": "0497ffff24ce9e34bb1bb8a13e6c796755f8d5cf0d024be958b193b51d24a638",
+      "extractor": "fc70416f5fa0b2026d244af276685d624f9afabd922cb98c735940fa0a09028e",
+      "verifier": "1986b3bf23789cf2e644bc1b51f57f85e859795cfecc1af48425b35e8aec18d1"
+    },
+    "gate_config": {
+      "backend": "ollama",
+      "confidence_floor": 0.5,
+      "dedup_sim": 0.92,
+      "durable_cutoff": 0.7,
+      "embed_dim": 768,
+      "embed_model": "nomic-embed-text",
+      "ephemeral_floor": 0.45,
+      "extractor_max_retries": 2,
+      "extractor_model": "llama3.2:3b",
+      "extractor_timeout_seconds": 120.0,
+      "fingerprint": "bff97df82c4c2f10892f0c195e66a4bcb8f19e55726cd8d7745175b4425b2556",
+      "pipeline_version": "2026-09-09-v3",
+      "predicate_vocab": [
+        "name",
+        "role",
+        "preferred_database",
+        "preferred_language",
+        "team_lead",
+        "ship_day",
+        "location",
+        "timezone",
+        "deploy_method",
+        "goal",
+        "currently_debugging",
+        "dislikes"
+      ],
+      "session_ttl_seconds": 86400.0,
+      "transient_penalty": 0.15,
+      "update_sim": 0.9,
+      "verifier_backend": "heuristic",
+      "verifier_entailment_threshold": 0.99,
+      "verifier_fallback_backend": "none",
+      "verifier_fallback_model": null,
+      "verifier_max_retries": 1,
+      "verifier_model": "cross-encoder/nli-deberta-v3-small",
+      "verifier_timeout_seconds": 20.0,
+      "w_imp": 0.4,
+      "w_nov": 0.3,
+      "w_spec": 0.3,
+      "w_src": 0.4
+    },
+    "mode": "candidate_replay",
+    "model_names": {
+      "embedder": "DeterministicEmbedder",
+      "extractor": "LabeledReplayExtractor",
+      "verifier": "mnemo-clause-rules-v1"
+    },
+    "shared_candidate_cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "shared_candidate_usage": {},
+    "split": "all",
+    "synthetic": true,
+    "turns": 200
+  },
+  "naive": {
+    "cost": {
+      "reason": "No pricing supplied; measured usage is reported separately.",
+      "usd": null
+    },
+    "current_assertions": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "screen magnification",
+        "predicate": "accessibility_need",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "shellfish",
+        "predicate": "allergy",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SOAP",
+        "predicate": "api_style",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "weekly",
+        "predicate": "backup_schedule",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Azure",
+        "predicate": "cloud_provider",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "after midnight",
+        "predicate": "contact_window",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "EUR",
+        "predicate": "currency",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "europe-west1",
+        "predicate": "data_region",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MM/DD/YY",
+        "predicate": "date_format",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "bare metal",
+        "predicate": "deploy_method",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "predicate": "diet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "predicate": "documentation_tool",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Emacs",
+        "predicate": "editor",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Alex Chen",
+        "predicate": "emergency_contact",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "country",
+        "predicate": "favorite_music",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "January",
+        "predicate": "fiscal_year_start",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "middle",
+        "predicate": "flight_seat",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "skydiving",
+        "predicate": "hobby",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SFO",
+        "predicate": "home_airport",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "party floor",
+        "predicate": "hotel_need",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "#random",
+        "predicate": "incident_channel",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "last day",
+        "predicate": "invoice_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jira",
+        "predicate": "issue_tracker",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Icelandic",
+        "predicate": "learning_goal",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Seattle",
+        "predicate": "location",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jordan Lee",
+        "predicate": "manager",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "predicate": "meeting_free_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen revised",
+        "predicate": "name",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SMS",
+        "predicate": "notification_preference",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "predicate": "on_call_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "conda",
+        "predicate": "package_manager",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "dog named Luna",
+        "predicate": "pet",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MongoDB",
+        "predicate": "preferred_database",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Java",
+        "predicate": "preferred_language",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Cedar",
+        "predicate": "project_codename",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "they/them",
+        "predicate": "pronouns",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Sunday",
+        "predicate": "release_day",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Bitbucket",
+        "predicate": "repository_host",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "forever",
+        "predicate": "retention_period",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "predicate": "role",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "ultramarathon",
+        "predicate": "running_goal",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Marketing",
+        "predicate": "service_owner",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PowerShell",
+        "predicate": "shell",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "predicate": "spoken_language",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "free",
+        "predicate": "support_tier",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Payments",
+        "predicate": "team",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Fahrenheit",
+        "predicate": "temperature_unit",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "JUnit",
+        "predicate": "test_framework",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Eastern Time",
+        "predicate": "timezone",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "06:00",
+        "predicate": "work_start",
+        "subject": "user"
+      }
+    ],
+    "f1": 0.20000000000000004,
+    "false": 40,
+    "false_writes": 50,
+    "historical_by_split": {
+      "dev": {
+        "false_writes": 25,
+        "precision": 0.5098039215686274,
+        "recall": 0.8666666666666667,
+        "unsupported_writes": 0
+      },
+      "held_out": {
+        "false_writes": 25,
+        "precision": 0.5,
+        "recall": 0.8333333333333334,
+        "unsupported_writes": 0
+      }
+    },
+    "historical_precision": 0.504950495049505,
+    "historical_recall": 0.85,
+    "latency_ms": 837.5234589911997,
+    "must_keep_recall": 0.7692307692307693,
+    "precision": 0.2,
+    "recall": 0.2,
+    "storage_bytes": 1564672,
+    "stored": 50,
+    "total_events": 101,
+    "total_rows": 151,
+    "unsupported_writes": 0,
+    "usage": {
+      "embedder": {},
+      "extractor": {},
+      "verifier": {}
+    },
+    "visible_facts": 50,
+    "writes": [
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen",
+        "op": "ADD",
+        "predicate": "name",
+        "seq": 1,
+        "source_span": "{\"turn_ids\": [\"dev-001a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Mina Chen",
+        "op": "UPDATE",
+        "predicate": "name",
+        "seq": 2,
+        "source_span": "{\"turn_ids\": [\"dev-001b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Maya Chen revised",
+        "op": "UPDATE",
+        "predicate": "name",
+        "seq": 3,
+        "source_span": "{\"turn_ids\": [\"dev-001d\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "site reliability engineer",
+        "op": "ADD",
+        "predicate": "role",
+        "seq": 4,
+        "source_span": "{\"turn_ids\": [\"dev-002a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "product designer",
+        "op": "UPDATE",
+        "predicate": "role",
+        "seq": 5,
+        "source_span": "{\"turn_ids\": [\"dev-002b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Portland",
+        "op": "ADD",
+        "predicate": "location",
+        "seq": 6,
+        "source_span": "{\"turn_ids\": [\"dev-003a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Seattle",
+        "op": "UPDATE",
+        "predicate": "location",
+        "seq": 7,
+        "source_span": "{\"turn_ids\": [\"dev-003b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Pacific Time",
+        "op": "ADD",
+        "predicate": "timezone",
+        "seq": 8,
+        "source_span": "{\"turn_ids\": [\"dev-004a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Eastern Time",
+        "op": "UPDATE",
+        "predicate": "timezone",
+        "seq": 9,
+        "source_span": "{\"turn_ids\": [\"dev-004b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "TypeScript",
+        "op": "ADD",
+        "predicate": "preferred_language",
+        "seq": 10,
+        "source_span": "{\"turn_ids\": [\"dev-005a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Java",
+        "op": "UPDATE",
+        "predicate": "preferred_language",
+        "seq": 11,
+        "source_span": "{\"turn_ids\": [\"dev-005b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PostgreSQL",
+        "op": "ADD",
+        "predicate": "preferred_database",
+        "seq": 12,
+        "source_span": "{\"turn_ids\": [\"dev-006a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MongoDB",
+        "op": "UPDATE",
+        "predicate": "preferred_database",
+        "seq": 13,
+        "source_span": "{\"turn_ids\": [\"dev-006b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Neovim",
+        "op": "ADD",
+        "predicate": "editor",
+        "seq": 14,
+        "source_span": "{\"turn_ids\": [\"dev-007a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Emacs",
+        "op": "UPDATE",
+        "predicate": "editor",
+        "seq": 15,
+        "source_span": "{\"turn_ids\": [\"dev-007b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "fish",
+        "op": "ADD",
+        "predicate": "shell",
+        "seq": 16,
+        "source_span": "{\"turn_ids\": [\"dev-008a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PowerShell",
+        "op": "UPDATE",
+        "predicate": "shell",
+        "seq": 17,
+        "source_span": "{\"turn_ids\": [\"dev-008b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Reliability Platform",
+        "op": "ADD",
+        "predicate": "team",
+        "seq": 18,
+        "source_span": "{\"turn_ids\": [\"dev-009a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Payments",
+        "op": "UPDATE",
+        "predicate": "team",
+        "seq": 19,
+        "source_span": "{\"turn_ids\": [\"dev-009b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Elena Ruiz",
+        "op": "ADD",
+        "predicate": "manager",
+        "seq": 20,
+        "source_span": "{\"turn_ids\": [\"dev-010a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jordan Lee",
+        "op": "UPDATE",
+        "predicate": "manager",
+        "seq": 21,
+        "source_span": "{\"turn_ids\": [\"dev-010b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Tuesday",
+        "op": "ADD",
+        "predicate": "on_call_day",
+        "seq": 22,
+        "source_span": "{\"turn_ids\": [\"dev-011a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Saturday",
+        "op": "UPDATE",
+        "predicate": "on_call_day",
+        "seq": 23,
+        "source_span": "{\"turn_ids\": [\"dev-011b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Kubernetes",
+        "op": "ADD",
+        "predicate": "deploy_method",
+        "seq": 24,
+        "source_span": "{\"turn_ids\": [\"dev-012a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "bare metal",
+        "op": "UPDATE",
+        "predicate": "deploy_method",
+        "seq": 25,
+        "source_span": "{\"turn_ids\": [\"dev-012b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Google Cloud",
+        "op": "ADD",
+        "predicate": "cloud_provider",
+        "seq": 26,
+        "source_span": "{\"turn_ids\": [\"dev-013a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Azure",
+        "op": "UPDATE",
+        "predicate": "cloud_provider",
+        "seq": 27,
+        "source_span": "{\"turn_ids\": [\"dev-013b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Linear",
+        "op": "ADD",
+        "predicate": "issue_tracker",
+        "seq": 28,
+        "source_span": "{\"turn_ids\": [\"dev-014a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Jira",
+        "op": "UPDATE",
+        "predicate": "issue_tracker",
+        "seq": 29,
+        "source_span": "{\"turn_ids\": [\"dev-014b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Google Docs",
+        "op": "ADD",
+        "predicate": "documentation_tool",
+        "seq": 30,
+        "source_span": "{\"turn_ids\": [\"dev-015a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Notion",
+        "op": "UPDATE",
+        "predicate": "documentation_tool",
+        "seq": 31,
+        "source_span": "{\"turn_ids\": [\"dev-015b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Wednesday",
+        "op": "ADD",
+        "predicate": "meeting_free_day",
+        "seq": 32,
+        "source_span": "{\"turn_ids\": [\"dev-016a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Monday",
+        "op": "UPDATE",
+        "predicate": "meeting_free_day",
+        "seq": 33,
+        "source_span": "{\"turn_ids\": [\"dev-016b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "08:30",
+        "op": "ADD",
+        "predicate": "work_start",
+        "seq": 34,
+        "source_span": "{\"turn_ids\": [\"dev-017a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "06:00",
+        "op": "UPDATE",
+        "predicate": "work_start",
+        "seq": 35,
+        "source_span": "{\"turn_ids\": [\"dev-017b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "she/her",
+        "op": "ADD",
+        "predicate": "pronouns",
+        "seq": 36,
+        "source_span": "{\"turn_ids\": [\"dev-018a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "they/them",
+        "op": "UPDATE",
+        "predicate": "pronouns",
+        "seq": 37,
+        "source_span": "{\"turn_ids\": [\"dev-018b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Mandarin",
+        "op": "ADD",
+        "predicate": "spoken_language",
+        "seq": 38,
+        "source_span": "{\"turn_ids\": [\"dev-019a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "German",
+        "op": "UPDATE",
+        "predicate": "spoken_language",
+        "seq": 39,
+        "source_span": "{\"turn_ids\": [\"dev-019b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "captions",
+        "op": "ADD",
+        "predicate": "accessibility_need",
+        "seq": 40,
+        "source_span": "{\"turn_ids\": [\"dev-020a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "screen magnification",
+        "op": "UPDATE",
+        "predicate": "accessibility_need",
+        "seq": 41,
+        "source_span": "{\"turn_ids\": [\"dev-020b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "vegetarian",
+        "op": "ADD",
+        "predicate": "diet",
+        "seq": 42,
+        "source_span": "{\"turn_ids\": [\"dev-021a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "keto",
+        "op": "UPDATE",
+        "predicate": "diet",
+        "seq": 43,
+        "source_span": "{\"turn_ids\": [\"dev-021b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "peanuts",
+        "op": "ADD",
+        "predicate": "allergy",
+        "seq": 44,
+        "source_span": "{\"turn_ids\": [\"dev-022a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "shellfish",
+        "op": "UPDATE",
+        "predicate": "allergy",
+        "seq": 45,
+        "source_span": "{\"turn_ids\": [\"dev-022b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Noah Chen",
+        "op": "ADD",
+        "predicate": "emergency_contact",
+        "seq": 46,
+        "source_span": "{\"turn_ids\": [\"dev-023a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Alex Chen",
+        "op": "UPDATE",
+        "predicate": "emergency_contact",
+        "seq": 47,
+        "source_span": "{\"turn_ids\": [\"dev-023b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "cat named Pixel",
+        "op": "ADD",
+        "predicate": "pet",
+        "seq": 48,
+        "source_span": "{\"turn_ids\": [\"dev-024a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "dog named Luna",
+        "op": "UPDATE",
+        "predicate": "pet",
+        "seq": 49,
+        "source_span": "{\"turn_ids\": [\"dev-024b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "jazz",
+        "op": "ADD",
+        "predicate": "favorite_music",
+        "seq": 50,
+        "source_span": "{\"turn_ids\": [\"dev-025a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "country",
+        "op": "UPDATE",
+        "predicate": "favorite_music",
+        "seq": 51,
+        "source_span": "{\"turn_ids\": [\"dev-025b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "ceramics",
+        "op": "ADD",
+        "predicate": "hobby",
+        "seq": 52,
+        "source_span": "{\"turn_ids\": [\"held_out-026a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "skydiving",
+        "op": "UPDATE",
+        "predicate": "hobby",
+        "seq": 53,
+        "source_span": "{\"turn_ids\": [\"held_out-026b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "half marathon",
+        "op": "ADD",
+        "predicate": "running_goal",
+        "seq": 54,
+        "source_span": "{\"turn_ids\": [\"held_out-027a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "ultramarathon",
+        "op": "UPDATE",
+        "predicate": "running_goal",
+        "seq": 55,
+        "source_span": "{\"turn_ids\": [\"held_out-027b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Japanese",
+        "op": "ADD",
+        "predicate": "learning_goal",
+        "seq": 56,
+        "source_span": "{\"turn_ids\": [\"held_out-028a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Icelandic",
+        "op": "UPDATE",
+        "predicate": "learning_goal",
+        "seq": 57,
+        "source_span": "{\"turn_ids\": [\"held_out-028b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "email",
+        "op": "ADD",
+        "predicate": "notification_preference",
+        "seq": 58,
+        "source_span": "{\"turn_ids\": [\"held_out-029a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SMS",
+        "op": "UPDATE",
+        "predicate": "notification_preference",
+        "seq": 59,
+        "source_span": "{\"turn_ids\": [\"held_out-029b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "before 18:00",
+        "op": "ADD",
+        "predicate": "contact_window",
+        "seq": 60,
+        "source_span": "{\"turn_ids\": [\"held_out-030a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "after midnight",
+        "op": "UPDATE",
+        "predicate": "contact_window",
+        "seq": 61,
+        "source_span": "{\"turn_ids\": [\"held_out-030b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "YYYY-MM-DD",
+        "op": "ADD",
+        "predicate": "date_format",
+        "seq": 62,
+        "source_span": "{\"turn_ids\": [\"held_out-031a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "MM/DD/YY",
+        "op": "UPDATE",
+        "predicate": "date_format",
+        "seq": 63,
+        "source_span": "{\"turn_ids\": [\"held_out-031b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Celsius",
+        "op": "ADD",
+        "predicate": "temperature_unit",
+        "seq": 64,
+        "source_span": "{\"turn_ids\": [\"held_out-032a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Fahrenheit",
+        "op": "UPDATE",
+        "predicate": "temperature_unit",
+        "seq": 65,
+        "source_span": "{\"turn_ids\": [\"held_out-032b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "USD",
+        "op": "ADD",
+        "predicate": "currency",
+        "seq": 66,
+        "source_span": "{\"turn_ids\": [\"held_out-033a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "EUR",
+        "op": "UPDATE",
+        "predicate": "currency",
+        "seq": 67,
+        "source_span": "{\"turn_ids\": [\"held_out-033b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "aisle",
+        "op": "ADD",
+        "predicate": "flight_seat",
+        "seq": 68,
+        "source_span": "{\"turn_ids\": [\"held_out-034a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "middle",
+        "op": "UPDATE",
+        "predicate": "flight_seat",
+        "seq": 69,
+        "source_span": "{\"turn_ids\": [\"held_out-034b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "quiet room",
+        "op": "ADD",
+        "predicate": "hotel_need",
+        "seq": 70,
+        "source_span": "{\"turn_ids\": [\"held_out-035a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "party floor",
+        "op": "UPDATE",
+        "predicate": "hotel_need",
+        "seq": 71,
+        "source_span": "{\"turn_ids\": [\"held_out-035b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "PDX",
+        "op": "ADD",
+        "predicate": "home_airport",
+        "seq": 72,
+        "source_span": "{\"turn_ids\": [\"held_out-036a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SFO",
+        "op": "UPDATE",
+        "predicate": "home_airport",
+        "seq": 73,
+        "source_span": "{\"turn_ids\": [\"held_out-036b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Juniper",
+        "op": "ADD",
+        "predicate": "project_codename",
+        "seq": 74,
+        "source_span": "{\"turn_ids\": [\"held_out-037a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Cedar",
+        "op": "UPDATE",
+        "predicate": "project_codename",
+        "seq": 75,
+        "source_span": "{\"turn_ids\": [\"held_out-037b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "GitHub",
+        "op": "ADD",
+        "predicate": "repository_host",
+        "seq": 76,
+        "source_span": "{\"turn_ids\": [\"held_out-038a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Bitbucket",
+        "op": "UPDATE",
+        "predicate": "repository_host",
+        "seq": 77,
+        "source_span": "{\"turn_ids\": [\"held_out-038b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "daily at 02:00 UTC",
+        "op": "ADD",
+        "predicate": "backup_schedule",
+        "seq": 78,
+        "source_span": "{\"turn_ids\": [\"held_out-039a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "weekly",
+        "op": "UPDATE",
+        "predicate": "backup_schedule",
+        "seq": 79,
+        "source_span": "{\"turn_ids\": [\"held_out-039b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "30 days",
+        "op": "ADD",
+        "predicate": "retention_period",
+        "seq": 80,
+        "source_span": "{\"turn_ids\": [\"held_out-040a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "forever",
+        "op": "UPDATE",
+        "predicate": "retention_period",
+        "seq": 81,
+        "source_span": "{\"turn_ids\": [\"held_out-040b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Core Infrastructure",
+        "op": "ADD",
+        "predicate": "service_owner",
+        "seq": 82,
+        "source_span": "{\"turn_ids\": [\"held_out-041a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Marketing",
+        "op": "UPDATE",
+        "predicate": "service_owner",
+        "seq": 83,
+        "source_span": "{\"turn_ids\": [\"held_out-041b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "#incidents",
+        "op": "ADD",
+        "predicate": "incident_channel",
+        "seq": 84,
+        "source_span": "{\"turn_ids\": [\"held_out-042a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "#random",
+        "op": "UPDATE",
+        "predicate": "incident_channel",
+        "seq": 85,
+        "source_span": "{\"turn_ids\": [\"held_out-042b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Thursday",
+        "op": "ADD",
+        "predicate": "release_day",
+        "seq": 86,
+        "source_span": "{\"turn_ids\": [\"held_out-043a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "Sunday",
+        "op": "UPDATE",
+        "predicate": "release_day",
+        "seq": 87,
+        "source_span": "{\"turn_ids\": [\"held_out-043b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "pytest",
+        "op": "ADD",
+        "predicate": "test_framework",
+        "seq": 88,
+        "source_span": "{\"turn_ids\": [\"held_out-044a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "JUnit",
+        "op": "UPDATE",
+        "predicate": "test_framework",
+        "seq": 89,
+        "source_span": "{\"turn_ids\": [\"held_out-044b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "uv",
+        "op": "ADD",
+        "predicate": "package_manager",
+        "seq": 90,
+        "source_span": "{\"turn_ids\": [\"held_out-045a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "conda",
+        "op": "UPDATE",
+        "predicate": "package_manager",
+        "seq": 91,
+        "source_span": "{\"turn_ids\": [\"held_out-045b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "REST",
+        "op": "ADD",
+        "predicate": "api_style",
+        "seq": 92,
+        "source_span": "{\"turn_ids\": [\"held_out-046a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "SOAP",
+        "op": "UPDATE",
+        "predicate": "api_style",
+        "seq": 93,
+        "source_span": "{\"turn_ids\": [\"held_out-046b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "us-central1",
+        "op": "ADD",
+        "predicate": "data_region",
+        "seq": 94,
+        "source_span": "{\"turn_ids\": [\"held_out-047a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "europe-west1",
+        "op": "UPDATE",
+        "predicate": "data_region",
+        "seq": 95,
+        "source_span": "{\"turn_ids\": [\"held_out-047b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "enterprise",
+        "op": "ADD",
+        "predicate": "support_tier",
+        "seq": 96,
+        "source_span": "{\"turn_ids\": [\"held_out-048a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "free",
+        "op": "UPDATE",
+        "predicate": "support_tier",
+        "seq": 97,
+        "source_span": "{\"turn_ids\": [\"held_out-048b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "15th",
+        "op": "ADD",
+        "predicate": "invoice_day",
+        "seq": 98,
+        "source_span": "{\"turn_ids\": [\"held_out-049a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "last day",
+        "op": "UPDATE",
+        "predicate": "invoice_day",
+        "seq": 99,
+        "source_span": "{\"turn_ids\": [\"held_out-049b\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "July",
+        "op": "ADD",
+        "predicate": "fiscal_year_start",
+        "seq": 100,
+        "source_span": "{\"turn_ids\": [\"held_out-050a\"]}",
+        "subject": "user"
+      },
+      {
+        "object_json": null,
+        "object_number": null,
+        "object_text": "January",
+        "op": "UPDATE",
+        "predicate": "fiscal_year_start",
+        "seq": 101,
+        "source_span": "{\"turn_ids\": [\"held_out-050b\"]}",
+        "subject": "user"
+      }
+    ]
+  }
+}

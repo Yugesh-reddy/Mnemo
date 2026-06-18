@@ -1,0 +1,231 @@
+{
+  "research_date": "2026-09-19",
+  "mnemo_commit": "a19478663b04050ec7ab4a902ff0563a5094a3ee",
+  "method": "Primary documentation and pinned upstream source inspection. Files downloaded without executing third-party code or running upstream tests. This manifest records downloads, not a complete repository audit.",
+  "files": [
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "LICENSE",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/LICENSE",
+      "bytes": 11349,
+      "sha256": "0bbcbe931c353293a2fafce08326181dfeea0e568c566afd4ce8337a70f5e219"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "mem0/memory/main.py",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/mem0/memory/main.py",
+      "bytes": 168002,
+      "sha256": "5b1b75e2f00aca7bd368a6e9cd5905145d60fd05a0e36d6b1ef3e2f1b4f28ca1"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "mem0/memory/storage.py",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/mem0/memory/storage.py",
+      "bytes": 12886,
+      "sha256": "5f5ecdadd2b260fd14f36a0f338336eb760275465dd1056a99a47e1ef07702bd"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "docs/core-concepts/memory-operations/add.mdx",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/docs/core-concepts/memory-operations/add.mdx",
+      "bytes": 8600,
+      "sha256": "57a912b4e7b3ab540c6a30b7502f4dbc3c716ac5b8181837aa6b8f2d61e247c2"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "docs/core-concepts/memory-operations/update.mdx",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/docs/core-concepts/memory-operations/update.mdx",
+      "bytes": 6554,
+      "sha256": "c2c97a5cfb8f2f09e9a44ecfc33b9e1e38044b9e12501591269bd182f17c838e"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "docs/api-reference/memory/history-memory.mdx",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/docs/api-reference/memory/history-memory.mdx",
+      "bytes": 186,
+      "sha256": "40868489433b9d1ff7a12ac05636b280b13b6ccceff478979d197ac2be992c16"
+    },
+    {
+      "repository": "mem0ai/mem0",
+      "commit": "a39a802bbc93e85b820078cd3c4dbaf53af25dbe",
+      "path": "server/main.py",
+      "url": "https://github.com/mem0ai/mem0/blob/a39a802bbc93e85b820078cd3c4dbaf53af25dbe/server/main.py",
+      "bytes": 22215,
+      "sha256": "320af32a959fcb6bed8b4420757714e8824fb1e98e9869a2475e1a03eddf3158"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "LICENSE",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/LICENSE",
+      "bytes": 11344,
+      "sha256": "a471e34908f50c3f120e9a56f3c30cb34e133e4ede01a9cbd5ce718fc358ecd4"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee-mcp/README.md",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee-mcp/README.md",
+      "bytes": 29275,
+      "sha256": "66f5a79d8af328a91c80f9139e1e79da689ce94c96872c614cd46af78f53b17b"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee-mcp/src/server.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee-mcp/src/server.py",
+      "bytes": 47943,
+      "sha256": "acdc11c7cba8818da5b850132f0ec347d158e7c6b7f4308995c62b4e6cc3f9ad"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee-mcp/src/tool_registry.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee-mcp/src/tool_registry.py",
+      "bytes": 2560,
+      "sha256": "cd4632ab9fabe33ee683c08982a855f7a8371e0e4bcb077d51380d314a9d74b7"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/api/v1/remember/remember.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/api/v1/remember/remember.py",
+      "bytes": 83476,
+      "sha256": "5e16f0fd0b80b20bcad6c03ea48699e7487bbc742336014534d7a2cd78877a69"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/api/v1/forget/forget.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/api/v1/forget/forget.py",
+      "bytes": 19434,
+      "sha256": "c107e944fa2b0315111114361c6bf4077edf4889de14dc6b24a2aa92ccff618d"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/modules/migration/snapshot.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/modules/migration/snapshot.py",
+      "bytes": 10912,
+      "sha256": "22fb1f39b866aa57327cef32c50ff382cb66ca15e259f50473eae2e0aa836f53"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/modules/cognify/rollback.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/modules/cognify/rollback.py",
+      "bytes": 13522,
+      "sha256": "f10506abdd489a1eeccbaa72137a5ffd808f5bbeb7c2052cc6131797841c0a4c"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/infrastructure/databases/provenance/source_refs.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/infrastructure/databases/provenance/source_refs.py",
+      "bytes": 3442,
+      "sha256": "521fcbcfa45462791865e06588320df248d44410e2555f3b42b812acdd3ed7dd"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/infrastructure/databases/provenance/delete_data.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/infrastructure/databases/provenance/delete_data.py",
+      "bytes": 1687,
+      "sha256": "8fe6536dc0a9fbf6bd506e6ef07409d3704f4b33da7e1bc095511751dbd7e240"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/tests/unit/migration/test_snapshot.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/tests/unit/migration/test_snapshot.py",
+      "bytes": 7383,
+      "sha256": "75f5ec4aa4fa5fd0c84454bd41a7397a68a62f28ce474f23e58bc9c9cf4a3ce9"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/tests/unit/modules/cognify/test_rollback.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/tests/unit/modules/cognify/test_rollback.py",
+      "bytes": 20025,
+      "sha256": "79ac20786e2187c4fa4c7d14901eaf0863ad4f02d3ed037c0890ffb2cfda6445"
+    },
+    {
+      "repository": "topoteretes/cognee",
+      "commit": "4294605f20324b250fd0edf8893cb69dc4215369",
+      "path": "cognee/modules/migration/sources/mem0.py",
+      "url": "https://github.com/topoteretes/cognee/blob/4294605f20324b250fd0edf8893cb69dc4215369/cognee/modules/migration/sources/mem0.py",
+      "bytes": 3488,
+      "sha256": "26155db6c08dd090723866ee270a43db8afc89c7636818fefad6882fb3b77153"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "LICENSE",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/LICENSE",
+      "bytes": 10173,
+      "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "docs/mcp/me_memory_history.md",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/docs/mcp/me_memory_history.md",
+      "bytes": 5874,
+      "sha256": "1c6011fc41f082c72f8d5193274c14549fc194707c4672a4a3f2c07ad4260bba"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "docs/mcp/me_memory_revert.md",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/docs/mcp/me_memory_revert.md",
+      "bytes": 2418,
+      "sha256": "d3d4697e028bb35286e9a95a859cb91064fe7087d1177b4191536c9bf5904b76"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "packages/database/space/migrate/idempotent/001_memory.sql",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/database/space/migrate/idempotent/001_memory.sql",
+      "bytes": 40055,
+      "sha256": "878f45a4b644e4c61a7a0bb5a9a6af7d7bb4de1de29368b534184622cdee7e1a"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "packages/database/space/migrate/idempotent/004_memory_event.sql",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/database/space/migrate/idempotent/004_memory_event.sql",
+      "bytes": 11813,
+      "sha256": "c8ad690b9506798a7c001138d7580676f8e79476bd4a901b29d25d386881dd37"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "packages/server/rpc/memory/memory.test.ts",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/server/rpc/memory/memory.test.ts",
+      "bytes": 2390,
+      "sha256": "3926d1adf67d89d1f5e3282727743ee87310e6da815f25686fa4ee4205ffde9f"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "design/event-log-and-history.md",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/design/event-log-and-history.md",
+      "bytes": 8298,
+      "sha256": "cac40b8244b138680d8ad03a61b0b27e22da4bcd3d0ac4265edce830f3783437"
+    },
+    {
+      "repository": "timescale/memory-engine",
+      "commit": "2ef90da9385448e0bbb02ed1da82c04bd663602d",
+      "path": "packages/client/memory.test.ts",
+      "url": "https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/client/memory.test.ts",
+      "bytes": 4391,
+      "sha256": "5bcd3bcc901fabb4a6e15760090a01b7187e4f6fb66e2e148b6c91b54d731279"
+    }
+  ]
+}

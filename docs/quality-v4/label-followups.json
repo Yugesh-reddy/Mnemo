@@ -1,0 +1,21 @@
+{
+  "status": "post-run development review; frozen labels unchanged",
+  "reviewer": "Codex; same author/reviewer, not independent human adjudication",
+  "items": [
+    {
+      "predicate": "omar_audio_minutes",
+      "issue": "The source states that the interview lasted 51 minutes; the label calls this audio duration. Interview duration alone does not establish recording duration.",
+      "next_action": "Adjudicate the type distinction before a future dataset version. Preserve the current report and denominator."
+    },
+    {
+      "predicate": "usability_result",
+      "issue": "The label combines two outcomes that extraction represents separately. A compound label should not require a fabricated merged atomic fact.",
+      "next_action": "Review atomic decomposition and event binding in a future label version."
+    },
+    {
+      "predicate": "open relation aliases",
+      "issue": "Sixteen of thirty strict must-keep misses have source-supported equivalents in their saved retrieval probes. Exact predicate/object comparison undercounts these cases, while broad similarity matching could admit actor or event-binding errors.",
+      "next_action": "Independently review explicit source-scoped mappings. Do not replace strict scores with embedding similarity or apply a turn-level equivalence to every target."
+    }
+  ]
+}

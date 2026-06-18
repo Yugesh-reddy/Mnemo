@@ -1,0 +1,106 @@
+{
+  "gated": {
+    "cost": {
+      "reason": "No pricing supplied; token usage is measured where reported.",
+      "usd": null
+    },
+    "f1": 0.0,
+    "false": 0,
+    "false_writes": 0,
+    "historical_precision": 0.0,
+    "historical_recall": 0.0,
+    "latency_ms": 24184.536999993725,
+    "must_keep_recall": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "storage_bytes": 524288,
+    "stored": 0,
+    "total_events": 0,
+    "total_rows": 14,
+    "unsupported_writes": 0,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 3,
+        "unmetered_requests": 3
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {
+        "input_tokens": 419,
+        "output_tokens": 476,
+        "requests": 5,
+        "unmetered_requests": 0
+      }
+    },
+    "visible_facts": 0
+  },
+  "metadata": {
+    "candidate_preparation_ms": 18516.182082996238,
+    "dataset": "mnemo-synthetic-smoke",
+    "dataset_version": "1.0.0",
+    "fingerprints": {
+      "config": "99690522a5f892276c05c7bcbc77b10df6b0917c8fd1c8c8f648226a2c3b1e57",
+      "dataset": "dd5c297e8e6af66f8decbb47b5c374f4ae278ede8ef9dc754aaa2e7ec463261a",
+      "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+      "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+      "verifier": "eec45c9e1e4ef8d1faf64ab715db7b0bb81340106260e98bbdbe8003bc2803af"
+    },
+    "mode": "candidate_replay",
+    "model_names": {
+      "embedder": "nomic-embed-text",
+      "extractor": "qwen3.5:4b-mlx",
+      "verifier": "qwen3.5:4b-mlx"
+    },
+    "shared_candidate_usage": {
+      "input_tokens": 1354,
+      "output_tokens": 278,
+      "requests": 4,
+      "unmetered_requests": 0
+    },
+    "split": "smoke-partial",
+    "synthetic": true,
+    "turns": 4
+  },
+  "naive": {
+    "cost": {
+      "reason": "No pricing supplied; token usage is measured where reported.",
+      "usd": null
+    },
+    "f1": 0.5714285714285715,
+    "false": 0,
+    "false_writes": 0,
+    "historical_precision": 0.6,
+    "historical_recall": 1.0,
+    "latency_ms": 713.4933339984855,
+    "must_keep_recall": 0.6666666666666666,
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "storage_bytes": 450560,
+    "stored": 4,
+    "total_events": 5,
+    "total_rows": 9,
+    "unsupported_writes": 2,
+    "usage": {
+      "embedder": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 5,
+        "unmetered_requests": 5
+      },
+      "extractor": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "requests": 0,
+        "unmetered_requests": 0
+      },
+      "verifier": {}
+    },
+    "visible_facts": 4
+  }
+}

@@ -1,0 +1,47 @@
+/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 7000.85it/s]
+6d550036 4 source turns
+Traceback (most recent call last):
+  File "/Users/yugesh/Desktop/Projects/Mnemo/scripts/replay_extraction_probe.py", line 211, in <module>
+    main()
+  File "/Users/yugesh/Desktop/Projects/Mnemo/scripts/replay_extraction_probe.py", line 207, in main
+    asyncio.run(run(parser.parse_args()))
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/scripts/replay_extraction_probe.py", line 174, in run
+    report["cases"][identity] = await evaluate(
+                                ^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/eval.py", line 607, in evaluate
+    connections[0] = await _prepare_schema(target_dsn, schemas[0], embed_dim=settings.embed_dim)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/mnemo/db.py", line 149, in prepare_isolated_schema
+    conn = await asyncpg.connect(dsn)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connection.py", line 2443, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py", line 1249, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py", line 1218, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py", line 1054, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py", line 1099, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py", line 969, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yugesh/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1140, in create_connection
+    raise OSError('Multiple exceptions: {}'.format(
+OSError: Multiple exceptions: [Errno 61] Connect call failed ('::1', 5432, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 5432)

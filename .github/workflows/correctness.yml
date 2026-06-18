@@ -24,7 +24,7 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: '3.12'
-      - run: uv sync --extra dev
+      - run: uv sync --locked --extra dev
       - run: make lint
       - run: make test-db
       - run: make migrate

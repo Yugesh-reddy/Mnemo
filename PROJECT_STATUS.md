@@ -1,11 +1,24 @@
 # Mnemo — implementation status
 
-Updated September 18, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
-[the correctness plan](docs/CORRECTNESS_PLAN.md) records the infrastructure backlog.
-The [quality reliability plan](docs/QUALITY_RELIABILITY_PLAN.md) and
-[current evidence](docs/quality-v7/README.md) cover the follow-up work.
+Updated September 21, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+[the master plan](docs/MASTER_PLAN.md) records the implementation backlog, and
+[current quality evidence](docs/quality-v7/README.md) covers the extraction work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
+
+## Master plan Phase 0: local fixes
+
+Fresh-database connections now tolerate pgvector not being installed yet, so
+migrations can create the extension. The regression test creates an empty
+database, migrates twice, reconnects and verifies vector decoding. CI and
+`make install` use `uv sync --locked --extra dev`; `uv.lock`, the documentation
+and `AGENTS.md` are tracked. `CLAUDE.md` points to the operating guide. Broken
+plan links, the missing demo-recording target and the stale README test count
+are removed. Tests explicitly check must-keep recall and all ten MCP tools.
+
+Hosted CI and branch protection (Task 0.5) remain pending: no Git remote is
+configured. The direct backend, guarded mutation contract and product framing
+changes are not part of this first set of fixes. Extraction quality is unchanged.
 
 ## Current milestone: bounded quote-feedback experiment rejected
 

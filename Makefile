@@ -9,8 +9,7 @@ help:  ## Show available targets
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
 install:  ## Create the venv and install (editable, with dev deps)
-	uv venv
-	uv pip install -e ".[dev]"
+	uv sync --locked --extra dev
 
 up:  ## Start Postgres + pgvector (docker compose up -d)
 	docker compose up -d
@@ -46,9 +45,6 @@ demo:  ## Run the end-to-end rollback demo (spec §10)
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
-
-gif:  ## Record the rollback demo GIF (needs `brew install vhs`)
-	vhs docs/demo.tape
 
 worker:  ## Run extraction with lease renewal and scheduled decay
 	$(RUN) python -m mnemo.worker

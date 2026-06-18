@@ -1,0 +1,2416 @@
+{
+  "split": "holdout",
+  "policy_sha256": "cb2fafb6ae234ceb566fddc4f4c167080e99ffcdd5cb85c9ff64c392a5247ebb",
+  "complete": true,
+  "cases": {
+    "2ce6a0f2": {
+      "naive": {
+        "stored": 25,
+        "precision": 0.04,
+        "recall": 0.043478260869565216,
+        "f1": 0.041666666666666664,
+        "false": 0,
+        "must_keep_recall": 0.09090909090909091,
+        "false_writes": 0,
+        "historical_precision": 0.05263157894736842,
+        "historical_recall": 0.08695652173913043,
+        "unsupported_writes": 36,
+        "visible_facts": 25,
+        "total_events": 38,
+        "total_rows": 63,
+        "storage_bytes": 835584,
+        "latency_ms": 2252.479916991433,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 38,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 38
+          },
+          "verifier": {
+            "nli_requests": 0
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "exhibition",
+            "predicate": "name",
+            "object_text": "\"Women in Art\"",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "Modern Art Museum",
+            "predicate": "hosting_events",
+            "object_text": "more events and exhibitions focused on local artists",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "Rachel Lee",
+            "predicate": "artist",
+            "object_text": "local artist",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "Sarah Johnson",
+            "predicate": "role",
+            "object_text": "curator",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "object_text": "attended exhibition",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "activity_participation",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "attended_event",
+            "object_text": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_activity",
+            "object_text": "visiting_local_artists_work_in_person",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "date_attended",
+            "object_text": "February 10th",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "editor_use",
+            "object_text": "online_course",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "event_participated_in",
+            "object_text": "Art Afternoon",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "exposure_to_artist",
+            "object_text": "Rachel Lee",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "has_experience_with",
+            "object_text": "red-figure kylix",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intention",
+            "object_text": "check out resources about Rachel Lee's work and other local artists",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "object_text": "feminist art",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in",
+            "object_text": "local art events and exhibitions",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in_topic",
+            "object_text": "feminist art history",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "location",
+            "object_text": "Los Angeles",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "object_text": "visit local art studios and galleries",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_event",
+            "object_text": "street art workshop for kids at the Children's Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_focus",
+            "object_text": "Greek and Roman Galleries",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "object_text": "Temple of Dendur",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "visited",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_at",
+            "object_text": "Children's Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_on_date",
+            "object_text": "February 17th",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "activity_participation",
+            "op": "ADD",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:0\"]}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "ADD",
+            "object_text": "ancient history and art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:0\"]}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "The Metropolitan Museum of Art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:2\"]}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "visited",
+            "op": "ADD",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:2\"]}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "has_experience_with",
+            "op": "ADD",
+            "object_text": "red-figure kylix",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:4\"]}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "red-figure kylix",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:6\"]}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "op": "ADD",
+            "object_text": "Metropolitan Museum of Art (The Met)",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:8\"]}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_focus",
+            "op": "ADD",
+            "object_text": "Greek and Roman Galleries",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:8\"]}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_visit",
+            "op": "ADD",
+            "object_text": "Temple of Dendur",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:8\"]}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "mythology and symbolism associated with the goddess Isis",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:10\"]}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "attended_event",
+            "op": "ADD",
+            "object_text": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:0\"]}",
+            "seq": 11
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "stencil art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:2\"]}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "location",
+            "op": "ADD",
+            "object_text": "Los Angeles",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:4\"]}",
+            "seq": 13
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_activity",
+            "op": "ADD",
+            "object_text": "visiting_local_artists_work_in_person",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:6\"]}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "local artists' work",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:8\"]}",
+            "seq": 15
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "street art scene in LA",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:10\"]}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in",
+            "op": "ADD",
+            "object_text": "local art events and exhibitions",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:0\"]}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "attended exhibition",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"]}",
+            "seq": 18
+          },
+          {
+            "subject": "exhibition",
+            "predicate": "name",
+            "op": "ADD",
+            "object_text": "\"Women in Art\"",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"]}",
+            "seq": 19
+          },
+          {
+            "subject": "user",
+            "predicate": "date_attended",
+            "op": "ADD",
+            "object_text": "February 10th",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"]}",
+            "seq": 20
+          },
+          {
+            "subject": "Rachel Lee",
+            "predicate": "artist",
+            "op": "ADD",
+            "object_text": "local artist",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"]}",
+            "seq": 21
+          },
+          {
+            "subject": "user",
+            "predicate": "intention",
+            "op": "ADD",
+            "object_text": "check out resources about Rachel Lee's work and other local artists",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:4\"]}",
+            "seq": 22
+          },
+          {
+            "subject": "Sarah Johnson",
+            "predicate": "role",
+            "op": "ADD",
+            "object_text": "curator",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:4\"]}",
+            "seq": 23
+          },
+          {
+            "subject": "Modern Art Museum",
+            "predicate": "hosting_events",
+            "op": "ADD",
+            "object_text": "more events and exhibitions focused on local artists",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:4\"]}",
+            "seq": 24
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "op": "UPDATE",
+            "object_text": "check_out_modern_art_museum_website_and_social_media",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:6\"]}",
+            "seq": 25
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "op": "UPDATE",
+            "object_text": "visiting local art studios and galleries",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:8\"]}",
+            "seq": 26
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_activity",
+            "op": "UPDATE",
+            "object_text": "visit local art studios and galleries",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:10\"]}",
+            "seq": 27
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "Rachel Lee's work",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:10\"]}",
+            "seq": 28
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_at",
+            "op": "ADD",
+            "object_text": "Children's Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:0\"]}",
+            "seq": 29
+          },
+          {
+            "subject": "user",
+            "predicate": "event_participated_in",
+            "op": "ADD",
+            "object_text": "Art Afternoon",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:0\"]}",
+            "seq": 30
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_on_date",
+            "op": "ADD",
+            "object_text": "February 17th",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:0\"]}",
+            "seq": 31
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "art inspiration",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:2\"]}",
+            "seq": 32
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "mixed media art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:2\"]}",
+            "seq": 33
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "feminist art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:2\"]}",
+            "seq": 34
+          },
+          {
+            "subject": "user",
+            "predicate": "exposure_to_artist",
+            "op": "ADD",
+            "object_text": "Rachel Lee",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:2\"]}",
+            "seq": 35
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in_topic",
+            "op": "ADD",
+            "object_text": "feminist art history",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:4\"]}",
+            "seq": 36
+          },
+          {
+            "subject": "user",
+            "predicate": "editor_use",
+            "op": "ADD",
+            "object_text": "online_course",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:6\"]}",
+            "seq": 37
+          },
+          {
+            "subject": "user",
+            "predicate": "planned_event",
+            "op": "ADD",
+            "object_text": "street art workshop for kids at the Children's Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:8\"]}",
+            "seq": 38
+          }
+        ],
+        "retrieval_probes": [
+          {
+            "turn_id": "answer_901a6763_2:0",
+            "query": "user art_afternoon_volunteering_date February 17",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 137.25391600746661,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "volunteered_on_date",
+                "object": "February 17th",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:2",
+            "query": "user artist_interest Rachel Lee",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 42.59491598349996,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "intention",
+                "object": "check out resources about Rachel Lee's work and other local artists",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "Rachel Lee",
+                "predicate": "artist",
+                "object": "local artist",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "exposure_to_artist",
+                "object": "Rachel Lee",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interest",
+                "object": "feminist art",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_1:2",
+            "query": "user attended_exhibition Women in Art",
+            "k": 5,
+            "session_id": "answer_901a6763_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 37.84379200078547,
+            "results": [
+              {
+                "subject": "exhibition",
+                "predicate": "name",
+                "object": "\"Women in Art\"",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interest",
+                "object": "feminist art",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in",
+                "object": "local art events and exhibitions",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:0",
+            "query": "user attended_lecture The Evolution of Street Art at the Art Gallery",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 28.808333008782938,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "attended_event",
+                "object": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_event",
+                "object": "street art workshop for kids at the Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in",
+                "object": "local art events and exhibitions",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_activity",
+                "object": "visit local art studios and galleries",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_3:0",
+            "query": "user attended_tour History Museum guided tour",
+            "k": 5,
+            "session_id": "answer_901a6763_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 25.189667008817196,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "visited",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_activity",
+                "object": "visit local art studios and galleries",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:6",
+            "query": "user current_course online art history course",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 22.93949999148026,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "attended_event",
+                "object": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "editor_use",
+                "object": "online_course",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_activity",
+                "object": "visit local art studios and galleries",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_3:0",
+            "query": "user history_museum_tour_date February 24",
+            "k": 5,
+            "session_id": "answer_901a6763_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 23.128375003580004,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "visited",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_on_date",
+                "object": "February 17th",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:4",
+            "query": "user location Los Angeles",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": true,
+            "retrieved": true,
+            "stage": "retrieved",
+            "latency_ms": 17.267750023165718,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "location",
+                "object": "Los Angeles",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_activity",
+                "object": "visit local art studios and galleries",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:0",
+            "query": "user street_art_lecture_date March 3",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 24.708666984224692,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "attended_event",
+                "object": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_event",
+                "object": "street art workshop for kids at the Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in",
+                "object": "local art events and exhibitions",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:0",
+            "query": "user volunteered_event Art Afternoon at the Children's Museum",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 32.96866698656231,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "planned_event",
+                "object": "street art workshop for kids at the Children's Museum",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_1:2",
+            "query": "user women_in_art_exhibition_date February 10",
+            "k": 5,
+            "session_id": "answer_901a6763_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 32.38033302477561,
+            "results": [
+              {
+                "subject": "exhibition",
+                "predicate": "name",
+                "object": "\"Women in Art\"",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "durable",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in",
+                "object": "local art events and exhibitions",
+                "tier": "durable",
+                "source": "semantic"
+              }
+            ]
+          }
+        ],
+        "retrieval_probe_usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 11,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 11
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        }
+      },
+      "gated": {
+        "stored": 14,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false": 0,
+        "must_keep_recall": 0.0,
+        "false_writes": 0,
+        "historical_precision": 0.05,
+        "historical_recall": 0.043478260869565216,
+        "unsupported_writes": 19,
+        "visible_facts": 14,
+        "total_events": 20,
+        "total_rows": 187,
+        "storage_bytes": 1409024,
+        "latency_ms": 198123.0485419801,
+        "usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 43,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 43
+          },
+          "verifier": {
+            "requests": 37,
+            "input_tokens": 16308,
+            "output_tokens": 3315,
+            "unmetered_requests": 0,
+            "nli_requests": 2
+          }
+        },
+        "cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "historical_by_split": {},
+        "current_assertions": [
+          {
+            "subject": "exhibition",
+            "predicate": "name",
+            "object_text": "\"Women in Art\"",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "Modern Art Museum",
+            "predicate": "hosting_events",
+            "object_text": "more events and exhibitions focused on local artists",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "Rachel Lee",
+            "predicate": "artist",
+            "object_text": "local artist",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "object_text": "attended exhibition",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "activity_participation",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "attended_event",
+            "object_text": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_activity",
+            "object_text": "visiting_local_artists_work_in_person",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "date_attended",
+            "object_text": "February 10th",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "event_participated_in",
+            "object_text": "Art Afternoon",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "intention",
+            "object_text": "check out resources about Rachel Lee's work and other local artists",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "object_text": "Rachel Lee's work",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in_topic",
+            "object_text": "feminist art history",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "visited",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_at",
+            "object_text": "Children's Museum",
+            "object_number": null,
+            "object_json": null
+          }
+        ],
+        "writes": [
+          {
+            "subject": "user",
+            "predicate": "activity_participation",
+            "op": "ADD",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:0\"], \"cache_ids\": [\"6407c41f-665b-4499-ad41-a254496bd634\"], \"session_id\": \"answer_901a6763_3\"}",
+            "seq": 1
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "ADD",
+            "object_text": "ancient history and art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:0\"], \"cache_ids\": [\"6407c41f-665b-4499-ad41-a254496bd634\"], \"session_id\": \"answer_901a6763_3\"}",
+            "seq": 2
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "The Metropolitan Museum of Art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:2\"], \"cache_ids\": [\"50a9b0d2-17b3-4c46-97c7-67f60c3f2818\"], \"session_id\": \"answer_901a6763_3\"}",
+            "seq": 3
+          },
+          {
+            "subject": "user",
+            "predicate": "visited",
+            "op": "ADD",
+            "object_text": "History Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:2\"], \"cache_ids\": [\"50a9b0d2-17b3-4c46-97c7-67f60c3f2818\"], \"session_id\": \"answer_901a6763_3\"}",
+            "seq": 4
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "mythology and symbolism associated with the goddess Isis",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_3:10\"], \"cache_ids\": [\"235d34d7-0441-45be-97b6-0196c322dc76\"], \"session_id\": \"answer_901a6763_3\"}",
+            "seq": 5
+          },
+          {
+            "subject": "user",
+            "predicate": "attended_event",
+            "op": "ADD",
+            "object_text": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:0\"], \"cache_ids\": [\"0e6132fb-c1fb-4c72-bfff-15522a2e7ab0\"], \"session_id\": \"answer_901a6763_4\"}",
+            "seq": 6
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "stencil art",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:2\"], \"cache_ids\": [\"0a64f746-77c3-4c18-9c98-66983e334114\"], \"session_id\": \"answer_901a6763_4\"}",
+            "seq": 7
+          },
+          {
+            "subject": "user",
+            "predicate": "considering_activity",
+            "op": "ADD",
+            "object_text": "visiting_local_artists_work_in_person",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:6\"], \"cache_ids\": [\"851f1483-60dd-4fe8-abf8-04f3be39f4af\"], \"session_id\": \"answer_901a6763_4\"}",
+            "seq": 8
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "local artists' work",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:8\"], \"cache_ids\": [\"c8b4bbe5-a3e0-4e58-bba0-930ea7f7a6c2\"], \"session_id\": \"answer_901a6763_4\"}",
+            "seq": 9
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "street art scene in LA",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_4:10\"], \"cache_ids\": [\"0098a1d4-938f-44fd-9183-2308b47474f6\"], \"session_id\": \"answer_901a6763_4\"}",
+            "seq": 10
+          },
+          {
+            "subject": "user",
+            "predicate": "activity",
+            "op": "ADD",
+            "object_text": "attended exhibition",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"], \"cache_ids\": [\"dbdd1f3c-0925-428c-b978-27f1745c09c6\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 11
+          },
+          {
+            "subject": "exhibition",
+            "predicate": "name",
+            "op": "ADD",
+            "object_text": "\"Women in Art\"",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"], \"cache_ids\": [\"dbdd1f3c-0925-428c-b978-27f1745c09c6\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 12
+          },
+          {
+            "subject": "user",
+            "predicate": "date_attended",
+            "op": "ADD",
+            "object_text": "February 10th",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"], \"cache_ids\": [\"dbdd1f3c-0925-428c-b978-27f1745c09c6\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 13
+          },
+          {
+            "subject": "Rachel Lee",
+            "predicate": "artist",
+            "op": "ADD",
+            "object_text": "local artist",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:2\"], \"cache_ids\": [\"dbdd1f3c-0925-428c-b978-27f1745c09c6\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 14
+          },
+          {
+            "subject": "user",
+            "predicate": "intention",
+            "op": "ADD",
+            "object_text": "check out resources about Rachel Lee's work and other local artists",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:4\"], \"cache_ids\": [\"f4d82e1b-365e-43c4-9362-15c74d5d1258\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 15
+          },
+          {
+            "subject": "Modern Art Museum",
+            "predicate": "hosting_events",
+            "op": "ADD",
+            "object_text": "more events and exhibitions focused on local artists",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:4\"], \"cache_ids\": [\"f4d82e1b-365e-43c4-9362-15c74d5d1258\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 16
+          },
+          {
+            "subject": "user",
+            "predicate": "interest",
+            "op": "UPDATE",
+            "object_text": "Rachel Lee's work",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_1:10\"], \"cache_ids\": [\"c6ecbe2c-06f1-4b79-9826-6fb77dbce02f\"], \"session_id\": \"answer_901a6763_1\"}",
+            "seq": 17
+          },
+          {
+            "subject": "user",
+            "predicate": "volunteered_at",
+            "op": "ADD",
+            "object_text": "Children's Museum",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:0\"], \"cache_ids\": [\"b5746617-42e5-4ba7-8f2d-5e3c2151c831\"], \"session_id\": \"answer_901a6763_2\"}",
+            "seq": 18
+          },
+          {
+            "subject": "user",
+            "predicate": "event_participated_in",
+            "op": "ADD",
+            "object_text": "Art Afternoon",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:0\"], \"cache_ids\": [\"b5746617-42e5-4ba7-8f2d-5e3c2151c831\"], \"session_id\": \"answer_901a6763_2\"}",
+            "seq": 19
+          },
+          {
+            "subject": "user",
+            "predicate": "interests_in_topic",
+            "op": "ADD",
+            "object_text": "feminist art history",
+            "object_number": null,
+            "object_json": null,
+            "source_span": "{\"turn_ids\": [\"answer_901a6763_2:4\"], \"cache_ids\": [\"f526627d-88e6-4348-a394-f1997da76922\"], \"session_id\": \"answer_901a6763_2\"}",
+            "seq": 20
+          }
+        ],
+        "retrieval_probes": [
+          {
+            "turn_id": "answer_901a6763_2:0",
+            "query": "user art_afternoon_volunteering_date February 17",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 46.67416599113494,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:2",
+            "query": "user artist_interest Rachel Lee",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 39.074957981938496,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_1:2",
+            "query": "user attended_exhibition Women in Art",
+            "k": 5,
+            "session_id": "answer_901a6763_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 36.982833000365645,
+            "results": [
+              {
+                "subject": "exhibition",
+                "predicate": "name",
+                "object": "\"Women in Art\"",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "Modern Art Museum",
+                "predicate": "hosting_events",
+                "object": "more events and exhibitions focused on local artists",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interest",
+                "object": "Rachel Lee's work",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:0",
+            "query": "user attended_lecture The Evolution of Street Art at the Art Gallery",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 28.358790994388983,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "attended_event",
+                "object": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_3:0",
+            "query": "user attended_tour History Museum guided tour",
+            "k": 5,
+            "session_id": "answer_901a6763_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 31.173958996078,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "visited",
+                "object": "History Museum",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:6",
+            "query": "user current_course online art history course",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 32.93674997985363,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_3:0",
+            "query": "user history_museum_tour_date February 24",
+            "k": 5,
+            "session_id": "answer_901a6763_3",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 31.83266698033549,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "visited",
+                "object": "History Museum",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity_participation",
+                "object": "History Museum",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:4",
+            "query": "user location Los Angeles",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 32.95591601636261,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_4:0",
+            "query": "user street_art_lecture_date March 3",
+            "k": 5,
+            "session_id": "answer_901a6763_4",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 41.78520798450336,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "attended_event",
+                "object": "lecture on 'The Evolution of Street Art' at the Art Gallery",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "considering_activity",
+                "object": "visiting_local_artists_work_in_person",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_2:0",
+            "query": "user volunteered_event Art Afternoon at the Children's Museum",
+            "k": 5,
+            "session_id": "answer_901a6763_2",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 48.59654200845398,
+            "results": [
+              {
+                "subject": "user",
+                "predicate": "volunteered_at",
+                "object": "Children's Museum",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "event_participated_in",
+                "object": "Art Afternoon",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "interests_in_topic",
+                "object": "feminist art history",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          },
+          {
+            "turn_id": "answer_901a6763_1:2",
+            "query": "user women_in_art_exhibition_date February 10",
+            "k": 5,
+            "session_id": "answer_901a6763_1",
+            "in_current": false,
+            "retrieved": false,
+            "stage": "upstream_or_label_mismatch",
+            "latency_ms": 35.60450000804849,
+            "results": [
+              {
+                "subject": "exhibition",
+                "predicate": "name",
+                "object": "\"Women in Art\"",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "activity",
+                "object": "attended exhibition",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "date_attended",
+                "object": "February 10th",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "Modern Art Museum",
+                "predicate": "hosting_events",
+                "object": "more events and exhibitions focused on local artists",
+                "tier": "session",
+                "source": "semantic"
+              },
+              {
+                "subject": "user",
+                "predicate": "intention",
+                "object": "check out resources about Rachel Lee's work and other local artists",
+                "tier": "session",
+                "source": "semantic"
+              }
+            ]
+          }
+        ],
+        "retrieval_probe_usage": {
+          "extractor": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0
+          },
+          "embedder": {
+            "requests": 11,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 11
+          },
+          "verifier": {
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "unmetered_requests": 0,
+            "nli_requests": 0
+          }
+        }
+      },
+      "decisions": [
+        {
+          "turn_id": "answer_901a6763_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"History Museum\", \"subject\": \"user\", \"predicate\": \"activity_participation\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.60; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they 'went on a guided tour' at the History Museum on February 24th, which confirms participation in an activity at that location.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I recently went on a guided tour at the History Museum on February 24th\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_3:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"ancient history and art\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states that the guided tour 'sparked my interest in ancient history and art', which directly confirms the subject's interest in those topics.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"it really sparked my interest in ancient history and art\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.42658709519546023, \"novelty\": 0.28862365065153417, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_3:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"The Metropolitan Museum of Art\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I'm particularly interested in The Metropolitan Museum of Art', which directly supports the assertion that the subject (user) has an interest relationship with the object (The Metropolitan Museum of Art).\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"I'm particularly interested in The Metropolitan Museum of Art.\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_3:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"History Museum\", \"subject\": \"user\", \"predicate\": \"visited\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.35; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they were 'fascinated by the ancient pottery section during my guided tour at the History Museum,' which confirms the action of visiting.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I was really fascinated by the ancient pottery section during my guided tour at the History Museum.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3533016285682688, \"novelty\": 0.17767209522756267, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_3:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"red-figure kylix\", \"subject\": \"user\", \"predicate\": \"has_experience_with\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user explicitly states 'I've never seen a red-figure kylix up close', which directly contradicts the assertion that the user has experience with red-figure kylix.",
+          "verification": "{\"label\": \"contradiction\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I've never seen a red-figure kylix up close', which directly contradicts the assertion that the user has experience with red-figure kylix.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've never seen a red-figure kylix up close\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"red-figure kylix\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user explicitly states they are 'looking forward to seeing it' and expresses excitement about the details of a 'red-figure kylix', which confirms an interest in this object.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they are 'looking forward to seeing it' and expresses excitement about the details of a 'red-figure kylix', which confirms an interest in this object.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"Yeah, I'm really looking forward to seeing it! I've never seen a red-figure kylix up close before, so it'll be amazing to see the details and colors in person.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Metropolitan Museum of Art (The Met)\", \"subject\": \"user\", \"predicate\": \"planned_activity\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The speaker expresses a tentative intention ('I think I'll', 'I'm really excited to') and a probable future action ('I'll probably head there'), which indicates a plan or desire but does not confirm the activity has been definitively scheduled or completed as a fact.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker expresses a tentative intention ('I think I'll', 'I'm really excited to') and a probable future action ('I'll probably head there'), which indicates a plan or desire but does not confirm the activity has been definitively scheduled or completed as a fact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll spend the whole day at the Met. I'm really excited to explore the Greek and Roman Galleries and see more of the museum's incredible collection. I've heard that the Temple of Dendur is also a must-see, so I'll probably head there after I'm done with the Greek and Roman Galleries.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Greek and Roman Galleries\", \"subject\": \"user\", \"predicate\": \"planned_focus\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The speaker expresses excitement about exploring the Greek and Roman Galleries but uses tentative language ('I think I'll', 'probably') and frames it as a future intention rather than a confirmed plan or completed action.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker expresses excitement about exploring the Greek and Roman Galleries but uses tentative language ('I think I'll', 'probably') and frames it as a future intention rather than a confirmed plan or completed action.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I think I'll spend the whole day at the Met. I'm really excited to explore the Greek and Roman Galleries and see more of the museum's incredible collection.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Temple of Dendur\", \"subject\": \"user\", \"predicate\": \"planned_visit\", \"confidence\": 0.8, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The speaker expresses a tentative intention ('I'll probably head there') contingent on completing other activities, which does not establish a definite completed plan or commitment to the specific visit.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker expresses a tentative intention ('I'll probably head there') contingent on completing other activities, which does not establish a definite completed plan or commitment to the specific visit.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll probably head there after I'm done with the Greek and Roman Galleries.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_3:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"mythology and symbolism associated with the goddess Isis\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states 'I'm actually really interested in the mythology and symbolism associated with the goddess Isis', which directly confirms the subject (user), predicate (interest), and object (mythology and symbolism associated with the goddess Isis).\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm actually really interested in the mythology and symbolism associated with the goddess Isis.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_3:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"lecture on 'The Evolution of Street Art' at the Art Gallery\", \"subject\": \"user\", \"predicate\": \"attended_event\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text explicitly states the user 'recently attended a lecture', which directly supports the assertion that the user attended the event.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I recently attended a lecture at the Art Gallery on 'The Evolution of Street Art'\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4193968549103033, \"novelty\": 0.3979895163676779, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_4:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"stencil art\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I'm particularly interested in stencil art', which directly confirms the subject (user), predicate (interest), and object (stencil art) relationship.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm particularly interested in stencil art\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_4:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Los Angeles\", \"subject\": \"user\", \"predicate\": \"location\", \"confidence\": 0.95, \"importance\": 8, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text states the user is currently 'in' Los Angeles and asks for recommendations, but it does not explicitly state that they live there or establish a permanent residence.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text states the user is currently 'in' Los Angeles and asks for recommendations, but it does not explicitly state that they live there or establish a permanent residence.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm in the city of Los Angeles.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"visiting_local_artists_work_in_person\", \"subject\": \"user\", \"predicate\": \"considering_activity\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I'm actually thinking of checking out...', which directly supports the assertion that the subject is considering the activity.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm actually thinking of checking out some local artists' work in person.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4097172337472835, \"novelty\": 0.36572411249094516, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_4:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"local artists' work\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.60; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states a desire to explore local artists' work and requests recommendations for LA-based street artists or muralists, which directly confirms an interest in this subject matter.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'd like to explore more local artists' work.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6, \"novelty\": 1.0, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_4:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_4:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"street art scene in LA\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I'm interested in learning more about the street art scene in LA', which directly confirms the subject (user), predicate (interest), and object (street art scene in LA) without requiring any external knowledge or assumptions.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm interested in learning more about the street art scene in LA.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_4:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"local art events and exhibitions\", \"subject\": \"user\", \"predicate\": \"interests_in\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user expresses a desire for information and asks for recommendations, which indicates an interest but does not confirm that local art events and exhibitions are already established interests or facts about the user.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user expresses a desire for information and asks for recommendations, which indicates an interest but does not confirm that local art events and exhibitions are already established interests or facts about the user.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm looking for some information on local art events and exhibitions. Can you recommend any upcoming events or exhibitions that might be of interest to me?\", \"probability\": 0.8}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"attended exhibition\", \"subject\": \"user\", \"predicate\": \"activity\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they 'attended' the 'Women in Art' exhibition on February 10th, which directly satisfies the assertion that the subject (user) performed the activity of attending an exhibition.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"which I attended on February 10th\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4136919937016525, \"novelty\": 0.2456399790055085, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"\\\"Women in Art\\\"\", \"subject\": \"exhibition\", \"predicate\": \"name\", \"confidence\": 1.0, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states they attended the 'Women in Art' exhibition on February 10th, confirming the name of the event.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"I was particularly drawn to the works of local artist, Rachel Lee, at the \\\\\\\"Women in Art\\\\\\\" exhibition which I attended on February 10th.\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 1.0, \"score\": 0.6415573865273235, \"novelty\": 0.3385246217577451, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"February 10th\", \"subject\": \"user\", \"predicate\": \"date_attended\", \"confidence\": 1.0, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.47; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they attended the 'Women in Art' exhibition on February 10th, which directly supports the assertion that the user dated this event to February 10th.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"which I attended on February 10th\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.4667320381390353, \"novelty\": 0.4224401271301178, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"local artist\", \"subject\": \"Rachel Lee\", \"predicate\": \"artist\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly identifies Rachel Lee as a 'local artist' within the context of an exhibition they attended.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"\\\"I was particularly drawn to the works of local artist, Rachel Lee\\\"\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.40966547107938384, \"novelty\": 0.3655515702646128, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"check out resources about Rachel Lee's work and other local artists\", \"subject\": \"user\", \"predicate\": \"intention\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.34; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states 'I'll definitely check out...', which expresses a definite intention to perform the action described in the assertion.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'll definitely check out those resources to learn more about Rachel Lee's work and other local artists.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.34293381649329946, \"novelty\": 0.14311272164433153, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"curator\", \"subject\": \"Sarah Johnson\", \"predicate\": \"role\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "The source text mentions Sarah Johnson as 'the curator' in a reported speech context ('...the curator, Sarah Johnson, mentioned...'), which identifies her role within the context of the Modern Art Museum. However, this is not an explicit statement of fact by the speaker about Sarah Johnson's current job title; it is information recalled from another person's words. The assertion claims 'Sarah Johnson's job role is curator' as a definitive fact without qualification or source attribution, which goes beyond what the text explicitly states (that she was referred to as such). While highly probable, the text does not establish this as an absolute, unqualified fact about her current role.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text mentions Sarah Johnson as 'the curator' in a reported speech context ('...the curator, Sarah Johnson, mentioned...'), which identifies her role within the context of the Modern Art Museum. However, this is not an explicit statement of fact by the speaker about Sarah Johnson's current job title; it is information recalled from another person's words. The assertion claims 'Sarah Johnson's job role is curator' as a definitive fact without qualification or source attribution, which goes beyond what the text explicitly states (that she was referred to as such). While highly probable, the text does not establish this as an absolute, unqualified fact about her current role.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I remember that the curator, Sarah Johnson, mentioned that the Modern Art Museum might be hosting more events and exhibitions focused on local artists.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"more events and exhibitions focused on local artists\", \"subject\": \"Modern Art Museum\", \"predicate\": \"hosting_events\", \"confidence\": 0.8, \"importance\": 5, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.34; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states they remember the curator mentioning that the Modern Art Museum might be hosting more events and exhibitions focused on local artists, which directly supports the assertion about the museum's activity.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I remember that the curator, Sarah Johnson, mentioned that the Modern Art Museum might be hosting more events and exhibitions focused on local artists.\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3430071455497834, \"novelty\": 0.27669048516594474, \"transient\": false, \"importance\": 5, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"check_out_modern_art_museum_website_and_social_media\", \"subject\": \"user\", \"predicate\": \"planned_activity\", \"confidence\": 0.95, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a future intention ('I'll definitely check out...') but does not confirm the action has been completed or is currently in progress as a fact.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a future intention ('I'll definitely check out...') but does not confirm the action has been completed or is currently in progress as a fact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll definitely check out the Modern Art Museum's website and social media to stay updated on their upcoming events and exhibitions.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"visiting local art studios and galleries\", \"subject\": \"user\", \"predicate\": \"planned_activity\", \"confidence\": 0.85, \"importance\": 4, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The speaker states they are 'thinking of' visiting, which indicates a consideration or intention rather than a definite plan or completed action. The assertion requires the subject to have 'planned' the activity, but the text only confirms they are considering it.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker states they are 'thinking of' visiting, which indicates a consideration or intention rather than a definite plan or completed action. The assertion requires the subject to have 'planned' the activity, but the text only confirms they are considering it.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm thinking of visiting some local art studios and galleries this weekend.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"visit local art studios and galleries\", \"subject\": \"user\", \"predicate\": \"planned_activity\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The source text expresses a future intention ('I'll definitely use...') but does not confirm the action has been completed or is currently scheduled as a fixed plan; it remains a hypothetical desire subject to change.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The source text expresses a future intention ('I'll definitely use...') but does not confirm the action has been completed or is currently scheduled as a fixed plan; it remains a hypothetical desire subject to change.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'll definitely use those resources to find some local art studios and galleries to visit this weekend.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_1:10",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Rachel Lee's work\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.85, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.64; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The speaker explicitly states they are 'particularly interested' in seeing Rachel Lee's work, which directly supports the assertion of interest.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm particularly interested in seeing more of Rachel Lee's work\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.6399999999999999, \"novelty\": 1.0, \"transient\": false, \"importance\": 7, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_1:11",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Children's Museum\", \"subject\": \"user\", \"predicate\": \"volunteered_at\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.37; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they 'recently volunteered at the Children's Museum', which directly confirms the predicate 'volunteered_at' with the object 'Children's Museum'.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I recently volunteered at the Children's Museum for their \\\"Art Afternoon\\\" event on February 17th\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3741235729012972, \"novelty\": 0.2470785763376575, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Art Afternoon\", \"subject\": \"user\", \"predicate\": \"event_participated_in\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they volunteered at the Children's Museum for their 'Art Afternoon' event on February 17th, which confirms participation in the event.\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I recently volunteered at the Children's Museum for their \\\"Art Afternoon\\\" event on February 17th\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3906414125831117, \"novelty\": 0.30213804194370564, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_2:0",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"February 17th\", \"subject\": \"user\", \"predicate\": \"volunteered_on_date\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user explicitly states they 'recently volunteered' at the Children's Museum for an event on February 17th, which directly supports the assertion that the user volunteered on that date.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they 'recently volunteered' at the Children's Museum for an event on February 17th, which directly supports the assertion that the user volunteered on that date.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I recently volunteered at the Children's Museum for their \\\"Art Afternoon\\\" event on February 17th\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:1",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"art inspiration\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.95, \"importance\": 7, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user states they are 'looking for' art inspiration and expresses a desire to explore specific artists, which indicates an ongoing search or interest rather than a completed fact of having found inspiration.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user states they are 'looking for' art inspiration and expresses a desire to explore specific artists, which indicates an ongoing search or interest rather than a completed fact of having found inspiration.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm actually looking for some art inspiration, too... I'd love to explore more in that vein.\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"mixed media art\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user explicitly states they are looking for art inspiration and expresses a desire to explore mixed media art, which confirms an interest in the subject.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they are looking for art inspiration and expresses a desire to explore mixed media art, which confirms an interest in the subject.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm actually looking for some art inspiration, too... I'd love to explore more in that vein.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"feminist art\", \"subject\": \"user\", \"predicate\": \"interest\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user explicitly states they are looking for art inspiration and expresses a desire to explore mixed media and feminist art, which confirms an interest in the subject matter.",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states they are looking for art inspiration and expresses a desire to explore mixed media and feminist art, which confirms an interest in the subject matter.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I'm actually looking for some art inspiration, too... that focus on mixed media or feminist art? I'd love to explore more in that vein.\", \"probability\": 0.95}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:2",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"Rachel Lee\", \"subject\": \"user\", \"predicate\": \"exposure_to_artist\", \"confidence\": 0.85, \"importance\": 5, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user states they were 'drawn' to Rachel Lee's work and is looking for inspiration, which indicates interest or exposure but does not confirm a completed state of exposure as a fact.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user states they were 'drawn' to Rachel Lee's work and is looking for inspiration, which indicates interest or exposure but does not confirm a completed state of exposure as a fact.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I was really drawn to Rachel Lee's work recently\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:3",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:4",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"feminist art history\", \"subject\": \"user\", \"predicate\": \"interests_in_topic\", \"confidence\": 0.95, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.39; demoted",
+          "verification": "{\"label\": \"entailment\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user explicitly states 'I'm also interested in learning more about the history of feminist art', which directly confirms the subject (user) has an interest_in_topic relationship with the object (feminist art history).\", \"backend\": \"ollama\", \"accepted\": true, \"evidence\": \"I'm also interested in learning more about the history of feminist art\", \"probability\": 1.0}",
+          "score_components": "{\"spec\": 0.2, \"score\": 0.3854672476739902, \"novelty\": 0.2848908255799675, \"transient\": false, \"importance\": 6, \"from_assistant\": false}"
+        },
+        {
+          "turn_id": "answer_901a6763_2:5",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:6",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"online_course\", \"subject\": \"user\", \"predicate\": \"editor_use\", \"confidence\": 0.9, \"importance\": 6, \"assertion_type\": \"direct_user_statement\"}",
+          "outcome": "rejected",
+          "reason": "The user states they have been taking an online course on art history 'lately' and are interested in resources, but does not explicitly confirm the specific action of editing content within that course or any other context. The predicate 'editor_use' implies a specific role or action (editing) which is not supported by the text mentioning general consumption ('taking') and interest.",
+          "verification": "{\"label\": \"neutral\", \"model\": \"qwen3.5:4b-mlx\", \"reason\": \"The user states they have been taking an online course on art history 'lately' and are interested in resources, but does not explicitly confirm the specific action of editing content within that course or any other context. The predicate 'editor_use' implies a specific role or action (editing) which is not supported by the text mentioning general consumption ('taking') and interest.\", \"backend\": \"ollama\", \"accepted\": false, \"evidence\": \"I've been taking an online course on art history lately\", \"probability\": 0.5}",
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:7",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:8",
+          "candidate": "{\"kind\": \"triple\", \"object\": \"street art workshop for kids at the Children's Museum\", \"subject\": \"user\", \"predicate\": \"planned_event\", \"confidence\": 0.85, \"importance\": 6, \"assertion_type\": \"agent_inference\"}",
+          "outcome": "rejected",
+          "reason": "tentative consideration does not establish a definite plan or intention",
+          "verification": null,
+          "score_components": null
+        },
+        {
+          "turn_id": "answer_901a6763_2:9",
+          "candidate": "{}",
+          "outcome": "rejected",
+          "reason": "assistant turns are excluded",
+          "verification": null,
+          "score_components": null
+        }
+      ],
+      "metadata": {
+        "dataset": "longmemeval-adapter",
+        "dataset_version": "1.0.0",
+        "split": "holdout",
+        "turns": 46,
+        "synthetic": false,
+        "mode": "candidate_replay",
+        "candidate_preparation_ms": 168089.77937500458,
+        "shared_candidate_usage": {
+          "requests": 46,
+          "input_tokens": 51640,
+          "output_tokens": 2295,
+          "unmetered_requests": 0
+        },
+        "shared_candidate_cost": {
+          "usd": null,
+          "reason": "No pricing supplied; measured usage is reported separately."
+        },
+        "model_names": {
+          "extractor": "qwen3.5:4b-mlx",
+          "embedder": "nomic-embed-text",
+          "verifier": "cross-encoder/nli-deberta-v3-small"
+        },
+        "gate_config": {
+          "backend": "ollama",
+          "extractor_model": "qwen3.5:4b-mlx",
+          "embed_model": "nomic-embed-text",
+          "embed_dim": 768,
+          "verifier_backend": "cross_encoder",
+          "verifier_model": "cross-encoder/nli-deberta-v3-small",
+          "verifier_entailment_threshold": 0.99,
+          "verifier_fallback_backend": "ollama",
+          "verifier_fallback_model": null,
+          "verifier_timeout_seconds": 20.0,
+          "verifier_max_retries": 1,
+          "extractor_timeout_seconds": 120.0,
+          "extractor_max_retries": 2,
+          "confidence_floor": 0.5,
+          "w_imp": 0.4,
+          "w_spec": 0.3,
+          "w_nov": 0.3,
+          "w_src": 0.4,
+          "transient_penalty": 0.15,
+          "durable_cutoff": 0.7,
+          "ephemeral_floor": 0.45,
+          "predicate_vocab": [
+            "name",
+            "role",
+            "preferred_database",
+            "uses_database",
+            "preferred_language",
+            "primary_language",
+            "team_lead",
+            "ship_day",
+            "location",
+            "timezone",
+            "deploy_method",
+            "goal",
+            "currently_debugging",
+            "dislikes"
+          ],
+          "session_ttl_seconds": 86400.0,
+          "update_sim": 0.9,
+          "dedup_sim": 0.92,
+          "pipeline_version": "2026-09-11-v5.1",
+          "fingerprint": "222b8d6b446d04fd6dee748537a3aa893e6ce48569c1c1bdec1c5d3c24e75d0e"
+        },
+        "fingerprints": {
+          "dataset": "dcc814c5359d00ce545005675fb4d704b7dca2ceab79d6923cfa25eacbadf8b1",
+          "extractor": "6fd9dad79613348ea595ec95827e159c30a63bb2db36e9859214c7f8116c070a",
+          "verifier": "bbfa4420f619543337f56280525c97cefe634402eb2cc032cbc6eccd0c7722f6",
+          "embedder": "34e904ebcfe3eda066977ff57c8c6b62f585cb62ae21309a75ca206b4f297d18",
+          "config": "222b8d6b446d04fd6dee748537a3aa893e6ce48569c1c1bdec1c5d3c24e75d0e"
+        },
+        "cleanup_errors": []
+      }
+    }
+  }
+}

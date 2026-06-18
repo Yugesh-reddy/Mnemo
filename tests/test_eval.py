@@ -54,6 +54,7 @@ async def test_gated_beats_naive_the_north_star(_disposable_test_db: str, clean_
     assert result["gated"]["false"] == 0
     assert result["naive"]["false"] > 0
     assert result["gated"]["recall"] == 1.0
+    assert result["gated"]["must_keep_recall"] == 1.0
 
 
 def test_versioned_benchmark_has_real_splits_and_distinct_slices() -> None:

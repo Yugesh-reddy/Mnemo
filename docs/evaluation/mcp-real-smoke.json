@@ -1,0 +1,123 @@
+{
+  "date": "2026-09-09",
+  "namespace": "mcp-validation-eea84690348b489795bbdd99eae30ae9",
+  "health": {
+    "statuses": {
+      "done": 1
+    },
+    "processing_latency_24h": {
+      "mean_ms": 9854.1,
+      "p95_ms": 9854.1
+    },
+    "archived_24h": 0,
+    "oldest_pending_seconds": 0.0,
+    "retries": 0,
+    "failures": []
+  },
+  "facts": [
+    {
+      "fact_id": "5220f60b-27f0-442f-a187-c9592d796eb6",
+      "subject": "user",
+      "predicate": "location",
+      "value": "Austin",
+      "trust": "low",
+      "tier": "durable",
+      "score": 0.835,
+      "source": "semantic"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "406807fd-2a9a-45a3-b6a4-bee3b36f1319",
+      "job_id": "9f25eb2d-00e6-4374-8368-4fa3735b9791",
+      "namespace": "mcp-validation-eea84690348b489795bbdd99eae30ae9",
+      "user_id": "default",
+      "agent_id": "default",
+      "session_id": "validation",
+      "turn_id": "real-user",
+      "candidate_index": 0,
+      "candidate": {
+        "kind": "triple",
+        "object": "Austin",
+        "subject": "user",
+        "predicate": "location",
+        "confidence": 0.95,
+        "importance": 7,
+        "assertion_type": "direct_user_statement"
+      },
+      "outcome": "accepted",
+      "reason": "entailment; score=0.88; accepted",
+      "verification": {
+        "label": "entailment",
+        "model": "cross-encoder/nli-deberta-v3-small",
+        "reason": "NLI entailment passed threshold",
+        "backend": "cross_encoder",
+        "accepted": true,
+        "evidence": "I live in Austin.",
+        "probability": 0.9976361989974976
+      },
+      "score_components": {
+        "spec": 1.0,
+        "score": 0.8799999999999999,
+        "novelty": 1.0,
+        "transient": false,
+        "importance": 7,
+        "from_assistant": false
+      },
+      "config_snapshot": {
+        "w_imp": 0.4,
+        "w_nov": 0.3,
+        "w_src": 0.4,
+        "w_spec": 0.3,
+        "backend": "ollama",
+        "dedup_sim": 0.92,
+        "embed_dim": 768,
+        "update_sim": 0.9,
+        "embed_model": "nomic-embed-text",
+        "fingerprint": "6f82d68f39b3edd45813d69a65b6877756b1d8e399845812fcd3736459ae207a",
+        "durable_cutoff": 0.7,
+        "verifier_model": "cross-encoder/nli-deberta-v3-small",
+        "ephemeral_floor": 0.45,
+        "extractor_model": "qwen3.5:4b-mlx",
+        "predicate_vocab": [
+          "name",
+          "role",
+          "preferred_database",
+          "preferred_language",
+          "team_lead",
+          "ship_day",
+          "location",
+          "timezone",
+          "deploy_method",
+          "goal",
+          "currently_debugging",
+          "dislikes"
+        ],
+        "confidence_floor": 0.5,
+        "pipeline_version": "2026-09-09-v3",
+        "verifier_backend": "cross_encoder",
+        "transient_penalty": 0.15,
+        "session_ttl_seconds": 86400.0,
+        "verifier_max_retries": 1,
+        "extractor_max_retries": 2,
+        "verifier_fallback_model": null,
+        "verifier_timeout_seconds": 20.0,
+        "extractor_timeout_seconds": 120.0,
+        "verifier_fallback_backend": "ollama",
+        "verifier_entailment_threshold": 0.99
+      },
+      "source_span": {
+        "turn_ids": [
+          "real-user"
+        ],
+        "cache_ids": [
+          "c4c217dc-e83b-4e20-bf4d-b0e3bdd412c6"
+        ],
+        "session_id": "validation"
+      },
+      "event_id": "bf0bb8ef-0cbd-4d93-be03-5667e3f0f4e5",
+      "recorded_at": "2026-09-09T22:45:53.176790Z"
+    }
+  ],
+  "passed": true
+}
