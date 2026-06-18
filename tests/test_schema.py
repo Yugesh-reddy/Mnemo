@@ -5,9 +5,13 @@ Acceptance (spec §12 M1): migrations apply cleanly; the view returns seeded fac
 
 from __future__ import annotations
 
+from urllib.parse import urlsplit, urlunsplit
+from uuid import uuid4
+
 import asyncpg
 import pytest
 
+from mnemo import db as mdb
 from mnemo.seed import seed
 
 CORE_TABLES = [
@@ -18,6 +22,41 @@ CORE_TABLES = [
     "extraction_job",
     "schema_migrations",
 ]
+
+
+async def test_connect_and_migrate_on_database_without_vector_extension(
+    _disposable_test_db: str,
+) -> None:
+    """The public connection path must work before migrations install pgvector."""
+    parts = urlsplit(_disposable_test_db)
+    name = "mnemo_fresh_" + uuid4().hex[:12]
+    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
+    try:
+        await admin.execute(f'CREATE DATABASE "{name}"')
+        dsn = urlunsplit(parts._replace(path="/" + name))
+        conn = await mdb.connect(dsn)
+        try:
+            assert not await conn.fetchval(
+                "SELECT EXISTS (SELECT 1 FROM pg_extension WHERE extname='vector')"
+            )
+            applied = await mdb.apply_migrations(conn)
+            assert applied[0] == "0001_init.sql"
+            assert await conn.fetchval("SELECT count(*) FROM memory_fact") == 0
+            assert await mdb.apply_migrations(conn) == []
+        finally:
+            await conn.close()
+
+        # Normal connections still decode vectors after the extension is installed.
+        conn = await mdb.connect(dsn)
+        try:
+            assert await conn.fetchval("SELECT '[1,2,3]'::vector") == [1.0, 2.0, 3.0]
+        finally:
+            await conn.close()
+    finally:
+        try:
+            await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
+        finally:
+            await admin.close()
 
 
 async def test_core_tables_exist(db: asyncpg.Connection) -> None:

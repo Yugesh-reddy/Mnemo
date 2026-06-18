@@ -59,6 +59,11 @@ async def register_vector(conn: asyncpg.Connection) -> None:
         )
     except asyncpg.exceptions.UndefinedObjectError:
         pass
+    except ValueError as exc:
+        # asyncpg 0.31 reports a missing type this way before migrations install
+        # pgvector. Other codec errors still need to reach the caller.
+        if str(exc) != "unknown type: public.vector":
+            raise
 
 
 async def connect(dsn: str | None = None) -> asyncpg.Connection:
