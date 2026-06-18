@@ -1,11 +1,12 @@
 # Mnemo — Master Plan
 
-**Execution update (September 21, 2026):** local Tasks 0.1–0.4 are implemented.
-Required-Postgres validation passes 232 tests; three live-Ollama tests skip.
-Lint, a clean-clone install/migrate/eval, wheel checks and locked source-archive
-installation pass. Task 0.5 remains pending because no Git remote is configured.
-See `PROJECT_STATUS.md` for verification details. Later phases are not implemented;
-contract decisions still follow `AGENTS.md` rule 6.
+**Execution update (September 21, 2026):** local Tasks 0.1–0.4 and Phase 1
+are implemented. Required-Postgres validation passes 249 tests; three live-Ollama
+tests skip. Lint, clean-clone installation/migrations/direct demo, external MCP
+lifecycle/restart and wheel/source packaging pass. Task 0.5 remains pending because
+no Git remote is configured. The user explicitly approved Phase 2's additive
+receipt schema and guarded API contract in this session; implementation is next.
+See `PROJECT_STATUS.md` for verification details.
 
 Written September 21, 2026 against checkout `0468977` (working tree: one uncommitted
 `.gitignore` change). This document **supersedes** the three research documents as the
@@ -388,7 +389,7 @@ stdio MCP client** in the test suite and as a runnable demo, with zero model dep
 `mnemo/quality.py::build_verifier`, `mnemo/runtime.py`, `tests/test_embeddings.py`,
 `tests/test_runtime_config.py`, `.env.example`.
 
-- [ ] Failing tests:
+- [x] Failing tests:
 
 ```python
 def test_hash_embedder_is_deterministic_and_normalized():
@@ -414,7 +415,7 @@ def test_hash_backend_disables_worker_by_default_and_refuses_explicit_worker():
         Settings(backend="hash", worker_enabled=True)                # explicit contradiction
 ```
 
-- [ ] Implement. `embedder.py`:
+- [x] Implement. `embedder.py`:
 
 ```python
 class HashEmbedder:
@@ -454,14 +455,14 @@ class HashEmbedder:
 ```
   `build_extractor` / `build_verifier`: `if s.backend == "hash": raise ValueError(...)` (defensive).
   `.env.example`: document `MNEMO_BACKEND=hash  # deterministic, non-semantic; direct profile/demo only`.
-- [ ] Replace `tests/conftest.py::FakeEmbedder` with `from mnemo.embedder import HashEmbedder as FakeEmbedder` (same algorithm — vectors are identical, so no test fixtures change).
-- [ ] Run full suite, lint. Commit: `feat: deterministic hash embedder backend for model-free direct memory`.
+- [x] Replace `tests/conftest.py::FakeEmbedder` with `from mnemo.embedder import HashEmbedder as FakeEmbedder` (same algorithm — vectors are identical, so no test fixtures change).
+- [x] Run full suite, lint. Commit: `feat: deterministic hash embedder backend for model-free direct memory`.
 
 ### Task 1.2 — External stdio lifecycle test (legacy tools)
 
 **Files:** create `tests/test_mcp_direct_stdio.py`.
 
-- [ ] Write the test (this is the probe that was run during verification, formalized):
+- [x] Write the test (this is the probe that was run during verification, formalized):
 
 ```python
 """Real stdio client: create -> update -> history -> revert -> read back, no models."""
@@ -520,22 +521,22 @@ async def test_external_lifecycle_postgres_mysql_postgres(_disposable_test_db, c
         await conn.close()
 ```
 
-- [ ] Add to `tests/test_runtime_config.py` a unit test that `background_runtime` with
+- [x] Add to `tests/test_runtime_config.py` a unit test that `background_runtime` with
   `worker_enabled=False` never calls `build_extractor`/`build_verifier` (monkeypatch both to raise).
-- [ ] Run, lint, commit: `test: external stdio lifecycle proof with no model dependencies`.
+- [x] Run, lint, commit: `test: external stdio lifecycle proof with no model dependencies`.
 
 ### Task 1.3 — Runnable direct demo
 
 **Files:** create `examples/direct_memory.py`; `Makefile` add `demo-direct`; README (one paragraph, full rewrite waits for Phase 4).
 
-- [ ] `examples/direct_memory.py`: Typer app; connects with `MNEMO_BACKEND=hash` unless the
+- [x] `examples/direct_memory.py`: Typer app; connects with `MNEMO_BACKEND=hash` unless the
   user has a real backend configured; runs the five-step conversation from the research
   doc, printing each returned `event_id`, then the `blame` table, then `get`; uses a fresh
   namespace `demo-direct-<hex>`. Prints "embeddings: hash (non-semantic)" when applicable.
-- [ ] `Makefile`: `demo-direct:  ## Direct write -> history -> revert through the SDK, no models\n\tMNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false $(RUN) python examples/direct_memory.py`
-- [ ] Hermetic test `tests/test_demo.py::test_direct_demo_runs` (call the scenario function
+- [x] `Makefile`: `demo-direct:  ## Direct write -> history -> revert through the SDK, no models\n\tMNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false $(RUN) python examples/direct_memory.py`
+- [x] Hermetic test `tests/test_demo.py::test_direct_demo_runs` (call the scenario function
   against the disposable DB).
-- [ ] Commit: `feat: make demo-direct — model-free write/history/revert demo`.
+- [x] Commit: `feat: make demo-direct — model-free write/history/revert demo`.
 
 **Phase 1 exit:** `make demo-direct` works on a fresh clone; the stdio test passes in CI;
 no extractor/verifier is constructed when the worker is disabled (tested).

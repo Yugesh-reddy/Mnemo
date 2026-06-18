@@ -6,6 +6,36 @@ Updated September 21, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
 
+## Master plan Phase 1: model-free lifecycle proof
+
+`MNEMO_BACKEND=hash` supplies deterministic, normalized, non-semantic embeddings.
+It uses the configured dimension, defaults background work off, rejects an
+explicit enabled worker, and refuses extractor/verifier construction. Tests use
+the same hash implementation; output matches the former fake embedder exactly.
+Existing Ollama/OpenAI defaults and store semantics are unchanged.
+
+The real stdio MCP test proves PostgreSQL → MySQL → history → revert → PostgreSQL,
+then restarts the server and verifies the persisted HEAD and event chain. Runtime
+tests reject any attempt to construct extraction/verification or schedule decay
+with the worker disabled. `make demo-direct` runs the same lifecycle through the
+synchronous SDK, prints revision IDs and provenance, and uses a fresh namespace.
+The standalone module honors explicitly configured backends and otherwise uses
+hash. Hash similarity does not establish semantic relevance.
+
+Verification: `make test-db` reports **249 passed, 3 live-Ollama skips**; `make lint`
+passes Ruff/Black (72 Python files). Nine demo tests cover the lifecycle, CLI,
+backend selection and contradictory configuration. A clean local clone with no
+`.env` and an invocation-owned empty database passes `make install`, `make migrate`,
+`make demo-direct`, the external stdio lifecycle test, `uv build` and the extended
+`bash scripts/check-wheel.sh`. The packaging check runs the demo from the installed
+wheel and installs the source archive with its lockfile. `make eval` retains the
+18-turn synthetic 90.9% precision / 100% recall / zero false writes result.
+The independent reviewer hit its account usage limit before completing Phase 1;
+local diff review and executable verification were completed.
+
+The user explicitly approved Phase 2's receipt migration and guarded mutation
+contract. Phase 2 implementation is next; no guarded API or schema has shipped yet.
+
 ## Master plan Phase 0: local fixes
 
 Fresh-database connections now tolerate pgvector not being installed yet, so
@@ -37,8 +67,8 @@ extracted source archive as well as the wheel. The extended packaging check and
 evaluation artifacts, including their raw log whitespace, are preserved.
 
 Hosted CI and branch protection (Task 0.5) remain pending: no Git remote is
-configured. The direct backend, guarded mutation contract and product framing
-changes are not part of this first set of fixes. Extraction quality is unchanged.
+configured. The guarded mutation contract and product framing changes are not part of
+Phase 0. Extraction quality is unchanged.
 
 ## Current milestone: bounded quote-feedback experiment rejected
 
