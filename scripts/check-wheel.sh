@@ -38,6 +38,8 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval-suite" --help
 "$mnemo_wheel_env/venv/bin/mnemo-benchmark" --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
+MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false \
+  "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
 
 # The source archive must support the same locked install as a fresh checkout.
 mkdir "$mnemo_wheel_env/source"

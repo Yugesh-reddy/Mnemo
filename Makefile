@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp demo ui
+.PHONY: help install up down migrate seed test lint fmt mcp demo demo-direct ui
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -42,6 +42,9 @@ mcp:  ## Run the MCP server (stdio)
 
 demo:  ## Run the end-to-end rollback demo (spec §10)
 	$(RUN) python examples/agent.py demo
+
+demo-direct:  ## Direct write -> history -> revert through the SDK, no models
+	MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false $(RUN) python -m examples.direct_memory
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000

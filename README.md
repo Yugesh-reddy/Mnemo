@@ -19,6 +19,18 @@ make migrate
 make eval       # 18-turn deterministic regression, no model required
 ```
 
+Run `make demo-direct` for a scripted SDK lifecycle: remember PostgreSQL, change
+to MySQL, inspect history, restore PostgreSQL and read it back. This uses the
+non-semantic `hash` backend, a fresh namespace and no model server or background
+worker. Hash vectors are deterministic; use keyword queries, not similarity as
+evidence of meaning. For MCP without models, run
+`MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false make mcp`. These use the existing
+direct-write tools; revision guards and idempotency receipts are still planned.
+`uv run python -m examples.direct_memory` honors a backend explicitly set in
+`.env` or `MNEMO_BACKEND`, otherwise defaulting to hash. Keep the configured
+embedding dimension matched to the database, and use a separate database for
+hash demos when existing memories use a semantic embedding model.
+
 For extraction and embeddings, start Ollama and install the configured models:
 
 ```bash
