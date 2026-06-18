@@ -556,6 +556,8 @@ def _llm(settings: Settings, backend: str, model: str) -> LLMVerifier:
 
 def build_verifier(settings: Settings | None = None) -> Verifier:
     settings = settings or get_settings()
+    if settings.backend == "hash":
+        raise ValueError("backend=hash has no verifier; use a model backend for verification")
     backend = settings.verifier_backend
     if backend == "heuristic":
         return HeuristicVerifier()

@@ -1,12 +1,13 @@
-"""Embedder abstraction with two backends: Ollama (local, default) and OpenAI.
+"""Embeddings via Ollama (default), OpenAI, or deterministic non-semantic hashes.
 
 The core is async; ``embed`` here is sync (simple httpx) and the store calls it via
-``asyncio.to_thread`` so a network round-trip never blocks the event loop. Tests use
-a deterministic fake embedder instead of either backend.
+``asyncio.to_thread`` so a network round-trip never blocks the event loop. The hash
+backend supports tests and direct-memory demos without a model server.
 """
 
 from __future__ import annotations
 
+import hashlib
 from typing import Protocol, runtime_checkable
 
 import httpx
@@ -22,6 +23,29 @@ class Embedder(Protocol):
     dim: int
 
     def embed(self, text: str) -> list[float]: ...
+
+
+class HashEmbedder:
+    """Deterministic SHA-256 vectors for model-free demos and tests. NOT semantic.
+
+    Identical text gives an identical L2-normalized vector. Similarity between
+    different texts does not measure meaning; use keyword search for this backend.
+    """
+
+    def __init__(self, dim: int) -> None:
+        self.dim = dim
+
+    def embed(self, text: str) -> list[float]:
+        raw = b""
+        i = 0
+        while len(raw) < self.dim * 4:
+            raw += hashlib.sha256(f"{i}:{text}".encode()).digest()
+            i += 1
+        values = [
+            (int.from_bytes(raw[j * 4 : j * 4 + 4], "big") / 2**31) - 1.0 for j in range(self.dim)
+        ]
+        norm = sum(value * value for value in values) ** 0.5 or 1.0
+        return [value / norm for value in values]
 
 
 class OllamaEmbedder:
@@ -90,8 +114,10 @@ class OpenAIEmbedder:
 
 
 def build_embedder(settings: Settings | None = None) -> Embedder:
-    """Construct the configured embedder (Ollama unless backend == 'openai')."""
+    """Construct the configured embedder; hash vectors are non-semantic."""
     s = settings or get_settings()
+    if s.backend == "hash":
+        return HashEmbedder(s.embed_dim)
     if s.backend == "openai":
         return OpenAIEmbedder(
             model=s.embed_model,

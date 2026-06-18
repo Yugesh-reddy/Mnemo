@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     test_dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo_test"
 
     # --- Backend selection ---
-    backend: Literal["ollama", "openai"] = "ollama"
+    backend: Literal["ollama", "openai", "hash"] = "ollama"
 
     # --- Ollama (default backend) ---
     ollama_host: str = "http://localhost:11434"
@@ -157,6 +157,13 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_configuration(self) -> Settings:
+        if self.backend == "hash":
+            if "worker_enabled" not in self.model_fields_set:
+                self.worker_enabled = False
+            elif self.worker_enabled:
+                raise ValueError(
+                    "backend=hash has no extractor/verifier; set MNEMO_WORKER_ENABLED=false"
+                )
         # A backend switch must not silently send Ollama model names to OpenAI.
         if self.backend == "openai":
             if "embed_model" not in self.model_fields_set:

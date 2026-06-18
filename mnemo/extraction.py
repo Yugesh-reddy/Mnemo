@@ -629,8 +629,10 @@ class ExtractionWorker:
 
 
 def build_extractor(settings: Settings | None = None) -> Extractor:
-    """Construct the configured extractor (Ollama unless backend == 'openai')."""
+    """Construct a real extractor; the hash backend has no extraction provider."""
     s = settings or get_settings()
+    if s.backend == "hash":
+        raise ValueError("backend=hash has no extractor; use a model backend for extraction")
     if s.backend == "openai":
         return OpenAIExtractor(
             model=s.extractor_model,

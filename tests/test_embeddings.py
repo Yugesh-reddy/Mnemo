@@ -19,6 +19,31 @@ from mnemo.core import MnemoStore
 DIM = 768
 
 
+def test_hash_embedder_is_deterministic_and_normalized() -> None:
+    from mnemo.embedder import HashEmbedder
+
+    embedder = HashEmbedder(dim=768)
+    vector = embedder.embed("PostgreSQL")
+    assert vector == HashEmbedder(dim=768).embed("PostgreSQL")
+    assert len(vector) == 768
+    assert math.isclose(math.sqrt(sum(value * value for value in vector)), 1.0, abs_tol=1e-6)
+    assert embedder.embed("MySQL") != vector
+
+
+def test_hash_backend_builds_hash_embedder_without_network(monkeypatch) -> None:
+    from mnemo.embedder import HashEmbedder, build_embedder
+
+    def no_http_client(*args, **kwargs):
+        raise AssertionError("hash embeddings must not construct a network client")
+
+    monkeypatch.setattr(httpx, "Client", no_http_client)
+    settings = Settings(_env_file=None, backend="hash", embed_dim=64, worker_enabled=False)
+    embedder = build_embedder(settings)
+    assert isinstance(embedder, HashEmbedder)
+    assert embedder.dim == 64
+    assert len(embedder.embed("PostgreSQL")) == 64
+
+
 def _planted(*coords: float) -> list[float]:
     """A unit 768-vector with the given leading components (rest zero)."""
     v = list(coords) + [0.0] * (DIM - len(coords))

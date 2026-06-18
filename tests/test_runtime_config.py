@@ -39,3 +39,29 @@ async def test_database_dimension_mismatch_fails_before_a_write(db):
     with pytest.raises(ValueError, match="explicitly migrate and re-embed"):
         await validate_embedding_dimension(db, 1536)
     await validate_embedding_dimension(db, 768)
+
+
+def test_hash_backend_disables_worker_by_default_and_refuses_explicit_worker(monkeypatch):
+    monkeypatch.delenv("MNEMO_WORKER_ENABLED", raising=False)
+    assert Settings(_env_file=None, backend="hash").worker_enabled is False
+    assert Settings(_env_file=None, backend="hash", worker_enabled=False).worker_enabled is False
+    with pytest.raises(ValidationError, match="MNEMO_WORKER_ENABLED=false"):
+        Settings(_env_file=None, backend="hash", worker_enabled=True)
+
+
+def test_hash_backend_rejects_worker_enabled_from_environment(monkeypatch):
+    monkeypatch.setenv("MNEMO_BACKEND", "hash")
+    monkeypatch.setenv("MNEMO_WORKER_ENABLED", "true")
+    with pytest.raises(ValidationError, match="MNEMO_WORKER_ENABLED=false"):
+        Settings(_env_file=None)
+
+
+@pytest.mark.parametrize("component", ["extractor", "verifier"])
+def test_hash_backend_rejects_extraction_components(component):
+    from mnemo.extraction import build_extractor
+    from mnemo.quality import build_verifier
+
+    settings = Settings(_env_file=None, backend="hash", worker_enabled=False)
+    builder = build_extractor if component == "extractor" else build_verifier
+    with pytest.raises(ValueError, match="backend=hash"):
+        builder(settings)
