@@ -43,6 +43,7 @@ include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md
 [project.scripts]
 mnemo-migrate = "mnemo.db:main"
 mnemo-mcp = "mnemo.mcp_server:main"
+mnemo-mcp-direct = "mnemo.mcp_direct:main"
 mnemo-worker = "mnemo.worker:main"
 mnemo-eval = "mnemo.eval:main"
 mnemo-audit-eval = "mnemo.eval_audit:main"
