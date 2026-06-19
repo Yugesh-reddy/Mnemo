@@ -5,6 +5,7 @@ Acceptance (spec §12 M1): migrations apply cleanly; the view returns seeded fac
 
 from __future__ import annotations
 
+import shutil
 from urllib.parse import urlsplit, urlunsplit
 from uuid import uuid4
 
@@ -147,3 +148,54 @@ async def test_each_seed_fact_has_exactly_one_live_event(
         predicate,
     )
     assert live == 1
+
+
+async def test_mutation_receipts_are_scoped_unique_and_immutable(store, db) -> None:
+    event = await store.add("user", "preferred_database", "PostgreSQL")
+    request_id = uuid4()
+    insert = """
+        INSERT INTO memory_mutation_receipt
+            (namespace, user_id, agent_id, request_id, operation, request_payload,
+             status, fact_id, event_id, result)
+        VALUES ($1, 'default', 'default', $2, 'create', '{}', 'applied', $3, $4, '{}')
+    """
+    await db.execute(insert, "default", request_id, event.fact_id, event.event_id)
+    with pytest.raises(asyncpg.UniqueViolationError):
+        async with db.transaction():
+            await db.execute(insert, "default", request_id, event.fact_id, event.event_id)
+    await db.execute(insert, "other", request_id, event.fact_id, event.event_id)
+    for statement in (
+        "UPDATE memory_mutation_receipt SET result='{}'",
+        "DELETE FROM memory_mutation_receipt",
+    ):
+        with pytest.raises(asyncpg.CheckViolationError, match="append-only") as error:
+            async with db.transaction():
+                await db.execute(statement)
+        assert error.value.sqlstate == "23514"
+    assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 2
+
+
+async def test_0010_applies_over_populated_0009(db, fake_embedder, tmp_path) -> None:
+    from mnemo.core import MnemoStore
+
+    for migration in sorted(mdb.MIGRATIONS_DIR.glob("*.sql")):
+        if int(migration.name.split("_")[0]) <= 9:
+            shutil.copy(migration, tmp_path / migration.name)
+    schema = "mnemo_upgrade_" + uuid4().hex
+    await db.execute(f'CREATE SCHEMA "{schema}"')
+    await db.execute(f'SET LOCAL search_path TO "{schema}", public')
+    # Prevent the public schema's migration bookkeeping from shadowing this one.
+    await db.execute(
+        "CREATE TABLE schema_migrations (filename text PRIMARY KEY, "
+        "applied_at timestamptz NOT NULL DEFAULT now())"
+    )
+    assert len(await mdb.apply_migrations(db, tmp_path)) == 9
+    legacy = MnemoStore(db, fake_embedder)
+    await legacy.add("user", "preferred_database", "PostgreSQL")
+    await legacy.add("user", "preferred_language", "Python")
+    snapshot = "SELECT row_to_json(f)::text FROM memory_fact f ORDER BY fact_id"
+    before = await db.fetch(snapshot)
+    assert await mdb.apply_migrations(db) == ["0010_mutation_receipts.sql"]
+    assert await db.fetch(snapshot) == before
+    assert await db.fetchval("SELECT count(*) FROM memory_current") == 2
+    assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0

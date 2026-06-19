@@ -124,7 +124,7 @@ def clean_memory(_disposable_test_db: str):
         conn = await asyncpg.connect(_disposable_test_db)
         try:
             await conn.execute(
-                "TRUNCATE memory_event, memory_fact, memory_commit, "
+                "TRUNCATE memory_mutation_receipt, memory_event, memory_fact, memory_commit, "
                 "fast_cache, extraction_job RESTART IDENTITY CASCADE"
             )
         finally:
