@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from decimal import Decimal
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -180,3 +180,67 @@ class ExtractedFact(BaseModel):
     assertion_type: str = "agent_inference"
     evidence: str | None = Field(default=None, min_length=1)
     """Untrusted quote hint; the worker checks it against the original input."""
+
+
+class MutationResult(BaseModel):
+    status: Literal["applied", "no_change"]
+    fact_id: UUID
+    event_id: UUID
+    previous_event_id: UUID | None = None
+    restored_from_event_id: UUID | None = None
+    value: str
+    request_id: UUID
+    replayed: bool = False
+
+
+class CurrentValue(BaseModel):
+    fact_id: UUID
+    subject: str
+    predicate: str
+    value: str
+    current_event_id: UUID
+    provenance: str
+    trust_level: str
+    recorded_at: datetime
+
+
+class HistoricalValue(BaseModel):
+    fact_id: UUID
+    event_id: UUID
+    op: str
+    value: str
+    provenance: str
+    trust_level: str
+    actor: str | None
+    recorded_at: datetime
+    current_event_id: UUID | None
+    restorable: bool
+
+
+class HistoryEntry(BaseModel):
+    event_id: UUID
+    seq: int
+    op: str
+    value_preview: str
+    value_truncated: bool
+    provenance: str
+    trust_level: str
+    actor: str | None
+    recorded_at: datetime
+    restored_from_event_id: UUID | None = None
+
+
+class HistoryPage(BaseModel):
+    fact_id: UUID
+    current_event_id: UUID | None
+    entries: list[HistoryEntry]
+    next_cursor: str | None
+
+
+class SearchHit(BaseModel):
+    fact_id: UUID
+    event_id: UUID
+    subject: str
+    predicate: str
+    value: str
+    score: float

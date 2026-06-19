@@ -841,34 +841,15 @@ class MnemoStore:
             if target is None:
                 raise ValueError(f"event {to_event_id} does not belong to fact {fact_id}")
 
-            row = await self.conn.fetchrow(
-                f"""
-                INSERT INTO memory_event
-                    (fact_id, op, object_text, object_number, object_json, embedding,
-                     provenance, actor, confidence, trust_level, source_span,
-                     session_id, expires_at, valid_from, parent_event_id, importance, write_score,
-                       tier,
-                     reason, strength, recall_count, last_used)
-                SELECT fact_id, 'REVERT', object_text, object_number, object_json, embedding,
-                       'human_review', $3, 1.0, 'high', source_span,
-                       COALESCE(session_id, $5),
-                       CASE WHEN tier='session' THEN
-                           clock_timestamp()+make_interval(secs => $6) END,
-                       now(), event_id, importance, write_score, tier,
-                       $4, strength, recall_count, last_used
-                FROM memory_event WHERE event_id=$1 AND fact_id=$2
-                RETURNING {_EVENT_COLS}
-                """,
-                to_event_id,
+            event = await self._copy_as_revert(
                 fact_id,
-                actor,
-                f"revert to {str(to_event_id)[:8]}",
-                await self.conn.fetchval(
-                    "SELECT session_id FROM memory_fact WHERE fact_id=$1", fact_id
-                ),
-                self.settings.session_ttl_seconds,
+                to_event_id,
+                provenance="human_review",
+                trust_level="high",
+                confidence=1.0,
+                actor=actor,
+                reason=f"revert to {str(to_event_id)[:8]}",
             )
-            event = Event.from_row(row)
 
             current_id = fact["current_event_id"]
             if current_id is not None and current_id != event.event_id:
@@ -879,6 +860,56 @@ class MnemoStore:
                 "UPDATE memory_fact SET status='active' WHERE fact_id=$1", fact_id
             )
             return event
+
+    async def _copy_as_revert(
+        self,
+        fact_id: UUID,
+        to_event_id: UUID,
+        *,
+        provenance: str | None,
+        trust_level: str | None,
+        actor: str | None,
+        reason: str,
+        confidence: float | None = None,
+    ) -> Event:
+        """Copy a scoped target into a new event inside the caller's transaction.
+
+        None preserves source provenance, trust and confidence. Legacy human
+        review explicitly overrides all three. HEAD movement belongs to the caller.
+        """
+        row = await self.conn.fetchrow(
+            f"""
+            INSERT INTO memory_event
+                (fact_id, op, object_text, object_number, object_json, embedding,
+                 provenance, actor, confidence, trust_level, source_span,
+                 session_id, expires_at, valid_from, parent_event_id, importance, write_score,
+                 tier, reason, strength, recall_count, last_used)
+            SELECT fact_id, 'REVERT', object_text, object_number, object_json, embedding,
+                   COALESCE($3::mem_provenance, provenance), $4,
+                   COALESCE($9::double precision, confidence),
+                   COALESCE($5::mem_trust, trust_level), source_span,
+                   COALESCE(session_id, $6),
+                   CASE WHEN tier='session' THEN clock_timestamp()+make_interval(secs => $7) END,
+                   now(), event_id, importance, write_score, tier,
+                   $8, strength, recall_count, last_used
+            FROM memory_event WHERE event_id=$1 AND fact_id=$2
+            RETURNING {_EVENT_COLS}
+            """,
+            to_event_id,
+            fact_id,
+            provenance,
+            actor,
+            trust_level,
+            await self.conn.fetchval(
+                "SELECT session_id FROM memory_fact WHERE fact_id=$1", fact_id
+            ),
+            self.settings.session_ttl_seconds,
+            reason,
+            confidence,
+        )
+        if row is None:
+            raise ValueError("restore target not found")
+        return Event.from_row(row)
 
     async def reinforce(self, fact_id: UUID) -> None:
         """Recall reinforcement (MemoryBank): S += 1, t -> 0 on the live event.
