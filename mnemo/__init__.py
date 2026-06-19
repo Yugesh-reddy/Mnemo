@@ -19,10 +19,32 @@ import asyncpg
 
 from mnemo.core import MnemoStore
 from mnemo.db import register_vector
-from mnemo.models import Commit, Diff, Event, Fact
+from mnemo.direct import DirectMemory
+from mnemo.errors import ErrorCode, MnemoError
+from mnemo.models import (
+    Commit,
+    CurrentValue,
+    Diff,
+    Event,
+    Fact,
+    HistoricalValue,
+    HistoryPage,
+    MutationResult,
+    SearchHit,
+)
 
 __version__ = "0.0.1"
-__all__ = ["Mnemo", "MnemoStore", "Event", "Fact", "Commit", "Diff"]
+__all__ = [
+    "Mnemo",
+    "MnemoStore",
+    "Event",
+    "Fact",
+    "Commit",
+    "Diff",
+    "MutationResult",
+    "MnemoError",
+    "ErrorCode",
+]
 
 T = TypeVar("T")
 
@@ -44,6 +66,11 @@ class Mnemo:
         self._namespace = namespace
         self._user_id = user_id
         self._agent_id = agent_id
+
+    @property
+    def direct(self) -> _DirectSDK:
+        """Guarded mutations and scoped reads using this client's connection settings."""
+        return _DirectSDK(self)
 
     def _run(self, fn: Callable[[MnemoStore], Awaitable[T]]) -> T:
         async def _wrapped() -> T:
@@ -92,3 +119,81 @@ class Mnemo:
 
     def observe(self, turn_id: str, text: str, session_id: str, *, role: str = "user") -> None:
         return self._run(lambda s: s.observe(turn_id, text, session_id, role=role))
+
+
+class _DirectSDK:
+    """Synchronous adapter for DirectMemory; validation and transactions stay in the core."""
+
+    def __init__(self, client: Mnemo) -> None:
+        self._client = client
+
+    def _run(self, fn: Callable[[DirectMemory], Awaitable[T]]) -> T:
+        return self._client._run(lambda store: fn(DirectMemory(store)))
+
+    def create(
+        self,
+        subject: str,
+        predicate: str,
+        value: str,
+        *,
+        request_id: UUID,
+        actor: str | None = None,
+        source_span: Any | None = None,
+    ) -> MutationResult:
+        return self._run(
+            lambda d: d.create(
+                subject,
+                predicate,
+                value,
+                request_id=request_id,
+                actor=actor,
+                source_span=source_span,
+            )
+        )
+
+    def update(
+        self,
+        fact_id: UUID,
+        value: str,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str | None = None,
+    ) -> MutationResult:
+        return self._run(
+            lambda d: d.update(
+                fact_id,
+                value,
+                expected_event_id=expected_event_id,
+                request_id=request_id,
+                actor=actor,
+            )
+        )
+
+    def revert(
+        self,
+        fact_id: UUID,
+        to_event_id: UUID,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str | None = None,
+    ) -> MutationResult:
+        return self._run(
+            lambda d: d.revert(
+                fact_id,
+                to_event_id,
+                expected_event_id=expected_event_id,
+                request_id=request_id,
+                actor=actor,
+            )
+        )
+
+    def get(self, fact_id: UUID, event_id: UUID | None = None) -> CurrentValue | HistoricalValue:
+        return self._run(lambda d: d.get(fact_id, event_id))
+
+    def history(self, fact_id: UUID, *, cursor: str | None = None, limit: int = 20) -> HistoryPage:
+        return self._run(lambda d: d.history(fact_id, cursor=cursor, limit=limit))
+
+    def search_direct(self, query: str, *, limit: int = 5) -> list[SearchHit]:
+        return self._run(lambda d: d.search(query, limit=limit))
