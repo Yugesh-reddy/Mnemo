@@ -1,11 +1,12 @@
 # Mnemo — Master Plan
 
-**Execution update (September 21, 2026):** local Tasks 0.1–0.4 and Phase 1
-are implemented. Required-Postgres validation passes 249 tests; three live-Ollama
-tests skip. Lint, clean-clone installation/migrations/direct demo, external MCP
-lifecycle/restart and wheel/source packaging pass. Task 0.5 remains pending because
-no Git remote is configured. The user explicitly approved Phase 2's additive
-receipt schema and guarded API contract in this session; implementation is next.
+**Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–2
+are implemented. Required-Postgres validation passes 288 tests; three live-Ollama
+tests skip. Lint and wheel/source packaging pass, including installed guarded SDK
+lifecycle, revision conflict and durable replay. Phase 2's additive receipt schema
+and guarded API contract were explicitly approved by the user. Fresh migration and
+populated-0009 upgrade tests pass. Phase 3 is next. Task 0.5 remains pending because
+no Git remote is configured.
 See `PROJECT_STATUS.md` for verification details.
 
 Written September 21, 2026 against checkout `0468977` (working tree: one uncommitted
@@ -580,7 +581,7 @@ class MnemoError(Exception):
         return {"code": str(self.code), "message": self.message, "details": self.details}
 ```
 
-- [ ] Test: `MnemoError(ErrorCode.NOT_FOUND, "x", fact_id="f").to_dict()` shape. Commit with 2.2.
+- [x] Test: `MnemoError(ErrorCode.NOT_FOUND, "x", fact_id="f").to_dict()` shape. Commit with 2.2.
 
 ### Task 2.2 — Migration `0010_mutation_receipts.sql` (D4)
 
@@ -619,9 +620,9 @@ CREATE TRIGGER mutation_receipt_immutable
   FOR EACH ROW EXECUTE FUNCTION protect_mutation_receipt();
 ```
 
-- [ ] Schema test: table exists; UNIQUE on scope+request_id; UPDATE/DELETE raise `23514`.
-- [ ] `conftest.clean_memory`: add `memory_mutation_receipt` to the TRUNCATE list.
-- [ ] Commit: `feat: mutation receipt table (0010) and structured error codes`.
+- [x] Schema test: table exists; UNIQUE on scope+request_id; UPDATE/DELETE raise `23514`.
+- [x] `conftest.clean_memory`: add `memory_mutation_receipt` to the TRUNCATE list.
+- [x] Commit: `feat: mutation receipt table (0010) and structured error codes`.
 
 ### Task 2.3 — Result models
 
@@ -698,7 +699,7 @@ class SearchHit(BaseModel):
 
 **Files:** `mnemo/core.py:829-881`.
 
-- [ ] Extract the `INSERT … SELECT` in `revert()` into:
+- [x] Extract the `INSERT … SELECT` in `revert()` into:
 
 ```python
     async def _copy_as_revert(
@@ -735,7 +736,7 @@ class SearchHit(BaseModel):
 
   `revert()` calls it with `provenance="human_review", trust_level="high"`. All existing
   tests must stay green unchanged (`test_lifecycle`, `test_council`, `test_temporal_cache`).
-- [ ] Commit: `refactor: share the REVERT copy SQL between legacy and guarded revert`.
+- [x] Commit: `refactor: share the REVERT copy SQL between legacy and guarded revert`.
 
 ### Task 2.5 — `DirectMemory` mutations
 
@@ -848,7 +849,7 @@ Rules inside `apply` (each raises `MnemoError`):
 - `search(query, limit)`: `store.search(query, k=limit, reinforce=False)` (no `session_id`
   ⇒ no fast-cache rows), mapped to `SearchHit` with `event_id`.
 
-- [ ] Tests — `tests/test_direct_mutations.py`. Use fixtures `store` (rolled back) for
+- [x] Tests — `tests/test_direct_mutations.py`. Use fixtures `store` (rolled back) for
   single-connection cases and `_disposable_test_db` + `clean_memory` with two real
   `asyncpg.connect`s for race/rollback/restart cases. One test per numbered case in Part D;
   function names are fixed there. Minimal skeletons for the non-obvious ones:
@@ -913,16 +914,16 @@ async def test_14_direct_revert_preserves_source_trust_and_records_actor(store):
     assert legacy.provenance == "human_review" and legacy.trust_level == "high"
 ```
 
-- [ ] Run the new file: all 18 pass. Full suite green. Lint. Commit:
+- [x] Run the new file: 36 tests pass (acceptance cases 1–16 plus boundary checks). Full suite green. Lint. Commit:
   `feat: guarded create/update/revert with expected revisions and idempotency receipts`.
 
 ### Task 2.6 — Sync SDK wrappers
 
 **Files:** `mnemo/__init__.py`.
 
-- [ ] Add `Mnemo.direct` returning thin sync wrappers (`create/update/revert/get/history/search_direct`)
+- [x] Add `Mnemo.direct` returning thin sync wrappers (`create/update/revert/get/history/search_direct`)
   built on the same `_run` pattern; export `MutationResult`, `MnemoError`, `ErrorCode` in `__all__`.
-- [ ] `tests/test_sdk.py`: one test that runs create → update → revert and asserts a
+- [x] `tests/test_sdk.py`: one test that runs create → update → revert and asserts a
   `REVISION_CONFLICT` on a stale update. Commit: `feat: sync SDK access to guarded mutations`.
 
 **Phase 2 exit:** Part D cases 1–16 and 18 green; migration applies on a fresh DB and on a DB

@@ -25,7 +25,9 @@ non-semantic `hash` backend, a fresh namespace and no model server or background
 worker. Hash vectors are deterministic; use keyword queries, not similarity as
 evidence of meaning. For MCP without models, run
 `MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false make mcp`. These use the existing
-direct-write tools; revision guards and idempotency receipts are still planned.
+direct-write tools. The Python SDK now also offers
+[guarded mutations and durable retry receipts](docs/DIRECT_SDK.md) through
+`Mnemo.direct`; the separate direct MCP profile is planned next.
 `uv run python -m examples.direct_memory` honors a backend explicitly set in
 `.env` or `MNEMO_BACKEND`, otherwise defaulting to hash. Keep the configured
 embedding dimension matched to the database, and use a separate database for

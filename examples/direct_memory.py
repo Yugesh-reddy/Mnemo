@@ -2,7 +2,7 @@
 
 Run ``make demo-direct`` without a model server, or ``python -m
 examples.direct_memory`` to honor a backend explicitly configured in the
-environment or .env. Uses the legacy SDK; guarded mutations are a later milestone.
+environment or .env. Uses the legacy SDK; guarded mutations are available via Mnemo.direct.
 """
 
 from __future__ import annotations

@@ -17,6 +17,7 @@ import mnemo.mcp_server
 from mnemo.db import MIGRATIONS_DIR
 from web.app import TEMPLATES
 assert len(list(MIGRATIONS_DIR.glob('*.sql'))) >= 7
+assert MIGRATIONS_DIR.joinpath('0010_mutation_receipts.sql').is_file()
 assert files('mnemo').joinpath('data/longmemeval-car.json').is_file()
 assert TEMPLATES.env.get_template('list.html')
 assert len(mnemo.eval.load_benchmark_dataset('all').turns) == 200
@@ -40,6 +41,39 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
 MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false \
   "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
+MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false \
+  "$mnemo_wheel_env/venv/bin/python" - <<'PY'
+from uuid import uuid4
+from mnemo import ErrorCode, Mnemo, MnemoError, MutationResult
+from mnemo.config import get_settings
+from mnemo.embedder import HashEmbedder
+
+settings = get_settings()
+namespace = 'wheel-direct-' + uuid4().hex
+client = Mnemo(settings.dsn, HashEmbedder(settings.embed_dim), namespace=namespace)
+first = client.direct.create('user', 'preferred_database', 'PostgreSQL', request_id=uuid4())
+assert isinstance(first, MutationResult)
+changed = client.direct.update(
+    first.fact_id, 'MySQL', expected_event_id=first.event_id, request_id=uuid4())
+try:
+    client.direct.update(
+        first.fact_id, 'SQLite', expected_event_id=first.event_id, request_id=uuid4())
+except MnemoError as error:
+    assert error.code == ErrorCode.REVISION_CONFLICT
+else:
+    raise AssertionError('A stale SDK mutation was accepted')
+restored = client.direct.revert(
+    first.fact_id, first.event_id, expected_event_id=changed.event_id, request_id=uuid4())
+restarted = Mnemo(settings.dsn, HashEmbedder(settings.embed_dim), namespace=namespace)
+retry = restarted.direct.revert(
+    first.fact_id, first.event_id, expected_event_id=changed.event_id,
+    request_id=restored.request_id)
+assert retry.replayed and retry.event_id == restored.event_id
+assert restarted.direct.get(first.fact_id).value == 'PostgreSQL'
+assert [entry.op for entry in restarted.direct.history(first.fact_id).entries] == [
+    'REVERT', 'UPDATE', 'ADD']
+print('Installed wheel: guarded SDK lifecycle, revision conflict and receipt replay verified')
+PY
 
 # The source archive must support the same locked install as a fresh checkout.
 mkdir "$mnemo_wheel_env/source"

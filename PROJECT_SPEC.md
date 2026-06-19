@@ -318,3 +318,57 @@ Consolidation stays disabled until evaluation demonstrates a benefit. Adding the
 reflection enum alone would not complete it: it still needs every source event,
 verification against source evidence, and trust no higher than medium or its
 least-trusted source.
+
+## 15. Additive guarded memory contract — September 22, 2026
+
+The user approved this contract and migration `0010_mutation_receipts.sql` for
+master-plan Phase 2. It adds `mnemo.direct.DirectMemory` to the async store and
+`Mnemo.direct` to the sync SDK. Legacy `add`, `revert`, `search` and the existing
+MCP server retain their contracts. The separate direct MCP profile is Phase 3.
+
+- **Scope and values.** Scope is bound to the client/store. `create(subject,
+  predicate, value)` is create-only under the existing canonical identity rules.
+  `update(fact_id, value)` changes that fact's value without alias deduplication.
+  Values are exact, nonblank UTF-8 strings, at most 8192 bytes, without NUL.
+  Create/update always write durable `agent_inference` / low-trust events.
+- **Revision guards.** Update and revert require `expected_event_id`. Under the
+  existing scope and fact locks, HEAD must equal that ID before a no-op or write.
+  Equal values do not bypass the guard: A→B→A still invalidates the first ID.
+  Mutations require an active durable HEAD with no session, validity end or expiry.
+  Revert targets must belong to the scoped fact, be ADD/UPDATE/REVERT events, and
+  meet the same event eligibility rules. Revert copies typed payload, embedding,
+  provenance, trust, confidence and source lineage; the requester becomes actor.
+- **Durable retries.** Each mutation requires a caller-generated UUID request ID.
+  The append-only receipt table is unique by namespace/user/agent/request ID and
+  retains validated parameters and the original result for the lifetime of the
+  store. Event, supersession, HEAD and receipt changes commit or roll back together.
+  An identical retry returns the saved result with `replayed=True`, even after a
+  later revision; changed parameters or operation under that ID are rejected.
+  Exact-value update and revert-to-current return `no_change` and write a receipt
+  without an event. Failed operations write neither an event nor a receipt.
+- **Results and reads.** Mutation results identify the resulting event, displaced
+  HEAD when applicable, restore target, value and request ID. `get` returns current
+  or historical values; typed legacy values are rendered with `str(value)`.
+  Historical reads include current HEAD and restore eligibility. `history` uses
+  descending sequence pages, an initial sequence ceiling, a fact-bound opaque
+  cursor, and 256-character previews with a truncation flag. Page size is clamped
+  to 1–100 and scope is checked on every page. Reads use repeatable-read snapshots
+  when they own the transaction and inherit caller isolation inside an existing
+  transaction. Async `search` / sync `search_direct` return current event IDs with
+  no reinforcement or fast-cache merge. Embedding calls precede mutation locks.
+
+Errors are `MnemoError` with a stable code, message and details dictionary:
+
+| Code | Meaning |
+|---|---|
+| `INVALID_INPUT` | Invalid UUID, text, metadata, limit or cursor |
+| `NOT_FOUND` | Unknown or out-of-scope memory/revision; no foreign IDs disclosed |
+| `ALREADY_EXISTS` | Canonical identity exists; includes its fact ID, HEAD and key |
+| `REVISION_CONFLICT` | Expected revision is stale; includes current HEAD |
+| `INVALID_RESTORE_TARGET` | Target does not belong to this fact; no target IDs disclosed |
+| `UNSUPPORTED_STATE` | Current or target state is ineligible for guarded mutation |
+| `REQUEST_ID_REUSED` | Request ID already belongs to another mutation payload |
+| `UNSUPPORTED_OPERATION` | Creation undo (no restore target) is unsupported |
+
+See [the direct SDK guide](docs/DIRECT_SDK.md) for a lifecycle example. This
+additive API does not change extraction quality or authorize gate tuning.

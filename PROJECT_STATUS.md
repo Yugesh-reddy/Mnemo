@@ -1,10 +1,43 @@
 # Mnemo — implementation status
 
-Updated September 21, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the implementation backlog, and
 [current quality evidence](docs/quality-v7/README.md) covers the extraction work.
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
+
+## Master plan Phase 2: guarded mutations and durable receipts
+
+The user approved the additive receipt schema and guarded API contract.
+`DirectMemory` and the synchronous `Mnemo.direct` wrapper now provide create,
+update, revert, current/historical reads, stable history pagination and search.
+Expected event IDs prevent stale overwrites, including A→B→A. Successful and
+no-change mutations retain append-only receipts; identical retries replay the
+original result without disturbing a later HEAD. Receipt failure rolls back the
+event, supersession and HEAD together. Direct revert preserves source trust,
+confidence and lineage. Legacy APIs retain their behavior.
+
+Verification: `make test-db` reports **288 passed, 3 live-Ollama skips**;
+`make lint` passes Ruff/Black (75 Python files). The direct test file has 36 cases,
+covering acceptance cases 1–16, concurrent writers, concurrent identical requests,
+reconnection, rollback, scope isolation, Unicode byte limits, typed legacy values
+and malformed cursor rejection. Both SDK tests pass. Migration tests cover a
+fresh database and an upgrade over populated migration 0009 without changed HEADs.
+`uv build` and `bash scripts/check-wheel.sh` pass outside the checkout against an
+invocation-owned empty database: all ten migrations, installed guarded SDK
+lifecycle/conflict/replay, legacy demo, resource checks and locked source archive
+installation. No model calls were needed.
+
+One earlier legacy TTL run saw a 15-minute application/database clock difference;
+after the clocks agreed, the unchanged test and full suite passed. An initial
+packaging invocation incorrectly applied the hash backend to the quality eval;
+the corrected invocation used heuristic verification for eval and hash only for
+direct-memory checks. No quality thresholds or held-out data changed. Independent
+review remains unavailable after the prior reviewer's account-limit failure;
+local review and executable checks were completed.
+
+The approved contract is recorded in spec §15, with a runnable
+[SDK guide](docs/DIRECT_SDK.md). Phase 3's separate direct MCP profile is next.
 
 ## Master plan Phase 1: model-free lifecycle proof
 
@@ -33,8 +66,8 @@ wheel and installs the source archive with its lockfile. `make eval` retains the
 The independent reviewer hit its account usage limit before completing Phase 1;
 local diff review and executable verification were completed.
 
-The user explicitly approved Phase 2's receipt migration and guarded mutation
-contract. Phase 2 implementation is next; no guarded API or schema has shipped yet.
+Phase 2's approved receipt migration and guarded mutation contract are implemented
+above; the Phase 1 demo and MCP lifecycle remain legacy compatibility checks.
 
 ## Master plan Phase 0: local fixes
 
