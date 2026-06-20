@@ -2,7 +2,7 @@
 
 Run ``make demo-direct`` without a model server, or ``python -m
 examples.direct_memory`` to honor a backend explicitly configured in the
-environment or .env. Uses the legacy SDK; guarded mutations are available via Mnemo.direct.
+environment or .env. Exercises guarded revisions and durable retries via Mnemo.direct.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from uuid import uuid4
 
 import typer
 
-from mnemo import Mnemo
+from mnemo import ErrorCode, Mnemo, MnemoError
 from mnemo.config import Settings
 from mnemo.embedder import build_embedder
 
@@ -33,47 +33,74 @@ def run_scenario(
 ) -> dict[str, Any]:
     """Remember, change, inspect, undo and read back through the synchronous SDK."""
     say('[1] Remember: "My preferred database is PostgreSQL."')
-    first = memory.add(
-        "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement", actor="user"
+    first = memory.direct.create(
+        "user", "preferred_database", "PostgreSQL", request_id=uuid4(), actor="demo-agent"
     )
-    say(f"    {first.op}: {first.value} | event_id={first.event_id}")
+    say(f"    ADD: {first.value} | event_id={first.event_id}")
 
     say('[2] Change: "Use MySQL instead."')
-    changed = memory.add(
-        "user", "preferred_database", "MySQL", provenance="direct_user_statement", actor="user"
+    changed = memory.direct.update(
+        first.fact_id,
+        "MySQL",
+        expected_event_id=first.event_id,
+        request_id=uuid4(),
+        actor="demo-agent",
     )
-    say(f"    {changed.op}: {changed.value} | event_id={changed.event_id}")
-    before = memory.get(first.fact_id)
-    if before is None:
-        raise RuntimeError("The changed memory is missing from HEAD")
+    say(f"    UPDATE: {changed.value} | event_id={changed.event_id}")
+    before = memory.direct.get(first.fact_id)
     say(f"    Current value: {before.value}")
 
+    try:
+        memory.direct.update(
+            first.fact_id,
+            "SQLite",
+            expected_event_id=first.event_id,
+            request_id=uuid4(),
+            actor="demo-agent",
+        )
+    except MnemoError as exc:
+        if exc.code != ErrorCode.REVISION_CONFLICT:
+            raise
+        conflict_code = str(exc.code)
+        say(f"    Stale update rejected: {conflict_code}; MySQL remains current.")
+    else:
+        raise RuntimeError("A stale revision unexpectedly overwrote the memory")
+
     say("[3] Inspect history to choose the revision to restore.")
-    history = memory.blame(fact_id=first.fact_id)
+    history = memory.direct.history(first.fact_id)
     say(f"    {'event_id':<36} {'op':<7} {'value':<12} {'provenance':<22} trust")
-    for event in history:
+    for event in reversed(history.entries):
         say(
-            f"    {event.event_id} {event.op:<7} {str(event.value):<12} "
+            f"    {event.event_id} {event.op:<7} {event.value_preview:<12} "
             f"{event.provenance:<22} {event.trust_level}"
         )
 
-    say("[4] Human review: restore the original PostgreSQL revision.")
-    restored = memory.revert(first.fact_id, first.event_id, actor="demo-reviewer")
-    say(f"    {restored.op}: {restored.value} | event_id={restored.event_id}")
+    say("[4] Guarded restore: return to the original PostgreSQL revision.")
+    restore_request = uuid4()
+    restore_args = dict(
+        expected_event_id=history.current_event_id, request_id=restore_request, actor="demo-agent"
+    )
+    restored = memory.direct.revert(first.fact_id, first.event_id, **restore_args)
+    say(f"    REVERT: {restored.value} | event_id={restored.event_id}")
+    retry = memory.direct.revert(first.fact_id, first.event_id, **restore_args)
+    if not retry.replayed or retry.event_id != restored.event_id:
+        raise RuntimeError("An identical retry did not replay the saved result")
+    say(f"    Identical retry replayed: {retry.replayed}; no additional revision.")
 
-    after = memory.get(first.fact_id)
-    if after is None:
-        raise RuntimeError("The restored memory is missing from HEAD")
-    say(f"[5] Read back: {after.value} | event_id={after.event_id}")
-    final = memory.blame(fact_id=first.fact_id)
-    say("    History kept: " + " -> ".join(f"{event.op}({event.value})" for event in final))
+    after = memory.direct.get(first.fact_id)
+    say(f"[5] Read back: {after.value} | event_id={after.current_event_id}")
+    final = list(reversed(memory.direct.history(first.fact_id).entries))
+    say("    History kept: " + " -> ".join(f"{event.op}({event.value_preview})" for event in final))
+    say(f"    Source trust preserved: {after.provenance} / {after.trust_level}")
     return {
         "fact_id": first.fact_id,
         "event_ids": [event.event_id for event in final],
         "ops": [event.op for event in final],
-        "values": [event.value for event in final],
+        "values": [event.value_preview for event in final],
         "before": before.value,
         "after": after.value,
+        "conflict_code": conflict_code,
+        "replayed": retry.replayed,
     }
 
 

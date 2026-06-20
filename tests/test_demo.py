@@ -60,10 +60,13 @@ def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory)
     assert result["after"] == "PostgreSQL"
     assert result["ops"] == ["ADD", "UPDATE", "REVERT"]
     assert result["values"] == ["PostgreSQL", "MySQL", "PostgreSQL"]
+    assert result["conflict_code"] == "REVISION_CONFLICT"
+    assert result["replayed"] is True
     assert len(set(result["event_ids"])) == 3
     assert all(str(event_id) in "\n".join(messages) for event_id in result["event_ids"])
     current = memory.get(result["fact_id"])
     assert current is not None and current.event_id == result["event_ids"][-1]
+    assert current.provenance == "agent_inference" and current.trust_level == "low"
     assert [fact.value for fact in memory.search("preferred_database", reinforce=False)] == [
         "PostgreSQL"
     ]
@@ -71,6 +74,12 @@ def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory)
     async def assert_no_background_writes() -> None:
         conn = await asyncpg.connect(_disposable_test_db)
         try:
+            assert (
+                await conn.fetchval(
+                    "SELECT count(*) FROM memory_mutation_receipt WHERE namespace=$1", namespace
+                )
+                == 3
+            )
             for table in ("fast_cache", "extraction_job", "quality_decision"):
                 assert (
                     await conn.fetchval(
