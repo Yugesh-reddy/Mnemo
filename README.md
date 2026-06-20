@@ -24,10 +24,9 @@ to MySQL, inspect history, restore PostgreSQL and read it back. This uses the
 non-semantic `hash` backend, a fresh namespace and no model server or background
 worker. Hash vectors are deterministic; use keyword queries, not similarity as
 evidence of meaning. For MCP without models, run
-`MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false make mcp`. These use the existing
-direct-write tools. The Python SDK now also offers
-[guarded mutations and durable retry receipts](docs/DIRECT_SDK.md) through
-`Mnemo.direct`; the separate direct MCP profile is planned next.
+`MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false make mcp-direct`. Its six tools use
+expected revisions and durable retry receipts. The Python SDK exposes the same
+[guarded mutation contract](docs/DIRECT_SDK.md) through `Mnemo.direct`.
 `uv run python -m examples.direct_memory` honors a backend explicitly set in
 `.env` or `MNEMO_BACKEND`, otherwise defaulting to hash. Keep the configured
 embedding dimension matched to the database, and use a separate database for
@@ -221,7 +220,15 @@ memory.search("location", as_of=datetime.now(timezone.utc))
 memory.observe("turn-1", "I use Postgres.", "session-1")  # run make worker for SDK observations
 ```
 
-MCP tools: `memory_add`, `memory_observe`, `memory_search`, `memory_get`,
+`make mcp-direct` (installed command: `mnemo-mcp-direct`) exposes exactly six tools:
+`memory_create`, `memory_get`, `memory_search`, `memory_update`, `memory_history`
+and `memory_revert`. Update/revert require the event ID you read and a request UUID.
+Identical retries return their saved result; conflicts require reading current
+state and reconsidering. Errors are JSON with `code`, `message` and `details`,
+marked `isError` by MCP. Scope and actor come from local configuration. This
+profile starts no extraction or decay and never reinforces search results.
+
+The legacy `make mcp` tools remain: `memory_add`, `memory_observe`, `memory_search`, `memory_get`,
 `memory_blame`, `memory_revert`, `memory_diff`, `memory_log`, `memory_decisions`,
 `memory_health`. `memory_decisions` exposes rejection reasons, evidence, score
 components, configuration snapshots and duplicate resolution.

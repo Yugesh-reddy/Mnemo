@@ -69,5 +69,8 @@ creation is unsupported.
 
 The synchronous client opens and closes a connection per call. Inside an async
 application, bind `DirectMemory` to a `MnemoStore` using your own connection or
-pool. The six-tool direct MCP profile is a later master-plan phase; the existing
-MCP server retains its legacy behavior.
+pool. The same guarded contract is exposed by `mnemo-mcp-direct` (or
+`make mcp-direct`), with six tools: create, get, search, update, history and revert,
+each prefixed `memory_`. Set scope with `MNEMO_NAMESPACE`, `MNEMO_USER_ID` and
+`MNEMO_AGENT_ID`; the configured agent is also the recorded actor. Tool arguments
+cannot select scope or trust. The existing `make mcp` retains its legacy behavior.

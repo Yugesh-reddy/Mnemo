@@ -1,11 +1,11 @@
 # Mnemo — Master Plan
 
-**Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–2
-are implemented. Required-Postgres validation passes 288 tests; three live-Ollama
+**Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–3
+are implemented. Required-Postgres validation passes 294 tests; three live-Ollama
 tests skip. Lint and wheel/source packaging pass, including installed guarded SDK
-lifecycle, revision conflict and durable replay. Phase 2's additive receipt schema
+lifecycle and real direct MCP stdio checks. Phase 2's additive receipt schema
 and guarded API contract were explicitly approved by the user. Fresh migration and
-populated-0009 upgrade tests pass. Phase 3 is next. Task 0.5 remains pending because
+populated-0009 upgrade tests pass. Phase 4 is next. Task 0.5 remains pending because
 no Git remote is configured.
 See `PROJECT_STATUS.md` for verification details.
 
@@ -943,7 +943,7 @@ structured errors, never starts background work, and is covered by a real stdio 
 
 **Files:** create `mnemo/mcp_direct.py`; `pyproject.toml` `[project.scripts] mnemo-mcp-direct = "mnemo.mcp_direct:main"`; `Makefile` `mcp-direct`.
 
-- [ ] Server skeleton:
+- [x] Server skeleton:
 
 ```python
 """Direct-profile MCP server: six guarded tools, no extraction, no decay.
@@ -1039,7 +1039,7 @@ def main() -> None:
   changing; use returned IDs; pass the revision you read as `expected_event_id`; on
   `REVISION_CONFLICT` re-read and reconsider; ask the user when several memories fit
   "undo that"; "undo the creation" is unsupported in this profile).
-- [ ] Unit test (`tests/test_mcp_direct_profile.py`, in-process): tool set ==
+- [x] Unit test (`tests/test_mcp_direct_profile.py`, in-process): tool set ==
   `{"memory_create","memory_get","memory_search","memory_update","memory_history","memory_revert"}`;
   each has an `inputSchema` with the listed required fields; `mnemo.mcp_direct` does not
   import `mnemo.extraction` or `mnemo.quality` (`assert "mnemo.extraction" not in sys.modules`
@@ -1049,23 +1049,23 @@ def main() -> None:
 
 **Files:** create `tests/test_mcp_direct_profile_stdio.py` (same harness as Task 1.2, `python -m mnemo.mcp_direct`).
 
-- [ ] Success path: create → update (with `expected_event_id`) → history (page of 2,
+- [x] Success path: create → update (with `expected_event_id`) → history (page of 2,
   `current_event_id` == update) → revert (expected = update) → get == restored; `search`
   returns `event_id`.
-- [ ] Error paths (each asserts `result.isError` and `json.loads(text)["code"]`):
+- [x] Error paths (each asserts `result.isError` and `json.loads(text)["code"]`):
   create twice → `ALREADY_EXISTS`; update with stale expected → `REVISION_CONFLICT`;
   same `request_id` different value → `REQUEST_ID_REUSED`; identical retry → same
   `event_id`, `replayed: true`, and DB event count unchanged; revert to foreign event →
   `INVALID_RESTORE_TARGET`; `memory_get` unknown → `NOT_FOUND`; malformed UUID → `INVALID_INPUT`.
-- [ ] Restart the server mid-test and replay a request_id → still replayed (receipts durable).
-- [ ] Assert `extraction_job` and `quality_decision` are empty at the end.
-- [ ] Commit: `feat: direct-profile MCP server (mnemo-mcp-direct) with structured errors`.
+- [x] Restart the server mid-test and replay a request_id → still replayed (receipts durable).
+- [x] Assert `extraction_job` and `quality_decision` are empty at the end.
+- [x] Commit: `feat: direct-profile MCP server (mnemo-mcp-direct) with structured errors`.
 
 ### Task 3.3 — Wheel and CI
 
-- [ ] `scripts/check-wheel.sh`: add `mnemo-mcp-direct --help` (or a `--version` flag) to the
+- [x] `scripts/check-wheel.sh`: add `mnemo-mcp-direct --help` (or a `--version` flag) to the
   console-script checks; assert `mnemo/migrations/0010_mutation_receipts.sql` is packaged.
-- [ ] Commit: `build: package the direct profile`.
+- [x] Commit: `build: package the direct profile`.
 
 **Phase 3 exit:** Part D case 17 green; both stdio tests green in CI; `make mcp-direct` runs
 with `MNEMO_BACKEND=hash` and with `ollama`.

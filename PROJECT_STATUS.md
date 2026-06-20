@@ -6,6 +6,33 @@ Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 **The memory-quality acceptance target is still unmet.** Numeric thresholds remain
 unchanged. Consolidation is deferred.
 
+## Master plan Phase 3: direct MCP profile
+
+`make mcp-direct` / `mnemo-mcp-direct` now expose exactly six guarded tools:
+create, get, search, update, history and revert. Scope and actor are configured
+locally. The server owns a dimension-validated pool and embedder without importing
+or starting extraction, verification or decay. Search does not reinforce memory.
+Domain and argument-validation errors return JSON with MCP's error flag; the
+adapter preserves structured errors despite FastMCP's exception message prefix.
+
+Verification: `make test-db` reports **294 passed, 3 live-Ollama skips**;
+`make lint` passes Ruff/Black (78 Python files); `uv lock --check` passes. Six
+new tests cover schemas, isolated imports, disabled background work with hash and
+Ollama configurations, and the external stdio lifecycle, errors, paging and replay
+after process restart. An Ollama-configured server starts with an unreachable
+model endpoint and answers non-embedding requests without background model calls.
+Actual Ollama embedding calls remain untested in this model-free verification.
+
+`uv build` and the extended `bash scripts/check-wheel.sh` pass in a fresh environment
+outside the checkout, against an invocation-owned empty database. Checks include
+the installed CLI, a real direct stdio client, six-tool discovery, current reads,
+JSON input/conflict errors, guarded SDK replay, ten packaged migrations and locked
+source archive installation. The wheel resolved MCP 1.30.0; the locked checkout and
+source archive use MCP 1.28.1. Both paths passed. The existing CI command includes
+both legacy and direct stdio tests, but hosted CI has not run: no remote exists.
+
+Phase 4 (guarded web revert and the broader documentation/demo update) remains.
+
 ## Master plan Phase 2: guarded mutations and durable receipts
 
 The user approved the additive receipt schema and guarded API contract.
@@ -37,7 +64,8 @@ review remains unavailable after the prior reviewer's account-limit failure;
 local review and executable checks were completed.
 
 The approved contract is recorded in spec §15, with a runnable
-[SDK guide](docs/DIRECT_SDK.md). Phase 3's separate direct MCP profile is next.
+[SDK guide](docs/DIRECT_SDK.md). Phase 3's separate direct MCP profile is implemented
+above.
 
 ## Master plan Phase 1: model-free lifecycle proof
 

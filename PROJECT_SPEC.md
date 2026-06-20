@@ -324,7 +324,8 @@ least-trusted source.
 The user approved this contract and migration `0010_mutation_receipts.sql` for
 master-plan Phase 2. It adds `mnemo.direct.DirectMemory` to the async store and
 `Mnemo.direct` to the sync SDK. Legacy `add`, `revert`, `search` and the existing
-MCP server retain their contracts. The separate direct MCP profile is Phase 3.
+MCP server retain their contracts. Phase 3 exposes the same guarded contract
+through the separate `mnemo-mcp-direct` stdio server.
 
 - **Scope and values.** Scope is bound to the client/store. `create(subject,
   predicate, value)` is create-only under the existing canonical identity rules.
@@ -372,3 +373,12 @@ Errors are `MnemoError` with a stable code, message and details dictionary:
 
 See [the direct SDK guide](docs/DIRECT_SDK.md) for a lifecycle example. This
 additive API does not change extraction quality or authorize gate tuning.
+
+The direct MCP profile advertises exactly `memory_create`, `memory_get`,
+`memory_search`, `memory_update`, `memory_history` and `memory_revert`. Scope and
+actor come from local configuration, never tool arguments. Contract errors and
+invalid arguments return the JSON error object above with `isError=true`.
+The server owns a dimension-validated connection pool and embedder, starts no
+extraction/verification/decay work, and disables search reinforcement. Hosts must
+use returned revision IDs, reconsider on conflicts, reuse request IDs only for
+identical retries, and clarify ambiguous undo targets with the user.
