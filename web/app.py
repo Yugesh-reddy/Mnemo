@@ -12,7 +12,7 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import asyncpg
 from fastapi import Depends, FastAPI, Form, Request
@@ -23,7 +23,9 @@ from fastapi.templating import Jinja2Templates
 from mnemo.config import get_settings
 from mnemo.core import MnemoStore
 from mnemo.db import register_vector, validate_embedding_dimension
+from mnemo.direct import DirectMemory
 from mnemo.embedder import build_embedder
+from mnemo.errors import ErrorCode, MnemoError
 
 TEMPLATES = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
@@ -82,20 +84,81 @@ async def rows(request: Request, q: str = "", store: MnemoStore = Depends(get_st
     return TEMPLATES.TemplateResponse(request, "_rows.html", {"facts": facts})
 
 
-@app.get("/fact/{fact_id}", response_class=HTMLResponse)
-async def fact_detail(request: Request, fact_id: UUID, store: MnemoStore = Depends(get_store)):
-    fact = await store.get(fact_id)
-    history = await store.blame(fact_id=fact_id)
+async def _fact_response(
+    request: Request,
+    fact_id: UUID,
+    store: MnemoStore,
+    *,
+    message: str | None = None,
+    status_code: int = 200,
+) -> HTMLResponse:
+    # Render the value, history and expected revision from the same snapshot.
+    async with store.conn.transaction(
+        isolation=None if store.conn.is_in_transaction() else "repeatable_read"
+    ):
+        fact = await store.get(fact_id)
+        history = await store.blame(fact_id=fact_id)
+    head = next((e for e in history if fact and e.event_id == fact.event_id), None)
+    request_ids = {
+        event.event_id: uuid4()
+        for event in history
+        if DirectMemory._eligible(head)
+        and DirectMemory._eligible(event)
+        and event.event_id != head.event_id
+    }
     return TEMPLATES.TemplateResponse(
         request,
         "fact.html",
-        {"fact": fact, "history": list(reversed(history)), "fact_id": fact_id},
+        {
+            "fact": fact,
+            "history": list(reversed(history)),
+            "fact_id": fact_id,
+            "request_ids": request_ids,
+            "message": message,
+        },
+        status_code=status_code,
     )
 
 
+@app.get("/fact/{fact_id}", response_class=HTMLResponse)
+async def fact_detail(request: Request, fact_id: UUID, store: MnemoStore = Depends(get_store)):
+    return await _fact_response(request, fact_id, store)
+
+
 @app.post("/fact/{fact_id}/revert/{event_id}")
-async def do_revert(fact_id: UUID, event_id: UUID, store: MnemoStore = Depends(get_store)):
-    await store.revert(fact_id, event_id)
+async def do_revert(
+    request: Request,
+    fact_id: UUID,
+    event_id: UUID,
+    expected_event_id: UUID = Form(...),
+    request_id: UUID = Form(...),
+    store: MnemoStore = Depends(get_store),
+):
+    try:
+        await DirectMemory(store).revert(
+            fact_id,
+            event_id,
+            expected_event_id=expected_event_id,
+            request_id=request_id,
+            actor="ui",
+        )
+    except MnemoError as exc:
+        status, message = {
+            ErrorCode.REVISION_CONFLICT: (
+                409,
+                "This memory changed since you loaded the page — review and try again",
+            ),
+            ErrorCode.UNSUPPORTED_STATE: (
+                409,
+                "This memory or revision is unavailable for restore.",
+            ),
+            ErrorCode.REQUEST_ID_REUSED: (
+                409,
+                "This restore request was already used. Review the current memory and try again.",
+            ),
+            ErrorCode.NOT_FOUND: (404, "Memory not found."),
+        }.get(exc.code, (400, exc.message))
+        return await _fact_response(request, fact_id, store, message=message, status_code=status)
     return RedirectResponse(f"/fact/{fact_id}", status_code=303)
 
 

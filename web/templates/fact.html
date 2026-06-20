@@ -3,6 +3,12 @@
 {% block content %}
 <a href="/" class="text-sm text-slate-500 hover:text-indigo-600">← back to memory</a>
 
+{% if message %}
+<div role="alert" class="mt-4 border border-amber-300 bg-amber-50 text-amber-900 rounded-lg p-4">
+  {{ message }}
+</div>
+{% endif %}
+
 {% if fact %}
 <div class="mt-4 bg-white border rounded-lg p-6">
   <div class="text-sm text-slate-500">{{ fact.subject }} · {{ fact.predicate }}</div>
@@ -11,14 +17,16 @@
     {{ trust_badge(fact.trust_level) }}
     <span class="text-slate-500">{{ fact.provenance }}</span>
   </div>
-  <form method="post" action="/fact/{{ fact_id }}/edit" class="mt-5 flex gap-2">
-    <input name="value" placeholder="Correct the value (records a human_review edit)…"
+  <label for="manual-correction" class="block mt-5 text-sm font-medium">Manual correction</label>
+  <p class="text-xs text-slate-500 mt-1">Enter a value you have verified. This records your human review.</p>
+  <form method="post" action="/fact/{{ fact_id }}/edit" class="mt-2 flex gap-2">
+    <input id="manual-correction" name="value" placeholder="Corrected value…"
       class="flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
-    <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Edit</button>
+    <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Save correction</button>
   </form>
 </div>
 {% else %}
-<p class="mt-4 text-slate-500">Fact not found.</p>
+<p class="mt-4 text-slate-500">{{ 'This memory is not currently visible. Its history is preserved below.' if history else 'Memory not found.' }}</p>
 {% endif %}
 
 <h2 class="mt-8 mb-3 font-semibold">History
@@ -37,10 +45,14 @@
     <div class="ml-auto">
       {% if fact and e.event_id == fact.event_id %}
         <span class="text-xs text-slate-400">current</span>
-      {% else %}
+      {% elif e.event_id in request_ids %}
         <form method="post" action="/fact/{{ fact_id }}/revert/{{ e.event_id }}">
+          <input type="hidden" name="expected_event_id" value="{{ fact.event_id }}">
+          <input type="hidden" name="request_id" value="{{ request_ids[e.event_id] }}">
           <button class="text-xs px-2 py-1 rounded border hover:bg-indigo-50 hover:border-indigo-300">Revert to this</button>
         </form>
+      {% else %}
+        <span class="text-xs text-slate-400">restore unavailable</span>
       {% endif %}
     </div>
   </div>
