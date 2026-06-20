@@ -11,8 +11,8 @@ help:  ## Show available targets
 install:  ## Create the venv and install (editable, with dev deps)
 	uv sync --locked --extra dev
 
-up:  ## Start Postgres + pgvector (docker compose up -d)
-	docker compose up -d
+up:  ## Start Postgres + pgvector and wait for database health
+	docker compose up -d --wait
 
 down:  ## Stop services
 	docker compose down
