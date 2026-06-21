@@ -1,12 +1,89 @@
 # Mnemo — implementation status
 
 Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
-[the master plan](docs/MASTER_PLAN.md) records the implementation backlog, and
-[current quality evidence](docs/quality-v7/README.md) covers the extraction work.
-**The memory-quality acceptance target is still unmet.** Numeric thresholds remain
-unchanged. Consolidation is deferred.
+[the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
+implemented and locally verified. Hosted CI and merge protection were declined
+by the owner; they are not prerequisites for this delivery.
 
-## Master plan Phase 3: direct MCP profile
+## Shipped through Phase 4
+
+- **Foundation and installation (Phase 0):** fresh-database vector registration,
+  a tracked lockfile, packaged runtime resources and locked source installation.
+- **Model-free lifecycle (Phase 1):** a deterministic, explicitly non-semantic
+  hash embedder, disabled background work and external stdio lifecycle coverage.
+- **Guarded SDK (Phase 2):** expected-event guards, append-only request receipts,
+  durable retry replay, scoped reads/history and trust-preserving revert. Legacy
+  APIs retain their contracts; [spec §15](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026)
+  and the [SDK guide](docs/DIRECT_SDK.md) describe the additive API.
+- **Direct MCP (Phase 3):** six tools over stdio, structured errors, a validated
+  connection pool and no extraction, verification, decay or search reinforcement.
+- **Web review, demo and documentation (Phase 4):** restore forms carry the
+  revision the reviewer saw and a request UUID. Stale submissions return HTTP 409
+  with refreshed state and no write; duplicate submissions replay their receipt.
+  Restore preserves source trust. The separately labelled Manual correction form
+  remains a legacy, unguarded human-review write. `make demo-direct` now demonstrates
+  the guarded SDK, a stale-write conflict and an identical restore retry. The
+  quick-start command waits for Postgres health before running migrations. The
+  README covers setup, MCP clients, contracts and measured quality limits; detailed
+  extraction instructions are in [the extraction guide](docs/EXTRACTION.md).
+
+The quality pipeline and versioned event store remain one system. Direct writes
+provide an explicit path into that store; they do not establish automatic
+extraction accuracy.
+
+## Verification
+
+`make test-db`: **301 passed, 3 live-Ollama skips**. `make lint` passes Ruff and
+Black (78 Python files), and `uv lock --check` passes. Web tests exercise rendered
+forms, stale conflicts without writes, replay after a later update, preserved
+low trust, missing guards, unavailable targets and manual corrections. The demo
+asserts exactly three revisions and three receipts, with no background work.
+
+A browser check used two tabs against an invocation-owned database: a correction
+in one tab made the other's restore form stale; the conflict banner showed the
+new value; submitting the refreshed form restored PostgreSQL with its original
+low trust and retained the complete history. The temporary server and database
+were removed.
+
+A fresh local clone with the Phase 4 changes and no `.env` also passes locked
+installation, cold Postgres startup, migrations, the guarded demo and all 19
+web/demo tests. The old detached startup returned while Postgres still rejected
+connections; `make up` now uses Compose's `--wait` flag and returns with database
+health confirmed. This check used a separate container, volume and dynamically
+assigned local port; all temporary resources were removed.
+
+`uv build` and `bash scripts/check-wheel.sh` pass in a clean environment outside
+the checkout against an invocation-owned empty database. The installed wheel
+passes resource and migration checks, the guarded demo and SDK lifecycle, receipt
+replay, and real stdio MCP discovery/read/error checks. Locked installation from
+the source archive also passes. The wheel resolved MCP 1.30.0; the locked source
+uses MCP 1.28.1. No model calls or new extraction experiments were needed.
+
+The repository is [Yugesh-reddy/Mnemo](https://github.com/Yugesh-reddy/Mnemo).
+**GitHub Actions remains disabled at the owner's request.** The workflow file is
+retained, but there is no hosted green-CI result and no required merge check.
+Independent agent review was unavailable after the earlier account-limit failure;
+local code review, browser checks and executable verification were completed.
+
+## Extraction quality and remaining scope
+
+**Extraction quality is unchanged since v7; the acceptance target remains unmet.**
+See [the v7 decision and evidence](docs/quality-v7/README.md). The bounded development
+baseline remains 16/23 complete distinct retrieval targets; the rejected experiment
+achieved 15/23. These are provisional, limited measurements, not general reliability.
+The 18-turn scripted regression remains gated precision/recall 90.9%/100%,
+100% must-keep recall and zero false writes; it does not measure real extraction.
+Numeric thresholds are unchanged. `b46e15ed` remains sealed. Consolidation stays
+deferred. The optional Phase 5 host-model pilot has not been started.
+
+## History
+
+The records below preserve earlier checks and quality cycles. Their test counts,
+commit hashes, next-step notes and remote/CI statements describe the time of each
+record; the current delivery and owner decisions are above. Historical notes do
+not authorize another extraction experiment or re-enabling CI.
+
+### Master plan Phase 3: direct MCP profile
 
 `make mcp-direct` / `mnemo-mcp-direct` now expose exactly six guarded tools:
 create, get, search, update, history and revert. Scope and actor are configured
@@ -33,7 +110,7 @@ both legacy and direct stdio tests, but hosted CI has not run: no remote exists.
 
 Phase 4 (guarded web revert and the broader documentation/demo update) remains.
 
-## Master plan Phase 2: guarded mutations and durable receipts
+### Master plan Phase 2: guarded mutations and durable receipts
 
 The user approved the additive receipt schema and guarded API contract.
 `DirectMemory` and the synchronous `Mnemo.direct` wrapper now provide create,
@@ -67,7 +144,7 @@ The approved contract is recorded in spec §15, with a runnable
 [SDK guide](docs/DIRECT_SDK.md). Phase 3's separate direct MCP profile is implemented
 above.
 
-## Master plan Phase 1: model-free lifecycle proof
+### Master plan Phase 1: model-free lifecycle proof
 
 `MNEMO_BACKEND=hash` supplies deterministic, normalized, non-semantic embeddings.
 It uses the configured dimension, defaults background work off, rejects an
@@ -97,7 +174,7 @@ local diff review and executable verification were completed.
 Phase 2's approved receipt migration and guarded mutation contract are implemented
 above; the Phase 1 demo and MCP lifecycle remain legacy compatibility checks.
 
-## Master plan Phase 0: local fixes
+### Master plan Phase 0: local fixes
 
 Fresh-database connections now tolerate pgvector not being installed yet, so
 migrations can create the extension. The regression test creates an empty
@@ -131,7 +208,7 @@ Hosted CI and branch protection (Task 0.5) remain pending: no Git remote is
 configured. The guarded mutation contract and product framing changes are not part of
 Phase 0. Extraction quality is unchanged.
 
-## Current milestone: bounded quote-feedback experiment rejected
+### v7 milestone: bounded quote-feedback experiment rejected
 
 The single v7 experiment added exact source-substring suggestions to retry errors
 for invented terminal punctuation, while retaining strict validation and the
@@ -163,7 +240,7 @@ Generalization, full conversations and later-session/TTL retention remain
 unmeasured. `b46e15ed` remains sealed. This completed failure authorizes no further
 tuning cycle.
 
-## Prior milestone: complete baseline; span experiment rejected
+### Prior milestone: complete baseline; span experiment rejected
 
 All 60 saved candidates from the 20-source development probe now have a full gate,
 store and retrieval baseline. Two provisional agent reviews agree on **16/24
@@ -215,7 +292,7 @@ checks verify held-out resource presence without opening held-out contents.
 `make eval` and the live extraction/rollback demo also pass using the installed
 model override. The synthetic smoke result does not establish real-data quality.
 
-## Latest extraction milestone: partial batch recovery
+### v5 extraction milestone: partial batch recovery
 
 Continued the linked quality-debugging thread by recovering its uncommitted parser,
 audit and replay fixes from the local transcript. The unsuccessful component-check
@@ -244,7 +321,7 @@ is unavailable, so the model integration check and demo require the documented
 model override. The original disjoint 48-turn reservation `b46e15ed` has been
 restored by checksum and remains unopened, unlabeled and unevaluated.
 
-## Prior evidence-grounded extraction milestone
+### Prior evidence-grounded extraction milestone
 
 Commit `3aaaed1` adds evidence-first extraction, exact-quote and nonempty-value
 validation, bounded retries with the failed response and validator feedback,
@@ -285,7 +362,7 @@ a serial workload of simple fixture facts, not concurrent capacity or quality
 acceptance. Actual costs remain unknown. Ruff/Black and the rebuilt clean-wheel
 checks pass; old-policy measurements below remain historical.
 
-## Implemented and regression tested
+### Implemented and regression tested
 
 - Scoped, serialized HEAD mutations; immutable event payloads; fact-owned revert
   targets with restored embeddings, JSON and lineage; transactional decay with
@@ -311,7 +388,7 @@ checks pass; old-policy measurements below remain historical.
 - Packaged migrations, data, templates and demos; required-Postgres CI and clean
   wheel installation. Remote merge protection is not yet configured.
 
-## Labels and evaluation controls
+### Labels and evaluation controls
 
 All 38 original unmatched writes and eight missed must-keep targets have
 source-linked review with report/source hashes. Reviews distinguish equivalent
@@ -330,7 +407,7 @@ usage and all allocated storage are recorded. The latest synthetic replay instea
 uses saved user candidates to isolate verifier behavior; only its gated arm is
 published. Neither evaluation format establishes a competitor comparison.
 
-## Prior v5.1 correctness validation
+### Prior v5.1 correctness validation
 
 The required-Postgres suite passes **180 tests, zero skipped**, including available
 local-model integration checks. [Latest test log](docs/quality-v3/tests-validated.log).
@@ -344,7 +421,7 @@ required-DB unavailability fails instead of skipping, real MCP observation and
 rollback demos pass, and HNSW execution plans are preserved. Infrastructure
 regressions do not prove real-model write accuracy.
 
-## Prior v5.1 quality results
+### Prior v5.1 quality results
 
 The 18-turn **scripted** regression remains **90.9% precision / 100% recall** versus
 naive **60% / 90%**. Its source turns are unchanged; v2 labels correct database use
@@ -384,7 +461,7 @@ finds false assertions in all three preceding v5.1 evaluation scopes. Read the
 [full evidence](docs/quality-v3/README.md) for sources, all write judgments, all
 missed must-keep traces and limits. Those two holdouts are consumed.
 
-## Storage, latency, cost and remote CI
+### Storage, latency, cost and remote CI
 
 Current v6.2 allocated bytes rise from **2,392,064 to 3,743,744** on the 200-turn
 development run and **696,320 to 1,433,600** on the 48-turn holdout. Fewer events
@@ -412,7 +489,7 @@ remote; the same-named repository in the authenticated account contains unrelate
 DSA submissions and was not modified. The intended repository/branch and actual
 compute rates have been requested from the user.
 
-## Remaining work, in order
+### Earlier quality backlog (requires a separately authorized cycle)
 
 1. Independently adjudicate provisional labels and explicit equivalences. Review
    the new interview-versus-audio duration issue and compound usability label;

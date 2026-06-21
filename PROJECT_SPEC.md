@@ -1,7 +1,7 @@
 # Mnemo — Project Spec (single source of truth, v4)
 
-The September 9, 2026 correctness amendment in §14 supersedes earlier wording
-where indicated. The implementation plan is in `docs/MASTER_PLAN.md`;
+The correctness amendment in §14 and direct-memory contract in §15 supersede
+earlier wording where indicated. The implementation plan is in `docs/MASTER_PLAN.md`;
 executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
 The quality work is summarized in `docs/MASTER_PLAN.md`;
 `docs/quality-v5/README.md` records partial extraction recovery and its development measurements;
@@ -22,7 +22,7 @@ The quality work is summarized in `docs/MASTER_PLAN.md`;
 ## 0. One product, not two (read this first)
 Earlier drafts split into "git for agent memory" (versioning) and a "quality pipeline." **They are the same product.** Resolution, final:
 - **The product is the write-quality pipeline** — deciding *what is worth remembering* (salience scoring, NLI verification, tiering, dedup, decay). This attacks the loud, validated pain: agent memory stores ~96–98% junk and invents false facts (Mem0 issue #4573).
-- **The versioned event store is its foundation** — every memory is an append-only event, so the quality decisions (keep / demote / drop / forget) are all **auditable and reversible**. Incumbents with mutable stores literally cannot make that guarantee.
+- **The versioned event store is its foundation** — memory revisions are append-only events, and quality decisions have their own audit log. Revert preserves history. Versioning is not unique to Mnemo: Timescale's Memory Engine also records history and restores revisions through [database triggers](https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/database/space/migrate/idempotent/004_memory_event.sql). Mnemo combines database-enforced payload immutability, mandatory expected-revision guards and durable retry receipts in its direct API.
 - **`blame` / `revert` are the safety net** — for whatever junk or wrong fact slips through the gate, a human (or agent) can see where it came from and undo it.
 - **Lead with the outcome (debugging / stores-less), keep the architecture honest (it's a versioned memory store).** Hero demo = the precision/recall side-by-side; rollback = the secondary demo.
 
@@ -382,3 +382,12 @@ The server owns a dimension-validated connection pool and embedder, starts no
 extraction/verification/decay work, and disables search reinforcement. Hosts must
 use returned revision IDs, reconsider on conflicts, reuse request IDs only for
 identical retries, and clarify ambiguous undo targets with the user.
+
+The web review UI uses this guarded revert contract. Each restore form carries the
+HEAD shown to the reviewer and a UUID request ID for that row. A stale submission
+returns HTTP 409 with current state and fresh forms, without writing an event or
+receipt. An identical successful submission replays its receipt. The UI offers
+restore only when both the current state and historical target are eligible;
+the server enforces the same rules for forged or outdated forms. Restore preserves
+the target's trust and provenance. The separate **Manual correction** form uses
+legacy `add` with `human_review` provenance and high trust; it remains unguarded.
