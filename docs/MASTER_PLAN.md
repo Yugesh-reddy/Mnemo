@@ -1,12 +1,14 @@
 # Mnemo — Master Plan
 
-**Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–3
-are implemented. Required-Postgres validation passes 294 tests; three live-Ollama
-tests skip. Lint and wheel/source packaging pass, including installed guarded SDK
-lifecycle and real direct MCP stdio checks. Phase 2's additive receipt schema
-and guarded API contract were explicitly approved by the user. Fresh migration and
-populated-0009 upgrade tests pass. Phase 4 is next. Task 0.5 remains pending because
-no Git remote is configured.
+**Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–5
+are complete. Required-Postgres validation passes 326 tests; one live-Ollama test
+skips. Lint and wheel/source packaging pass, including the installed pilot entry
+point, guarded SDK lifecycle and real direct MCP stdio checks. Phase 5's single
+local Qwen run passed **2/6 scenarios with zero unintended mutations**; see the
+[recorded failures and evidence](direct-pilot/run-2026-09-22/README.md).
+Phase 2's additive receipt schema and guarded API contract were explicitly
+approved by the user. The GitHub remote is configured; hosted CI and merge
+protection in Task 0.5 were declined by the owner. Phase 6 remains deferred.
 See `PROJECT_STATUS.md` for verification details.
 
 Written September 21, 2026 against checkout `0468977` (working tree: one uncommitted
@@ -370,12 +372,14 @@ and `docs/MASTER_PLAN.md`.
 
 ### Task 0.5 — Push and get one green CI run (your action)
 
-- [ ] Create the GitHub repo, `git remote add origin …`, push `main`. Confirm the `correctness`
-  job is green (after 0.1 it should be; before 0.1 the `make migrate` step fails).
-- [ ] Add the branch-protection rule requiring `correctness` (README already says so).
+- [x] Create the GitHub repo, configure `origin`, and push `main`.
+- Hosted CI and required merge checks were declined by the owner. GitHub Actions
+  remains disabled; there is no hosted green-CI result. Local verification is
+  recorded in `PROJECT_STATUS.md`.
 
 **Phase 0 exit:** fresh clone → `make install && make up && make migrate && make eval` works
-with no Ollama; CI green; `rg CORRECTNESS_PLAN` returns nothing; `git check-ignore docs/` fails.
+with no Ollama; local checks pass (hosted CI waived by owner);
+`rg CORRECTNESS_PLAN` returns nothing; `git check-ignore docs/` fails.
 
 ---
 
@@ -1078,13 +1082,13 @@ with `MNEMO_BACKEND=hash` and with `ollama`.
 
 **Files:** `web/app.py:96-99`, `web/templates/fact.html`, `tests/test_web.py`.
 
-- [ ] Revert form posts a hidden `expected_event_id` (the HEAD rendered on the page) and a
+- [x] Revert form posts a hidden `expected_event_id` (the HEAD rendered on the page) and a
   `request_id` (uuid4 rendered per row); handler calls `DirectMemory.revert`; on
   `REVISION_CONFLICT` re-render the fact page with a banner "This memory changed since you
   loaded the page — review and try again" (HTTP 409). Keep the `/edit` form but label it
   "manual correction" and set `provenance="human_review"` only there (it is a human form).
-- [ ] Tests: happy path unchanged; stale form → 409 and no new event.
-- [ ] Commit: `feat(web): revert requires the revision the reviewer saw`.
+- [x] Tests: happy path unchanged; stale form → 409 and no new event.
+- [x] Commit: `feat(web): revert requires the revision the reviewer saw`.
 
 ### Task 4.2 — README rewrite (D7)
 
@@ -1112,21 +1116,21 @@ Structure (write it, do not leave as an outline):
 8. Non-goals and known limits (single-tenant local scope; hash embeddings are not
    semantic; extraction pipeline experimental; no branching/merge).
 
-- [ ] Commit: `docs: README leads with versioned memory + guarded undo; extraction is optional`.
+- [x] README rewrite shipped in `docs: explain guarded memory and make the quick start reliable`.
 
 ### Task 4.3 — Spec and status
 
 **Files:** `PROJECT_SPEC.md`, `PROJECT_STATUS.md`.
 
-- [ ] Spec §0: soften "incumbents… literally cannot" → "most incumbents mutate in place;
+- [x] Spec §0: soften "incumbents… literally cannot" → "most incumbents mutate in place;
   Timescale's Memory Engine also versions via triggers — Mnemo's difference is the
   DB-enforced append-only log plus expected-revision guards and receipts." Add **§15 Direct
   memory contract (Sept 2026)** summarizing Phase 2/3 semantics (copy the rules from Task
   2.5, the error table from D3, receipt retention = lifetime of the store).
-- [ ] Status: replace the "Current milestone" narrative with: what shipped in Phases 0–4,
+- [x] Status: replace the "Current milestone" narrative with: what shipped in Phases 0–4,
   the verified test count, and a short "Extraction quality: unchanged since v7; see
   `docs/quality-v7/README.md`". Move the long cycle history under a "History" heading.
-- [ ] Commit: `docs: spec §15 direct contract; status reflects the pivot`.
+- [x] Spec/status shipped in `docs: record the guarded web contract and Phase 4 verification`.
 
 **Phase 4 exit:** a reviewer can understand the project from the README in two minutes and
 run the demo in five; nothing on the front page is false.
@@ -1140,16 +1144,18 @@ is fine.
 
 **Files:** create `examples/agent_undo.py`, `docs/direct-pilot/README.md` + transcripts.
 
-- [ ] Minimal tool-calling loop (Ollama `/api/chat` with tools, or OpenAI) wired to the
+- [x] Minimal tool-calling loop (Ollama `/api/chat` with tools, or OpenAI) wired to the
   six direct tools via the in-process `DirectMemory`. Six fixed scenarios:
   (1) "remember PostgreSQL" → create; (2) "change it to MySQL" → update with expected id;
   (3) "undo that" → history + revert; (4) two memories then "undo the database one" →
   correct target; (5) ambiguous "undo that" after two changes → asks, no mutation;
   (6) inject a `REVISION_CONFLICT` on first attempt → model re-reads and retries or asks.
-- [ ] Record: model name, transcript, tool calls, unintended mutations (must be 0), wall time.
+- [x] Record: model name, transcript, tool calls, unintended mutations (must be 0), wall time.
   Report the denominators exactly (6 scenarios, 1 run each). Do not blend with the
   extraction eval numbers.
-- [ ] Commit: `docs: scripted host-agent undo pilot (N/6, model X)`.
+- [x] Record the frozen result: **2/6**, `qwen3.5:4b-mlx`, zero unintended
+  mutations, 158.28 seconds. Four protocol failures remain visible in the
+  [run review and transcript](direct-pilot/run-2026-09-22/README.md).
 
 ---
 

@@ -2,10 +2,12 @@
 
 Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
-implemented and locally verified. Hosted CI and merge protection were declined
-by the owner; they are not prerequisites for this delivery.
+implemented and locally verified. Phase 5's bounded local host-agent pilot is
+complete: **2/6 scenarios passed, zero unintended mutations**. Hosted CI and
+merge protection were declined by the owner; they are not prerequisites for
+this delivery.
 
-## Shipped through Phase 4
+## Shipped through Phase 5
 
 - **Foundation and installation (Phase 0):** fresh-database vector registration,
   a tracked lockfile, packaged runtime resources and locked source installation.
@@ -26,6 +28,15 @@ by the owner; they are not prerequisites for this delivery.
   quick-start command waits for Postgres health before running migrations. The
   README covers setup, MCP clients, contracts and measured quality limits; detailed
   extraction instructions are in [the extraction guide](docs/EXTRACTION.md).
+- **Local host-agent pilot (Phase 5):** a bounded Ollama tool loop uses the six
+  published schemas through `DirectMemory`, with isolated fixture histories,
+  actual revision-conflict injection, complete transcripts and event-level
+  scoring. The [single six-scenario Qwen run](docs/direct-pilot/run-2026-09-22/README.md)
+  passed create and update. Both undo cases restored the requested value but
+  skipped the required current read; ambiguous undo exhausted its request budget;
+  conflict recovery read a specific revision instead of current state. All five
+  model-written events were intended. This is a completed measurement with four
+  protocol failures, not a claim of reliable host behavior.
 
 The quality pipeline and versioned event store remain one system. Direct writes
 provide an explicit path into that store; they do not establish automatic
@@ -33,8 +44,15 @@ extraction accuracy.
 
 ## Verification
 
-`make test-db`: **301 passed, 3 live-Ollama skips**. `make lint` passes Ruff and
-Black (78 Python files), and `uv lock --check` passes. Web tests exercise rendered
+`make test-db`: **326 passed, 1 live-Ollama skip**. `make lint` passes Ruff and
+Black (80 Python files), and `uv lock --check` passes. The pilot adds 23 regression
+cases; two previously skipped live embedding checks now pass. Pilot tests cover
+argument validation, all six tools, actual conflict injection, event-level
+scoring, current reads before recovery, bounded loops and interruption cleanup.
+An offline replay reproduced all six recorded pilot verdicts without new host
+calls. The original pilot database's removal was independently confirmed.
+
+Web tests exercise rendered
 forms, stale conflicts without writes, replay after a later update, preserved
 low trust, missing guards, unavailable targets and manual corrections. The demo
 asserts exactly three revisions and three receipts, with no background work.
@@ -55,9 +73,11 @@ assigned local port; all temporary resources were removed.
 `uv build` and `bash scripts/check-wheel.sh` pass in a clean environment outside
 the checkout against an invocation-owned empty database. The installed wheel
 passes resource and migration checks, the guarded demo and SDK lifecycle, receipt
-replay, and real stdio MCP discovery/read/error checks. Locked installation from
+replay, the installed pilot's `--help`, and real stdio MCP discovery/read/error
+checks. Locked installation from
 the source archive also passes. The wheel resolved MCP 1.30.0; the locked source
-uses MCP 1.28.1. No model calls or new extraction experiments were needed.
+uses MCP 1.28.1. Packaging needed no model calls; the local host pilot and live
+embedding tests are separate from extraction experiments.
 
 The repository is [Yugesh-reddy/Mnemo](https://github.com/Yugesh-reddy/Mnemo).
 **GitHub Actions remains disabled at the owner's request.** The workflow file is
@@ -74,7 +94,9 @@ achieved 15/23. These are provisional, limited measurements, not general reliabi
 The 18-turn scripted regression remains gated precision/recall 90.9%/100%,
 100% must-keep recall and zero false writes; it does not measure real extraction.
 Numeric thresholds are unchanged. `b46e15ed` remains sealed. Consolidation stays
-deferred. The optional Phase 5 host-model pilot has not been started.
+deferred. Phase 5 is complete with the limitations above. Phase 6 (identity
+extensions, export/import, grouped undo and consolidation) remains deferred until
+a concrete need and any required contract approval.
 
 ## History
 

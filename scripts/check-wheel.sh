@@ -37,6 +37,7 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval" --json > eval.json
 "$mnemo_wheel_env/venv/bin/mnemo-worker" --help
 "$mnemo_wheel_env/venv/bin/mnemo-mcp-direct" --version
+"$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
 "$mnemo_wheel_env/venv/bin/mnemo-audit-eval" --help
 "$mnemo_wheel_env/venv/bin/mnemo-eval-suite" --help
 "$mnemo_wheel_env/venv/bin/mnemo-benchmark" --help

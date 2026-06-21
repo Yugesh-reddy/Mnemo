@@ -6,6 +6,17 @@ six existing MCP tool schemas; the adapter executes its arguments through the
 in-process `DirectMemory` API. This pilot does not exercise MCP transport, automatic
 extraction, or semantic embeddings. Those are separate checks and measurements.
 
+## Recorded result
+
+The [September 22 run](run-2026-09-22/README.md) completed all six scenarios once
+with `qwen3.5:4b-mlx`: **2/6 passed the frozen protocol, with zero unintended
+mutations across six scenarios**. The model produced five intended events.
+Both undo cases restored the requested value but omitted the required current
+read. Ambiguous undo exhausted its eight-request budget without asking a question.
+Conflict recovery read a specific historical revision rather than current state.
+The [complete evidence](run-2026-09-22/results.json) retains these failures;
+the prompt, scorer and results were not changed after the run.
+
 ## Protocol fixed before the run
 
 Six independent scenarios run once each. Each starts with a fresh namespace and

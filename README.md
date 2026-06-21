@@ -36,6 +36,11 @@ or decay runs. The `hash` backend produces deterministic **non-semantic** vector
 use keyword queries for this demo. Use a separate database when switching between
 hash and semantic embeddings, even if their dimensions match.
 
+The optional [local host-agent pilot](docs/direct-pilot/README.md) lets Qwen choose
+the tool calls. Its recorded run passed **2/6 scenarios**, one attempt each, with
+zero unintended mutations. It exposes missed reads and a failed clarification;
+it does not establish general agent reliability.
+
 ## Connect an MCP client
 
 After installation and migration, use this local-server configuration for
