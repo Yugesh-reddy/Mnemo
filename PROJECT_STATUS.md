@@ -38,15 +38,23 @@ this delivery.
   model-written events were intended. This is a completed measurement with four
   protocol failures, not a claim of reliable host behavior.
 
+An optional Azure Luna host adapter is now available for the same six-scenario
+pilot. It preserves tool-call IDs, the original prompt and scorer, records raw
+provider responses and token usage, and enforces request/input/output limits.
+The `Mnemo` project endpoint is configured locally, and Azure's deployment API
+confirms `gpt-5.6-luna`, version `2026-07-09`. The live rerun is prepared; the
+recorded Qwen result remains the only completed live host-model measurement.
+
 The quality pipeline and versioned event store remain one system. Direct writes
 provide an explicit path into that store; they do not establish automatic
 extraction accuracy.
 
 ## Verification
 
-`make test-db`: **326 passed, 1 live-Ollama skip**. `make lint` passes Ruff and
-Black (80 Python files), and `uv lock --check` passes. The pilot adds 23 regression
-cases; two previously skipped live embedding checks now pass. Pilot tests cover
+`make test-db`: **342 passed, 1 live-Ollama skip**. `make lint` passes Ruff and
+Black (82 Python files), and `uv lock --check` passes. The pilot adds 23 regression
+cases and the Azure adapter adds 16 transport/configuration cases; two previously
+skipped live embedding checks now pass. Pilot tests cover
 argument validation, all six tools, actual conflict injection, event-level
 scoring, current reads before recovery, bounded loops and interruption cleanup.
 An offline replay reproduced all six recorded pilot verdicts without new host

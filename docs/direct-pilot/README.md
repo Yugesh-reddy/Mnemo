@@ -1,6 +1,6 @@
 # Direct-memory host-agent pilot
 
-Phase 5 adds a bounded Ollama tool-calling loop in
+Phase 5 adds a bounded host-model tool-calling loop in
 [`examples/agent_undo.py`](../../examples/agent_undo.py). The host chooses from the
 six existing MCP tool schemas; the adapter executes its arguments through the
 in-process `DirectMemory` API. This pilot does not exercise MCP transport, automatic
@@ -51,7 +51,7 @@ These settings do not guarantee identical generations on another runtime.
 
 Each scenario permits at most eight model requests and twelve executed tool
 calls, with a 45-second HTTP timeout and 180-second scenario deadline. There is
-no automatic HTTP retry. Cloud model tags and non-local endpoints are rejected;
+no automatic HTTP retry. For the Ollama host, cloud model tags and non-local endpoints are rejected;
 only already-installed models advertising tool support are allowed. No paid
 provider is used. Hash vectors have the configured database dimension and are
 explicitly non-semantic; keyword lookup is sufficient for these fixture facts.
@@ -81,6 +81,52 @@ wall time, errors, checks and whole-run wall time. Exit status is zero only when
 all six automatic case checks pass and no background rows exist. A nonzero exit
 is retained as a measured failure. Model responses are never used as evidence
 that a write occurred without checking the store.
+
+## Azure Luna rerun
+
+The optional Azure adapter uses the existing `httpx` dependency and the resource's
+OpenAI v1 Chat Completions API. A project URL such as
+`https://mnemo.services.ai.azure.com/api/projects/Mnemo` resolves to
+`https://mnemo.services.ai.azure.com/openai/v1/`. The `model` parameter is the
+**deployment name**, which can differ from the underlying model name. See
+[Microsoft's endpoint guidance](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/endpoints).
+
+Set these in the gitignored project-root `.env`:
+
+```dotenv
+MNEMO_AZURE_ENDPOINT=https://mnemo.services.ai.azure.com/api/projects/Mnemo
+MNEMO_AZURE_DEPLOYMENT=gpt-5.6-luna
+AZURE_OPENAI_API_KEY=your-resource-key
+```
+
+Then use a new evidence directory:
+
+```bash
+uv run python -m examples.agent_undo --host azure \
+  --output docs/direct-pilot/new-luna-run
+```
+
+The Azure response must identify `gpt-5.6-luna` or a dated Luna version. A different
+model stops further requests before any of its tool calls execute. Setup requires
+an existing deployment and resource key; this command does not provision Azure
+resources. Authentication headers are excluded from the saved evidence.
+
+The scenarios, system prompt, six tool schemas, fixture isolation and scorer are
+shared with the Qwen pilot. Azure uses `reasoning_effort=none` and
+`max_completion_tokens=512`, including any reasoning tokens. It omits Ollama's
+seed, context and temperature options. These provider differences are recorded;
+this is not an identical-runtime comparison. See
+[Luna's model documentation](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
+and [Azure's output-token limits](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#control-costs).
+
+The cloud run is bounded to **48 requests total**, **32 KiB of serialized request
+body per request**, and **512 completion tokens per request** (at most 24,576
+completion tokens). Oversized inputs stop instead of truncating the transcript;
+failed requests consume the request budget and are never automatically retried.
+These are usage limits, not a dollar estimate for an unverified Azure tariff.
+Raw provider requests/responses, returned model/version, finish reasons and token
+usage are retained along with the existing event/receipt audit. Incomplete
+generations cannot execute tool calls. The original Qwen evidence is preserved.
 
 ## Interpretation
 

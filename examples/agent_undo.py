@@ -1,4 +1,4 @@
-"""Bounded local host-agent pilot; six fixed scenarios, one run each.
+"""Bounded host-agent pilot; six fixed scenarios, one run each.
 
 Uses the published MCP schemas and in-process DirectMemory, not MCP transport.
 Only the host model is real: embeddings are non-semantic hash vectors. All writes
@@ -24,6 +24,7 @@ from uuid import UUID, uuid4
 import asyncpg
 import httpx
 
+from examples.azure_host import AzureChatHost
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
 from mnemo.db import apply_migrations, register_vector
@@ -255,9 +256,14 @@ async def run_turn(
                     }
                     record["tool_calls"].append(tool_record)
                     result = tool_record["result"] = await tools.call(name, arguments)
-                    messages.append(
-                        {"role": "tool", "tool_name": name, "content": json.dumps(result)}
-                    )
+                    tool_message = {
+                        "role": "tool",
+                        "tool_name": name,
+                        "content": json.dumps(result),
+                    }
+                    if "id" in call:
+                        tool_message["tool_call_id"] = call["id"]
+                    messages.append(tool_message)
     except TimeoutError:
         record["status"] = "scenario_timeout"
     except asyncio.CancelledError:
@@ -499,8 +505,17 @@ async def seed(direct: DirectMemory, scenario: Scenario) -> UUID | None:
     return database_fact
 
 
-async def pilot(model: str, output: Path) -> JSON:
+async def pilot(model: str | None, output: Path, *, provider: str = "ollama") -> JSON:
     settings = get_settings()
+    if provider == "azure":
+        model = model or settings.azure_deployment
+        if not model or not settings.azure_endpoint or not settings.azure_api_key:
+            raise ValueError(
+                "Azure needs MNEMO_AZURE_ENDPOINT, MNEMO_AZURE_DEPLOYMENT (or --model), "
+                "and AZURE_OPENAI_API_KEY in environment/.env"
+            )
+    elif provider != "ollama" or not model:
+        raise ValueError("Choose --host ollama with --model, or --host azure")
     report: JSON = {
         "started_at": datetime.now(UTC).isoformat(),
         "protocol": "direct-pilot-v1",
@@ -519,7 +534,15 @@ async def pilot(model: str, output: Path) -> JSON:
         "database_removed": False,
     }
     output.mkdir(parents=True, exist_ok=False)
-    host = OllamaHost(settings.ollama_host, model)
+    if provider == "azure":
+        host = AzureChatHost(
+            settings.azure_endpoint, model, settings.azure_api_key.get_secret_value()
+        )
+        report["host_source_sha256"] = hashlib.sha256(
+            Path(__file__).with_name("azure_host.py").read_bytes()
+        ).hexdigest()
+    else:
+        host = OllamaHost(settings.ollama_host, model)
     report_file = output / "results.json"
 
     def save() -> None:
@@ -629,8 +652,9 @@ async def pilot(model: str, output: Path) -> JSON:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--host", choices=("ollama", "azure"), default="ollama")
     parser.add_argument(
-        "--model", required=True, help="Already-installed local Ollama tool model (full tag)"
+        "--model", help="Ollama model tag or Azure deployment (defaults to MNEMO_AZURE_DEPLOYMENT)"
     )
     parser.add_argument(
         "--output",
@@ -639,7 +663,10 @@ def main() -> None:
         help="New evidence directory; existing directories are never overwritten",
     )
     args = parser.parse_args()
-    report = asyncio.run(pilot(args.model, args.output))
+    try:
+        report = asyncio.run(pilot(args.model, args.output, provider=args.host))
+    except ValueError as exc:
+        parser.error(str(exc))
     print(
         f"Result: {report['passed']}/6 scenarios; "
         f"unintended mutations: {report['unintended_mutations']}"

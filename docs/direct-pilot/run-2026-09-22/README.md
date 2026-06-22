@@ -60,7 +60,7 @@ establish request-ID discipline across a continuing conversation in one scope.
 ## Reproducibility and verification
 
 The recorded source is commit `26a3ccc23f01750d0b258053e0886eaeaa9cf6f2`.
-`examples/agent_undo.py` still matches its recorded SHA-256:
+At the original review, `examples/agent_undo.py` matched its recorded SHA-256:
 `9ce7357660a6786ee0e395faaa46f305f847734b19858b65db4f336bc52eed2f`.
 The unmodified `results.json` SHA-256 is
 `d90f927b5d23b75caf9ebc8a6b28d4400b21b6cb88be0c3215ae6c1c375995ae`.

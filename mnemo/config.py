@@ -9,7 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import AliasChoices, Field, model_validator
+from pydantic import AliasChoices, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -39,6 +39,20 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("MNEMO_OPENAI_API_KEY", "OPENAI_API_KEY"),
     )
     openai_base_url: str = "https://api.openai.com/v1"
+
+    # --- Optional Azure host for the direct-memory pilot (not extraction/embeddings) ---
+    azure_endpoint: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("MNEMO_AZURE_ENDPOINT", "AZURE_OPENAI_ENDPOINT"),
+    )
+    azure_deployment: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("MNEMO_AZURE_DEPLOYMENT", "AZURE_OPENAI_DEPLOYMENT"),
+    )
+    azure_api_key: SecretStr | None = Field(
+        default=None,
+        validation_alias=AliasChoices("MNEMO_AZURE_API_KEY", "AZURE_OPENAI_API_KEY"),
+    )
 
     # --- Embedding / extraction models ---
     # Dimension MUST match the vector(N) used in migrations (see CLAUDE.md "Embedding dimension").
