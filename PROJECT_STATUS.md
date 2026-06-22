@@ -2,8 +2,9 @@
 
 Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
-implemented and locally verified. Phase 5's bounded local host-agent pilot is
-complete: **2/6 scenarios passed, zero unintended mutations**. Hosted CI and
+implemented and locally verified. Phase 5's bounded pilots are complete:
+**Qwen 2/6 with zero unintended mutations; Azure Luna 4/6 with two unintended
+mutations**. Luna failed the zero-unintended-mutation requirement. Hosted CI and
 merge protection were declined by the owner; they are not prerequisites for
 this delivery.
 
@@ -38,12 +39,15 @@ this delivery.
   model-written events were intended. This is a completed measurement with four
   protocol failures, not a claim of reliable host behavior.
 
-An optional Azure Luna host adapter is now available for the same six-scenario
-pilot. It preserves tool-call IDs, the original prompt and scorer, records raw
-provider responses and token usage, and enforces request/input/output limits.
-The `Mnemo` project endpoint is configured locally, and Azure's deployment API
-confirms `gpt-5.6-luna`, version `2026-07-09`. The live rerun is prepared; the
-recorded Qwen result remains the only completed live host-model measurement.
+The [Azure Luna rerun](docs/direct-pilot/run-2026-09-22-luna/README.md) used the
+same six scenarios once each and preserved tool-call IDs, the prompt and scorer.
+Azure confirmed `gpt-5.6-luna-2026-07-09`. It passed create, update, simple undo
+and conflict recovery. Targeted undo read a historical revision instead of current
+state; ambiguous undo reverted both memories without clarification, producing
+two unintended events. The 49.14-second run used 29 requests and reported 36,213
+input / 1,691 completion tokens. Raw responses and snapshots are retained;
+the temporary database was removed. These are bounded observations, not a
+general reliability claim. No prompt or scorer tuning followed either run.
 
 The quality pipeline and versioned event store remain one system. Direct writes
 provide an explicit path into that store; they do not establish automatic
@@ -57,8 +61,8 @@ cases and the Azure adapter adds 16 transport/configuration cases; two previousl
 skipped live embedding checks now pass. Pilot tests cover
 argument validation, all six tools, actual conflict injection, event-level
 scoring, current reads before recovery, bounded loops and interruption cleanup.
-An offline replay reproduced all six recorded pilot verdicts without new host
-calls. The original pilot database's removal was independently confirmed.
+Offline replays reproduced both pilots' six verdicts without new host calls.
+Both pilot databases' removal was independently confirmed.
 
 Web tests exercise rendered
 forms, stale conflicts without writes, replay after a later update, preserved

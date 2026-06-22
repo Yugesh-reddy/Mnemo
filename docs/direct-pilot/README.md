@@ -8,6 +8,12 @@ extraction, or semantic embeddings. Those are separate checks and measurements.
 
 ## Recorded result
 
+The [Azure Luna run](run-2026-09-22-luna/README.md) completed all six scenarios
+once with `gpt-5.6-luna-2026-07-09`: **4/6 passed, with two unintended mutations**.
+It restored both memories on an ambiguous undo request instead of asking which
+change was intended. Targeted undo also used a historical read where the protocol
+required a current read. This run fails the zero-unintended-mutation requirement.
+
 The [September 22 run](run-2026-09-22/README.md) completed all six scenarios once
 with `qwen3.5:4b-mlx`: **2/6 passed the frozen protocol, with zero unintended
 mutations across six scenarios**. The model produced five intended events.

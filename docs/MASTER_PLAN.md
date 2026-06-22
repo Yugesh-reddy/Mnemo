@@ -1,11 +1,12 @@
 # Mnemo — Master Plan
 
 **Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–5
-are complete. Required-Postgres validation passes 326 tests; one live-Ollama test
+are complete. Required-Postgres validation passes 342 tests; one live-Ollama test
 skips. Lint and wheel/source packaging pass, including the installed pilot entry
 point, guarded SDK lifecycle and real direct MCP stdio checks. Phase 5's single
-local Qwen run passed **2/6 scenarios with zero unintended mutations**; see the
-[recorded failures and evidence](direct-pilot/run-2026-09-22/README.md).
+local Qwen run passed **2/6 scenarios with zero unintended mutations**; the
+Azure Luna rerun passed **4/6 with two unintended mutations**. See the
+[pilot evidence](direct-pilot/README.md) for both complete transcripts and failures.
 Phase 2's additive receipt schema and guarded API contract were explicitly
 approved by the user. The GitHub remote is configured; hosted CI and merge
 protection in Task 0.5 were declined by the owner. Phase 6 remains deferred.

@@ -36,10 +36,11 @@ or decay runs. The `hash` backend produces deterministic **non-semantic** vector
 use keyword queries for this demo. Use a separate database when switching between
 hash and semantic embeddings, even if their dimensions match.
 
-The optional [local host-agent pilot](docs/direct-pilot/README.md) lets Qwen choose
-the tool calls. Its recorded run passed **2/6 scenarios**, one attempt each, with
-zero unintended mutations. It exposes missed reads and a failed clarification;
-it does not establish general agent reliability.
+The optional [host-agent pilot](docs/direct-pilot/README.md) lets Qwen or Azure
+Luna choose the tool calls. With one attempt per scenario, Qwen passed **2/6 with
+zero unintended mutations**; Luna passed **4/6 with two unintended mutations**
+after reverting both memories on an ambiguous request. These measurements expose
+host failures and do not establish general agent reliability.
 
 ## Connect an MCP client
 
