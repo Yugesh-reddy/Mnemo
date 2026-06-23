@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct demo demo-direct ui
+.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct demo demo-direct ui export import
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -48,6 +48,12 @@ demo:  ## Run the end-to-end rollback demo (spec §10)
 
 demo-direct:  ## Direct write -> history -> revert through the SDK, no models
 	MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false $(RUN) python -m examples.direct_memory
+
+export:  ## Export the configured scope as versioned JSON (OUT=file, default stdout)
+	$(RUN) python -m mnemo.transfer export --out $(or $(OUT),-)
+
+import:  ## Restore an export into an empty, migrated store (FILE=export.json)
+	$(RUN) python -m mnemo.transfer import $(FILE)
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
