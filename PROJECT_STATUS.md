@@ -4,7 +4,10 @@ Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
 implemented and locally verified. Phase 5's bounded pilots are complete:
 **Qwen 2/6 with zero unintended mutations; Azure Luna 4/6 with two unintended
-mutations**. Luna failed the zero-unintended-mutation requirement. Hosted CI and
+mutations**. Luna failed the zero-unintended-mutation requirement. Across both
+runs the intended end state was reached in 10 of 12 scenarios and no existing
+event was altered; the two unintended events are attributed, visible in history
+and reversible with the same tools. Hosted CI and
 merge protection were declined by the owner; they are not prerequisites for
 this delivery.
 
@@ -32,19 +35,22 @@ this delivery.
 - **Local host-agent pilot (Phase 5):** a bounded Ollama tool loop uses the six
   published schemas through `DirectMemory`, with isolated fixture histories,
   actual revision-conflict injection, complete transcripts and event-level
-  scoring. The [single six-scenario Qwen run](docs/direct-pilot/run-2026-09-22/README.md)
+  scoring. The [single six-scenario Qwen run](docs/direct-pilot/run-qwen/README.md)
   passed create and update. Both undo cases restored the requested value but
   skipped the required current read; ambiguous undo exhausted its request budget;
   conflict recovery read a specific revision instead of current state. All five
   model-written events were intended. This is a completed measurement with four
   protocol failures, not a claim of reliable host behavior.
 
-The [Azure Luna rerun](docs/direct-pilot/run-2026-09-22-luna/README.md) used the
+The [Azure Luna rerun](docs/direct-pilot/run-luna/README.md) used the
 same six scenarios once each and preserved tool-call IDs, the prompt and scorer.
 Azure confirmed `gpt-5.6-luna-2026-07-09`. It passed create, update, simple undo
 and conflict recovery. Targeted undo read a historical revision instead of current
 state; ambiguous undo reverted both memories without clarification, producing
-two unintended events. The 49.14-second run used 29 requests and reported 36,213
+two unintended events. Those events carry `actor="pilot-host"` and the model's
+request UUIDs, sit in `memory_history`, and are each undoable with one guarded
+`memory_revert`; the guards bounded the damage but could not judge intent.
+The 49.14-second run used 29 requests and reported 36,213
 input / 1,691 completion tokens. Raw responses and snapshots are retained;
 the temporary database was removed. These are bounded observations, not a
 general reliability claim. No prompt or scorer tuning followed either run.

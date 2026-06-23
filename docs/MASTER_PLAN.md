@@ -264,12 +264,10 @@ in `docs/quality-*`)". Soften spec §0 "incumbents with mutable stores literally
 **D8. Commit dating.** `AGENTS.md` says continue the synthetic timeline (HEAD 2026-05-29,
 ≤7 commits/day). `mnemo/audit.py`, the two tracked quality manifests, and the gitignored
 `docs/evaluation` + `docs/quality-v*` artifacts carry September 2026 timestamps (A3-12).
-Decide one of: (a) keep the rule and rename `pipeline_version` to a non-date tag (e.g.
-`v6.2`; this changes the gate fingerprint, so expect `tests/test_audit.py` snapshot updates)
-and either leave the manifests/artifacts as data or strip their timestamps, (b) drop the
-rule and let commits carry real dates. This
-plan does not decide for you; the executing agent follows `AGENTS.md` as written until told
-otherwise.
+**Decided (owner, 2026-09-22): accept the inconsistency.** History was re-dated to a
+June 2026 timeline (`backup/pre-june7` keeps the prior one); content dates, `pipeline_version`,
+and artifact hashes stay as they are. The executing agent follows the `AGENTS.md` git-dates
+rule as written and does not "fix" dates opportunistically while touching a file.
 
 **D9. Pilot B (member/occurrence identity) and export/import stay deferred** until Phases
 0–4 ship and a concrete need exists. Consolidation stays disabled. Recommended: **yes**.
@@ -1157,7 +1155,7 @@ is fine.
   extraction eval numbers.
 - [x] Record the frozen result: **2/6**, `qwen3.5:4b-mlx`, zero unintended
   mutations, 158.28 seconds. Four protocol failures remain visible in the
-  [run review and transcript](direct-pilot/run-2026-09-22/README.md).
+  [run review and transcript](direct-pilot/run-qwen/README.md).
 
 ---
 

@@ -37,10 +37,16 @@ use keyword queries for this demo. Use a separate database when switching betwee
 hash and semantic embeddings, even if their dimensions match.
 
 The optional [host-agent pilot](docs/direct-pilot/README.md) lets Qwen or Azure
-Luna choose the tool calls. With one attempt per scenario, Qwen passed **2/6 with
-zero unintended mutations**; Luna passed **4/6 with two unintended mutations**
-after reverting both memories on an ambiguous request. These measurements expose
-host failures and do not establish general agent reliability.
+Luna choose the tool calls, one attempt per scenario. Both models finished with
+the intended end state in 5/6 scenarios (Qwen's sixth ran out of budget without
+writing or replying; Luna's wrote twice) and neither altered an existing event; the
+strict read-before-write protocol was followed 2/6 (Qwen) and 4/6 (Luna) times.
+Luna's one bad outcome shows where the guards stop: on an ambiguous "undo that"
+it reverted both memories instead of asking. `expected_event_id` blocks stale and
+racing writes; it cannot know whether a write was wanted. What it guarantees is
+the blast radius: two events, attributed to the agent's actor and request IDs,
+visible in `memory_history`, reversible with two `memory_revert` calls. These
+runs measure host behavior; they do not establish general agent reliability.
 
 ## Connect an MCP client
 

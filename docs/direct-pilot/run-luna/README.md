@@ -8,7 +8,7 @@ Azure's project deployment API confirmed deployment `gpt-5.6-luna` in project
 `Mnemo`, version `2026-07-09`; every inference response identified
 `gpt-5.6-luna-2026-07-09`. The run used in-process `DirectMemory`, the same six
 tool schemas, system prompt, fixture histories and scorer as
-[Qwen's 2/6 run](../run-2026-09-22/README.md). Embeddings remained non-semantic
+[Qwen's 2/6 run](../run-qwen/README.md). Embeddings remained non-semantic
 hash vectors. Azure used `reasoning_effort=none`, a 512-completion-token cap,
 and no temperature or seed parameter. No prompt/scorer changes or retries of
 failed scenarios followed the results.

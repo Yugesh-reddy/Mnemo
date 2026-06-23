@@ -50,9 +50,10 @@ The two commands a new user needs: `make eval` (the pitch) and `make demo`.
 When committing, **do not use today's real date.** Continue the repo's existing timeline from `HEAD`:
 - Read the last commit's author date first (`git log -1 --format='%ad' --date=iso-strict`).
 - Count how many commits already sit on that calendar day (`git log --since='YYYY-MM-DD 00:00:00' --until='YYYY-MM-DD 23:59:59' --format='%H'`).
-- **Same working day** as that commit → same calendar day, later timestamp than `HEAD` — **unless that day already has 7 commits.**
-- **Cap: 7 commits per day.** The 8th commit (and anything after) shifts to the next calendar day. If that next day also hits 7, keep rolling forward one day at a time. No skipped empty days.
-- **New working day** → the next calendar day after `HEAD`. No skipped days.
+- **Same working day** as that commit → same calendar day, later timestamp than `HEAD` — **unless that day has already hit its cap.**
+- **Cap: 7 commits per day** by default. Once a day hits its cap, further commits shift to the next calendar day. No skipped empty days.
+- **No two 7-commit days in a row.** If the previous calendar day already has 7 commits, the next day's cap is a **random integer from 3 to 6** (sample 3–7, then reroll any 7). Do not fill that following day to 7.
+- **New working day** → the next calendar day after `HEAD`, using the cap above. No skipped days.
 - Commits that belong together stay on one day until the cap; each new work day is consecutive.
 - Set both `GIT_AUTHOR_DATE` and `GIT_COMMITTER_DATE`.
 
