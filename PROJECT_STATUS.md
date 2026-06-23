@@ -53,11 +53,27 @@ The quality pipeline and versioned event store remain one system. Direct writes
 provide an explicit path into that store; they do not establish automatic
 extraction accuracy.
 
+## Phase 6: export/import
+
+The owner chose export/import from the deferred Phase 6 list. `mnemo-transfer`
+(`make export` / `make import`) writes a versioned JSON document of one scope or
+the whole store and restores it into an empty, migrated store. It refuses
+schema or embedding mismatches, rows outside the declared scope and non-empty
+destinations. It keeps original IDs and sequence numbers and verifies the restored
+rows against the document before commit ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
+Nine Postgres tests in `tests/test_transfer.py` cover the exact round trip, receipt
+replay and sequence continuation after import, whole-store export, and every
+refusal path. A manual CLI round trip between two scratch databases produced
+byte-identical exports apart from `exported_at`. Pipeline tables (`fast_cache`,
+`extraction_job`, `quality_decision`) are not exported. Merge-import stays out of
+scope.
+
 ## Verification
 
-`make test-db`: **342 passed, 1 live-Ollama skip**. `make lint` passes Ruff and
-Black (82 Python files), and `uv lock --check` passes. The pilot adds 23 regression
-cases and the Azure adapter adds 16 transport/configuration cases; two previously
+`make test-db`: **351 passed, 1 live-Ollama skip** (including the nine export/import
+tests). `make lint` passes Ruff and Black (84 Python files), and `uv lock --check`
+passes. The pilot adds 23 regression cases and the Azure adapter adds 16
+transport/configuration cases; two previously
 skipped live embedding checks now pass. Pilot tests cover
 argument validation, all six tools, actual conflict injection, event-level
 scoring, current reads before recovery, bounded loops and interruption cleanup.
@@ -106,9 +122,9 @@ achieved 15/23. These are provisional, limited measurements, not general reliabi
 The 18-turn scripted regression remains gated precision/recall 90.9%/100%,
 100% must-keep recall and zero false writes; it does not measure real extraction.
 Numeric thresholds are unchanged. `b46e15ed` remains sealed. Consolidation stays
-deferred. Phase 5 is complete with the limitations above. Phase 6 (identity
-extensions, export/import, grouped undo and consolidation) remains deferred until
-a concrete need and any required contract approval.
+deferred. Phase 5 is complete with the limitations above. Export/import has
+shipped from Phase 6; identity extensions, grouped undo and consolidation remain
+deferred until a concrete need and any required contract approval.
 
 ## History
 

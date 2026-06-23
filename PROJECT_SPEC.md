@@ -391,3 +391,33 @@ restore only when both the current state and historical target are eligible;
 the server enforces the same rules for forged or outdated forms. Restore preserves
 the target's trust and provenance. The separate **Manual correction** form uses
 legacy `add` with `human_review` provenance and high trust; it remains unguarded.
+
+## 16. Export/import — September 22, 2026
+
+The user selected export/import from the deferred master-plan Phase 6 list. It
+adds `mnemo.transfer` (`export_store`, `import_store`), the `mnemo-transfer` CLI
+and `make export` / `make import`. No migration or existing contract changes.
+
+- **Document.** One JSON object: `format="mnemo.export"`, `format_version=1`,
+  `scope` (namespace/user/agent, or `null` for the whole store), the applied
+  `schema_migrations`, `embedding` (backend, model — `null` for `hash` — and the
+  column dimension), per-section `counts`, `excluded_tables` and `exported_at`.
+  Sections `facts` (with HEAD pointers), `events`, `commits` and `receipts` hold
+  complete rows as `to_jsonb` renders them, ordered deterministically, with
+  timestamps in UTC. IDs, `seq`, supersession links, embeddings and exact numeric
+  values are preserved. The export reads one repeatable-read snapshot.
+- **Not exported.** `fast_cache`, `extraction_job` and `quality_decision` are
+  pipeline working state; `excluded_tables` names them. Their audit trail stays
+  in the source store.
+- **Import.** Restores into an empty store only: all four store tables must be
+  empty, migrations must match exactly, and the destination's backend, model and
+  dimension must equal the document's. Scoped documents may contain only rows of
+  their scope, and every event/receipt must reference an exported fact. Rows are
+  written with `jsonb_populate_recordset`, keeping original sequence numbers; the
+  identity continues after the highest imported `seq`, so receipts still replay
+  and new writes follow the restored history. Before committing, import re-exports
+  the restored rows and rolls back unless they equal the document. Any refusal
+  writes nothing. The CLI never overwrites an existing export file.
+
+Merging into a non-empty store, remapping scopes and exporting pipeline state
+remain unimplemented.

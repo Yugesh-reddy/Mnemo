@@ -1,7 +1,7 @@
 # Mnemo — Master Plan
 
 **Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–5
-are complete. Required-Postgres validation passes 342 tests; one live-Ollama test
+are complete. Required-Postgres validation passes 351 tests; one live-Ollama test
 skips. Lint and wheel/source packaging pass, including the installed pilot entry
 point, guarded SDK lifecycle and real direct MCP stdio checks. Phase 5's single
 local Qwen run passed **2/6 scenarios with zero unintended mutations**; the
@@ -9,7 +9,8 @@ Azure Luna rerun passed **4/6 with two unintended mutations**. See the
 [pilot evidence](direct-pilot/README.md) for both complete transcripts and failures.
 Phase 2's additive receipt schema and guarded API contract were explicitly
 approved by the user. The GitHub remote is configured; hosted CI and merge
-protection in Task 0.5 were declined by the owner. Phase 6 remains deferred.
+protection in Task 0.5 were declined by the owner. From Phase 6, export/import has
+shipped (spec §16); the other Phase 6 items remain deferred.
 See `PROJECT_STATUS.md` for verification details.
 
 Written September 21, 2026 against checkout `0468977` (working tree: one uncommitted
@@ -1166,8 +1167,11 @@ is fine.
   `docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md`. Requires its own rule-6 decision and a
   reader/writer co-deploy. Trigger: a user story that genuinely needs two facts under one
   subject/predicate.
-- **Export/import**: versioned JSON of facts, events, HEADs, receipts, embedding model/dim;
-  restore only into an empty destination first.
+- [x] **Export/import**: versioned JSON of facts, events, HEADs, receipts, embedding model/dim;
+  restore only into an empty destination first. Shipped as `mnemo/transfer.py`
+  (`mnemo-transfer`, `make export` / `make import`), with commits included (events
+  reference them) and pipeline tables excluded. Contract in spec §16; tests in
+  `tests/test_transfer.py`.
 - **Grouped undo / archive-as-undo**: needs all affected expected revisions in one transaction.
 - **Consolidation (Layer 4)**: stays off; `mem_provenance` has no `agent_reflection` member —
   adding it is a schema decision that must come with source lineage + NLI gating + trust cap.

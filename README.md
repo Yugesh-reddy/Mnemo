@@ -116,6 +116,21 @@ The [Python guide](docs/DIRECT_SDK.md) shows `Mnemo.direct` and the async
 contracts. Legacy `add` performs alias deduplication; direct updates preserve
 exact spelling changes. Legacy human-review revert is not revision-guarded.
 
+### Back up or move a store
+
+```bash
+make export OUT=mnemo-export.json      # configured scope; stdout without OUT
+uv run mnemo-transfer export --all-scopes --out all.json
+make import FILE=mnemo-export.json     # into an empty, migrated store only
+```
+
+The export is one versioned JSON document: facts with their HEADs, every event,
+commits, receipts, the applied migrations and the embedding backend/model/dim.
+Import checks the schema and embedding configuration, then restores the rows in
+one transaction. It re-exports what it wrote and rolls back if anything differs,
+so IDs, sequence numbers, history and receipt replays come through unchanged.
+Extraction-pipeline working tables are not exported ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
+
 ## Review memory in the browser
 
 ```bash
