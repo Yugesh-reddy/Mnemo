@@ -1,0 +1,2650 @@
+[
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I switched our team's CI from Jenkins to GitHub Actions last month."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I switched our team's CI from Jenkins to GitHub Actions last month.\",\"subject\":\"user\",\"predicate\":\"switched_ci_system\",\"object\":\"our team's CI from Jenkins to GitHub Actions last month\",\"confidence\":0.99,\"importance\":7}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123146,
+      "id": "chatcmpl-ER55uqiNOkCFJ6luJldoWsO2Lgr0p",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r7-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 63,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 10,
+          "engine_ttft_ms": 174,
+          "engine_ttlt_ms": 789,
+          "pre_inference_ms": 166,
+          "service_tbt_ms": 10,
+          "service_ttft_ms": 471,
+          "service_ttlt_ms": 1081,
+          "user_visible_ttft_ms": 305
+        },
+        "prompt_tokens": 827,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 890
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I'm using Python and R to build predictive models\",\"subject\":\"user\",\"predicate\":\"uses_programming_languages\",\"object\":\"Python and R to build predictive models\",\"confidence\":0.99,\"importance\":7},{\"evidence\":\"I'm having some trouble with feature engineering\",\"subject\":\"user\",\"predicate\":\"needs_help_with\",\"object\":\"feature engineering\",\"confidence\":0.99,\"importance\":7}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123147,
+      "id": "chatcmpl-ER55vJJYymUKGyXGeQgaPuJKawhuw",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r6-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 91,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 10,
+          "engine_ttft_ms": 173,
+          "engine_ttlt_ms": 1112,
+          "pre_inference_ms": 174,
+          "service_tbt_ms": 10,
+          "service_ttft_ms": 501,
+          "service_ttlt_ms": 1435,
+          "user_visible_ttft_ms": 327
+        },
+        "prompt_tokens": 849,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 940
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been working on a solo project for my Data Mining class\",\"subject\":\"user\",\"predicate\":\"working_on_project\",\"object\":\"a solo project for my Data Mining class\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I'm really interested in applying some of these techniques to my customer purchase data.\",\"subject\":\"user\",\"predicate\":\"interested_in_applying_techniques\",\"object\":\"applying Data Mining techniques to customer purchase data\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"I'm trying to identify patterns and trends\",\"subject\":\"user\",\"predicate\":\"trying_to_identify\",\"object\":\"patterns and trends in customer purchase data\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I think feature engineering will really help me with that.\",\"subject\":\"user\",\"predicate\":\"believes_feature_engineering_will_help\",\"object\":\"feature engineering will help identify patterns and trends in customer purchase data\",\"confidence\":0.95,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123150,
+      "id": "chatcmpl-ER55y4jeZhi4FpU3nxoqEOQ6wKfo9",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r5-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 209,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 104,
+          "engine_ttlt_ms": 1774,
+          "pre_inference_ms": 174,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 426,
+          "service_ttlt_ms": 2088,
+          "user_visible_ttft_ms": 252
+        },
+        "prompt_tokens": 881,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1090
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_result": {
+            "error": {
+              "code": "content_filter_error",
+              "message": "The contents are not filtered"
+            }
+          },
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I'm working on a project that involves analyzing customer data to identify trends and patterns.\",\"subject\":\"user\",\"predicate\":\"working_on_project\",\"object\":\"a project involving analyzing customer data to identify trends and patterns\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"I was thinking of using clustering analysis\",\"subject\":\"user\",\"predicate\":\"considered_using\",\"object\":\"clustering analysis for the project\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I've had some experience with data analysis from my Marketing Research class project\",\"subject\":\"user\",\"predicate\":\"has_experience_with\",\"object\":\"data analysis from a Marketing Research class project\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I led the data analysis team\",\"subject\":\"user\",\"predicate\":\"led\",\"object\":\"the data analysis team in the Marketing Research class project\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"we did a comprehensive market analysis for a new product launch.\",\"subject\":\"user\",\"predicate\":\"completed\",\"object\":\"a comprehensive market analysis for a new product launch as part of the Marketing Research class project\",\"confidence\":0.95,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123152,
+      "id": "chatcmpl-ER560mJ7cJqnTVrdgX2dT6mO6cwv3",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r14-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 247,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 7,
+          "engine_ttft_ms": 141,
+          "engine_ttlt_ms": 1905,
+          "pre_inference_ms": 167,
+          "service_tbt_ms": 7,
+          "service_ttft_ms": 443,
+          "service_ttlt_ms": 2204,
+          "user_visible_ttft_ms": 276
+        },
+        "prompt_tokens": 900,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1147
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology\",\"subject\":\"user\",\"predicate\":\"presented_research_poster\",\"object\":\"research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology recently\",\"confidence\":0.99,\"importance\":7},{\"evidence\":\"I'm looking to expand on that research.\",\"subject\":\"user\",\"predicate\":\"plans_to_expand_research\",\"object\":\"research on the effects of social media influencers on consumer purchasing decisions\",\"confidence\":0.98,\"importance\":7},{\"evidence\":\"I'm looking for some research on consumer behavior and social media.\",\"subject\":\"user\",\"predicate\":\"seeks_research\",\"object\":\"consumer behavior and social media\",\"confidence\":0.98,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123155,
+      "id": "chatcmpl-ER563EJzhrlPsxMzhGL8MZUX7mvEm",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r4-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 179,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 7,
+          "engine_ttft_ms": 84,
+          "engine_ttlt_ms": 1417,
+          "pre_inference_ms": 181,
+          "service_tbt_ms": 7,
+          "service_ttft_ms": 450,
+          "service_ttlt_ms": 1758,
+          "user_visible_ttft_ms": 268
+        },
+        "prompt_tokens": 877,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1056
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some advice on improving my sourdough starter. I tried out a new bread recipe using sourdough starter on Tuesday, but it didn't quite turn out as expected. Do you have any tips on how to get my starter to be more active and produce better results?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I tried out a new bread recipe using sourdough starter on Tuesday, but it didn't quite turn out as expected.\",\"subject\":\"user\",\"predicate\":\"completed_baking_attempt\",\"object\":\"tried a new bread recipe using sourdough starter on Tuesday; the result did not turn out as expected\",\"confidence\":0.99,\"importance\":5},{\"evidence\":\"I'm looking for some advice on improving my sourdough starter.\",\"subject\":\"user\",\"predicate\":\"needs_advice\",\"object\":\"improving sourdough starter\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"Do you have any tips on how to get my starter to be more active and produce better results?\",\"subject\":\"user\",\"predicate\":\"wants_sourdough_starter_improvement\",\"object\":\"make sourdough starter more active and produce better results\",\"confidence\":0.99,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123158,
+      "id": "chatcmpl-ER566wXVivURQcsLSbuEwfn96wRkY",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r14-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 194,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 7,
+          "engine_ttft_ms": 1571,
+          "engine_ttlt_ms": 3032,
+          "pre_inference_ms": 229,
+          "service_tbt_ms": 7,
+          "service_ttft_ms": 1967,
+          "service_ttlt_ms": 3421,
+          "user_visible_ttft_ms": 1737
+        },
+        "prompt_tokens": 870,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1064
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I actually created my sourdough starter about a month ago\",\"subject\":\"user\",\"predicate\":\"created\",\"object\":\"sourdough starter about a month ago\",\"confidence\":0.99,\"importance\":7},{\"evidence\":\"I've been feeding it once a day with all-purpose flour and water\",\"subject\":\"user\",\"predicate\":\"feeds\",\"object\":\"sourdough starter once a day with all-purpose flour and water\",\"confidence\":0.99,\"importance\":7},{\"evidence\":\"The ratio is usually 1:1:1 (flour:water:starter).\",\"subject\":\"user\",\"predicate\":\"uses_ratio\",\"object\":\"1:1:1 (flour:water:starter) for sourdough starter feeding\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"On Tuesday, I used it in a recipe\",\"subject\":\"user\",\"predicate\":\"used\",\"object\":\"sourdough starter in a recipe on Tuesday\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"the bread came out dense and heavy\",\"subject\":\"user\",\"predicate\":\"produced\",\"object\":\"dense and heavy bread from the recipe on Tuesday\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"which was a bit disappointing\",\"subject\":\"user\",\"predicate\":\"felt_disappointed\",\"object\":\"about the dense and heavy bread result\",\"confidence\":0.95,\"importance\":3},{\"evidence\":\"I'm not sure if it's the starter or the recipe\",\"subject\":\"user\",\"predicate\":\"uncertain_about_cause\",\"object\":\"whether the dense and heavy bread was caused by the sourdough starter or the recipe\",\"confidence\":0.99,\"importance\":4},{\"evidence\":\"I'm open to any suggestions!\",\"subject\":\"user\",\"predicate\":\"open_to_suggestions\",\"object\":\"suggestions about the sourdough starter or recipe\",\"confidence\":0.99,\"importance\":4}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123162,
+      "id": "chatcmpl-ER56AasFB435mtJkijpeICFXqm4Nv",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r6-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 394,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 7,
+          "engine_ttft_ms": 101,
+          "engine_ttlt_ms": 2928,
+          "pre_inference_ms": 162,
+          "service_tbt_ms": 7,
+          "service_ttft_ms": 403,
+          "service_ttlt_ms": 3226,
+          "user_visible_ttft_ms": 242
+        },
+        "prompt_tokens": 901,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1295
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\n\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I think I might have been overmixing the dough\",\"subject\":\"user\",\"predicate\":\"considered_overmixing\",\"object\":\"the dough\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"maybe the fermentation time was a bit short\",\"subject\":\"user\",\"predicate\":\"considered_fermentation_time_short\",\"object\":\"the dough's fermentation time was a bit short\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I'll try to be more gentle when mixing and give the dough more time to ferment next time.\",\"subject\":\"user\",\"predicate\":\"planned_baking_adjustments\",\"object\":\"to mix more gently and give the dough more time to ferment next time\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I've been experimenting with different types of flour lately\",\"subject\":\"user\",\"predicate\":\"experimenting_with\",\"object\":\"different types of flour lately\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online.\",\"subject\":\"user\",\"predicate\":\"completed_baking\",\"object\":\"a chocolate cake for the user's sister's birthday party using a new recipe found online recently\",\"confidence\":0.98,\"importance\":6},{\"evidence\":\"It turned out amazing\",\"subject\":\"user\",\"predicate\":\"assessed_baking_result\",\"object\":\"the recently baked chocolate cake turned out amazing\",\"confidence\":0.95,\"importance\":4},{\"evidence\":\"everyone loved it!\",\"subject\":\"user\",\"predicate\":\"reported_positive_reception\",\"object\":\"everyone loved the recently baked chocolate cake\",\"confidence\":0.95,\"importance\":4}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123166,
+      "id": "chatcmpl-ER56EjEZlX6jal7F7h2tmltptv8Xj",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r9-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 346,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 7,
+          "engine_ttft_ms": 486,
+          "engine_ttlt_ms": 3084,
+          "pre_inference_ms": 161,
+          "service_tbt_ms": 7,
+          "service_ttft_ms": 789,
+          "service_ttlt_ms": 3383,
+          "user_visible_ttft_ms": 628
+        },
+        "prompt_tokens": 904,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1250
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I'm looking for some recipe ideas for a dinner party I'm hosting next weekend.\",\"subject\":\"user\",\"predicate\":\"hosting\",\"object\":\"a dinner party next weekend\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing\",\"subject\":\"user\",\"predicate\":\"completed_baking\",\"object\":\"a chocolate cake for my sister's birthday party last weekend\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"the espresso powder really enhanced the flavor!\",\"subject\":\"user\",\"predicate\":\"found_ingredient_enhanced_flavor\",\"object\":\"espresso powder enhanced the flavor of the chocolate cake\",\"confidence\":0.95,\"importance\":4}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123169,
+      "id": "chatcmpl-ER56Hgna799L4hOz2bcgXn0i6rSUI",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r5-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 161,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 102,
+          "engine_ttlt_ms": 1493,
+          "pre_inference_ms": 144,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 360,
+          "service_ttlt_ms": 1748,
+          "user_visible_ttft_ms": 216
+        },
+        "prompt_tokens": 880,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1041
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"they're my favorite\",\"subject\":\"user\",\"predicate\":\"preferred_food\",\"object\":\"strawberries\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"I've been eating a lot of sweet treats lately, including leftover birthday cake\",\"subject\":\"user\",\"predicate\":\"has_been_eating\",\"object\":\"a lot of sweet treats lately, including leftover birthday cake\",\"confidence\":0.95,\"importance\":4}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123172,
+      "id": "chatcmpl-ER56K8NGXaU5pRTEZFqMXuNivxPlg",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r2-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 98,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 159,
+          "engine_ttlt_ms": 1038,
+          "pre_inference_ms": 134,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 448,
+          "service_ttlt_ms": 1323,
+          "user_visible_ttft_ms": 314
+        },
+        "prompt_tokens": 855,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 953
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I was thinking of making a homemade crust, but I'm not sure what type of flour to use. I've been experimenting with different types of flour lately, including whole wheat flour, which I used to make a delicious whole wheat baguette last Saturday. Would whole wheat flour work for a tart crust?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I was thinking of making a homemade crust\",\"subject\":\"user\",\"predicate\":\"considered_making\",\"object\":\"a homemade crust\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I've been experimenting with different types of flour lately\",\"subject\":\"user\",\"predicate\":\"experimenting_with\",\"object\":\"different types of flour lately\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"including whole wheat flour, which I used to make a delicious whole wheat baguette last Saturday\",\"subject\":\"user\",\"predicate\":\"used_ingredient_to_make\",\"object\":\"whole wheat flour to make a delicious whole wheat baguette last Saturday\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123174,
+      "id": "chatcmpl-ER56MaUfH75Q8u1K3CItfJTTqf76H",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r4-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 151,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 122,
+          "engine_ttlt_ms": 1449,
+          "pre_inference_ms": 181,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 499,
+          "service_ttlt_ms": 1784,
+          "user_visible_ttft_ms": 318
+        },
+        "prompt_tokens": 872,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1023
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I think I'll stick with all-purpose flour for the tart crust\",\"subject\":\"user\",\"predicate\":\"considered_using\",\"object\":\"all-purpose flour for the tart crust\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I've been using my new stand mixer nonstop since I got it a few weeks ago\",\"subject\":\"user\",\"predicate\":\"uses_appliance\",\"object\":\"new stand mixer since acquiring it a few weeks ago\",\"confidence\":0.95,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123176,
+      "id": "chatcmpl-ER56OJSUGC7GEMdUSreEfGzA2KsW7",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r0-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 110,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 142,
+          "engine_ttlt_ms": 1120,
+          "pre_inference_ms": 178,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 442,
+          "service_ttlt_ms": 1419,
+          "user_visible_ttft_ms": 265
+        },
+        "prompt_tokens": 860,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 970
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I'll definitely try the dry brine method and baking powder trick.\",\"subject\":\"user\",\"predicate\":\"planned_to_try\",\"object\":\"the dry brine method and baking powder trick\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I've been experimenting with different types of flour for baking\",\"subject\":\"user\",\"predicate\":\"experimenting_with\",\"object\":\"different types of flour for baking\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies\",\"subject\":\"user\",\"predicate\":\"used_oven_setting\",\"object\":\"oven's convection setting for the first time last Thursday to bake a batch of cookies\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"it turned out amazing!\",\"subject\":\"user\",\"predicate\":\"evaluated_baking_result\",\"object\":\"the batch of cookies baked with the oven's convection setting turned out amazing\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123178,
+      "id": "chatcmpl-ER56QQpM3i8lEDLVJIg3EL44WEjSY",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r13-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 214,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 289,
+          "engine_ttlt_ms": 2064,
+          "pre_inference_ms": 153,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 618,
+          "service_ttlt_ms": 2389,
+          "user_visible_ttft_ms": 465
+        },
+        "prompt_tokens": 905,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1119
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've had good results with the convection setting on my oven\",\"subject\":\"user\",\"predicate\":\"has_good_results_with\",\"object\":\"the convection setting on my oven\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I used it to bake a batch of cookies last Thursday.\",\"subject\":\"user\",\"predicate\":\"used_appliance_setting_for\",\"object\":\"the convection setting on my oven to bake a batch of cookies last Thursday\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"They turned out perfectly crispy on the outside and chewy on the inside.\",\"subject\":\"user\",\"predicate\":\"baked_cookies_with_result\",\"object\":\"a batch of cookies that turned out perfectly crispy on the outside and chewy on the inside\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123181,
+      "id": "chatcmpl-ER56TNHTnGjPWYpyDLISLrscK3S89",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r14-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 170,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 142,
+          "engine_ttlt_ms": 1720,
+          "pre_inference_ms": 198,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 537,
+          "service_ttlt_ms": 2088,
+          "user_visible_ttft_ms": 339
+        },
+        "prompt_tokens": 871,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1041
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been doing a lot of rice and roasted veggies lately\",\"subject\":\"user\",\"predicate\":\"frequently_eats\",\"object\":\"rice and roasted veggies lately\",\"confidence\":0.95,\"importance\":4},{\"evidence\":\"I tried out a new Ethiopian restaurant in town last week and loved it!\",\"subject\":\"user\",\"predicate\":\"enjoyed_dining_at\",\"object\":\"a new Ethiopian restaurant in town last week\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123183,
+      "id": "chatcmpl-ER56Vkd5iT5E7h14WuOMB8rJ9m5dk",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r14-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 108,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 140,
+          "engine_ttlt_ms": 1170,
+          "pre_inference_ms": 256,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 561,
+          "service_ttlt_ms": 1586,
+          "user_visible_ttft_ms": 305
+        },
+        "prompt_tokens": 865,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 973
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I'm planning a dinner party for this weekend\",\"subject\":\"user\",\"predicate\":\"planned_event\",\"object\":\"dinner party for this weekend\",\"confidence\":0.99,\"importance\":6},{\"evidence\":\"I'm thinking of serving an Indian-inspired dish\",\"subject\":\"user\",\"predicate\":\"considered_serving\",\"object\":\"an Indian-inspired dish at the dinner party\",\"confidence\":0.98,\"importance\":5},{\"evidence\":\"I learned how to make a perfect chicken tikka masala in a class on Indian cuisine\",\"subject\":\"user\",\"predicate\":\"learned_skill\",\"object\":\"how to make chicken tikka masala in a class on Indian cuisine\",\"confidence\":0.99,\"importance\":7},{\"evidence\":\"that's definitely on the menu\",\"subject\":\"user\",\"predicate\":\"planned_menu_item\",\"object\":\"chicken tikka masala for the dinner party\",\"confidence\":0.99,\"importance\":7}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123186,
+      "id": "chatcmpl-ER56Y7DZWXgYJePui8DXeZw83T1b3",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r5-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 196,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 114,
+          "engine_ttlt_ms": 1788,
+          "pre_inference_ms": 133,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 409,
+          "service_ttlt_ms": 2078,
+          "user_visible_ttft_ms": 275
+        },
+        "prompt_tokens": 886,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1082
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been trying to eat more plant-based lately\",\"subject\":\"user\",\"predicate\":\"trying_to_eat\",\"object\":\"more plant-based food lately\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"I recently attended a class on vegan cuisine\",\"subject\":\"user\",\"predicate\":\"attended_class\",\"object\":\"a class on vegan cuisine recently\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123188,
+      "id": "chatcmpl-ER56aRhVvxv5gJS3rbNNC1thpeBg5",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r1-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 94,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 11,
+          "engine_ttft_ms": 254,
+          "engine_ttlt_ms": 1267,
+          "pre_inference_ms": 172,
+          "service_tbt_ms": 10,
+          "service_ttft_ms": 603,
+          "service_ttlt_ms": 1590,
+          "user_visible_ttft_ms": 431
+        },
+        "prompt_tokens": 847,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 941
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been meaning to try tempeh for a while now\",\"subject\":\"user\",\"predicate\":\"intends_to_try\",\"object\":\"tempeh\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"I recently attended a workshop on fermentation at a local food co-op\",\"subject\":\"user\",\"predicate\":\"attended_workshop\",\"object\":\"a fermentation workshop at a local food co-op recently\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"where I learned how to make my own sauerkraut and kimchi\",\"subject\":\"user\",\"predicate\":\"learned_to_make\",\"object\":\"sauerkraut and kimchi\",\"confidence\":0.95,\"importance\":7}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123190,
+      "id": "chatcmpl-ER56cwfwsotRO0W2RQWO5q4jS3Oyd",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r5-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 154,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 129,
+          "engine_ttlt_ms": 1424,
+          "pre_inference_ms": 94,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 361,
+          "service_ttlt_ms": 1651,
+          "user_visible_ttft_ms": 267
+        },
+        "prompt_tokens": 896,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1050
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been wanting to try to incorporate more fermented foods into my diet\",\"subject\":\"user\",\"predicate\":\"planned_dietary_change\",\"object\":\"incorporate more fermented foods into diet\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I recently attended a class on vegan cuisine\",\"subject\":\"user\",\"predicate\":\"attended_class\",\"object\":\"class on vegan cuisine recently\",\"confidence\":0.95,\"importance\":5},{\"evidence\":\"where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute\",\"subject\":\"user\",\"predicate\":\"learned_to_make\",\"object\":\"vegan lasagna with a cashew-based ricotta cheese substitute\",\"confidence\":0.95,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123193,
+      "id": "chatcmpl-ER56fYNtsNOaO2TCdnRH5WDxkOKAz",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r1-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 162,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 75,
+          "engine_ttlt_ms": 1391,
+          "pre_inference_ms": 268,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 506,
+          "service_ttlt_ms": 1793,
+          "user_visible_ttft_ms": 238
+        },
+        "prompt_tokens": 876,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1038
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?"
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've been trying to cook more at home\",\"subject\":\"user\",\"predicate\":\"trying_to_cook_more_at_home\",\"object\":\"cook more at home\",\"confidence\":0.95,\"importance\":6},{\"evidence\":\"I want to make sure I'm using up all the ingredients I buy.\",\"subject\":\"user\",\"predicate\":\"wants_to_use_all_purchased_ingredients\",\"object\":\"use up all ingredients purchased\",\"confidence\":0.95,\"importance\":7},{\"evidence\":\"I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing.\",\"subject\":\"user\",\"predicate\":\"completed_cooking\",\"object\":\"Korean bibimbap recipe from the cooking class's online recipe library; found it amazing\",\"confidence\":0.95,\"importance\":6}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123195,
+      "id": "chatcmpl-ER56hnTPJXfjH3Gbfy6tATI45WKAU",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r3-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 174,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 10,
+          "engine_ttft_ms": 225,
+          "engine_ttlt_ms": 1967,
+          "pre_inference_ms": 154,
+          "service_tbt_ms": 10,
+          "service_ttft_ms": 546,
+          "service_ttlt_ms": 2282,
+          "user_visible_ttft_ms": 392
+        },
+        "prompt_tokens": 898,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1072
+      }
+    }
+  },
+  {
+    "request": {
+      "model": "gpt-5.6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Read the user's turn and extract its explicitly stated memory facts.\nFirst copy the evidence, then express the SAME meaning as a subject/predicate/object.\nReturn only JSON: {\"facts\": [{\"evidence\": \"verbatim source clause\",\n\"subject\": \"user\", \"predicate\": \"precise_relation\", \"object\": \"complete value\",\n\"confidence\": 0.95, \"importance\": 7}]}.\n\nFor each independent assertion:\n1. Copy a contiguous evidence span EXACTLY from the turn, including negation,\n   tense, dates and qualifications. Do not rewrite or invent the quote.\n2. subject is the actor/entity; use user for the speaker. predicate is a precise\n   snake_case relationship actually expressed by that span. The vocabulary is open.\n   object contains the complete value and any event context needed to preserve\n   meaning. Keep what happened, to whom/what, where and when bound together.\n   Put literal names, items and dates in the object, not inside the predicate.\n   For stable attributes, the object is the value, not a repetition of the action.\n3. Do not substitute another relationship. Using something is not preferring it.\n   Liking a food is not an allergy. Using a programming language, appliance or\n   oven setting does not make it an editor. Membership is not a job role.\n   A person's manager is not someone that person manages. Listening often is\n   frequency, not necessarily preference. Copy the stated attribute's meaning.\n   Use specific known types: PostgreSQL is a database, Python is a programming\n   language, and a mixer is an appliance. Database use is uses_database and an\n   explicit database preference is preferred_database. Keep these distinct.\n4. Include all explicit relevant facts, even when the turn also asks for advice:\n   needs, preferences, tool use, projects, completed activities, learned skills,\n   dates and corrections. A completed event must not become a generic present\n   role or goal. An action's date belongs to that action, not to a different event.\n5. Keep independent attributes separate. Preserve the same predicate through a\n   correction: a meeting-free day remains meeting_free_day, and diet remains diet.\n   Preserve all simultaneously mentioned values; a list is allowed when they share\n   the exact same relation. Do not replace one value with a different concurrent one.\n6. Preserve modality: thinking of/considering is considered_, explicit intention\n   is planned_, and only stated completion is completed. Questions and denied or\n   hypothetical positive facts are not assertions. Do not encode exclusions as\n   null, not_X, or an affirmative replacement. Omit chit-chat and assistant claims.\n\nimportance is 1..10: high for important needs, identity, preferences and corrections;\nmoderate for relevant experiences and project context; low for fleeting trivia.\nconfidence is 0..1. If there are no supported memory facts, return {\"facts\": []}.\nDo not fill imagined attributes or use predicate names as a menu.\n\nExample user turn: \"I bought a kiln in April. I might teach pottery next fall.\"\n{\"facts\": [\n {\"evidence\": \"I bought a kiln in April.\", \"subject\": \"user\", \"predicate\": \"purchased\",\n  \"object\": \"kiln in April\", \"confidence\": 0.95, \"importance\": 6},\n {\"evidence\": \"I might teach pottery next fall.\", \"subject\": \"user\",\n  \"predicate\": \"considered_teaching\",\n  \"object\": \"pottery next fall\", \"confidence\": 0.95, \"importance\": 5}\n]}\nExample user turn: \"I use Postgres for my project.\"\n{\"facts\": [{\"evidence\": \"I use Postgres for my project.\", \"subject\": \"user\",\n\"predicate\": \"uses_database\", \"object\": \"Postgres\", \"confidence\": 0.95, \"importance\": 7}]}\n"
+        },
+        {
+          "role": "user",
+          "content": "Turn (user): That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out."
+        }
+      ],
+      "response_format": {
+        "type": "json_object"
+      },
+      "reasoning_effort": "none",
+      "max_completion_tokens": 2048,
+      "temperature": 0
+    },
+    "attempt": 0,
+    "status_code": 200,
+    "response": {
+      "choices": [
+        {
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "protected_material_code": {
+              "detected": false,
+              "filtered": false
+            },
+            "protected_material_text": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": [],
+            "content": "{\"facts\":[{\"evidence\":\"I've actually made kimchi before from a workshop I attended on fermentation.\",\"subject\":\"user\",\"predicate\":\"completed_activity\",\"object\":\"made kimchi before, based on a fermentation workshop the user attended\",\"confidence\":0.98,\"importance\":6},{\"evidence\":\"a workshop I attended on fermentation\",\"subject\":\"user\",\"predicate\":\"attended_workshop\",\"object\":\"a fermentation workshop\",\"confidence\":0.98,\"importance\":5},{\"evidence\":\"I'll have to try that out.\",\"subject\":\"user\",\"predicate\":\"planned_to_try\",\"object\":\"adding ingredients such as seafood or garlic scapes to kimchi to create different flavor profiles\",\"confidence\":0.95,\"importance\":5}]}",
+            "refusal": null,
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1790123198,
+      "id": "chatcmpl-ER56kQJvltcNSM6iESds3MLW2LHVH",
+      "model": "gpt-5.6-luna-2026-07-09",
+      "object": "chat.completion",
+      "prompt_filter_results": [
+        {
+          "prompt_index": 0,
+          "content_filter_results": {
+            "hate": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "jailbreak": {
+              "detected": false,
+              "filtered": false
+            },
+            "self_harm": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "sexual": {
+              "filtered": false,
+              "severity": "safe"
+            },
+            "violence": {
+              "filtered": false,
+              "severity": "safe"
+            }
+          }
+        }
+      ],
+      "routing": {
+        "serving_pipereplica": "d20260919064008-0dc3825d-prefill-r13-dp0-prefill"
+      },
+      "service_tier": "default",
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 150,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 144,
+          "engine_ttlt_ms": 1520,
+          "pre_inference_ms": 118,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 397,
+          "service_ttlt_ms": 1768,
+          "user_visible_ttft_ms": 280
+        },
+        "prompt_tokens": 861,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1011
+      }
+    }
+  }
+]

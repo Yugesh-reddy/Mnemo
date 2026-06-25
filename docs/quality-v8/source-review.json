@@ -1,0 +1,880 @@
+{
+  "reviewer": "primary agent source review, completed before any v8 control or Luna replay output existed",
+  "status": "provisional, not independent human gold; no independent review completed",
+  "input_path": "docs/quality-v8/extraction.json",
+  "input_sha256": "3e2451292347764549a85f4f9da9cea2a8a1c8fde75eb2d816c13e106ff3296c",
+  "holdout_accessed": false,
+  "rubric": "Assess full assertions against original source; preserve actor, relation, modality, dates and bindings; quotes cannot fill assertion omissions. Unsupported and ambiguous judgments are distinct. Ambiguous: the source permits but does not determine the asserted reading. Unsupported: the source contradicts it, or it drops an explicit hedge/adds a fact. Prior v6/v7 judgments on the same wordings are followed.",
+  "rows": {
+    "0": {
+      "row_index": 0,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_2:0",
+      "source": "I'm using Python and R to build predictive models, but I'm having some trouble with feature engineering. Can you give me some tips or resources on how to improve my feature engineering skills?",
+      "source_sha256": "f668b68c0d4921ab48704b84183f821c7f2358df0ccc0189ca7cf0d05faaf81a",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_programming_languages",
+            "object": "Python and R to build predictive models"
+          },
+          "source_support": "supported",
+          "reason": "Using Python and R, bound to building predictive models, is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "needs_help_with",
+            "object": "feature engineering"
+          },
+          "source_support": "supported",
+          "reason": "The user reports trouble with feature engineering and asks for help."
+        }
+      ]
+    },
+    "1": {
+      "row_index": 1,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_2:2",
+      "source": "I've been working on a solo project for my Data Mining class, and I'm really interested in applying some of these techniques to my customer purchase data. I'm trying to identify patterns and trends, and I think feature engineering will really help me with that. Do you have any specific tips on how to handle high cardinality categorical variables in my dataset?",
+      "source_sha256": "ab147c8a505df1e68232baba5bdd9a3b3c96cbdcd50458cf258ca0a14e265739",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "working_on_project",
+            "object": "a solo project for my Data Mining class"
+          },
+          "source_support": "supported",
+          "reason": "A solo project for the Data Mining class is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "interested_in_applying_techniques",
+            "object": "applying Data Mining techniques to customer purchase data"
+          },
+          "source_support": "ambiguous",
+          "reason": "The source says 'these techniques' without naming them; 'Data Mining techniques' commits to one unstated referent (v7 accepted the unnamed 'techniques')."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "trying_to_identify",
+            "object": "patterns and trends in customer purchase data"
+          },
+          "source_support": "supported",
+          "reason": "Identifying patterns and trends is stated in the sentence about the customer purchase data."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "believes_feature_engineering_will_help",
+            "object": "feature engineering will help identify patterns and trends in customer purchase data"
+          },
+          "source_support": "supported",
+          "reason": "'I think feature engineering will really help me with that' resolves 'that' to the preceding goal; belief is retained."
+        }
+      ]
+    },
+    "2": {
+      "row_index": 2,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_1:0",
+      "source": "I'm working on a project that involves analyzing customer data to identify trends and patterns. I was thinking of using clustering analysis, but I'm not sure which type of clustering method to use. Can you help me decide between k-means and hierarchical clustering? By the way, I've had some experience with data analysis from my Marketing Research class project, where I led the data analysis team and we did a comprehensive market analysis for a new product launch.",
+      "source_sha256": "25208b4ac62420250c8f83391b996f329cba7d35a3843b8c55521d8846aa6622",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "working_on_project",
+            "object": "a project involving analyzing customer data to identify trends and patterns"
+          },
+          "source_support": "supported",
+          "reason": "The customer-data trend/pattern project is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_using",
+            "object": "clustering analysis for the project"
+          },
+          "source_support": "supported",
+          "reason": "'Thinking of using clustering analysis' is retained as consideration, not completion."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_experience_with",
+            "object": "data analysis from a Marketing Research class project"
+          },
+          "source_support": "supported",
+          "reason": "Data-analysis experience from the Marketing Research class project is explicit."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "led",
+            "object": "the data analysis team in the Marketing Research class project"
+          },
+          "source_support": "supported",
+          "reason": "The user led the data analysis team in that class project."
+        },
+        {
+          "candidate_index": 4,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed",
+            "object": "a comprehensive market analysis for a new product launch as part of the Marketing Research class project"
+          },
+          "source_support": "supported",
+          "reason": "'We did a comprehensive market analysis' includes the user, who led that team; completion and class binding are explicit."
+        }
+      ]
+    },
+    "3": {
+      "row_index": 3,
+      "case_id": "6d550036",
+      "turn_id": "answer_ec904b3c_3:0",
+      "source": "I'm looking for some research on consumer behavior and social media. I recently presented a poster on my research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology, and I'm looking to expand on that research. Do you have any recent studies or papers on this topic that you can recommend?",
+      "source_sha256": "991456b39d3eee115f3a5344a77c8816c2e4edb90a2afc08cef698e492320889",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "presented_research_poster",
+            "object": "research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology recently"
+          },
+          "source_support": "supported",
+          "reason": "Recent poster presentation, full research topic and consumer-psychology conference are explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "plans_to_expand_research",
+            "object": "research on the effects of social media influencers on consumer purchasing decisions"
+          },
+          "source_support": "supported",
+          "reason": "The user is looking to expand the same named research."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "seeks_research",
+            "object": "consumer behavior and social media"
+          },
+          "source_support": "supported",
+          "reason": "The user is looking for research on consumer behavior and social media."
+        }
+      ]
+    },
+    "4": {
+      "row_index": 4,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:0",
+      "source": "I'm looking for some advice on improving my sourdough starter. I tried out a new bread recipe using sourdough starter on Tuesday, but it didn't quite turn out as expected. Do you have any tips on how to get my starter to be more active and produce better results?",
+      "source_sha256": "86a1d3f346ee076f89d35df94aebc24102a6403e7e87a55d65c7b4c3e8efb36f",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed_baking_attempt",
+            "object": "tried a new bread recipe using sourdough starter on Tuesday; the result did not turn out as expected"
+          },
+          "source_support": "supported",
+          "reason": "Trying the sourdough bread recipe on Tuesday and its disappointing result are explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "needs_advice",
+            "object": "improving sourdough starter"
+          },
+          "source_support": "supported",
+          "reason": "The user asks for advice on improving the starter."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "wants_sourdough_starter_improvement",
+            "object": "make sourdough starter more active and produce better results"
+          },
+          "source_support": "supported",
+          "reason": "The user asks how to make the starter more active and produce better results."
+        }
+      ]
+    },
+    "5": {
+      "row_index": 5,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:2",
+      "source": "I actually created my sourdough starter about a month ago, and I've been feeding it once a day with all-purpose flour and water. The ratio is usually 1:1:1 (flour:water:starter). On Tuesday, I used it in a recipe and the bread came out dense and heavy, which was a bit disappointing. I'm not sure if it's the starter or the recipe, but I'm open to any suggestions!",
+      "source_sha256": "a675520ab315fe76cd5978d28f87a8c8b64b7a1215e7f7f893b8a46ac37142fb",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "created",
+            "object": "sourdough starter about a month ago"
+          },
+          "source_support": "supported",
+          "reason": "Creating the starter about a month ago is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "feeds",
+            "object": "sourdough starter once a day with all-purpose flour and water"
+          },
+          "source_support": "supported",
+          "reason": "Daily feeding with all-purpose flour and water is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_ratio",
+            "object": "1:1:1 (flour:water:starter) for sourdough starter feeding"
+          },
+          "source_support": "supported",
+          "reason": "Habitual 'uses' is compatible with 'usually' and names feeding; v7 judged the same uses_ratio assertion supported."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "used",
+            "object": "sourdough starter in a recipe on Tuesday"
+          },
+          "source_support": "supported",
+          "reason": "Using the starter in a recipe on Tuesday is explicit."
+        },
+        {
+          "candidate_index": 4,
+          "assertion": {
+            "subject": "user",
+            "predicate": "produced",
+            "object": "dense and heavy bread from the recipe on Tuesday"
+          },
+          "source_support": "supported",
+          "reason": "The bread from Tuesday's recipe came out dense and heavy."
+        },
+        {
+          "candidate_index": 5,
+          "assertion": {
+            "subject": "user",
+            "predicate": "felt_disappointed",
+            "object": "about the dense and heavy bread result"
+          },
+          "source_support": "supported",
+          "reason": "Disappointment is stated; 'a bit' changes intensity, not truth."
+        },
+        {
+          "candidate_index": 6,
+          "assertion": {
+            "subject": "user",
+            "predicate": "uncertain_about_cause",
+            "object": "whether the dense and heavy bread was caused by the sourdough starter or the recipe"
+          },
+          "source_support": "supported",
+          "reason": "Uncertainty between starter and recipe is explicit."
+        },
+        {
+          "candidate_index": 7,
+          "assertion": {
+            "subject": "user",
+            "predicate": "open_to_suggestions",
+            "object": "suggestions about the sourdough starter or recipe"
+          },
+          "source_support": "supported",
+          "reason": "Openness to suggestions is explicit."
+        }
+      ]
+    },
+    "6": {
+      "row_index": 6,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_3:10",
+      "source": "I think I might have been overmixing the dough, and maybe the fermentation time was a bit short. I'll try to be more gentle when mixing and give the dough more time to ferment next time. Thanks for the tips!\n\nBy the way, I've been experimenting with different types of flour lately, and I recently baked a chocolate cake for my sister's birthday party using a new recipe I found online. It turned out amazing, and everyone loved it!",
+      "source_sha256": "9bd81990913f235b069c1f39b1a8a8b257df8b2de08267a980deba66b458e00e",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_overmixing",
+            "object": "the dough"
+          },
+          "source_support": "ambiguous",
+          "reason": "A tentative retrospective diagnosis; considered_overmixing can also read as contemplating the action (same judgment as v6's span review)."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_fermentation_time_short",
+            "object": "the dough's fermentation time was a bit short"
+          },
+          "source_support": "supported",
+          "reason": "'Maybe the fermentation time was a bit short' is kept tentative by considered_, and the object states the diagnosis."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_baking_adjustments",
+            "object": "to mix more gently and give the dough more time to ferment next time"
+          },
+          "source_support": "supported",
+          "reason": "The user states they will mix more gently and ferment longer next time."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "experimenting_with",
+            "object": "different types of flour lately"
+          },
+          "source_support": "supported",
+          "reason": "Experimenting with different flours lately is explicit."
+        },
+        {
+          "candidate_index": 4,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed_baking",
+            "object": "a chocolate cake for the user's sister's birthday party using a new recipe found online recently"
+          },
+          "source_support": "supported",
+          "reason": "Recently baking a chocolate cake for the sister's birthday party with an online recipe is explicit."
+        },
+        {
+          "candidate_index": 5,
+          "assertion": {
+            "subject": "user",
+            "predicate": "assessed_baking_result",
+            "object": "the recently baked chocolate cake turned out amazing"
+          },
+          "source_support": "supported",
+          "reason": "The cake turned out amazing."
+        },
+        {
+          "candidate_index": 6,
+          "assertion": {
+            "subject": "user",
+            "predicate": "reported_positive_reception",
+            "object": "everyone loved the recently baked chocolate cake"
+          },
+          "source_support": "supported",
+          "reason": "Everyone loved the cake."
+        }
+      ]
+    },
+    "7": {
+      "row_index": 7,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:0",
+      "source": "I'm looking for some recipe ideas for a dinner party I'm hosting next weekend. Do you have any suggestions for a dessert that would pair well with a rich and savory main course? By the way, I just baked a chocolate cake for my sister's birthday party last weekend and it turned out amazing - the espresso powder really enhanced the flavor!",
+      "source_sha256": "df4c532539d3ec9023f8192850b2f7e70b3e6eccc158a441b33f8d8022dbcb3a",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "hosting",
+            "object": "a dinner party next weekend"
+          },
+          "source_support": "supported",
+          "reason": "The user is hosting a dinner party next weekend."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed_baking",
+            "object": "a chocolate cake for my sister's birthday party last weekend"
+          },
+          "source_support": "supported",
+          "reason": "Baking the chocolate cake for the sister's birthday party last weekend is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "found_ingredient_enhanced_flavor",
+            "object": "espresso powder enhanced the flavor of the chocolate cake"
+          },
+          "source_support": "supported",
+          "reason": "Espresso powder enhanced the cake's flavor."
+        }
+      ]
+    },
+    "8": {
+      "row_index": 8,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:4",
+      "source": "I think I'll go with strawberries, they're my favorite. I've been eating a lot of sweet treats lately, including leftover birthday cake, and I think the tartness of strawberries will be a nice change of pace.",
+      "source_sha256": "0e40473361216be2122fe451b46e8b1d0b0d9a3be89b41ee80dc7e1ba8bad51c",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "preferred_food",
+            "object": "strawberries"
+          },
+          "source_support": "supported",
+          "reason": "'They're my favorite' entails a food preference; v6/v7 judged the same weaker assertions supported. The fruit comparison-class target stays locked."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_been_eating",
+            "object": "a lot of sweet treats lately, including leftover birthday cake"
+          },
+          "source_support": "supported",
+          "reason": "Eating many sweet treats lately, including leftover birthday cake, is explicit."
+        }
+      ]
+    },
+    "9": {
+      "row_index": 9,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:6",
+      "source": "I was thinking of making a homemade crust, but I'm not sure what type of flour to use. I've been experimenting with different types of flour lately, including whole wheat flour, which I used to make a delicious whole wheat baguette last Saturday. Would whole wheat flour work for a tart crust?",
+      "source_sha256": "7c4718381b29833e036f358f586139bda77a8c118de49c7990d59a2b3d27f15b",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_making",
+            "object": "a homemade crust"
+          },
+          "source_support": "supported",
+          "reason": "'Thinking of making a homemade crust' is retained as consideration."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "experimenting_with",
+            "object": "different types of flour lately"
+          },
+          "source_support": "supported",
+          "reason": "Experimenting with different flours lately is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "used_ingredient_to_make",
+            "object": "whole wheat flour to make a delicious whole wheat baguette last Saturday"
+          },
+          "source_support": "supported",
+          "reason": "Using whole wheat flour to make a whole wheat baguette last Saturday is explicit."
+        }
+      ]
+    },
+    "10": {
+      "row_index": 10,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_1:8",
+      "source": "I think I'll stick with all-purpose flour for the tart crust, thanks for the advice! I've been using my new stand mixer nonstop since I got it a few weeks ago, and I'm sure it'll come in handy when making the crust.",
+      "source_sha256": "f7fa94bc8830ed9795dac9f075891d5a725f3fd99b0626cded2baff03f0a2206",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_using",
+            "object": "all-purpose flour for the tart crust"
+          },
+          "source_support": "supported",
+          "reason": "'I think I'll stick with all-purpose flour' entails at least considering it; the weaker modality adds nothing."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "uses_appliance",
+            "object": "new stand mixer since acquiring it a few weeks ago"
+          },
+          "source_support": "supported",
+          "reason": "Using the new stand mixer since getting it a few weeks ago is explicit."
+        }
+      ]
+    },
+    "11": {
+      "row_index": 11,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_2:2",
+      "source": "I see! Thanks for the tips. I'll definitely try the dry brine method and baking powder trick. Do you have any recommendations for roasted vegetables that would pair well with the crispy chicken wings? I've been experimenting with different types of flour for baking, but I haven't tried roasting veggies with convection yet.  By the way, I just used my oven's convection setting for the first time last Thursday to bake a batch of cookies, and it turned out amazing!",
+      "source_sha256": "8856441bde26b7cd095eeeeaec1cb57274feff7e8588b42da50d07dcd8670b90",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_to_try",
+            "object": "the dry brine method and baking powder trick"
+          },
+          "source_support": "supported",
+          "reason": "The user will try the dry brine method and baking powder trick."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "experimenting_with",
+            "object": "different types of flour for baking"
+          },
+          "source_support": "supported",
+          "reason": "Experimenting with flours for baking is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "used_oven_setting",
+            "object": "oven's convection setting for the first time last Thursday to bake a batch of cookies"
+          },
+          "source_support": "supported",
+          "reason": "First convection use last Thursday for cookies is explicit."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "evaluated_baking_result",
+            "object": "the batch of cookies baked with the oven's convection setting turned out amazing"
+          },
+          "source_support": "supported",
+          "reason": "The convection cookies turned out amazing."
+        }
+      ]
+    },
+    "12": {
+      "row_index": 12,
+      "case_id": "88432d0a",
+      "turn_id": "answer_733e443a_4:4",
+      "source": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday. They turned out perfectly crispy on the outside and chewy on the inside. Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+      "source_sha256": "64129f6d99fd6a730db85304572c6321997f41cf815de82723a12f8d2107257f",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "has_good_results_with",
+            "object": "the convection setting on my oven"
+          },
+          "source_support": "supported",
+          "reason": "Good results with the oven's convection setting are explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "used_appliance_setting_for",
+            "object": "the convection setting on my oven to bake a batch of cookies last Thursday"
+          },
+          "source_support": "supported",
+          "reason": "Using convection to bake cookies last Thursday is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "baked_cookies_with_result",
+            "object": "a batch of cookies that turned out perfectly crispy on the outside and chewy on the inside"
+          },
+          "source_support": "supported",
+          "reason": "The cookies' texture outcome is explicit."
+        }
+      ]
+    },
+    "13": {
+      "row_index": 13,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_4:0",
+      "source": "I'm looking for some recipe ideas for meal prep. I've been doing a lot of rice and roasted veggies lately, but I want to mix it up. Oh, and by the way, I tried out a new Ethiopian restaurant in town last week and loved it!",
+      "source_sha256": "3a1c182dc3ec33609251a2445e6d2fcf12ca1dd1391245a701fe104f5b979c77",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "frequently_eats",
+            "object": "rice and roasted veggies lately"
+          },
+          "source_support": "supported",
+          "reason": "'Doing a lot of rice and roasted veggies lately' for meal prep describes eating them frequently."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "enjoyed_dining_at",
+            "object": "a new Ethiopian restaurant in town last week"
+          },
+          "source_support": "supported",
+          "reason": "Trying and loving the new Ethiopian restaurant last week is explicit."
+        }
+      ]
+    },
+    "14": {
+      "row_index": 14,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_2:0",
+      "source": "I'm planning a dinner party for this weekend and I need some help with menu planning. I'm thinking of serving an Indian-inspired dish, but I'm not sure what to pair with it. Can you give me some suggestions? By the way, I learned how to make a perfect chicken tikka masala in a class on Indian cuisine, so that's definitely on the menu.",
+      "source_sha256": "b6775d3b2b065a05dc2e4fa59ddaf2f84b9a8b792806790e3635f64ca389f9b1",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_event",
+            "object": "dinner party for this weekend"
+          },
+          "source_support": "supported",
+          "reason": "Planning a dinner party this weekend is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "considered_serving",
+            "object": "an Indian-inspired dish at the dinner party"
+          },
+          "source_support": "supported",
+          "reason": "'Thinking of serving' an Indian-inspired dish is retained as consideration."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_skill",
+            "object": "how to make chicken tikka masala in a class on Indian cuisine"
+          },
+          "source_support": "supported",
+          "reason": "Learning chicken tikka masala in an Indian cuisine class is explicit."
+        },
+        {
+          "candidate_index": 3,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_menu_item",
+            "object": "chicken tikka masala for the dinner party"
+          },
+          "source_support": "supported",
+          "reason": "'That's definitely on the menu' refers to the tikka masala for this dinner party."
+        }
+      ]
+    },
+    "15": {
+      "row_index": 15,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:0",
+      "source": "I'm looking for some healthy meal prep ideas. I've been trying to eat more plant-based lately, and I recently attended a class on vegan cuisine that got me really inspired.",
+      "source_sha256": "738365c5ed41e50ef7ccd55f7bd20cb3b5fcb5c2e7bbd6d6abec0df637228506",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "trying_to_eat",
+            "object": "more plant-based food lately"
+          },
+          "source_support": "supported",
+          "reason": "Trying to eat more plant-based lately is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_class",
+            "object": "a class on vegan cuisine recently"
+          },
+          "source_support": "supported",
+          "reason": "Recently attending a vegan cuisine class is explicit."
+        }
+      ]
+    },
+    "16": {
+      "row_index": 16,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:6",
+      "source": "That's really helpful, thanks! I've been meaning to try tempeh for a while now, and this gives me a better understanding of what to expect. By the way, speaking of fermentation, I recently attended a workshop on fermentation at a local food co-op, where I learned how to make my own sauerkraut and kimchi. Have you got any tips on how to incorporate fermented foods into my diet?",
+      "source_sha256": "d7d5b20b271bc3e0aecefd7d562e198667cc4a961362ff88502239b664f93b87",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "intends_to_try",
+            "object": "tempeh"
+          },
+          "source_support": "supported",
+          "reason": "'Meaning to try tempeh' states an intention (v6/v7 judged intends_to_try tempeh supported)."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_workshop",
+            "object": "a fermentation workshop at a local food co-op recently"
+          },
+          "source_support": "supported",
+          "reason": "Recently attending a fermentation workshop at a local food co-op is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_to_make",
+            "object": "sauerkraut and kimchi"
+          },
+          "source_support": "supported",
+          "reason": "Learning to make sauerkraut and kimchi is explicit."
+        }
+      ]
+    },
+    "17": {
+      "row_index": 17,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_1:8",
+      "source": "That's really helpful, thanks! I've been wanting to try to incorporate more fermented foods into my diet, and these tips are really useful. Speaking of trying new foods, I recently attended a class on vegan cuisine, where I learned how to make a delicious vegan lasagna with a cashew-based ricotta cheese substitute.",
+      "source_sha256": "d37e27f34a0974df86cadfae10a9a5126606ee8d8fbb5fa35651f290c4da722e",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_dietary_change",
+            "object": "incorporate more fermented foods into diet"
+          },
+          "source_support": "ambiguous",
+          "reason": "The source states a desire ('wanting to try to incorporate'); planned_ upgrades it to a plan. v6/v7 accepted wants_to_incorporate because it kept the desire."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_class",
+            "object": "class on vegan cuisine recently"
+          },
+          "source_support": "supported",
+          "reason": "Recently attending a vegan cuisine class is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "learned_to_make",
+            "object": "vegan lasagna with a cashew-based ricotta cheese substitute"
+          },
+          "source_support": "supported",
+          "reason": "Learning vegan lasagna with a cashew-based ricotta substitute is explicit."
+        }
+      ]
+    },
+    "18": {
+      "row_index": 18,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:0",
+      "source": "I'm looking for some ideas on meal prep for the week. I've been trying to cook more at home, and I want to make sure I'm using up all the ingredients I buy. By the way, I just tried out a recipe for Korean bibimbap from the cooking class's online recipe library, and it was amazing. Do you have any suggestions for meal prep containers that can keep my food fresh for a few days?",
+      "source_sha256": "e7a9cb31d70583d9e473242275cf8ae676afb4c083e9998f2d89dee08115ff9a",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "trying_to_cook_more_at_home",
+            "object": "cook more at home"
+          },
+          "source_support": "supported",
+          "reason": "Trying to cook more at home is explicit."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "wants_to_use_all_purchased_ingredients",
+            "object": "use up all ingredients purchased"
+          },
+          "source_support": "supported",
+          "reason": "Wanting to use up purchased ingredients is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed_cooking",
+            "object": "Korean bibimbap recipe from the cooking class's online recipe library; found it amazing"
+          },
+          "source_support": "supported",
+          "reason": "Trying the bibimbap recipe from the class library and finding it amazing is explicit."
+        }
+      ]
+    },
+    "19": {
+      "row_index": 19,
+      "case_id": "d23cf73b",
+      "turn_id": "answer_5a0d28f8_3:6",
+      "source": "That's really helpful, thanks. I've actually made kimchi before from a workshop I attended on fermentation. But I didn't know you could add other ingredients like seafood or garlic scapes to create different flavor profiles. I'll have to try that out.",
+      "source_sha256": "80d38cfa574ac6048becce811789785b7084b755e9b396cdbcdd4e7e9b9a64b7",
+      "candidates": [
+        {
+          "candidate_index": 0,
+          "assertion": {
+            "subject": "user",
+            "predicate": "completed_activity",
+            "object": "made kimchi before, based on a fermentation workshop the user attended"
+          },
+          "source_support": "ambiguous",
+          "reason": "'Made kimchi before from a workshop' leaves open whether it was made at the workshop or learned there; 'based on' commits to one reading (earlier supported assertions kept 'from')."
+        },
+        {
+          "candidate_index": 1,
+          "assertion": {
+            "subject": "user",
+            "predicate": "attended_workshop",
+            "object": "a fermentation workshop"
+          },
+          "source_support": "supported",
+          "reason": "Attending a fermentation workshop is explicit."
+        },
+        {
+          "candidate_index": 2,
+          "assertion": {
+            "subject": "user",
+            "predicate": "planned_to_try",
+            "object": "adding ingredients such as seafood or garlic scapes to kimchi to create different flavor profiles"
+          },
+          "source_support": "supported",
+          "reason": "'I'll have to try that out' refers to adding seafood or garlic scapes to kimchi in the preceding sentence."
+        }
+      ]
+    }
+  }
+}
