@@ -1,0 +1,20 @@
+{
+  "phase": "control-replay",
+  "command": [
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "docs/quality-v5/extraction-partial-dev.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "docs/quality-v8/control-replay.json"
+  ],
+  "started_at_utc": "2026-09-23T00:30:09.749288+00:00",
+  "manifest_sha256": "ab02b91656a3eabd60cc160d1d5d61622d95f711997e8c89f6ec5d26ae1db9e2",
+  "probe_sha256": "c60306fd526a8c3c9c799a6a65e0deb41919526ed73cc999592a5e9d62c1be94",
+  "reviews_sha256_before_replay": {},
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 262.2181024999991,
+  "finished_at_utc": "2026-09-23T00:34:31.969789+00:00"
+}

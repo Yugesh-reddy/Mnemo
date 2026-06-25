@@ -1,0 +1,23 @@
+{
+  "phase": "replay",
+  "command": [
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "docs/quality-v8/extraction.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "docs/quality-v8/replay.json"
+  ],
+  "started_at_utc": "2026-09-23T00:34:32.541484+00:00",
+  "manifest_sha256": "ab02b91656a3eabd60cc160d1d5d61622d95f711997e8c89f6ec5d26ae1db9e2",
+  "probe_sha256": "3e2451292347764549a85f4f9da9cea2a8a1c8fde75eb2d816c13e106ff3296c",
+  "reviews_sha256_before_replay": {
+    "docs/quality-v8/source-review.json": "09680fd68a72df17af4e197494240b105adf78026de8cea2f49903a81f14ec12",
+    "docs/quality-v8/mustkeep-review.json": "e3da9a5b01e44df6d543151232c35a3c93b95a414a374548b7de705cef10420d"
+  },
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 297.8255273750001,
+  "finished_at_utc": "2026-09-23T00:39:30.369172+00:00"
+}

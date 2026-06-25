@@ -170,9 +170,12 @@ authored development run achieved **1.41% strict precision / 2.41% recall**; the
 48-turn external holdout had **0/9 exact must-keep matches**. These are different
 datasets and measures, with provisional labels and recorded extraction failures.
 The later bounded development baseline retrieved **16/23** complete distinct
-targets; the v7 experiment fell to **15/23** and was rejected. Extraction is
-unchanged since v7. See [v4](docs/quality-v4/README.md), [v7](docs/quality-v7/README.md),
-and [current status](PROJECT_STATUS.md). The harness preserves evidence so future
+targets; the v7 experiment fell to **15/23** and was rejected. In v8, swapping only
+the extraction model to Azure `gpt-5.6-luna` raised complete extraction to
+**20/23** with zero unsupported writes. Retrieval still stayed at 16/23, because
+one-value-per-subject/predicate identity overwrote four correct facts. Production
+extraction is unchanged. See [v4](docs/quality-v4/README.md), [v7](docs/quality-v7/README.md),
+[v8](docs/quality-v8/README.md) and [current status](PROJECT_STATUS.md). The harness preserves evidence so future
 models can be measured; these results do not establish general reliability.
 
 ## Architecture

@@ -1,0 +1,27 @@
+{
+  "post_hoc": true,
+  "computed_at_utc": "2026-09-23T00:40:20.430941+00:00",
+  "not_the_result": "The frozen outcome is decision.json (failure, 16/23). This file only shows how much that outcome depends on one review convention.",
+  "change": "Adds v7's single alternative group to target d23cf73b/answer_5a0d28f8_1:0/label1: the later same-case assertion 'user | attended_class | class on vegan cuisine recently' (answer_5a0d28f8_1:8/candidate1) also credits the vegan-class target. The blind review deliberately used no alternative groups, matching the v6 baseline review.",
+  "unique_complete_by_stage": {
+    "candidate": 20,
+    "historical": 20,
+    "current": 17,
+    "visible": 17,
+    "retrieved": 17
+  },
+  "denominator": 23,
+  "historical_write_review": {
+    "total": 60,
+    "supported": 56,
+    "unsupported": 0,
+    "ambiguous": 4
+  },
+  "loss_counts_latest_occurrence": {
+    "complete_equivalent_retrieved": 17,
+    "overwrite_or_visibility": 3,
+    "annotation_or_assertion_ambiguity": 2,
+    "extraction_binding_or_meaning": 1
+  },
+  "modified_review_sha256": "4362d496a63556735f9591858c4e4e6327230f3dfe0258595d86851db674d8d6"
+}

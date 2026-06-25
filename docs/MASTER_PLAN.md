@@ -1,7 +1,7 @@
 # Mnemo — Master Plan
 
 **Execution update (September 22, 2026):** local Tasks 0.1–0.4 and Phases 1–5
-are complete. Required-Postgres validation passes 351 tests; one live-Ollama test
+are complete. Required-Postgres validation passes 360 tests; one live-Ollama test
 skips. Lint and wheel/source packaging pass, including the installed pilot entry
 point, guarded SDK lifecycle and real direct MCP stdio checks. Phase 5's single
 local Qwen run passed **2/6 scenarios with zero unintended mutations**; the
@@ -1173,7 +1173,12 @@ is fine.
 - **Grouped undo / archive-as-undo**: needs all affected expected revisions in one transaction.
 - **Consolidation (Layer 4)**: stays off; `mem_provenance` has no `agent_reflection` member —
   adding it is a schema decision that must come with source lineage + NLI gating + trust cap.
-- **Extraction quality**: only with a stronger model and a new frozen protocol; do not
+- [x] **Extraction quality (v8, one bounded run)**: Azure `gpt-5.6-luna` as the only
+  change raised complete extraction from 16/23 to 20/23 with zero unsupported writes,
+  but storage identity overwrote four facts and retrieved coverage tied at 16/23; the frozen
+  rule failed ([v8](quality-v8/README.md)). No tuning or rerun follows. The binding loss is
+  now identity (Pilot B above), which still needs its own rule-6 decision.
+- **Extraction quality (original note)**: only with a stronger model and a new frozen protocol; do not
   reopen `b46e15ed`; do not tune thresholds on holdout output.
 
 ---

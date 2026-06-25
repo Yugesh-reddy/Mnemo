@@ -76,9 +76,9 @@ scope.
 
 ## Verification
 
-`make test-db`: **351 passed, 1 live-Ollama skip** (including the nine export/import
-tests). `make lint` passes Ruff and Black (84 Python files), and `uv lock --check`
-passes. The pilot adds 23 regression cases and the Azure adapter adds 16
+`make test-db`: **360 passed, 1 live-Ollama skip** (including nine export/import
+and nine v8 Azure-adapter tests). `make lint` passes Ruff and Black (87 Python files),
+and `uv lock --check` passes. The pilot adds 23 regression cases and the Azure adapter adds 16
 transport/configuration cases; two previously
 skipped live embedding checks now pass. Pilot tests cover
 argument validation, all six tools, actual conflict injection, event-level
@@ -121,16 +121,26 @@ local code review, browser checks and executable verification were completed.
 
 ## Extraction quality and remaining scope
 
-**Extraction quality is unchanged since v7; the acceptance target remains unmet.**
-See [the v7 decision and evidence](docs/quality-v7/README.md). The bounded development
-baseline remains 16/23 complete distinct retrieval targets; the rejected experiment
-achieved 15/23. These are provisional, limited measurements, not general reliability.
+**v8 measured a stronger extractor; the frozen rule failed, and storage identity
+is now the binding loss.** Production extraction is unchanged. With only the
+extraction model swapped to Azure `gpt-5.6-luna`, complete extraction on the 20
+development turns rose from **16/23 to 20/23** distinct targets, with zero
+unsupported writes (ambiguous writes rose from 1 to 4). All 20 were written, but
+one-value-per-subject/predicate identity overwrote four of them, so retrieved
+coverage stayed **16/23**, tying the baseline; a same-code qwen control also gave 16/23.
+Crediting one restatement as v7 did would give 17/23, a post-hoc figure that is not
+the outcome. Every write in both arms landed in the session tier. See
+[the v8 decision and evidence](docs/quality-v8/README.md) and
+[v7](docs/quality-v7/README.md) (15/23, rejected). These are provisional, limited
+measurements, not general reliability.
 The 18-turn scripted regression remains gated precision/recall 90.9%/100%,
 100% must-keep recall and zero false writes; it does not measure real extraction.
 Numeric thresholds are unchanged. `b46e15ed` remains sealed. Consolidation stays
 deferred. Phase 5 is complete with the limitations above. Export/import has
-shipped from Phase 6; identity extensions, grouped undo and consolidation remain
-deferred until a concrete need and any required contract approval.
+shipped from Phase 6. v8 supplies the concrete case the identity proposal was
+waiting for (two true facts under one subject/predicate), but changing identity
+still needs its own contract approval; grouped undo and consolidation remain
+deferred.
 
 ## History
 

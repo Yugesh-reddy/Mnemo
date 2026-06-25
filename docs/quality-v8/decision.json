@@ -1,0 +1,79 @@
+{
+  "decided_at_utc": "2026-09-23T00:39:31.000848+00:00",
+  "rule": {
+    "frozen_baseline_retrieved": 16,
+    "denominator": 23,
+    "success_requires_all": [
+      "Luna complete distinct retrieved targets > 16 (frozen v6 baseline)",
+      "Luna complete distinct retrieved targets > same-code control",
+      "zero unsupported gated historical writes (ambiguous reported separately)"
+    ],
+    "on_success": "Record the result. Supporting Azure as a production extractor option is a separate, later decision; no threshold, prompt or identity change follows automatically.",
+    "on_failure": "Record the result. No prompt tuning, rerun or second model follows from this protocol.",
+    "incomplete_extraction": "If the probe is incomplete (budget or infrastructure), the replay cannot run; the outcome is recorded as failure with the partial evidence."
+  },
+  "checks": {
+    "retrieved_exceeds_frozen_baseline": false,
+    "retrieved_exceeds_same_code_control": false,
+    "zero_unsupported_historical_writes": true
+  },
+  "outcome": "failure",
+  "summary": {
+    "control": {
+      "unique_complete_by_stage": {
+        "candidate": 16,
+        "historical": 16,
+        "current": 16,
+        "visible": 16,
+        "retrieved": 16
+      },
+      "denominator": 23,
+      "candidate_coverage": {
+        "complete_occurrences": 16,
+        "occurrences": 24,
+        "complete_unique_targets": 16,
+        "unique_targets": 23
+      },
+      "historical_write_review": {
+        "total": 50,
+        "supported": 49,
+        "unsupported": 0,
+        "ambiguous": 1
+      },
+      "loss_counts_latest_occurrence": {
+        "complete_equivalent_retrieved": 16,
+        "extraction_binding_or_meaning": 3,
+        "annotation_or_assertion_ambiguity": 2,
+        "extraction_omission_or_validation": 2
+      }
+    },
+    "luna": {
+      "unique_complete_by_stage": {
+        "candidate": 20,
+        "historical": 20,
+        "current": 16,
+        "visible": 16,
+        "retrieved": 16
+      },
+      "denominator": 23,
+      "candidate_coverage": {
+        "complete_occurrences": 21,
+        "occurrences": 24,
+        "complete_unique_targets": 20,
+        "unique_targets": 23
+      },
+      "historical_write_review": {
+        "total": 60,
+        "supported": 56,
+        "unsupported": 0,
+        "ambiguous": 4
+      },
+      "loss_counts_latest_occurrence": {
+        "complete_equivalent_retrieved": 16,
+        "overwrite_or_visibility": 4,
+        "annotation_or_assertion_ambiguity": 2,
+        "extraction_binding_or_meaning": 1
+      }
+    }
+  }
+}
