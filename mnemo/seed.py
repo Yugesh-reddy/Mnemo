@@ -46,7 +46,8 @@ async def add_seed_fact(
             """
             INSERT INTO memory_fact (subject, predicate, fact_key, kind)
             VALUES ($1, $2, $3, 'triple')
-            ON CONFLICT (namespace, user_id, agent_id, fact_key) DO NOTHING
+            ON CONFLICT (namespace, user_id, agent_id, fact_key, identity_mode, identity_ref)
+            DO NOTHING
             RETURNING fact_id
             """,
             subject,

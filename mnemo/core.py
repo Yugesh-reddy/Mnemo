@@ -5,8 +5,11 @@ transaction. The append-only invariant is sacred: state changes are *new* events
 we only ever flip supersession flags and move the HEAD pointer, never rewrite a
 payload.
 
-Identity is by ``fact_key`` (canonical subject|predicate). Exact values and narrow
-identity aliases no-op; changed values append revisions regardless of cosine. ``search``
+Identity is by ``fact_key`` (canonical subject|predicate) plus an identity mode.
+Legacy calls use the ``attribute`` identity: one HEAD per key. Member/occurrence
+identities (migration 0011) carry a nonzero ``identity_ref`` so several facts can
+share one key. Exact values and narrow identity aliases no-op; changed values
+append revisions regardless of cosine. ``search``
 is hybrid keyword + vector and merges un-reconciled fast_cache rows (§8) when given a
 session. ``observe`` feeds the async extraction worker (mnemo/extraction.py).
 """
@@ -18,7 +21,7 @@ import hashlib
 import json
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 import asyncpg
@@ -39,6 +42,23 @@ PREDICATE_ALIASES: dict[str, str] = {
     "database_system": "db_engine",
     "preferred_lang": "preferred_language",
 }
+
+IdentityMode = Literal["attribute", "member", "occurrence"]
+ATTRIBUTE_REF = UUID(int=0)
+
+
+def identity_key(identity_mode: str, identity_ref: UUID | None) -> tuple[str, UUID]:
+    """Validate an identity request; attributes store the all-zero reference."""
+    if identity_mode == "attribute":
+        if identity_ref is not None:
+            raise ValueError("attribute identities take no identity_ref")
+        return identity_mode, ATTRIBUTE_REF
+    if identity_mode in ("member", "occurrence"):
+        if not isinstance(identity_ref, UUID) or identity_ref == ATTRIBUTE_REF:
+            raise ValueError(f"{identity_mode} identities require a nonzero identity_ref")
+        return identity_mode, identity_ref
+    raise ValueError("identity_mode must be 'attribute', 'member' or 'occurrence'")
+
 
 # Every column needed to hydrate an Event, in one place.
 _EVENT_COLS = """
@@ -247,16 +267,25 @@ class MnemoStore:
             new_event_id,
         )
 
-    async def _fact_id_for_key(self, fact_key: str) -> UUID | None:
+    async def _fact_id_for_key(
+        self,
+        fact_key: str,
+        identity_mode: str = "attribute",
+        identity_ref: UUID | None = None,
+    ) -> UUID | None:
+        mode, ref = identity_key(identity_mode, identity_ref)
         return await self.conn.fetchval(
             """
             SELECT fact_id FROM memory_fact
             WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+              AND identity_mode=$5 AND identity_ref=$6
             """,
             self.namespace,
             self.user_id,
             self.agent_id,
             fact_key,
+            mode,
+            ref,
         )
 
     # ---- public ops -----------------------------------------------------
@@ -279,13 +308,18 @@ class MnemoStore:
         tier: str = "durable",
         reason: str | None = None,
         embedding: list[float] | None = None,
+        identity_mode: IdentityMode = "attribute",
+        identity_ref: UUID | None = None,
     ) -> Event:
         """Insert a fact value, routing to ADD / UPDATE / no-op (spec §5).
 
-        Exact values and narrow aliases under the same key are idempotent while
+        Exact values and narrow aliases under the same identity are idempotent while
         visible. Changed values append UPDATE even with identical embeddings;
-        unrelated identities create ADD.
+        unrelated identities create ADD. The default ``attribute`` identity keeps one
+        HEAD per subject/predicate; each member/occurrence ``identity_ref`` is its
+        own fact under the same key.
         """
+        mode, ref = identity_key(identity_mode, identity_ref)
         fact_key = canonicalize(subject, predicate)
         trust = derive_trust(provenance, confidence)
         if tier == "session" and session_id is None:
@@ -320,12 +354,15 @@ class MnemoStore:
                 """
                 SELECT fact_id, current_event_id, status FROM memory_fact
                 WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+                  AND identity_mode=$5 AND identity_ref=$6
                 FOR UPDATE
                 """,
                 self.namespace,
                 self.user_id,
                 self.agent_id,
                 fact_key,
+                mode,
+                ref,
             )
 
             # --- existing fact under the same key ---
@@ -333,18 +370,23 @@ class MnemoStore:
                 return await self._apply_to_existing(fact, object, vec, **emit)
 
             # --- brand-new fact ---
-            fact_id = await self._insert_fact(subject, predicate, fact_key, kind, session_id)
+            fact_id = await self._insert_fact(
+                subject, predicate, fact_key, kind, session_id, identity_mode=mode, identity_ref=ref
+            )
             if fact_id is None:
                 # Lost the UNIQUE race to a concurrent add: act as the second arrival.
                 fact = await self.conn.fetchrow(
                     """
                     SELECT fact_id, current_event_id, status FROM memory_fact
                     WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+                      AND identity_mode=$5 AND identity_ref=$6
                     """,
                     self.namespace,
                     self.user_id,
                     self.agent_id,
                     fact_key,
+                    mode,
+                    ref,
                 )
                 assert fact is not None  # the constraint fired, so the row must exist
                 return await self._apply_to_existing(fact, object, vec, **emit)
@@ -391,12 +433,21 @@ class MnemoStore:
         return await self._emit_update(fact["fact_id"], fact["current_event_id"], object, **emit)
 
     async def _insert_fact(
-        self, subject: str, predicate: str, fact_key: str, kind: str, session_id: str | None
+        self,
+        subject: str,
+        predicate: str,
+        fact_key: str,
+        kind: str,
+        session_id: str | None,
+        *,
+        identity_mode: str = "attribute",
+        identity_ref: UUID = ATTRIBUTE_REF,
     ) -> UUID | None:
         """Insert a brand-new fact. Returns ``None`` if a concurrent add won the race.
 
         Two parallel ``add`` calls for a new key can both miss the existence check,
-        then collide on ``UNIQUE (namespace, user_id, agent_id, fact_key)``. The loser
+        then collide on the scoped identity key (namespace, user, agent, fact_key,
+        identity_mode, identity_ref). The loser
         would otherwise surface as a raw ``UniqueViolationError``; instead we catch it
         *outside* the savepoint (asyncpg only rolls a savepoint back when the exception
         propagates out of the ``async with`` block — catching inside leaves the
@@ -409,8 +460,8 @@ class MnemoStore:
                     """
                     INSERT INTO memory_fact
                         (namespace, user_id, agent_id, session_id,
-                         subject, predicate, fact_key, kind)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind)
+                         subject, predicate, fact_key, kind, identity_mode, identity_ref)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8::mem_kind, $9, $10)
                     RETURNING fact_id
                     """,
                     self.namespace,
@@ -421,6 +472,8 @@ class MnemoStore:
                     predicate,
                     fact_key,
                     kind,
+                    identity_mode,
+                    identity_ref,
                 )
         except asyncpg.UniqueViolationError:
             return None  # lost the race to a parallel add
@@ -521,7 +574,8 @@ class MnemoStore:
                        e.object_json, e.embedding, e.provenance, e.actor, e.confidence,
                        e.trust_level, e.source_span, e.valid_from, e.valid_to,
                        e.expires_at, e.recorded_at, e.importance, e.write_score,
-                       e.tier, e.strength, e.recall_count, e.last_used
+                       e.tier, e.strength, e.recall_count, e.last_used,
+                       f.identity_mode, f.identity_ref
                 FROM memory_event e JOIN memory_fact f USING (fact_id)
                 WHERE f.namespace=$1 AND f.user_id=$2 AND f.agent_id=$3
                   AND e.recorded_at <= $14 AND e.valid_from <= $15
@@ -531,8 +585,10 @@ class MnemoStore:
             """
         else:
             source = """
-                SELECT s.*, $1::text AS namespace, $2::text AS user_id, $3::text AS agent_id
+                SELECT s.*, $1::text AS namespace, $2::text AS user_id, $3::text AS agent_id,
+                       f.identity_mode, f.identity_ref
                 FROM fact_snapshot_at($1, $2, $3, $14, $15) s
+                JOIN memory_fact f ON f.fact_id = s.fact_id
             """
         vector_source = """
             SELECT * FROM eligible WHERE embedding IS NOT NULL
@@ -742,7 +798,7 @@ class MnemoStore:
                    kind, event_id, object_text, object_number, object_json,
                    provenance, confidence, trust_level, valid_from, recorded_at,
                    importance, write_score, tier, strength, recall_count,
-                   source_span, valid_to, expires_at, fact_key
+                   source_span, valid_to, expires_at, fact_key, identity_mode, identity_ref
             FROM memory_current
             WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
             ORDER BY recorded_at DESC
@@ -781,7 +837,7 @@ class MnemoStore:
                    kind, event_id, object_text, object_number, object_json,
                    provenance, confidence, trust_level, valid_from, recorded_at,
                    importance, write_score, tier, strength, recall_count,
-                   source_span, valid_to, expires_at, fact_key
+                   source_span, valid_to, expires_at, fact_key, identity_mode, identity_ref
             FROM memory_current
             WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4
             """,
@@ -798,9 +854,17 @@ class MnemoStore:
         fact_id: UUID | None = None,
         subject: str | None = None,
         predicate: str | None = None,
+        identity_mode: IdentityMode = "attribute",
+        identity_ref: UUID | None = None,
     ) -> list[Event]:
-        """Full ordered event history for a fact (git blame for memory)."""
-        fid = await self._resolve_fact_id(fact_id, subject, predicate)
+        """Full ordered event history for a fact (git blame for memory).
+
+        A subject/predicate lookup addresses the attribute identity unless a
+        member/occurrence identity is given; fact_id lookups ignore identity.
+        """
+        fid = await self._resolve_fact_id(
+            fact_id, subject, predicate, identity_mode=identity_mode, identity_ref=identity_ref
+        )
         if fid is None:
             return []
         rows = await self.conn.fetch(
@@ -809,7 +873,13 @@ class MnemoStore:
         return [Event.from_row(r) for r in rows]
 
     async def _resolve_fact_id(
-        self, fact_id: UUID | None, subject: str | None, predicate: str | None
+        self,
+        fact_id: UUID | None,
+        subject: str | None,
+        predicate: str | None,
+        *,
+        identity_mode: str = "attribute",
+        identity_ref: UUID | None = None,
     ) -> UUID | None:
         if fact_id is not None:
             return await self.conn.fetchval(
@@ -823,7 +893,9 @@ class MnemoStore:
                 self.agent_id,
             )
         if subject is not None and predicate is not None:
-            return await self._fact_id_for_key(canonicalize(subject, predicate))
+            return await self._fact_id_for_key(
+                canonicalize(subject, predicate), identity_mode, identity_ref
+            )
         raise ValueError("provide fact_id or both subject and predicate")
 
     async def revert(

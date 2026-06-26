@@ -421,3 +421,33 @@ and `make export` / `make import`. No migration or existing contract changes.
 
 Merging into a non-empty store, remapping scopes and exporting pipeline state
 remain unimplemented.
+
+## 17. Member and occurrence identities (Pilot B) — September 22, 2026
+
+The owner approved migration `0011_identity.sql` and this contract under rule 6,
+following [the reviewed proposal](docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md).
+[v8](docs/quality-v8/README.md) supplied the concrete need: a stronger extractor
+wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
+
+- **Schema.** `memory_fact` gains `identity_mode` (`attribute` | `member` |
+  `occurrence`) and `identity_ref` (uuid). Attributes store the zero UUID; other
+  modes require a nonzero reference. The unique key becomes namespace, user, agent,
+  `fact_key`, `identity_mode` and `identity_ref`. Existing facts become attributes
+  with IDs, keys, HEADs and events unchanged. `memory_current` appends both columns.
+- **Writes.** `add(..., identity_mode="attribute", identity_ref=None)` validates
+  both before embedding or writing. An attribute keeps today's behavior: one HEAD
+  per scoped subject/predicate. Each member/occurrence reference is its own fact
+  under the same key: a changed value updates only that fact, an exact repeat is
+  a no-op, and concurrent retries of one reference write once. References never
+  derive from values, wording or embeddings.
+- **Reads and history.** Key-based lookups (`blame(subject=, predicate=)`, the
+  worker's novelty lookup, direct `create`'s existence check) address the attribute
+  identity unless a member/occurrence identity is given. `Fact` exposes
+  `identity_mode` and `identity_ref` (`None` for attributes); current, as-of and
+  superseded searches return every eligible member once. Revert, archive and
+  invalidate act on one `fact_id`; a sibling's event is never a restore target.
+- **Unchanged.** Legacy callers, the six direct MCP tools, the legacy MCP server
+  and the web UI stay attribute-only. Extraction still writes attributes.
+  Export/import carries the columns.
+- **Rollback.** Once members exist, the old unique key cannot return without
+  collapsing histories; disable new modes instead of reverting the migration.

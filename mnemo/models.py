@@ -109,6 +109,8 @@ class Fact(BaseModel):
     tier: str = "durable"
     strength: float = 1.0
     recall_count: int = 0
+    identity_mode: str = "attribute"
+    identity_ref: UUID | None = None  # None for attributes (stored as the zero UUID)
 
     @property
     def value(self) -> Any:
@@ -123,6 +125,8 @@ class Fact(BaseModel):
             if isinstance(d.get(field), str):
                 d[field] = json.loads(d[field])
         data = {k: d[k] for k in cls.model_fields if k in d}
+        if data.get("identity_ref") is not None and data["identity_ref"].int == 0:
+            data["identity_ref"] = None
         if score is not None:
             data["score"] = score
         return cls(**data)

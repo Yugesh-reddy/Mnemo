@@ -5,6 +5,7 @@ Acceptance (spec §12 M1): migrations apply cleanly; the view returns seeded fac
 
 from __future__ import annotations
 
+import json
 import shutil
 from urllib.parse import urlsplit, urlunsplit
 from uuid import uuid4
@@ -175,11 +176,10 @@ async def test_mutation_receipts_are_scoped_unique_and_immutable(store, db) -> N
     assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 2
 
 
-async def test_0010_applies_over_populated_0009(db, fake_embedder, tmp_path) -> None:
-    from mnemo.core import MnemoStore
-
+async def _schema_at(db, tmp_path, through: int) -> None:
+    """Migrate a private schema only through ``through`` (the older binary's view)."""
     for migration in sorted(mdb.MIGRATIONS_DIR.glob("*.sql")):
-        if int(migration.name.split("_")[0]) <= 9:
+        if int(migration.name.split("_")[0]) <= through:
             shutil.copy(migration, tmp_path / migration.name)
     schema = "mnemo_upgrade_" + uuid4().hex
     await db.execute(f'CREATE SCHEMA "{schema}"')
@@ -189,13 +189,68 @@ async def test_0010_applies_over_populated_0009(db, fake_embedder, tmp_path) -> 
         "CREATE TABLE schema_migrations (filename text PRIMARY KEY, "
         "applied_at timestamptz NOT NULL DEFAULT now())"
     )
-    assert len(await mdb.apply_migrations(db, tmp_path)) == 9
-    legacy = MnemoStore(db, fake_embedder)
-    await legacy.add("user", "preferred_database", "PostgreSQL")
-    await legacy.add("user", "preferred_language", "Python")
+    assert len(await mdb.apply_migrations(db, tmp_path)) == through
+
+
+async def _legacy_fact(db, predicate: str, value: str) -> None:
+    """Write a fact with SQL an older binary would issue (no identity columns)."""
+    fact_id = await db.fetchval(
+        "INSERT INTO memory_fact (subject, predicate, fact_key) VALUES ('user', $1, $2) "
+        "RETURNING fact_id",
+        predicate,
+        "user|" + predicate,
+    )
+    event_id = await db.fetchval(
+        "INSERT INTO memory_event (fact_id, op, object_text, provenance) "
+        "VALUES ($1, 'ADD', $2, 'direct_user_statement') RETURNING event_id",
+        fact_id,
+        value,
+    )
+    await db.execute(
+        "UPDATE memory_fact SET current_event_id=$1 WHERE fact_id=$2", event_id, fact_id
+    )
+
+
+async def test_0010_applies_over_populated_0009(db, tmp_path) -> None:
+    await _schema_at(db, tmp_path, 9)
+    await _legacy_fact(db, "preferred_database", "PostgreSQL")
+    await _legacy_fact(db, "preferred_language", "Python")
     snapshot = "SELECT row_to_json(f)::text FROM memory_fact f ORDER BY fact_id"
     before = await db.fetch(snapshot)
-    assert await mdb.apply_migrations(db) == ["0010_mutation_receipts.sql"]
-    assert await db.fetch(snapshot) == before
+    assert await mdb.apply_migrations(db) == ["0010_mutation_receipts.sql", "0011_identity.sql"]
     assert await db.fetchval("SELECT count(*) FROM memory_current") == 2
     assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0
+    # 0011 then appends identity columns; everything that existed is unchanged.
+    after = await db.fetch(
+        "SELECT (to_jsonb(f) - 'identity_mode' - 'identity_ref')::text "
+        "FROM memory_fact f ORDER BY fact_id"
+    )
+    assert [json.loads(r[0]) for r in after] == [json.loads(r[0]) for r in before]
+
+
+async def test_0011_turns_existing_facts_into_attribute_identities(db, tmp_path) -> None:
+    await _schema_at(db, tmp_path, 10)
+    await _legacy_fact(db, "preferred_database", "PostgreSQL")
+    await _legacy_fact(db, "learned_to_make", "kimchi")
+    facts = "SELECT to_jsonb(f)::text FROM memory_fact f ORDER BY fact_id"
+    events = "SELECT to_jsonb(e)::text FROM memory_event e ORDER BY seq"
+    view = "SELECT fact_id, event_id, object_text FROM memory_current ORDER BY fact_id"
+    before = (await db.fetch(facts), await db.fetch(events), await db.fetch(view))
+    assert await mdb.apply_migrations(db) == ["0011_identity.sql"]
+    migrated = [json.loads(r[0]) for r in await db.fetch(facts)]
+    assert [
+        {k: v for k, v in f.items() if k not in ("identity_mode", "identity_ref")} for f in migrated
+    ] == [json.loads(r[0]) for r in before[0]]
+    assert {(f["identity_mode"], f["identity_ref"]) for f in migrated} == {
+        ("attribute", "00000000-0000-0000-0000-000000000000")
+    }
+    assert await db.fetch(events) == before[1]
+    assert await db.fetch(view) == before[2]
+    # An old binary's key-only conflict target no longer matches any constraint.
+    with pytest.raises(asyncpg.InvalidColumnReferenceError):
+        async with db.transaction():
+            await db.execute(
+                "INSERT INTO memory_fact (subject, predicate, fact_key) "
+                "VALUES ('user', 'x', 'user|x') "
+                "ON CONFLICT (namespace, user_id, agent_id, fact_key) DO NOTHING"
+            )

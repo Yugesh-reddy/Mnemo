@@ -114,7 +114,8 @@ class DirectMemory:
     async def _existing_key(self, fact_key: str) -> None:
         row = await self.store.conn.fetchrow(
             "SELECT fact_id, current_event_id FROM memory_fact "
-            "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4",
+            "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4 "
+            "AND identity_mode='attribute'",
             *self._scope,
             fact_key,
         )
