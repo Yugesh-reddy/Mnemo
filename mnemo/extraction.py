@@ -10,8 +10,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+from types import SimpleNamespace
 from typing import Any, Protocol, runtime_checkable
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import asyncpg
 import httpx
@@ -19,7 +20,7 @@ from pydantic import ValidationError
 
 from mnemo.audit import record_decision
 from mnemo.config import Settings, get_settings
-from mnemo.core import MnemoStore
+from mnemo.core import MnemoStore, _same_object, canonicalize
 from mnemo.db import to_vector_literal
 from mnemo.models import ExtractedFact
 from mnemo.quality import (
@@ -286,6 +287,23 @@ class OpenAIExtractor:
         self._client.close()
 
 
+def _head_value(head: Any) -> Any:
+    if head["object_text"] is not None:
+        return head["object_text"]
+    if head["object_number"] is not None:
+        return head["object_number"]
+    value = head["object_json"]
+    return json.loads(value) if isinstance(value, str) else value
+
+
+def _route_record(route: dict[str, Any], item: dict[str, Any]) -> dict[str, Any]:
+    """JSON-safe audit of the identity decision and the checks behind it."""
+    return {
+        **{k: (str(v) if isinstance(v, UUID) else v) for k, v in route.items()},
+        "checks": item.get("identity_checks", []),
+    }
+
+
 class LeaseLost(RuntimeError):
     """A later claim owns the job; this attempt must not commit anything."""
 
@@ -314,6 +332,9 @@ class ExtractionWorker:
         self.settings = settings or get_settings()
         self.verifier = verifier or build_verifier(self.settings)
         self.actor = actor
+        # Lease renewal and identity reads share this connection while model calls
+        # run; asyncpg allows one operation at a time per connection.
+        self._conn_lock = asyncio.Lock()
 
     async def _claim(self) -> Any:
         async with self.conn.transaction():
@@ -350,7 +371,13 @@ class ExtractionWorker:
             )
 
     async def _renew(self, job: Any) -> None:
-        renewed = await self.conn.fetchval(
+        async with self._conn_lock:
+            renewed = await self._renew_query(job)
+        if renewed is None:
+            raise LeaseLost("extraction lease expired or changed owner")
+
+    async def _renew_query(self, job: Any) -> Any:
+        return await self.conn.fetchval(
             """UPDATE extraction_job
                SET lease_expires_at=clock_timestamp()+make_interval(secs => $3),
                    updated_at=clock_timestamp()
@@ -360,10 +387,104 @@ class ExtractionWorker:
             job["locked_by"],
             self.settings.job_lease_seconds,
         )
-        if renewed is None:
-            raise LeaseLost("extraction lease expired or changed owner")
 
-    async def _prepare(self, text: str, role: str) -> list[dict[str, Any]]:
+    def _single_valued(self, fact_key: str) -> bool:
+        return fact_key.split("|", 1)[1] in {
+            canonicalize("user", p).split("|", 1)[1] for p in self.settings.single_value_predicates
+        }
+
+    async def _current_heads(self, scope: tuple[str, str, str], fact_key: str) -> list[Any]:
+        """Every currently visible fact under one key, in any identity mode."""
+        return await self.conn.fetch(
+            """
+            SELECT fact_id, event_id, identity_mode, identity_ref, subject, predicate,
+                   object_text, object_number, object_json
+            FROM memory_current
+            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
+            ORDER BY recorded_at, event_id
+            """,
+            *scope,
+            fact_key,
+        )
+
+    async def _identity_checks(
+        self, scope: tuple[str, str, str], cand: ExtractedFact, text: str
+    ) -> list[dict[str, Any]]:
+        """Model calls for routing, outside any transaction (spec §17).
+
+        For each current value under the candidate's key: does the new turn
+        contradict it (a correction), and does it already state the candidate
+        (a restatement)? Both use the configured verifier and its threshold.
+        """
+        fact_key = canonicalize(cand.subject, cand.predicate)
+        if self._single_valued(fact_key):
+            return []
+        async with self._conn_lock:
+            heads = await self._current_heads(scope, fact_key)
+        checks = []
+        for head in heads:
+            value = _head_value(head)
+            stored = ExtractedFact(
+                subject=head["subject"], predicate=head["predicate"], object=value
+            )
+            premise = f"{head['subject']} {head['predicate'].replace('_', ' ')} {value}."
+            against_turn = await asyncio.to_thread(self.verifier.verify, stored, text)
+            restated = await asyncio.to_thread(self.verifier.verify, cand, premise)
+            threshold = self.settings.verifier_entailment_threshold
+            checks.append(
+                {
+                    "event_id": str(head["event_id"]),
+                    "contradicts": against_turn.label == "contradiction"
+                    and against_turn.probability >= threshold,
+                    "restates": restated.accepted,
+                    "turn_verdict": against_turn.model_dump(mode="json"),
+                    "restatement_verdict": restated.model_dump(mode="json"),
+                }
+            )
+        return checks
+
+    async def _route(
+        self, store: MnemoStore, cand: ExtractedFact, item: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Choose the identity for one candidate under the commit lock."""
+        fact_key = canonicalize(cand.subject, cand.predicate)
+        attribute = {"route": "attribute", "mode": "attribute", "ref": None}
+        if self.settings.identity_routing == "off" or self._single_valued(fact_key):
+            return attribute
+        heads = await self._current_heads(
+            (store.namespace, store.user_id, store.agent_id), fact_key
+        )
+        if not heads:
+            return attribute
+        checks = {c["event_id"]: c for c in item.get("identity_checks", [])}
+
+        def identity(head: Any) -> dict[str, Any]:
+            mode = head["identity_mode"]
+            return {"mode": mode, "ref": None if mode == "attribute" else head["identity_ref"]}
+
+        same = [h for h in heads if _same_object(SimpleNamespace(**dict(h)), cand.object)]
+        if same:
+            return {"route": "same_value", **identity(same[0]), "event_id": same[0]["event_id"]}
+        contradicted = [h for h in heads if checks.get(str(h["event_id"]), {}).get("contradicts")]
+        unchecked = sum(str(h["event_id"]) not in checks for h in heads)
+        if len(contradicted) == 1:
+            head = contradicted[0]
+            return {"route": "correction", **identity(head), "event_id": head["event_id"]}
+        if len(contradicted) > 1:
+            return {
+                "route": "unresolved",
+                "mode": "member",
+                "ref": uuid4(),
+                "contradicted": [str(h["event_id"]) for h in contradicted],
+            }
+        restated = [h for h in heads if checks.get(str(h["event_id"]), {}).get("restates")]
+        if restated:
+            return {"route": "restatement", "event_id": restated[0]["event_id"]}
+        return {"route": "new_member", "mode": "member", "ref": uuid4(), "unchecked": unchecked}
+
+    async def _prepare(
+        self, text: str, role: str, scope: tuple[str, str, str] | None = None
+    ) -> list[dict[str, Any]]:
         if role == "assistant":
             return [
                 {"candidate": {}, "reason": "assistant turns are excluded", "outcome": "rejected"}
@@ -398,6 +519,8 @@ class ExtractionWorker:
                     result["embedding"] = await asyncio.to_thread(
                         self.embedder.embed, f"{cand.subject} {cand.predicate} {cand.object}"
                     )
+                    if self.settings.identity_routing != "off" and scope is not None:
+                        result["identity_checks"] = await self._identity_checks(scope, cand, text)
             prepared.append(result)
         if isinstance(raw, ExtractionBatch):
             prepared.extend({**item, "outcome": "rejected"} for item in raw.rejections)
@@ -412,7 +535,8 @@ class ExtractionWorker:
         return prepared
 
     async def _prepare_with_renewal(self, job: Any, text: str, role: str) -> list[dict[str, Any]]:
-        pending = asyncio.create_task(self._prepare(text, role))
+        scope = (job["namespace"], job["user_id"], job["agent_id"])
+        pending = asyncio.create_task(self._prepare(text, role, scope))
         try:
             while not pending.done():
                 done, _ = await asyncio.wait({pending}, timeout=self.settings.job_lease_seconds / 3)
@@ -465,12 +589,25 @@ class ExtractionWorker:
                 event = None
                 components = None
                 outcome, reason = item.get("outcome"), item.get("reason")
+                route: dict[str, Any] | None = None
                 if outcome is None:
                     cand, emb = item["fact"], item["embedding"]
-                    from mnemo.core import canonicalize
-
-                    existing_id = await store._fact_id_for_key(
-                        canonicalize(cand.subject, cand.predicate)
+                    route = await self._route(store, cand, item)
+                if outcome is None and route is not None and route["route"] == "restatement":
+                    # An existing value already states this candidate: keep that
+                    # value and record the decision instead of writing a vaguer copy.
+                    event = await store._get_event(route["event_id"])
+                    outcome = "duplicate"
+                    reason = f"restates current value {route['event_id']}; identity=restatement"
+                    components = {"identity": _route_record(route, item)}
+                    first_event_id = first_event_id or event.event_id
+                if outcome is None:
+                    existing_id = (
+                        None
+                        if route["route"] in ("new_member", "unresolved")
+                        else await store._fact_id_for_key(
+                            canonicalize(cand.subject, cand.predicate), route["mode"], route["ref"]
+                        )
                     )
                     # A changed value under a known identity is a meaningful update.
                     # Similarity cannot remove its novelty or erase the correction.
@@ -490,7 +627,11 @@ class ExtractionWorker:
                     )
                     score = write_score(**components, settings=self.settings)
                     components["score"] = score
+                    if self.settings.identity_routing != "off":
+                        components["identity"] = _route_record(route, item)
                     tier = tier_for(score, self.settings)
+                    if route["route"] == "unresolved" and tier is not None:
+                        tier = "session"  # an unresolved identity never becomes durable
                     # Only clearly ephemeral candidates may be dropped for salience.
                     if tier is None and (existing_id or cand.importance > 2):
                         tier = "session"
@@ -515,6 +656,8 @@ class ExtractionWorker:
                             tier=tier,
                             reason=f"entailment; score={score:.2f}",
                             embedding=emb,
+                            identity_mode=route["mode"],
+                            identity_ref=route["ref"],
                         )
                         outcome = (
                             "duplicate"
@@ -522,6 +665,8 @@ class ExtractionWorker:
                             else ("demoted" if tier == "session" else "accepted")
                         )
                         reason = f"entailment; score={score:.2f}; {outcome}"
+                        if self.settings.identity_routing != "off":
+                            reason += f"; identity={route['route']}"
                         first_event_id = first_event_id or event.event_id
                 await record_decision(
                     self.conn,

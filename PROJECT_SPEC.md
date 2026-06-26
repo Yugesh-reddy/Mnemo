@@ -451,3 +451,17 @@ wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
   Export/import carries the columns.
 - **Rollback.** Once members exist, the old unique key cannot return without
   collapsing histories; disable new modes instead of reverting the migration.
+- **Extraction routing** (`MNEMO_IDENTITY_ROUTING`, default `off`). `off` keeps the
+  legacy overwrite and leaves the audit fingerprint unchanged. With `contradiction`,
+  a gated candidate is routed under the commit lock. The first value under a key
+  is the attribute. A predicate in `single_value_predicates` always updates the
+  attribute. An exact repeat goes to its existing identity. Otherwise the worker
+  (outside the transaction) asks the configured verifier, per current value under
+  the key, whether the new turn contradicts it and whether that value already
+  states the candidate; both use the verifier threshold. Exactly one contradiction
+  updates that fact (a correction); several write the candidate as an expiring
+  session-tier member marked unresolved; a restatement writes nothing and records
+  a duplicate linked to the existing event; anything else becomes a new member with
+  a runtime-generated reference. The model never supplies identity references.
+  Each decision records its route and verdicts. The default flips only if the
+  frozen v9 measurement passes.

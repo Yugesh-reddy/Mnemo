@@ -147,6 +147,28 @@ class Settings(BaseSettings):
     ]
     """Controlled predicate vocabulary — specificity=1.0 in-vocab, 0.2 otherwise."""
 
+    # --- Identity routing (spec §17; off until the v9 measurement passes) ---
+    identity_routing: Literal["off", "contradiction"] = "off"
+    """off: every extracted value updates the one attribute per subject/predicate.
+    contradiction: a value replaces an existing one only when its turn contradicts
+    it; values an existing one already states are duplicates; others coexist as
+    members. Single-value predicates below always use the attribute."""
+
+    single_value_predicates: list[str] = [
+        "name",
+        "role",
+        "preferred_database",
+        "preferred_language",
+        "primary_language",
+        "team_lead",
+        "ship_day",
+        "location",
+        "timezone",
+        "deploy_method",
+        "currently_debugging",
+    ]
+    """Predicates (after alias canonicalization) that hold exactly one value."""
+
     # --- Extraction worker ---
     extractor_max_retries: int = Field(2, ge=0, le=2)
     extractor_timeout_seconds: float = Field(120.0, gt=0.0)
