@@ -1,0 +1,284 @@
+{
+  "suite": "v9 identity routing cases",
+  "status": "authored and labeled by the primary agent before any v9 run; provisional, not independent human gold",
+  "labeling_rule": "expected_current lists the values that should be current for the predicate after all turns. A case passes only if the current values equal this set exactly: a missing value is a false replacement, an extra value is a stale fact or a duplicate.",
+  "candidate_policy": "Candidates are authored, not extracted, so the suite isolates routing. Each has subject=user, confidence 0.95, importance 8, and no evidence quote; each turn is its own session.",
+  "cases": [
+    {
+      "id": "budget_replacement",
+      "kind": "replacement",
+      "turns": [
+        {
+          "text": "My budget for the Japan trip is $2,000.",
+          "predicate": "trip_budget",
+          "value": "$2,000 for the Japan trip"
+        },
+        {
+          "text": "I raised my Japan trip budget to $2,500.",
+          "predicate": "trip_budget",
+          "value": "$2,500 for the Japan trip"
+        }
+      ],
+      "expected_current": [
+        "$2,500 for the Japan trip"
+      ]
+    },
+    {
+      "id": "meeting_free_day_correction",
+      "kind": "replacement",
+      "turns": [
+        {
+          "text": "Friday is my meeting-free day.",
+          "predicate": "meeting_free_day",
+          "value": "Friday"
+        },
+        {
+          "text": "Actually, my meeting-free day is Monday, not Friday.",
+          "predicate": "meeting_free_day",
+          "value": "Monday"
+        }
+      ],
+      "expected_current": [
+        "Monday"
+      ]
+    },
+    {
+      "id": "employer_change",
+      "kind": "replacement",
+      "turns": [
+        {
+          "text": "I work at Acme Corp.",
+          "predicate": "works_at",
+          "value": "Acme Corp"
+        },
+        {
+          "text": "I left Acme Corp and now work at Globex.",
+          "predicate": "works_at",
+          "value": "Globex"
+        }
+      ],
+      "expected_current": [
+        "Globex"
+      ]
+    },
+    {
+      "id": "diet_change",
+      "kind": "replacement",
+      "turns": [
+        {
+          "text": "I'm vegetarian.",
+          "predicate": "diet",
+          "value": "vegetarian"
+        },
+        {
+          "text": "I've gone fully vegan now.",
+          "predicate": "diet",
+          "value": "vegan"
+        }
+      ],
+      "expected_current": [
+        "vegan"
+      ]
+    },
+    {
+      "id": "location_move",
+      "kind": "replacement (single-value registry)",
+      "turns": [
+        {
+          "text": "I live in Austin.",
+          "predicate": "location",
+          "value": "Austin"
+        },
+        {
+          "text": "I moved to Denver last month.",
+          "predicate": "location",
+          "value": "Denver"
+        }
+      ],
+      "expected_current": [
+        "Denver"
+      ]
+    },
+    {
+      "id": "role_change",
+      "kind": "replacement (single-value registry)",
+      "turns": [
+        {
+          "text": "I work as a data analyst.",
+          "predicate": "role",
+          "value": "data analyst"
+        },
+        {
+          "text": "I just started a new job as a product manager.",
+          "predicate": "role",
+          "value": "product manager"
+        }
+      ],
+      "expected_current": [
+        "product manager"
+      ]
+    },
+    {
+      "id": "concurrent_skills",
+      "kind": "coexisting members",
+      "turns": [
+        {
+          "text": "At the fermentation workshop I learned how to make sauerkraut and kimchi.",
+          "predicate": "learned_to_make",
+          "value": "sauerkraut and kimchi"
+        },
+        {
+          "text": "In my vegan cooking class I learned how to make vegan lasagna.",
+          "predicate": "learned_to_make",
+          "value": "vegan lasagna"
+        }
+      ],
+      "expected_current": [
+        "sauerkraut and kimchi",
+        "vegan lasagna"
+      ]
+    },
+    {
+      "id": "concurrent_instruments",
+      "kind": "coexisting members",
+      "turns": [
+        {
+          "text": "I play the guitar.",
+          "predicate": "plays_instrument",
+          "value": "guitar"
+        },
+        {
+          "text": "I also started playing the piano this year.",
+          "predicate": "plays_instrument",
+          "value": "piano"
+        }
+      ],
+      "expected_current": [
+        "guitar",
+        "piano"
+      ]
+    },
+    {
+      "id": "two_interviews",
+      "kind": "coexisting occurrences",
+      "turns": [
+        {
+          "text": "I have an interview with Lena on May 3.",
+          "predicate": "has_interview",
+          "value": "with Lena on May 3"
+        },
+        {
+          "text": "I have a second interview with Lena on May 10.",
+          "predicate": "has_interview",
+          "value": "with Lena on May 10"
+        }
+      ],
+      "expected_current": [
+        "with Lena on May 10",
+        "with Lena on May 3"
+      ]
+    },
+    {
+      "id": "correct_one_interview",
+      "kind": "correction of one occurrence",
+      "turns": [
+        {
+          "text": "I have an interview with Lena on May 3.",
+          "predicate": "has_interview",
+          "value": "with Lena on May 3"
+        },
+        {
+          "text": "I have a second interview with Lena on May 10.",
+          "predicate": "has_interview",
+          "value": "with Lena on May 10"
+        },
+        {
+          "text": "My May 10 interview with Lena moved to May 11.",
+          "predicate": "has_interview",
+          "value": "with Lena on May 11"
+        }
+      ],
+      "expected_current": [
+        "with Lena on May 11",
+        "with Lena on May 3"
+      ]
+    },
+    {
+      "id": "ambiguous_projects",
+      "kind": "coexisting members (identity unresolved by the source)",
+      "turns": [
+        {
+          "text": "I'm working on a solo project for my Data Mining class.",
+          "predicate": "working_on_project",
+          "value": "a solo project for my Data Mining class"
+        },
+        {
+          "text": "I'm working on a project that analyzes customer data to find trends.",
+          "predicate": "working_on_project",
+          "value": "a project that analyzes customer data to find trends"
+        }
+      ],
+      "expected_current": [
+        "a project that analyzes customer data to find trends",
+        "a solo project for my Data Mining class"
+      ]
+    },
+    {
+      "id": "repeated_class",
+      "kind": "restatement (no duplicate)",
+      "turns": [
+        {
+          "text": "I recently attended a class on vegan cuisine.",
+          "predicate": "attended_class",
+          "value": "a class on vegan cuisine"
+        },
+        {
+          "text": "The class on vegan cuisine I attended got me inspired.",
+          "predicate": "attended_class",
+          "value": "class on vegan cuisine"
+        }
+      ],
+      "expected_current": [
+        "a class on vegan cuisine"
+      ]
+    },
+    {
+      "id": "vaguer_restatement",
+      "kind": "restatement (keep the specific value)",
+      "turns": [
+        {
+          "text": "I attended a fermentation workshop at a local food co-op.",
+          "predicate": "attended_workshop",
+          "value": "a fermentation workshop at a local food co-op"
+        },
+        {
+          "text": "I made kimchi at home after the fermentation workshop I attended.",
+          "predicate": "attended_workshop",
+          "value": "a fermentation workshop"
+        }
+      ],
+      "expected_current": [
+        "a fermentation workshop at a local food co-op"
+      ]
+    },
+    {
+      "id": "exact_repeat",
+      "kind": "exact repeat (no duplicate)",
+      "turns": [
+        {
+          "text": "I learned how to make sauerkraut and kimchi.",
+          "predicate": "learned_to_make",
+          "value": "sauerkraut and kimchi"
+        },
+        {
+          "text": "Like I said, I learned how to make sauerkraut and kimchi.",
+          "predicate": "learned_to_make",
+          "value": "sauerkraut and kimchi"
+        }
+      ],
+      "expected_current": [
+        "sauerkraut and kimchi"
+      ]
+    }
+  ]
+}
