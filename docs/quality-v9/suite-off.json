@@ -1,0 +1,486 @@
+{
+  "cases_sha256": "6beef17e4b320ad78fa733de404d9eeee76783cecb5d2156be2362d59d95db43",
+  "identity_routing": "off",
+  "gate_config": {
+    "backend": "ollama",
+    "extractor_model": "qwen3.5:4b-mlx",
+    "embed_model": "nomic-embed-text",
+    "embed_dim": 768,
+    "verifier_backend": "cross_encoder",
+    "verifier_model": "cross-encoder/nli-deberta-v3-small",
+    "verifier_entailment_threshold": 0.99,
+    "verifier_fallback_backend": "ollama",
+    "verifier_fallback_model": null,
+    "verifier_timeout_seconds": 20.0,
+    "verifier_max_retries": 1,
+    "extractor_timeout_seconds": 120.0,
+    "extractor_max_retries": 2,
+    "confidence_floor": 0.5,
+    "w_imp": 0.4,
+    "w_spec": 0.3,
+    "w_nov": 0.3,
+    "w_src": 0.4,
+    "transient_penalty": 0.15,
+    "durable_cutoff": 0.7,
+    "ephemeral_floor": 0.45,
+    "predicate_vocab": [
+      "name",
+      "role",
+      "preferred_database",
+      "uses_database",
+      "preferred_language",
+      "primary_language",
+      "team_lead",
+      "ship_day",
+      "location",
+      "timezone",
+      "deploy_method",
+      "goal",
+      "currently_debugging",
+      "dislikes"
+    ],
+    "session_ttl_seconds": 86400.0,
+    "update_sim": 0.9,
+    "dedup_sim": 0.92,
+    "pipeline_version": "2026-09-13-v6.2",
+    "fingerprint": "a35cb3d06f8f226772c2ee9d70612f171c5ff2ffabf1fc2137395b2c34946232"
+  },
+  "passed": 6,
+  "total": 14,
+  "false_replacements": 8,
+  "extra_current_values": 3,
+  "results": [
+    {
+      "id": "budget_replacement",
+      "kind": "replacement",
+      "expected_current": [
+        "$2,500 for the Japan trip"
+      ],
+      "current": [
+        "$2,500 for the Japan trip"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "meeting_free_day_correction",
+      "kind": "replacement",
+      "expected_current": [
+        "Monday"
+      ],
+      "current": [
+        "Monday"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "employer_change",
+      "kind": "replacement",
+      "expected_current": [
+        "Globex"
+      ],
+      "current": [
+        "Globex"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "diet_change",
+      "kind": "replacement",
+      "expected_current": [
+        "vegan"
+      ],
+      "current": [
+        "vegan"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "location_move",
+      "kind": "replacement (single-value registry)",
+      "expected_current": [
+        "Denver"
+      ],
+      "current": [
+        "Austin"
+      ],
+      "missing": [
+        "Denver"
+      ],
+      "extra": [
+        "Austin"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.92; accepted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "rejected",
+          "reason": "The source text states the user 'moved to Denver last month', which indicates a past relocation event but does not explicitly confirm current residence or establish an ongoing state of living there. The assertion claims 'I live in Denver' as a present continuous fact. While highly probable, the source text lacks the explicit confirmation required for entailment (e.g., 'I live' or 'I am in'), and cannot definitively contradict it without further context about current status.",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "role_change",
+      "kind": "replacement (single-value registry)",
+      "expected_current": [
+        "product manager"
+      ],
+      "current": [
+        "product manager"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.92; accepted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.77; accepted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "concurrent_skills",
+      "kind": "coexisting members",
+      "expected_current": [
+        "sauerkraut and kimchi",
+        "vegan lasagna"
+      ],
+      "current": [
+        "vegan lasagna"
+      ],
+      "missing": [
+        "sauerkraut and kimchi"
+      ],
+      "extra": [],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "concurrent_instruments",
+      "kind": "coexisting members",
+      "expected_current": [
+        "guitar",
+        "piano"
+      ],
+      "current": [
+        "piano"
+      ],
+      "missing": [
+        "guitar"
+      ],
+      "extra": [],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "two_interviews",
+      "kind": "coexisting occurrences",
+      "expected_current": [
+        "with Lena on May 10",
+        "with Lena on May 3"
+      ],
+      "current": [
+        "with Lena on May 10"
+      ],
+      "missing": [
+        "with Lena on May 3"
+      ],
+      "extra": [],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "correct_one_interview",
+      "kind": "correction of one occurrence",
+      "expected_current": [
+        "with Lena on May 11",
+        "with Lena on May 3"
+      ],
+      "current": [
+        "with Lena on May 11"
+      ],
+      "missing": [
+        "with Lena on May 3"
+      ],
+      "extra": [],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t2",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "ambiguous_projects",
+      "kind": "coexisting members (identity unresolved by the source)",
+      "expected_current": [
+        "a project that analyzes customer data to find trends",
+        "a solo project for my Data Mining class"
+      ],
+      "current": [
+        "a project that analyzes customer data to find trends"
+      ],
+      "missing": [
+        "a solo project for my Data Mining class"
+      ],
+      "extra": [],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "repeated_class",
+      "kind": "restatement (no duplicate)",
+      "expected_current": [
+        "a class on vegan cuisine"
+      ],
+      "current": [
+        "class on vegan cuisine"
+      ],
+      "missing": [
+        "a class on vegan cuisine"
+      ],
+      "extra": [
+        "class on vegan cuisine"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "vaguer_restatement",
+      "kind": "restatement (keep the specific value)",
+      "expected_current": [
+        "a fermentation workshop at a local food co-op"
+      ],
+      "current": [
+        "a fermentation workshop"
+      ],
+      "missing": [
+        "a fermentation workshop at a local food co-op"
+      ],
+      "extra": [
+        "a fermentation workshop"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "exact_repeat",
+      "kind": "exact repeat (no duplicate)",
+      "expected_current": [
+        "sauerkraut and kimchi"
+      ],
+      "current": [
+        "sauerkraut and kimchi"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    }
+  ],
+  "verifier_usage": {
+    "requests": 27,
+    "input_tokens": 10713,
+    "output_tokens": 2370,
+    "unmetered_requests": 0,
+    "nli_requests": 3
+  }
+}

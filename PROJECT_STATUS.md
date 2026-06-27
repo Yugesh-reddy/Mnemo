@@ -137,10 +137,18 @@ The 18-turn scripted regression remains gated precision/recall 90.9%/100%,
 100% must-keep recall and zero false writes; it does not measure real extraction.
 Numeric thresholds are unchanged. `b46e15ed` remains sealed. Consolidation stays
 deferred. Phase 5 is complete with the limitations above. Export/import has
-shipped from Phase 6. v8 supplies the concrete case the identity proposal was
-waiting for (two true facts under one subject/predicate), but changing identity
-still needs its own contract approval; grouped undo and consolidation remain
-deferred.
+shipped from Phase 6.
+
+**Pilot B (member/occurrence identity) shipped; its routing stays off.** Migration
+0011 and [spec §17](PROJECT_SPEC.md#17-member-and-occurrence-identities-pilot-b--september-22-2026)
+let several facts share a subject/predicate; legacy callers are unchanged.
+Contradiction-gated extraction routing is behind `MNEMO_IDENTITY_ROUTING=off`. In
+[v9](docs/quality-v9/README.md), routing raised Luna's retrieved coverage from 16/23
+to **19/23** with zero unsupported writes, and `make eval` was unchanged. It passed
+only 9/14 labeled identity cases (6/14 without routing), though. The local
+verifier rated real corrections and coexisting interviews as contradictions at the
+same 0.95, so three corrections left stale values. The frozen rule failed and the
+default stays off. Grouped undo and consolidation remain deferred.
 
 ## History
 

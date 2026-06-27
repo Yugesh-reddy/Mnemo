@@ -1,0 +1,133 @@
+{
+  "decided_at_utc": "2026-09-23T01:27:14.922471+00:00",
+  "rule": {
+    "v8_retrieved": 16,
+    "qwen_control_retrieved": 16,
+    "denominator": 23,
+    "success_requires_all": [
+      "Luna candidates with routing: retrieved complete targets > 16/23 (v8)",
+      "... and not below the same candidates with routing off",
+      "... and still > 16/23 after removing targets credited only through restatement links",
+      "... with zero unsupported gated historical writes",
+      "qwen candidates with routing: retrieved >= 16/23 (v8 control)",
+      "identity suite with routing: all 14 cases pass",
+      "make eval gated result identical with routing off and on"
+    ],
+    "on_success": "Flip the MNEMO_IDENTITY_ROUTING default to contradiction in a separate commit.",
+    "on_failure": "Keep the default off. Record the failing cases; no threshold or prompt tuning follows from this protocol."
+  },
+  "checks": {
+    "luna_on_retrieved_above_v8": true,
+    "luna_on_not_below_luna_off": true,
+    "luna_on_above_v8_without_restatement_links": true,
+    "luna_on_zero_unsupported_writes": true,
+    "qwen_on_not_below_control": true,
+    "suite_on_all_cases_pass": false,
+    "make_eval_unchanged_with_routing": true
+  },
+  "outcome": "failure",
+  "summary": {
+    "luna-off": {
+      "unique_complete_by_stage": {
+        "candidate": 20,
+        "historical": 20,
+        "current": 16,
+        "visible": 16,
+        "retrieved": 16
+      },
+      "denominator": 23,
+      "historical_write_review": {
+        "total": 60,
+        "supported": 56,
+        "unsupported": 0,
+        "ambiguous": 4
+      },
+      "loss_counts_latest_occurrence": {
+        "complete_equivalent_retrieved": 16,
+        "overwrite_or_visibility": 4,
+        "annotation_or_assertion_ambiguity": 2,
+        "extraction_binding_or_meaning": 1
+      }
+    },
+    "luna-on": {
+      "unique_complete_by_stage": {
+        "candidate": 20,
+        "historical": 20,
+        "current": 20,
+        "visible": 19,
+        "retrieved": 19
+      },
+      "denominator": 23,
+      "historical_write_review": {
+        "total": 55,
+        "supported": 51,
+        "unsupported": 0,
+        "ambiguous": 4
+      },
+      "loss_counts_latest_occurrence": {
+        "complete_equivalent_retrieved": 19,
+        "session_or_temporal_restriction": 1,
+        "annotation_or_assertion_ambiguity": 2,
+        "extraction_binding_or_meaning": 1
+      }
+    },
+    "qwen-on": {
+      "unique_complete_by_stage": {
+        "candidate": 16,
+        "historical": 16,
+        "current": 16,
+        "visible": 16,
+        "retrieved": 16
+      },
+      "denominator": 23,
+      "historical_write_review": {
+        "total": 50,
+        "supported": 49,
+        "unsupported": 0,
+        "ambiguous": 1
+      },
+      "loss_counts_latest_occurrence": {
+        "complete_equivalent_retrieved": 16,
+        "extraction_binding_or_meaning": 3,
+        "annotation_or_assertion_ambiguity": 2,
+        "extraction_omission_or_validation": 2
+      }
+    }
+  },
+  "restatement_only_targets": [],
+  "suite": {
+    "off": {
+      "passed": 6,
+      "total": 14,
+      "false_replacements": 8,
+      "extra_current_values": 3,
+      "failed_cases": [
+        "location_move",
+        "concurrent_skills",
+        "concurrent_instruments",
+        "two_interviews",
+        "correct_one_interview",
+        "ambiguous_projects",
+        "repeated_class",
+        "vaguer_restatement"
+      ]
+    },
+    "on": {
+      "passed": 9,
+      "total": 14,
+      "false_replacements": 1,
+      "extra_current_values": 5,
+      "failed_cases": [
+        "meeting_free_day_correction",
+        "employer_change",
+        "diet_change",
+        "location_move",
+        "correct_one_interview"
+      ]
+    }
+  },
+  "make_eval_gated": {
+    "off": "GATED : visible  11 | P  90.9% | R 100.0% | F1  95.2% | must-keep 100.0% | false now/history 0/0 | events 11",
+    "on": "GATED : visible  11 | P  90.9% | R 100.0% | F1  95.2% | must-keep 100.0% | false now/history 0/0 | events 11"
+  }
+}

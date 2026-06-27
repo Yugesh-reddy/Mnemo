@@ -174,7 +174,11 @@ targets; the v7 experiment fell to **15/23** and was rejected. In v8, swapping o
 the extraction model to Azure `gpt-5.6-luna` raised complete extraction to
 **20/23** with zero unsupported writes. Retrieval still stayed at 16/23, because
 one-value-per-subject/predicate identity overwrote four correct facts. Production
-extraction is unchanged. See [v4](docs/quality-v4/README.md), [v7](docs/quality-v7/README.md),
+extraction is unchanged. Member/occurrence identities (spec §17) now let several
+facts share a subject/predicate. With the optional routing on, the same candidates
+reached **19/23**, but routing stays off by default: on a labeled identity suite it
+left stale values after three corrections ([v9](docs/quality-v9/README.md)). See
+[v4](docs/quality-v4/README.md), [v7](docs/quality-v7/README.md),
 [v8](docs/quality-v8/README.md) and [current status](PROJECT_STATUS.md). The harness preserves evidence so future
 models can be measured; these results do not establish general reliability.
 

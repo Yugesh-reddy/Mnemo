@@ -1,0 +1,14 @@
+{
+  "phase": "eval-on",
+  "command": [
+    "-m",
+    "mnemo.eval"
+  ],
+  "identity_routing": "contradiction",
+  "started_at_utc": "2026-09-23T01:26:31.967443+00:00",
+  "manifest_sha256": "df5915e1a1295c5930d6912b5a720cbf839a731afda351beed63c43c536892f2",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 35.982834374997765,
+  "finished_at_utc": "2026-09-23T01:27:07.951039+00:00"
+}

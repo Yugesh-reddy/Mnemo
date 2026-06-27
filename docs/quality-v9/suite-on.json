@@ -1,0 +1,983 @@
+{
+  "cases_sha256": "6beef17e4b320ad78fa733de404d9eeee76783cecb5d2156be2362d59d95db43",
+  "identity_routing": "contradiction",
+  "gate_config": {
+    "backend": "ollama",
+    "extractor_model": "qwen3.5:4b-mlx",
+    "embed_model": "nomic-embed-text",
+    "embed_dim": 768,
+    "verifier_backend": "cross_encoder",
+    "verifier_model": "cross-encoder/nli-deberta-v3-small",
+    "verifier_entailment_threshold": 0.99,
+    "verifier_fallback_backend": "ollama",
+    "verifier_fallback_model": null,
+    "verifier_timeout_seconds": 20.0,
+    "verifier_max_retries": 1,
+    "extractor_timeout_seconds": 120.0,
+    "extractor_max_retries": 2,
+    "confidence_floor": 0.5,
+    "w_imp": 0.4,
+    "w_spec": 0.3,
+    "w_nov": 0.3,
+    "w_src": 0.4,
+    "transient_penalty": 0.15,
+    "durable_cutoff": 0.7,
+    "ephemeral_floor": 0.45,
+    "predicate_vocab": [
+      "name",
+      "role",
+      "preferred_database",
+      "uses_database",
+      "preferred_language",
+      "primary_language",
+      "team_lead",
+      "ship_day",
+      "location",
+      "timezone",
+      "deploy_method",
+      "goal",
+      "currently_debugging",
+      "dislikes"
+    ],
+    "session_ttl_seconds": 86400.0,
+    "update_sim": 0.9,
+    "dedup_sim": 0.92,
+    "identity_routing": "contradiction",
+    "single_value_predicates": [
+      "name",
+      "role",
+      "preferred_database",
+      "preferred_language",
+      "primary_language",
+      "team_lead",
+      "ship_day",
+      "location",
+      "timezone",
+      "deploy_method",
+      "currently_debugging"
+    ],
+    "pipeline_version": "2026-09-13-v6.2",
+    "fingerprint": "b8f8121e44d575651298f1d1b2b561567ec5e855cf27b4d8aef59ee8bbc3151b"
+  },
+  "passed": 9,
+  "total": 14,
+  "false_replacements": 1,
+  "extra_current_values": 5,
+  "results": [
+    {
+      "id": "budget_replacement",
+      "kind": "replacement",
+      "expected_current": [
+        "$2,500 for the Japan trip"
+      ],
+      "current": [
+        "$2,500 for the Japan trip"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=correction",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "correction",
+            "checks": [
+              {
+                "event_id": "b86a497b-c390-46ee-a090-dcf1a9e2bead",
+                "restates": false,
+                "contradicts": true,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the budget was raised to $2,500, which directly contradicts the assertion that the budget is $2,000.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I raised my Japan trip budget to $2,500.",
+                  "probability": 1.0
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states a budget of $2,000, while the assertion claims a budget of $2,500 for the same trip, creating a direct numerical contradiction.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "$2,000",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "event_id": "b86a497b-c390-46ee-a090-dcf1a9e2bead"
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "meeting_free_day_correction",
+      "kind": "replacement",
+      "expected_current": [
+        "Monday"
+      ],
+      "current": [
+        "Friday",
+        "Monday"
+      ],
+      "missing": [],
+      "extra": [
+        "Friday"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.41; demoted; identity=new_member",
+          "identity": {
+            "ref": "6cbd62cd-e6fb-4228-8b2a-8b18b4349d9a",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "7887392e-4da8-4668-8aa3-1ad62842d431",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the meeting-free day is Monday and contradicts Friday, directly opposing the assertion's object.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "Actually, my meeting-free day is Monday, not Friday.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user is meeting on a free day Friday, while the assertion claims the user meets on Monday, creating a direct conflict regarding the specific day of the meeting.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user meeting free day Friday.",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "employer_change",
+      "kind": "replacement",
+      "expected_current": [
+        "Globex"
+      ],
+      "current": [
+        "Acme Corp",
+        "Globex"
+      ],
+      "missing": [],
+      "extra": [
+        "Acme Corp"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.49; demoted; identity=new_member",
+          "identity": {
+            "ref": "39be9463-5e45-4db6-a3d4-99dbc2b45ed0",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "672e8fdf-4121-4453-a393-85d2b34cb3f5",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user left Acme Corp and now works at Globex, which directly contradicts the assertion that the user currently works at Acme Corp.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I left Acme Corp and now work at Globex.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user works at Acme Corp., while the assertion claims the user works at Globex, creating a direct conflict in employment location.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user works at Acme Corp.",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "diet_change",
+      "kind": "replacement",
+      "expected_current": [
+        "vegan"
+      ],
+      "current": [
+        "vegan",
+        "vegetarian"
+      ],
+      "missing": [],
+      "extra": [
+        "vegetarian"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.43; demoted; identity=new_member",
+          "identity": {
+            "ref": "c429d466-97c8-49c1-9924-5f8b6fa5cfed",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "4fd22786-fabe-4e38-b392-02fe363f95c0",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user has gone 'fully vegan', which excludes animal products including eggs and dairy, whereas the assertion claims the user is a 'vegetarian'. These dietary categories are mutually exclusive; being fully vegan contradicts being merely vegetarian.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I've gone fully vegan now.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user's diet is vegetarian, which excludes meat and fish products. The assertion claims the user's diet is vegan, which requires excluding all animal products including dairy and eggs. These two dietary categories are mutually exclusive.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user diet vegetarian.",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "location_move",
+      "kind": "replacement (single-value registry)",
+      "expected_current": [
+        "Denver"
+      ],
+      "current": [
+        "Austin"
+      ],
+      "missing": [
+        "Denver"
+      ],
+      "extra": [
+        "Austin"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.92; accepted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "rejected",
+          "reason": "The source text states the user 'moved to' Denver last month, which indicates a past action of relocation but does not confirm current residence. The assertion claims the user 'lives in' Denver as a present state. While moving there implies eventual living there, it does not establish that the move was completed or that the user currently resides there without further context.",
+          "identity": null
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "role_change",
+      "kind": "replacement (single-value registry)",
+      "expected_current": [
+        "product manager"
+      ],
+      "current": [
+        "product manager"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.92; accepted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "accepted",
+          "reason": "entailment; score=0.77; accepted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "concurrent_skills",
+      "kind": "coexisting members",
+      "expected_current": [
+        "sauerkraut and kimchi",
+        "vegan lasagna"
+      ],
+      "current": [
+        "sauerkraut and kimchi",
+        "vegan lasagna"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.48; demoted; identity=new_member",
+          "identity": {
+            "ref": "b7b58936-195f-4132-8db2-a460cab4f87e",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "0880c456-e84d-4857-8848-526ed1c12383",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user learned to make 'vegan lasagna', while the assertion claims they learned to make 'sauerkraut and kimchi'. These are distinct culinary items, creating a direct conflict regarding what was learned.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "In my vegan cooking class I learned how to make vegan lasagna.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user learned to make sauerkraut and kimchi, which are distinct from vegan lasagna. The assertion claims the user learned to make vegan lasagna, creating a direct conflict with the specific items listed in the source text.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user learned to make sauerkraut and kimchi.",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "concurrent_instruments",
+      "kind": "coexisting members",
+      "expected_current": [
+        "guitar",
+        "piano"
+      ],
+      "current": [
+        "guitar",
+        "piano"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.42; demoted; identity=new_member",
+          "identity": {
+            "ref": "e870908b-b3ce-41c8-9a04-87809e5687d0",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "16c784ca-f534-416a-b33c-235c8a0fb7d9",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user started playing the piano this year, implying a current activity in piano playing. The assertion claims the user plays guitar, which contradicts the specific instrument mentioned in the source text without any indication of multi-instrument proficiency.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I also started playing the piano this year.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the user plays the guitar, which directly contradicts the assertion that the user plays the piano.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user plays instrument guitar.",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "two_interviews",
+      "kind": "coexisting occurrences",
+      "expected_current": [
+        "with Lena on May 10",
+        "with Lena on May 3"
+      ],
+      "current": [
+        "with Lena on May 10",
+        "with Lena on May 3"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted; identity=new_member",
+          "identity": {
+            "ref": "2b7fd834-34a5-456c-8b2f-929c24eb314e",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "bb51347b-412d-49e0-8046-889ec8085b6d",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the interview is scheduled for May 10, while the assertion claims it is on May 3, creating a direct date conflict.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I have a second interview with Lena on May 10.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the interview is scheduled for May 3, while the assertion claims it is on May 10, creating a direct temporal conflict regarding the same event.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user has interview with Lena on May 3",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "correct_one_interview",
+      "kind": "correction of one occurrence",
+      "expected_current": [
+        "with Lena on May 11",
+        "with Lena on May 3"
+      ],
+      "current": [
+        "with Lena on May 10",
+        "with Lena on May 11",
+        "with Lena on May 3"
+      ],
+      "missing": [],
+      "extra": [
+        "with Lena on May 10"
+      ],
+      "passed": false,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted; identity=new_member",
+          "identity": {
+            "ref": "91359876-cec9-48c0-8039-390f8202bdbd",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "65fe5542-15a6-47a5-9bf3-c9ba043e6741",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the interview is scheduled for May 10, while the assertion claims it is on May 3, creating a direct date conflict.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I have a second interview with Lena on May 10.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the interview is scheduled for May 3, while the assertion claims it is on May 10, creating a direct temporal conflict regarding the same event.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user has interview with Lena on May 3",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        },
+        {
+          "turn_id": "t2",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.38; demoted; identity=new_member",
+          "identity": {
+            "ref": "5237a5a7-1bfd-4130-a450-960645ac9f69",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "65fe5542-15a6-47a5-9bf3-c9ba043e6741",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text states the interview moved from May 10 to May 11, directly contradicting the assertion that the interview occurred on May 3.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "My May 10 interview with Lena moved to May 11.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source explicitly states the interview is scheduled for May 3, while the assertion claims it is on May 11, creating a direct temporal conflict regarding the same event.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user has interview with Lena on May 3",
+                  "probability": 0.95
+                }
+              },
+              {
+                "event_id": "32930c44-f3f0-4dbe-88ee-666385d76816",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text states the interview moved to May 11, directly contradicting the assertion that the interview occurred on May 10.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "My May 10 interview with Lena moved to May 11.",
+                  "probability": 0.95
+                },
+                "restatement_verdict": {
+                  "label": "contradiction",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text states the interview is scheduled for May 10, while the assertion claims it is on May 11, creating a direct date conflict.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user has interview with Lena on May 10",
+                  "probability": 0.95
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "ambiguous_projects",
+      "kind": "coexisting members (identity unresolved by the source)",
+      "expected_current": [
+        "a project that analyzes customer data to find trends",
+        "a solo project for my Data Mining class"
+      ],
+      "current": [
+        "a project that analyzes customer data to find trends",
+        "a solo project for my Data Mining class"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.44; demoted; identity=new_member",
+          "identity": {
+            "ref": "6ecbb937-198f-42a0-bef9-a64eaec35531",
+            "mode": "member",
+            "route": "new_member",
+            "checks": [
+              {
+                "event_id": "bc18052b-fa37-4ab4-9921-72c0794f35d9",
+                "restates": false,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "neutral",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text confirms the user is working on a project to analyze customer data, but it does not specify that the project is 'solo' or explicitly state it is for a 'Data Mining class'. While these details are plausible, they are not entailed by the provided text.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "I'm working on a project that analyzes customer data to find trends.",
+                  "probability": 0.5
+                },
+                "restatement_verdict": {
+                  "label": "neutral",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text confirms the user is working on 'project a' for a Data Mining class, but it does not specify that this project analyzes customer data or finds trends. The assertion adds specific details about the project's content and purpose that are not present in the source.",
+                  "backend": "ollama",
+                  "accepted": false,
+                  "evidence": "user working on project a solo project for my Data Mining class.",
+                  "probability": 0.5
+                }
+              }
+            ],
+            "unchecked": 0
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "repeated_class",
+      "kind": "restatement (no duplicate)",
+      "expected_current": [
+        "a class on vegan cuisine"
+      ],
+      "current": [
+        "a class on vegan cuisine"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "duplicate",
+          "reason": "restates current value 95f5a8b7-ace8-4f79-b3c5-b650ad4c964b; identity=restatement",
+          "identity": {
+            "route": "restatement",
+            "checks": [
+              {
+                "event_id": "95f5a8b7-ace8-4f79-b3c5-b650ad4c964b",
+                "restates": true,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user 'attended' a class on vegan cuisine, which directly supports the assertion that the user attended such a class.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "The class on vegan cuisine I attended got me inspired.",
+                  "probability": 1.0
+                },
+                "restatement_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user attended a class on vegan cuisine, which directly matches the assertion's subject (user), predicate (attended_class), and object (class on vegan cuisine). The tense and modality align perfectly.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "user attended class a class on vegan cuisine",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "event_id": "95f5a8b7-ace8-4f79-b3c5-b650ad4c964b"
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "vaguer_restatement",
+      "kind": "restatement (keep the specific value)",
+      "expected_current": [
+        "a fermentation workshop at a local food co-op"
+      ],
+      "current": [
+        "a fermentation workshop at a local food co-op"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "duplicate",
+          "reason": "restates current value 431182b4-290b-45cb-9aa3-f77f25bf1ae9; identity=restatement",
+          "identity": {
+            "route": "restatement",
+            "checks": [
+              {
+                "event_id": "431182b4-290b-45cb-9aa3-f77f25bf1ae9",
+                "restates": true,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user 'attended' a 'fermentation workshop', which fully entails the assertion that the user 'attended_workshop' 'a fermentation workshop'. The location 'at home' and the specific detail 'local food co-op' are consistent with or elaborations of the general claim in the assertion, satisfying the requirement for complete subject, relation, and value entailment.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "I made kimchi at home after the fermentation workshop I attended.",
+                  "probability": 1.0
+                },
+                "restatement_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user attended a 'fermentation workshop', which directly entails the assertion that the user attended a 'fermentation workshop'. The specific location ('local food co-op') is additional detail but does not contradict the general claim.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "user attended workshop a fermentation workshop at a local food co-op.",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "event_id": "431182b4-290b-45cb-9aa3-f77f25bf1ae9"
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    },
+    {
+      "id": "exact_repeat",
+      "kind": "exact repeat (no duplicate)",
+      "expected_current": [
+        "sauerkraut and kimchi"
+      ],
+      "current": [
+        "sauerkraut and kimchi"
+      ],
+      "missing": [],
+      "extra": [],
+      "passed": true,
+      "decisions": [
+        {
+          "turn_id": "t0",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=attribute",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "attribute",
+            "checks": []
+          }
+        },
+        {
+          "turn_id": "t1",
+          "outcome": "demoted",
+          "reason": "entailment; score=0.68; demoted; identity=same_value",
+          "identity": {
+            "ref": null,
+            "mode": "attribute",
+            "route": "same_value",
+            "checks": [
+              {
+                "event_id": "0dc160da-74cb-4a8b-a217-9dfc40b65b47",
+                "restates": true,
+                "contradicts": false,
+                "turn_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The speaker explicitly states they learned how to make sauerkraut and kimchi, which directly entails the predicate 'learned_to_make' with the specified objects.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "Like I said, I learned how to make sauerkraut and kimchi.",
+                  "probability": 1.0
+                },
+                "restatement_verdict": {
+                  "label": "entailment",
+                  "model": "qwen3.5:4b-mlx",
+                  "reason": "The source text explicitly states the user learned to make both sauerkraut and kimchi, which directly matches the assertion's subject, predicate, and object.",
+                  "backend": "ollama",
+                  "accepted": true,
+                  "evidence": "user learned to make sauerkraut and kimchi.",
+                  "probability": 1.0
+                }
+              }
+            ],
+            "event_id": "0dc160da-74cb-4a8b-a217-9dfc40b65b47"
+          }
+        }
+      ],
+      "unfinished_jobs": []
+    }
+  ],
+  "verifier_usage": {
+    "requests": 55,
+    "input_tokens": 21811,
+    "output_tokens": 4799,
+    "unmetered_requests": 0,
+    "nli_requests": 3
+  }
+}

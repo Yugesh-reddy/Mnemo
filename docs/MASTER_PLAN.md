@@ -1161,7 +1161,11 @@ is fine.
 
 ## Phase 6 — Deferred (do not start without a concrete need)
 
-- **Pilot B — member/occurrence identity** (`identity_mode`, `identity_ref`): follow
+- [x] **Pilot B storage + routing (flag off)**: migration 0011 and spec §17 shipped;
+  contradiction-gated routing is behind `MNEMO_IDENTITY_ROUTING=off`. v9: Luna 16→19/23
+  retrieved, but identity suite 9/14 (stale values after corrections), so the default stays
+  off ([v9](quality-v9/README.md)). Next: a stronger contradiction judge, under a new frozen protocol.
+- **Pilot B — member/occurrence identity (original note)** (`identity_mode`, `identity_ref`): follow
   `docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md`. Requires its own rule-6 decision and a
   reader/writer co-deploy. Trigger: a user story that genuinely needs two facts under one
   subject/predicate.
