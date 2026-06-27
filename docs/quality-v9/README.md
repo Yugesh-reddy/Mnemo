@@ -41,7 +41,13 @@ isn't visible, so the target was lost at the visible stage. The attribute path
 already re-writes a value from another session instead of treating it as a
 duplicate; the restatement route skipped that check. It is fixed in a separate
 later commit and is **not** re-measured here: the number above is the frozen
-result.
+result. The fix only lets a restatement absorb values visible in its own session.
+A restatement of another session's session-tier value is now written as a new
+member in its session, and the other session's more specific value is left alone
+rather than overwritten. Under that rule, this suite's two cross-session
+restatement cases would show one value per session. The suite counts current
+values across all sessions, so a future protocol should score what each session
+can see.
 
 ### Identity suite
 

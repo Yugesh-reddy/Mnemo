@@ -460,8 +460,11 @@ wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
   the key, whether the new turn contradicts it and whether that value already
   states the candidate; both use the verifier threshold. Exactly one contradiction
   updates that fact (a correction); several write the candidate as an expiring
-  session-tier member marked unresolved; a restatement writes nothing and records
-  a duplicate linked to the existing event; anything else becomes a new member with
+  session-tier member marked unresolved; a restatement of a value visible in the
+  turn's session (durable, or session-tier in the same session) writes nothing and
+  records a duplicate linked to that event, while a restatement of another session's
+  session-tier value is written as a new member in this session, leaving that value
+  untouched; anything else becomes a new member with
   a runtime-generated reference. The model never supplies identity references.
   Each decision records its route and verdicts. The default flips only if the
   frozen v9 measurement passes.

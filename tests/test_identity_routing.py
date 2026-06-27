@@ -42,11 +42,11 @@ class Script:
         return Verdict(accepted=accepted, label=label, probability=1.0, reason="s", backend="t")
 
 
-async def run_turns(conn, embedder, script, turns, settings=ROUTING):
+async def run_turns(conn, embedder, script, turns, settings=ROUTING, *, same_session=False):
     store = MnemoStore(conn, embedder, settings=settings)
     worker = ExtractionWorker(conn, embedder, script, script, settings=settings)
     for i, text in enumerate(turns):
-        await store.observe(f"t{i}", text, f"s{i}")
+        await store.observe(f"t{i}", text, "s" if same_session else f"s{i}")
         assert await worker.process_one()
     return store
 
@@ -132,7 +132,7 @@ async def test_a_vaguer_restatement_keeps_the_specific_value(worker_connections,
         {first: [("attended_workshop", specific)], second: [("attended_workshop", vague)]},
         restates={(vague, specific)},
     )
-    store = await run_turns(conn, fake_embedder, script, [first, second])
+    store = await run_turns(conn, fake_embedder, script, [first, second], same_session=True)
     assert await current(store, "attended_workshop") == [(specific, "attribute")]
     rows = await decisions(conn)
     assert rows[-1]["outcome"] == "duplicate"
@@ -185,3 +185,30 @@ async def test_first_value_under_a_key_is_always_the_attribute(
     settings = Settings(_env_file=None, identity_routing=routing)
     store = await run_turns(conn, fake_embedder, Script(FACTS), [KIMCHI], settings)
     assert await current(store, "learned_to_make") == [("sauerkraut and kimchi", "attribute")]
+
+
+async def test_restating_another_sessions_value_writes_it_in_this_session(
+    worker_connections, fake_embedder
+):
+    """v9 bug: a session-tier value from another session is invisible here and
+    expires with its session, so a restatement must not be dropped as a duplicate."""
+    conn, _ = worker_connections
+    first = "I baked a chocolate cake for my sister's birthday party."
+    second = "Last weekend I baked a chocolate cake for my sister's birthday."
+    specific, restated = "a chocolate cake for my sister's birthday party", "a chocolate cake"
+    script = Script(
+        {first: [("completed_baking", specific)], second: [("completed_baking", restated)]},
+        restates={(restated, specific)},
+    )
+    store = await run_turns(conn, fake_embedder, script, [first, second])
+    facts = [f for f in await store.list_current() if f.predicate == "completed_baking"]
+    assert {(str(f.value), f.tier, f.session_id) for f in facts} == {
+        (specific, "session", "s0"),
+        (restated, "session", "s1"),
+    }
+    row = (await decisions(conn))[-1]
+    assert row["reason"].endswith("identity=new_member")
+    identity = json.loads(row["score_components"])["identity"]
+    assert len(identity["restates_other_session"]) == 1
+    hits = await store.search("chocolate cake", session_id="s1", reinforce=False)
+    assert restated in {str(h.value) for h in hits}

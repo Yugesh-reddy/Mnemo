@@ -398,7 +398,7 @@ class ExtractionWorker:
         return await self.conn.fetch(
             """
             SELECT fact_id, event_id, identity_mode, identity_ref, subject, predicate,
-                   object_text, object_number, object_json
+                   object_text, object_number, object_json, tier, session_id
             FROM memory_current
             WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4
             ORDER BY recorded_at, event_id
@@ -444,7 +444,7 @@ class ExtractionWorker:
         return checks
 
     async def _route(
-        self, store: MnemoStore, cand: ExtractedFact, item: dict[str, Any]
+        self, store: MnemoStore, cand: ExtractedFact, item: dict[str, Any], session_id: str | None
     ) -> dict[str, Any]:
         """Choose the identity for one candidate under the commit lock."""
         fact_key = canonicalize(cand.subject, cand.predicate)
@@ -478,9 +478,19 @@ class ExtractionWorker:
                 "contradicted": [str(h["event_id"]) for h in contradicted],
             }
         restated = [h for h in heads if checks.get(str(h["event_id"]), {}).get("restates")]
-        if restated:
-            return {"route": "restatement", "event_id": restated[0]["event_id"]}
-        return {"route": "new_member", "mode": "member", "ref": uuid4(), "unchecked": unchecked}
+        # Only a value visible in this session can absorb a restatement. Another
+        # session's session-tier value is invisible here and expires with its session;
+        # the restatement is written as its own member and never overwrites it.
+        visible = [h for h in restated if h["tier"] == "durable" or h["session_id"] == session_id]
+        if visible:
+            return {"route": "restatement", "event_id": visible[0]["event_id"]}
+        return {
+            "route": "new_member",
+            "mode": "member",
+            "ref": uuid4(),
+            "unchecked": unchecked,
+            "restates_other_session": [str(h["event_id"]) for h in restated],
+        }
 
     async def _prepare(
         self, text: str, role: str, scope: tuple[str, str, str] | None = None
@@ -592,7 +602,7 @@ class ExtractionWorker:
                 route: dict[str, Any] | None = None
                 if outcome is None:
                     cand, emb = item["fact"], item["embedding"]
-                    route = await self._route(store, cand, item)
+                    route = await self._route(store, cand, item, job["session_id"])
                 if outcome is None and route is not None and route["route"] == "restatement":
                     # An existing value already states this candidate: keep that
                     # value and record the decision instead of writing a vaguer copy.
