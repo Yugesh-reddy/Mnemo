@@ -1,0 +1,772 @@
+{
+  "labels": "v10 durability labels",
+  "status": "primary agent, written before any v10 lasting-tier run; provisional, not human gold",
+  "input_path": "docs/quality-v8/extraction.json",
+  "input_sha256": "3e2451292347764549a85f4f9da9cea2a8a1c8fde75eb2d816c13e106ff3296c",
+  "definition": {
+    "lasting": "Worth remembering beyond this conversation: identity, preferences, skills, habits, projects, completed events and their outcomes, owned equipment, goals, plans and intentions.",
+    "transient": "Useful only inside the current conversation: requests for help, advice or material; momentary reactions and uncertainty; acknowledgments; tentative considerations or diagnoses about the task being discussed."
+  },
+  "use": "Reported, not gated: the approved policy accepts that some transient facts become durable and fade through decay.",
+  "rows": [
+    {
+      "ref": "6d550036/answer_ec904b3c_2:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_programming_languages",
+        "object": "Python and R to build predictive models"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_2:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "needs_help_with",
+        "object": "feature engineering"
+      },
+      "importance": 7,
+      "label": "transient",
+      "reason": "a request for help in this conversation"
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_2:2/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "working_on_project",
+        "object": "a solo project for my Data Mining class"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_2:2/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "interested_in_applying_techniques",
+        "object": "applying Data Mining techniques to customer purchase data"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_2:2/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "trying_to_identify",
+        "object": "patterns and trends in customer purchase data"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_2:2/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "believes_feature_engineering_will_help",
+        "object": "feature engineering will help identify patterns and trends in customer purchase data"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "an opinion about the approach to the current question"
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_1:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "working_on_project",
+        "object": "a project involving analyzing customer data to identify trends and patterns"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_1:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_using",
+        "object": "clustering analysis for the project"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "a tentative consideration for the task under discussion"
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_1:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_experience_with",
+        "object": "data analysis from a Marketing Research class project"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_1:0/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "led",
+        "object": "the data analysis team in the Marketing Research class project"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_1:0/candidate4",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed",
+        "object": "a comprehensive market analysis for a new product launch as part of the Marketing Research class project"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_3:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "presented_research_poster",
+        "object": "research on the effects of social media influencers on consumer purchasing decisions at an academic conference on consumer psychology recently"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_3:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "plans_to_expand_research",
+        "object": "research on the effects of social media influencers on consumer purchasing decisions"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "6d550036/answer_ec904b3c_3:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "seeks_research",
+        "object": "consumer behavior and social media"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "a request for material in this conversation"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_baking_attempt",
+        "object": "tried a new bread recipe using sourdough starter on Tuesday; the result did not turn out as expected"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "needs_advice",
+        "object": "improving sourdough starter"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "a request for advice in this conversation"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "wants_sourdough_starter_improvement",
+        "object": "make sourdough starter more active and produce better results"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "the goal of the current request for tips"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "created",
+        "object": "sourdough starter about a month ago"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "feeds",
+        "object": "sourdough starter once a day with all-purpose flour and water"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_ratio",
+        "object": "1:1:1 (flour:water:starter) for sourdough starter feeding"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "used",
+        "object": "sourdough starter in a recipe on Tuesday"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate4",
+      "assertion": {
+        "subject": "user",
+        "predicate": "produced",
+        "object": "dense and heavy bread from the recipe on Tuesday"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate5",
+      "assertion": {
+        "subject": "user",
+        "predicate": "felt_disappointed",
+        "object": "about the dense and heavy bread result"
+      },
+      "importance": 3,
+      "label": "transient",
+      "reason": "a momentary reaction"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate6",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uncertain_about_cause",
+        "object": "whether the dense and heavy bread was caused by the sourdough starter or the recipe"
+      },
+      "importance": 4,
+      "label": "transient",
+      "reason": "momentary uncertainty during this conversation"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:2/candidate7",
+      "assertion": {
+        "subject": "user",
+        "predicate": "open_to_suggestions",
+        "object": "suggestions about the sourdough starter or recipe"
+      },
+      "importance": 4,
+      "label": "transient",
+      "reason": "a conversational acknowledgment"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_overmixing",
+        "object": "the dough"
+      },
+      "importance": 5,
+      "label": "transient",
+      "reason": "a tentative diagnosis during troubleshooting"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_fermentation_time_short",
+        "object": "the dough's fermentation time was a bit short"
+      },
+      "importance": 5,
+      "label": "transient",
+      "reason": "a tentative diagnosis during troubleshooting"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_baking_adjustments",
+        "object": "to mix more gently and give the dough more time to ferment next time"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "experimenting_with",
+        "object": "different types of flour lately"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate4",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_baking",
+        "object": "a chocolate cake for the user's sister's birthday party using a new recipe found online recently"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate5",
+      "assertion": {
+        "subject": "user",
+        "predicate": "assessed_baking_result",
+        "object": "the recently baked chocolate cake turned out amazing"
+      },
+      "importance": 4,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_3:10/candidate6",
+      "assertion": {
+        "subject": "user",
+        "predicate": "reported_positive_reception",
+        "object": "everyone loved the recently baked chocolate cake"
+      },
+      "importance": 4,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "hosting",
+        "object": "a dinner party next weekend"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_baking",
+        "object": "a chocolate cake for my sister's birthday party last weekend"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "found_ingredient_enhanced_flavor",
+        "object": "espresso powder enhanced the flavor of the chocolate cake"
+      },
+      "importance": 4,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:4/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "preferred_food",
+        "object": "strawberries"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:4/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_been_eating",
+        "object": "a lot of sweet treats lately, including leftover birthday cake"
+      },
+      "importance": 4,
+      "label": "transient",
+      "reason": "a recent eating pattern tied to leftover cake"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:6/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_making",
+        "object": "a homemade crust"
+      },
+      "importance": 5,
+      "label": "transient",
+      "reason": "a tentative consideration for the task under discussion"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:6/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "experimenting_with",
+        "object": "different types of flour lately"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:6/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "used_ingredient_to_make",
+        "object": "whole wheat flour to make a delicious whole wheat baguette last Saturday"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:8/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_using",
+        "object": "all-purpose flour for the tart crust"
+      },
+      "importance": 6,
+      "label": "transient",
+      "reason": "a tentative choice for the task under discussion"
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_1:8/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "uses_appliance",
+        "object": "new stand mixer since acquiring it a few weeks ago"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_2:2/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_to_try",
+        "object": "the dry brine method and baking powder trick"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_2:2/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "experimenting_with",
+        "object": "different types of flour for baking"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_2:2/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "used_oven_setting",
+        "object": "oven's convection setting for the first time last Thursday to bake a batch of cookies"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_2:2/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "evaluated_baking_result",
+        "object": "the batch of cookies baked with the oven's convection setting turned out amazing"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_4:4/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "has_good_results_with",
+        "object": "the convection setting on my oven"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_4:4/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "used_appliance_setting_for",
+        "object": "the convection setting on my oven to bake a batch of cookies last Thursday"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "88432d0a/answer_733e443a_4:4/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "baked_cookies_with_result",
+        "object": "a batch of cookies that turned out perfectly crispy on the outside and chewy on the inside"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_4:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "frequently_eats",
+        "object": "rice and roasted veggies lately"
+      },
+      "importance": 4,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_4:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "enjoyed_dining_at",
+        "object": "a new Ethiopian restaurant in town last week"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_2:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_event",
+        "object": "dinner party for this weekend"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_2:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "considered_serving",
+        "object": "an Indian-inspired dish at the dinner party"
+      },
+      "importance": 5,
+      "label": "transient",
+      "reason": "a tentative menu consideration"
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_2:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learned_skill",
+        "object": "how to make chicken tikka masala in a class on Indian cuisine"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_2:0/candidate3",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_menu_item",
+        "object": "chicken tikka masala for the dinner party"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "trying_to_eat",
+        "object": "more plant-based food lately"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "attended_class",
+        "object": "a class on vegan cuisine recently"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:6/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "intends_to_try",
+        "object": "tempeh"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:6/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "attended_workshop",
+        "object": "a fermentation workshop at a local food co-op recently"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:6/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learned_to_make",
+        "object": "sauerkraut and kimchi"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:8/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_dietary_change",
+        "object": "incorporate more fermented foods into diet"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:8/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "attended_class",
+        "object": "class on vegan cuisine recently"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_1:8/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "learned_to_make",
+        "object": "vegan lasagna with a cashew-based ricotta cheese substitute"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:0/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "trying_to_cook_more_at_home",
+        "object": "cook more at home"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:0/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "wants_to_use_all_purchased_ingredients",
+        "object": "use up all ingredients purchased"
+      },
+      "importance": 7,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:0/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_cooking",
+        "object": "Korean bibimbap recipe from the cooking class's online recipe library; found it amazing"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:6/candidate0",
+      "assertion": {
+        "subject": "user",
+        "predicate": "completed_activity",
+        "object": "made kimchi before, based on a fermentation workshop the user attended"
+      },
+      "importance": 6,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:6/candidate1",
+      "assertion": {
+        "subject": "user",
+        "predicate": "attended_workshop",
+        "object": "a fermentation workshop"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    },
+    {
+      "ref": "d23cf73b/answer_5a0d28f8_3:6/candidate2",
+      "assertion": {
+        "subject": "user",
+        "predicate": "planned_to_try",
+        "object": "adding ingredients such as seafood or garlic scapes to kimchi to create different flavor profiles"
+      },
+      "importance": 5,
+      "label": "lasting",
+      "reason": ""
+    }
+  ]
+}
