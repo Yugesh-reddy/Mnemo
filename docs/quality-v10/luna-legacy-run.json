@@ -1,0 +1,18 @@
+{
+  "phase": "luna-legacy",
+  "command": [
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "docs/quality-v8/extraction.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "docs/quality-v10/luna-legacy.json"
+  ],
+  "started_at_utc": "2026-09-23T06:53:05.023270+00:00",
+  "manifest_sha256": "8d5f69d55965e9058d10643b0007f2b21c46099ae014bb01ed83fb3fc4631c12",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 746.5170157079992,
+  "finished_at_utc": "2026-09-23T07:05:31.542473+00:00"
+}

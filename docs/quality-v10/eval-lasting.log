@@ -1,0 +1,7 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 10836.15it/s]
+PRECISION / RECALL WRITE-QUALITY EVAL (mnemo-synthetic-smoke; synthetic)
+  NAIVE : visible  15 | P  60.0% | R  90.0% | F1  72.0% | must-keep  90.0% | false now/history 2/5 | events 18 | 140.4 ms
+  GATED : visible  12 | P  83.3% | R 100.0% | F1  90.9% | must-keep 100.0% | false now/history 0/0 | events 12 | 43470.6 ms

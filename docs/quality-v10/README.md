@@ -1,8 +1,54 @@
 # v10: lasting tiering (durable by default, decay decides)
 
-**Status: protocol frozen; not yet run.** Results replace this line after the run.
+**Decision: failure; legacy tiering stays the default.** Every durability, safety and
+retrieval check passed. Luna's 20 written must-keep targets and qwen's 16 were
+all **durable** (legacy: none), with zero unsupported or forbidden writes and no
+retrieval regression. The one failure is `make eval`: the junk turn "2 + 2 is 4
+right?" (importance 1, labeled not to keep) became a session memory, so gated
+precision fell from 90.9% to 83.3% (recall and must-keep stayed at 100%, false
+writes at 0). The cause is the chosen weights, not the approved policy: identity
+novelty is always 1.0, so every fact starts at 0.4 and importance 1 scores 0.46,
+above the 0.45 noise floor. **Nothing is ever dropped as noise under these
+settings**, which contradicts the approved "ephemeral noise is still dropped".
 
-## Why
+The protocol was committed in `d3693d0` before any run. All phases were local.
+
+## Result
+
+| Measurement | Luna legacy | **Luna lasting** | qwen lasting |
+| --- | ---: | ---: | ---: |
+| Written complete targets that are durable | 0 / 18 | **20 / 20** | **16 / 16** |
+| Retrieved complete targets | 14/23 | 16/23 | 16/23 |
+| Gated writes: durable / session | 0 / 51 | 52 / 7 | 46 / 4 |
+| Gated writes: supported / unsupported / ambiguous | 47 / 0 / 4 | 55 / 0 / 4 | 49 / 0 / 1 |
+| Strict forbidden-label writes | 0 | 0 | 0 |
+| `make eval` gated | 90.9% P / 100% R | **83.3% P** / 100% R | – |
+
+Luna's legacy arm is an infrastructure outlier: it took 746 s instead of about
+300 s, and the fallback verifier rejected 18 candidates instead of the usual 9–10,
+including two must-keep targets. Slow checks fail closed. No check compares
+against that arm; v8 and v9 measured the same legacy policy at 16/23.
+Retrieval under lasting equals v8's 16/23, because routing stays off and the
+four identity overwrites remain (see v9).
+
+**Labels (reported, not gated).** Of Luna's 69 candidates under lasting tiering:
+43 of 54 lasting-labeled facts are durable (8 were rejected by the gate, 3 went to
+session at importance 3–4). 9 of 15 transient-labeled facts are durable ("needs
+help with feature engineering", "open to suggestions", "felt disappointed", …) and
+would fade through decay if never recalled. 4 went to session and 2 were rejected.
+Importance doesn't separate them, as the protocol expected.
+
+**What failed and what it implies.** The approved rule has three bands: noise
+(dropped), low importance (session) and importance ≥ 5 (durable). These settings
+implemented only the top two. Keeping the noise band means raising the ephemeral
+floor above the importance-2 score (0.52), for example to 0.55. That would drop
+importance 1–2, keep 3–4 in session and leave 5+ durable. Per the protocol, no
+weight change follows from v10; that correction would need its own frozen
+protocol. See [the decision](decision.json).
+
+## Protocol (frozen before the run)
+
+### Why
 
 In v8 and v9, every extracted fact landed in the session tier, which expires after
 about 24 hours. Luna's best write scored 0.64 against the 0.70 durable cutoff. It's
@@ -24,7 +70,7 @@ importance ≥ 5 is durable, and forgetting is left to decay. An unused durable 
 is archived (reversibly) after roughly 9–23 days depending on importance, and each
 recall strengthens it.
 
-## The change (settings only; defaults unchanged until this passes)
+### The change (settings only; defaults unchanged until this passes)
 
 | Setting | Legacy | Lasting |
 | --- | --- | --- |
@@ -37,7 +83,7 @@ Under lasting, a non-transient fact of importance ≥ 5 scores at least 0.70
 (durable), and importance 1–4 is session. A transient-marked fact needs
 importance ≥ 8 to be durable. The legacy gate fingerprint equals v8's.
 
-## Phases (all local; no paid calls)
+### Phases (all local; no paid calls)
 
 `luna-legacy` and `luna-lasting` replay the frozen v8 Luna candidates;
 `qwen-lasting` replays the frozen v5 qwen candidates; `eval` runs `make eval`
@@ -50,7 +96,7 @@ labels are **reported, not gated**. The approved policy accepts that some
 transient facts become durable and then fade through decay; the labels measure
 how many.
 
-## Decision rule
+### Decision rule
 
 Success requires all of:
 

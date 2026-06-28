@@ -1177,6 +1177,10 @@ is fine.
 - **Grouped undo / archive-as-undo**: needs all affected expected revisions in one transaction.
 - **Consolidation (Layer 4)**: stays off; `mem_provenance` has no `agent_reflection` member —
   adding it is a schema decision that must come with source lineage + NLI gating + trust cap.
+- [x] **Durability (v10)**: the lasting policy made all written must-keep targets durable
+  but dropped the noise band (importance-1 junk kept), so `make eval` precision fell and the
+  frozen rule failed ([v10](quality-v10/README.md)). Legacy tiering stays; a floor
+  correction needs a new protocol.
 - [x] **Extraction quality (v8, one bounded run)**: Azure `gpt-5.6-luna` as the only
   change raised complete extraction from 16/23 to 20/23 with zero unsupported writes,
   but storage identity overwrote four facts and retrieved coverage tied at 16/23; the frozen
