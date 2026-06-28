@@ -623,7 +623,7 @@ class ExtractionWorker:
                     # Similarity cannot remove its novelty or erase the correction.
                     novelty = (
                         1.0
-                        if existing_id
+                        if existing_id or self.settings.novelty_mode == "identity"
                         else max(
                             0.0, min(1.0, 1.0 - await store._max_cosine(to_vector_literal(emb)))
                         )
@@ -633,7 +633,7 @@ class ExtractionWorker:
                         spec=specificity(cand.predicate, self.settings.predicate_vocab),
                         novelty=novelty,
                         from_assistant=False,
-                        transient=is_transient(text),
+                        transient=is_transient(text, self.settings.transient_markers),
                     )
                     score = write_score(**components, settings=self.settings)
                     components["score"] = score

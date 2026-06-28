@@ -116,6 +116,21 @@ class Settings(BaseSettings):
     transient_penalty: float = 0.15
     """Penalty when the source turn is explicitly transient ('today', 'right now')."""
 
+    transient_markers: list[str] = [
+        "today",
+        "right now",
+        "just",
+        "currently",
+        "at the moment",
+        "this morning",
+        "waiting for",
+    ]
+    """Whole-word, case-insensitive markers that flag a source turn as transient."""
+
+    novelty_mode: Literal["cosine", "identity"] = "cosine"
+    """cosine: 1 - max similarity to current facts. identity: 1.0, because exact
+    repeats and (with routing) restatements are resolved by fact identity instead."""
+
     durable_cutoff: float = Field(0.70, ge=0.0, le=1.0)
     """write_score >= this => durable; below => demote to session."""
 

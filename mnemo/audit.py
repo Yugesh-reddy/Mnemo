@@ -47,6 +47,11 @@ def gate_snapshot(settings: Settings) -> dict[str, Any]:
     if settings.identity_routing != "off":
         values["identity_routing"] = settings.identity_routing
         values["single_value_predicates"] = settings.single_value_predicates
+    if settings.novelty_mode != "cosine":
+        values["novelty_mode"] = settings.novelty_mode
+    default_markers = type(settings).model_fields["transient_markers"].default
+    if settings.transient_markers != default_markers:
+        values["transient_markers"] = settings.transient_markers
     values["pipeline_version"] = "2026-09-13-v6.2"
     values["fingerprint"] = hashlib.sha256(json.dumps(values, sort_keys=True).encode()).hexdigest()
     return values

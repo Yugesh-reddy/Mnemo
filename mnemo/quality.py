@@ -587,8 +587,13 @@ def specificity(predicate: str, vocab: Sequence[str]) -> float:
     return 1.0 if predicate in vocab else 0.2
 
 
-def is_transient(source_text: str) -> bool:
-    return bool(TRANSIENT.search(source_text))
+def is_transient(source_text: str, markers: Sequence[str] | None = None) -> bool:
+    if markers is None:
+        return bool(TRANSIENT.search(source_text))
+    if not markers:
+        return False
+    pattern = r"\b(" + "|".join(re.escape(m) for m in markers) + r")\b"
+    return re.search(pattern, source_text, re.I) is not None
 
 
 def write_score(
