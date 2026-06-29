@@ -1,0 +1,13 @@
+{
+  "phase": "eval-legacy",
+  "command": [
+    "-m",
+    "mnemo.eval"
+  ],
+  "started_at_utc": "2026-09-25T02:13:14.270916+00:00",
+  "manifest_sha256": "0e945dead33ad31e7e8f695bfa26ce2a2378a15bfff36cbc0cf0784fb8b1e77c",
+  "complete": true,
+  "exit_code": 1,
+  "elapsed_seconds": 4.0906200419995,
+  "finished_at_utc": "2026-09-25T02:13:18.361927+00:00"
+}

@@ -1,0 +1,18 @@
+{
+  "phase": "qwen-lasting",
+  "command": [
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "docs/quality-v5/extraction-partial-dev.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "docs/quality-v11/qwen-lasting.json"
+  ],
+  "started_at_utc": "2026-09-25T02:19:30.151294+00:00",
+  "manifest_sha256": "0e945dead33ad31e7e8f695bfa26ce2a2378a15bfff36cbc0cf0784fb8b1e77c",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 249.72615387500264,
+  "finished_at_utc": "2026-09-25T02:23:39.879246+00:00"
+}

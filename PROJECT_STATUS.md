@@ -150,7 +150,14 @@ verifier rated real corrections and coexisting interviews as contradictions at t
 same 0.95, so three corrections left stale values. The frozen rule failed and the
 default stays off. Grouped undo and consolidation remain deferred.
 
-**Durability (v10) failed on one check; legacy tiering stays the default.** Under
+**Durability fixed in v11.** With the noise floor raised to 0.55, the lasting
+policy passed every check ([v11](docs/quality-v11/README.md)): every written must-keep
+target is durable (Luna 20/20, qwen 16/16), unsupported and forbidden writes are
+zero, retrieval holds at 16/23, and `make eval` is unchanged. Extracted facts of
+importance 5 or more now persist and fade through decay; 1–2 are dropped as noise,
+3–4 stay in session.
+
+**Durability (v10) failed on one check; legacy tiering stayed the default then.** Under
 legacy scoring no extracted fact can become durable, so everything expires with
 its session. The approved "lasting" policy made every written must-keep target
 durable (Luna 20/20, qwen 16/16) with zero unsupported or forbidden writes and

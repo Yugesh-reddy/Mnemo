@@ -1,0 +1,13 @@
+{
+  "phase": "eval-lasting",
+  "command": [
+    "-m",
+    "mnemo.eval"
+  ],
+  "started_at_utc": "2026-09-25T02:24:18.194460+00:00",
+  "manifest_sha256": "0e945dead33ad31e7e8f695bfa26ce2a2378a15bfff36cbc0cf0784fb8b1e77c",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 33.29521466699953,
+  "finished_at_utc": "2026-09-25T02:24:51.490303+00:00"
+}

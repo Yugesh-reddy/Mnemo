@@ -1,6 +1,39 @@
 # v11: lasting tiering with the noise band restored
 
-**Status: protocol frozen; not yet run.** Results replace this line after the run.
+**Decision: success; the lasting settings become the defaults.** Every check passed:
+all written must-keep targets are durable (Luna 20/20, qwen 16/16; under legacy
+tiering, none), with zero unsupported or forbidden writes, retrieval at 16/23 for
+both, `make eval` byte-identical to legacy (90.9% / 100%, zero false writes), and
+no candidate below importance 3 written. The protocol was committed in `463f6fb`
+before any run. All phases were local.
+
+| Measurement | Luna lasting | qwen lasting |
+| --- | ---: | ---: |
+| Written complete must-keep targets that are durable | **20 / 20** | **16 / 16** |
+| Gated writes: durable / session | 52 / 8 | 46 / 4 |
+| Gated writes: supported / unsupported / ambiguous | 56 / 0 / 4 | 49 / 0 / 1 |
+| Retrieved complete targets | 16/23 | 16/23 |
+| `make eval` gated (legacy → lasting) | 90.9% P / 100% R → **same** | – |
+
+**Reported, not gated.** Of Luna's candidates, 43 of 54 lasting-labeled facts are
+durable (7 rejected by the gate, 4 in session). 9 of 15 transient-labeled facts
+are also durable ("needs help with feature engineering", "open to suggestions",
+…), and would be archived by decay after roughly 11–15 days if never recalled.
+4 went to session and 2 were rejected. That is the trade-off the owner accepted.
+Retrieval stays at 16/23 because identity routing is off and the four overwrites
+from v8 remain; routing is v12's question. The four ambiguous Luna writes are now
+durable too; they were already stored in every earlier arm.
+
+**Aborted first attempt.** The first run failed within seconds because Docker
+(Postgres) and Ollama were down. Nothing was measured, and it is preserved in
+[aborted-attempt-1](aborted-attempt-1/NOTE.md). The services were restarted and
+the unchanged protocol was run again.
+
+**Limits.** This is the second protocol on the same 20 development turns, so it
+shows the approved three-band rule works here, not that it generalizes. Decay was
+not exercised. See [the decision](decision.json).
+
+## Protocol (frozen before the run)
 
 [v10](../quality-v10/README.md) made every written must-keep target durable but
 failed one check: its weights gave every fact a base score of 0.4, so the

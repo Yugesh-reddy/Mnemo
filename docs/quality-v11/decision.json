@@ -1,0 +1,138 @@
+{
+  "decided_at_utc": "2026-09-25T02:24:55.994922+00:00",
+  "rule": {
+    "v8_retrieved": 16,
+    "qwen_control_retrieved": 16,
+    "success_requires_all": [
+      "Luna and qwen: every historically written complete must-keep target has a durable write",
+      "zero unsupported gated historical writes (Luna and qwen)",
+      "zero strict forbidden-label writes in every arm",
+      "Luna and qwen retrieved complete targets >= 16/23",
+      "make eval gated result identical under legacy and lasting",
+      "no candidate with importance below 3 is written in either replay"
+    ],
+    "on_success": "Make the lasting settings (with floor 0.55) the defaults in a separate commit; update spec section 13 and the scoring tests.",
+    "on_failure": "Keep legacy defaults; record why; no further weight change follows from this protocol."
+  },
+  "checks": {
+    "luna_every_written_target_durable": true,
+    "qwen_every_written_target_durable": true,
+    "luna_lasting_zero_unsupported_writes": true,
+    "qwen_lasting_zero_unsupported_writes": true,
+    "strict_false_writes_zero": true,
+    "luna_retrieved_not_below_v8": true,
+    "qwen_retrieved_not_below_control": true,
+    "make_eval_unchanged": true,
+    "noise_band_kept_no_importance_below_3_written": true
+  },
+  "outcome": "success",
+  "target_durability": {
+    "luna-lasting": {
+      "durable": [
+        "6d550036/('user|current_course_project', 'solo data mining project')",
+        "6d550036/('user|led_project', 'marketing research data analysis team')",
+        "6d550036/('user|presented_research', 'poster at an academic conference on consumer psychology')",
+        "6d550036/('user|research_topic', 'social media influencers and consumer purchasing decisions')",
+        "6d550036/('user|uses_programming_languages', 'python and r')",
+        "88432d0a/('user|baked_for_sister_birthday', 'chocolate cake')",
+        "88432d0a/('user|baked_last_saturday', 'whole wheat baguette')",
+        "88432d0a/('user|baked_last_thursday', 'cookies')",
+        "88432d0a/('user|baked_tuesday', 'sourdough bread')",
+        "88432d0a/('user|first_convection_use', 'cookies last thursday')",
+        "88432d0a/('user|starter_feeding_frequency', 'once a day')",
+        "d23cf73b/('user|attended_fermentation_workshop', 'local food co-op fermentation workshop')",
+        "d23cf73b/('user|attended_indian_class', 'indian cuisine class')",
+        "d23cf73b/('user|attended_vegan_class', 'vegan cuisine class')",
+        "d23cf73b/('user|cooked_korean_dish', 'bibimbap from cooking class online recipe library')",
+        "d23cf73b/('user|diet_goal', 'eat more plant-based food')",
+        "d23cf73b/('user|learned_fermented_foods', 'sauerkraut and kimchi')",
+        "d23cf73b/('user|learned_indian_dish', 'chicken tikka masala')",
+        "d23cf73b/('user|learned_vegan_dish', 'vegan lasagna with cashew ricotta')",
+        "d23cf73b/('user|tried_restaurant', 'ethiopian restaurant last week')"
+      ],
+      "not_durable": []
+    },
+    "qwen-lasting": {
+      "durable": [
+        "6d550036/('user|current_course_project', 'solo data mining project')",
+        "6d550036/('user|presented_research', 'poster at an academic conference on consumer psychology')",
+        "6d550036/('user|research_topic', 'social media influencers and consumer purchasing decisions')",
+        "6d550036/('user|uses_programming_languages', 'python and r')",
+        "88432d0a/('user|baked_for_sister_birthday', 'chocolate cake')",
+        "88432d0a/('user|baked_last_saturday', 'whole wheat baguette')",
+        "88432d0a/('user|baked_last_thursday', 'cookies')",
+        "88432d0a/('user|baked_tuesday', 'sourdough bread')",
+        "88432d0a/('user|starter_feeding_frequency', 'once a day')",
+        "d23cf73b/('user|attended_fermentation_workshop', 'local food co-op fermentation workshop')",
+        "d23cf73b/('user|attended_indian_class', 'indian cuisine class')",
+        "d23cf73b/('user|attended_vegan_class', 'vegan cuisine class')",
+        "d23cf73b/('user|cooked_korean_dish', 'bibimbap from cooking class online recipe library')",
+        "d23cf73b/('user|learned_fermented_foods', 'sauerkraut and kimchi')",
+        "d23cf73b/('user|learned_indian_dish', 'chicken tikka masala')",
+        "d23cf73b/('user|learned_vegan_dish', 'vegan lasagna with cashew ricotta')"
+      ],
+      "not_durable": []
+    }
+  },
+  "retrieved": {
+    "luna-lasting": 16,
+    "qwen-lasting": 16
+  },
+  "write_review": {
+    "luna-lasting": {
+      "total": 60,
+      "supported": 56,
+      "unsupported": 0,
+      "ambiguous": 4,
+      "supported_precision": 0.9333333333333333
+    },
+    "qwen-lasting": {
+      "total": 50,
+      "supported": 49,
+      "unsupported": 0,
+      "ambiguous": 1,
+      "supported_precision": 0.98
+    }
+  },
+  "strict_false_writes": {
+    "luna-lasting": 0,
+    "qwen-lasting": 0
+  },
+  "tier_counts": {
+    "luna-lasting": {
+      "durable": 52,
+      "session": 8
+    },
+    "qwen-lasting": {
+      "durable": 46,
+      "session": 4
+    }
+  },
+  "reported_not_gated": {
+    "luna_label_vs_tier": {
+      "luna-lasting": {
+        "lasting->durable": 43,
+        "transient->durable": 9,
+        "transient->None": 2,
+        "lasting->None": 7,
+        "transient->session": 4,
+        "lasting->session": 4
+      }
+    },
+    "transient_labeled_durable_with_lasting": [
+      "6d550036/answer_ec904b3c_2:0/candidate1",
+      "6d550036/answer_ec904b3c_1:0/candidate1",
+      "6d550036/answer_ec904b3c_3:0/candidate2",
+      "88432d0a/answer_733e443a_3:0/candidate1",
+      "88432d0a/answer_733e443a_3:0/candidate2",
+      "88432d0a/answer_733e443a_3:10/candidate0",
+      "88432d0a/answer_733e443a_3:10/candidate1",
+      "88432d0a/answer_733e443a_1:6/candidate0",
+      "d23cf73b/answer_5a0d28f8_2:0/candidate1"
+    ]
+  },
+  "make_eval_gated": {
+    "legacy": "GATED : visible  11 | P  90.9% | R 100.0% | F1  95.2% | must-keep 100.0% | false now/history 0/0 | events 11",
+    "lasting": "GATED : visible  11 | P  90.9% | R 100.0% | F1  95.2% | must-keep 100.0% | false now/history 0/0 | events 11"
+  }
+}

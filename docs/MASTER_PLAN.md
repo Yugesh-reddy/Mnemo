@@ -1177,6 +1177,9 @@ is fine.
 - **Grouped undo / archive-as-undo**: needs all affected expected revisions in one transaction.
 - **Consolidation (Layer 4)**: stays off; `mem_provenance` has no `agent_reflection` member —
   adding it is a schema decision that must come with source lineage + NLI gating + trust cap.
+- [x] **Durability (v11)**: lasting tiering with a 0.55 noise floor passed every check
+  (must-keep targets durable, `make eval` unchanged); it becomes the default
+  ([v11](quality-v11/README.md)).
 - [x] **Durability (v10)**: the lasting policy made all written must-keep targets durable
   but dropped the noise band (importance-1 junk kept), so `make eval` precision fell and the
   frozen rule failed ([v10](quality-v10/README.md)). Legacy tiering stays; a floor
