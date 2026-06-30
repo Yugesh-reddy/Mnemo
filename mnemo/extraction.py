@@ -327,10 +327,14 @@ class ExtractionWorker:
         user_id: str = "default",
         agent_id: str = "default",
         actor: str = "extractor",
+        identity_judge: Any | None = None,
     ) -> None:
         self.conn, self.embedder, self.extractor = conn, embedder, extractor
         self.settings = settings or get_settings()
         self.verifier = verifier or build_verifier(self.settings)
+        # Routing's contradiction/restatement checks may use a different model than
+        # the write gate; by default both use the configured verifier.
+        self.identity_judge = identity_judge or self.verifier
         self.actor = actor
         # Lease renewal and identity reads share this connection while model calls
         # run; asyncpg allows one operation at a time per connection.
@@ -428,8 +432,8 @@ class ExtractionWorker:
                 subject=head["subject"], predicate=head["predicate"], object=value
             )
             premise = f"{head['subject']} {head['predicate'].replace('_', ' ')} {value}."
-            against_turn = await asyncio.to_thread(self.verifier.verify, stored, text)
-            restated = await asyncio.to_thread(self.verifier.verify, cand, premise)
+            against_turn = await asyncio.to_thread(self.identity_judge.verify, stored, text)
+            restated = await asyncio.to_thread(self.identity_judge.verify, cand, premise)
             threshold = self.settings.verifier_entailment_threshold
             checks.append(
                 {

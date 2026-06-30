@@ -168,6 +168,7 @@ async def run_gated(
     namespace: str = "eval-gated",
     settings: Settings | None = None,
     turn_errors: list[dict[str, Any]] | None = None,
+    identity_judge: Any | None = None,
 ) -> set[tuple[str, str]]:
     """Run turns through observe → worker → quality gate."""
     selected = dataset or _SMOKE
@@ -175,7 +176,13 @@ async def run_gated(
     observed = _ObservedExtractor(source)
     store = MnemoStore(conn, embedder, namespace=namespace, settings=settings)
     worker = ExtractionWorker(
-        conn, embedder, observed, verifier, namespace=namespace, settings=settings
+        conn,
+        embedder,
+        observed,
+        verifier,
+        namespace=namespace,
+        settings=settings,
+        identity_judge=identity_judge,
     )
     for turn in selected.turns:
         await store.observe(turn.turn_id, turn.text, turn.session_id, role=turn.role)
@@ -577,6 +584,7 @@ async def evaluate(
     prices: dict[str, Any] | None = None,
     probe_retrieval: bool = False,
     probe_all_must_keep: bool = False,
+    identity_judge: Any | None = None,
 ) -> dict[str, Any]:
     """Run isolated comparison arms; never truncate or reuse application tables."""
     if mode not in {"candidate_replay", "pipeline"}:
@@ -627,6 +635,7 @@ async def evaluate(
             verifier=verifier,
             settings=settings,
             turn_errors=gated_errors,
+            identity_judge=identity_judge,
         )
         gated_elapsed = time.perf_counter() - started
         after_gated = usage_snapshot(original_extractor, selected_embedder, verifier)

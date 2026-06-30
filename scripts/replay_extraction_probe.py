@@ -24,6 +24,25 @@ from mnemo.models import ExtractedFact
 from mnemo.quality import Verdict, build_verifier
 
 
+def build_identity_judge(kind: str, settings: Any) -> Any | None:
+    """None keeps routing on the configured verifier; azure is experiment-only (v12)."""
+    if kind == "verifier":
+        return None
+    import sys
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts.azure_judge import AzureJudge
+
+    if not (settings.azure_endpoint and settings.azure_deployment and settings.azure_api_key):
+        raise SystemExit("the azure identity judge needs MNEMO_AZURE_* settings")
+    return AzureJudge(
+        endpoint=settings.azure_endpoint,
+        deployment=settings.azure_deployment,
+        api_key=settings.azure_api_key.get_secret_value(),
+        threshold=settings.verifier_entailment_threshold,
+    )
+
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -156,6 +175,9 @@ async def run(args: argparse.Namespace) -> None:
     else:
         verifier = build_verifier(settings)
     embedder = build_embedder(settings)
+    judge = build_identity_judge(args.identity_judge, settings)
+    if judge is not None:
+        report["identity_judge"] = {"backend": "azure", "model": judge.model}
     fallback = getattr(verifier, "fallback", verifier)
     request = getattr(fallback, "_request", None)
     if request is not None:
@@ -179,13 +201,19 @@ async def run(args: argparse.Namespace) -> None:
                 settings=settings,
                 probe_retrieval=True,
                 probe_all_must_keep=True,
+                identity_judge=judge,
             )
             save()
             print(
                 identity, report["cases"][identity]["gated"]["total_events"], "writes", flush=True
             )
     finally:
-        for component in (embedder, verifier):
+        if judge is not None:
+            report["identity_judge"].update(
+                usage=judge.usage, exchanges=judge.exchanges, stopped=judge.fatal_error
+            )
+            save()
+        for component in (embedder, verifier, judge):
             if hasattr(component, "close"):
                 component.close()
     if policy_fingerprint(settings) != policy or any(
@@ -204,6 +232,12 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--verdicts-from", type=Path)
+    parser.add_argument(
+        "--identity-judge",
+        choices=("verifier", "azure"),
+        default="verifier",
+        help="judge for routing's checks; azure uses the experiment-only v12 adapter",
+    )
     asyncio.run(run(parser.parse_args()))
 
 

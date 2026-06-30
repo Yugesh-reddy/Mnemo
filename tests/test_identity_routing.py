@@ -237,3 +237,24 @@ async def test_restating_a_durable_value_from_another_session_is_a_duplicate(
     facts = [f for f in await store.list_current() if f.predicate == "completed_baking"]
     assert [(str(f.value), f.tier) for f in facts] == [(specific, "durable")]
     assert (await decisions(conn))[-1]["reason"].endswith("identity=restatement")
+
+
+async def test_routing_uses_the_identity_judge_while_the_gate_keeps_its_verifier(
+    worker_connections, fake_embedder
+):
+    conn, _ = worker_connections
+    gate, judge = Script(FACTS), Script(FACTS)
+    store = MnemoStore(conn, fake_embedder, settings=ROUTING)
+    worker = ExtractionWorker(
+        conn, fake_embedder, gate, gate, settings=ROUTING, identity_judge=judge
+    )
+    for i, text in enumerate((KIMCHI, LASAGNA)):
+        await store.observe(f"t{i}", text, f"s{i}")
+        assert await worker.process_one()
+    # The gate checked both candidates; only the judge saw the routing checks.
+    assert [source for _, source in gate.calls] == [KIMCHI, LASAGNA]
+    assert len(judge.calls) == 2
+    assert {source for _, source in judge.calls} == {
+        LASAGNA,
+        "user learned to make sauerkraut and kimchi.",
+    }
