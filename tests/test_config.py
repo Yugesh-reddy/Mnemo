@@ -34,9 +34,11 @@ def test_get_settings_is_cached() -> None:
 
 def test_gate_knobs_have_spec_defaults() -> None:
     s = _clean()
-    assert (s.w_imp, s.w_spec, s.w_nov) == (0.4, 0.3, 0.3)
+    # Lasting defaults (spec §18, validated by v11).
+    assert (s.w_imp, s.w_spec, s.w_nov) == (0.6, 0.0, 0.4)
+    assert s.novelty_mode == "identity" and "just" not in s.transient_markers
     assert s.w_src == 0.4
     assert s.durable_cutoff == 0.70
-    assert s.ephemeral_floor == 0.45
+    assert s.ephemeral_floor == 0.55
     assert "preferred_database" in s.predicate_vocab
     assert "timezone" in s.predicate_vocab

@@ -12,33 +12,53 @@ from mnemo.extraction import ExtractionWorker
 from mnemo.models import ExtractedFact
 from mnemo.quality import Verdict, is_transient, tier_for, write_score
 
-LEGACY = Settings(_env_file=None)
-LASTING = Settings(
+LEGACY = Settings(
     _env_file=None,
-    w_imp=0.6,
-    w_spec=0.0,
-    w_nov=0.4,
-    novelty_mode="identity",
+    w_imp=0.4,
+    w_spec=0.3,
+    w_nov=0.3,
+    ephemeral_floor=0.45,
+    novelty_mode="cosine",
     transient_markers=[
         "today",
         "right now",
+        "just",
         "currently",
         "at the moment",
         "this morning",
         "waiting for",
     ],
 )
+LASTING = Settings(_env_file=None)  # the defaults since v11
+V8_FINGERPRINT = "a35cb3d06f8f226772c2ee9d70612f171c5ff2ffabf1fc2137395b2c34946232"
 
 
-def test_legacy_defaults_and_fingerprint_are_unchanged():
-    assert LEGACY.novelty_mode == "cosine"
-    assert "just" in LEGACY.transient_markers
-    snapshot = gate_snapshot(LEGACY)
+def test_legacy_settings_still_reproduce_the_recorded_v8_fingerprint():
+    snapshot = gate_snapshot(
+        Settings(
+            _env_file=None,
+            **{
+                k: getattr(LEGACY, k)
+                for k in (
+                    "w_imp",
+                    "w_spec",
+                    "w_nov",
+                    "ephemeral_floor",
+                    "novelty_mode",
+                    "transient_markers",
+                )
+            },
+            backend="ollama",
+            extractor_model="qwen3.5:4b-mlx",
+            verifier_backend="cross_encoder",
+            verifier_fallback_backend="ollama",
+        )
+    )
     assert "novelty_mode" not in snapshot and "transient_markers" not in snapshot
-    assert snapshot["fingerprint"] == gate_snapshot(Settings(_env_file=None))["fingerprint"]
+    assert snapshot["fingerprint"] == V8_FINGERPRINT
     lasting = gate_snapshot(LASTING)
     assert lasting["novelty_mode"] == "identity" and "just" not in lasting["transient_markers"]
-    assert lasting["fingerprint"] != snapshot["fingerprint"]
+    assert lasting["fingerprint"] != gate_snapshot(LEGACY)["fingerprint"]
 
 
 @pytest.mark.parametrize(
@@ -54,7 +74,7 @@ def test_legacy_defaults_and_fingerprint_are_unchanged():
 def test_transient_markers_come_from_settings(text, legacy, lasting):
     assert is_transient(text, LEGACY.transient_markers) is legacy
     assert is_transient(text, LASTING.transient_markers) is lasting
-    assert is_transient(text) is legacy  # default markers are the legacy list
+    assert is_transient(text) is lasting  # default markers are the lasting list
 
 
 @pytest.mark.parametrize(
@@ -63,7 +83,9 @@ def test_transient_markers_come_from_settings(text, legacy, lasting):
         (10, False, "durable"),
         (5, False, "durable"),
         (4, False, "session"),
-        (1, False, "session"),
+        (3, False, "session"),
+        (2, False, None),
+        (1, False, None),
         (7, True, "session"),
         (8, True, "durable"),
         (3, True, None),

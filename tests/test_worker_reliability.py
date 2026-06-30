@@ -151,7 +151,28 @@ async def test_repeat_after_intervening_correction_is_not_hash_deduplicated(stor
     assert await db.fetchval("SELECT count(*) FROM extraction_job") == 3
 
 
-async def test_transient_word_cannot_drop_an_important_verified_fact(store, db):
+LEGACY_TIERING = dict(
+    w_imp=0.4,
+    w_spec=0.3,
+    w_nov=0.3,
+    ephemeral_floor=0.45,
+    novelty_mode="cosine",
+    transient_markers=[
+        "today",
+        "right now",
+        "just",
+        "currently",
+        "at the moment",
+        "this morning",
+        "waiting for",
+    ],
+)
+
+
+@pytest.mark.parametrize(
+    ("legacy", "tier"), [(True, "session"), (False, "durable")], ids=["legacy", "lasting"]
+)
+async def test_transient_word_cannot_drop_an_important_verified_fact(store, db, legacy, tier):
     from mnemo.quality import Verdict
 
     class Constant:
@@ -168,15 +189,21 @@ async def test_transient_word_cannot_drop_an_important_verified_fact(store, db):
                 backend="test",
             )
 
-    memory = MnemoStore(db, Constant())
+    settings = Settings(_env_file=None, **(LEGACY_TIERING if legacy else {}))
+    memory = MnemoStore(db, Constant(), settings=settings)
     await memory.add("user", "diet", "vegetarian")
     candidate = ExtractedFact(subject="user", predicate="allergy", object="peanuts", importance=9)
     await memory.observe("allergy", "Today I found out I am allergic to peanuts.", "s")
-    worker = ExtractionWorker(db, Constant(), StubExtractor([candidate]), Entailed())
+    worker = ExtractionWorker(
+        db, Constant(), StubExtractor([candidate]), Entailed(), settings=settings
+    )
     await worker.process_one()
     history = await memory.blame(subject="user", predicate="allergy")
-    assert len(history) == 1 and history[0].tier == "session"
-    assert history[0].write_score < memory.settings.ephemeral_floor
+    # Kept either way: legacy rescues a below-floor score into session; lasting
+    # scores the important fact durable despite the transient word.
+    assert len(history) == 1 and history[0].tier == tier
+    if legacy:
+        assert history[0].write_score < settings.ephemeral_floor
 
 
 async def test_cancellation_requeues_and_late_model_return_cannot_write(

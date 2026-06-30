@@ -100,15 +100,20 @@ class Settings(BaseSettings):
     recency_gamma: float = 0.995
     """Per-hour recency decay in the rerank (Generative Agents)."""
 
-    # --- Quality gate (spec §4 Layer 2 / §13; tune ONLY against make eval) ---
-    w_imp: float = 0.4
+    # --- Quality gate (spec §4 Layer 2 / §13 / §18; tune ONLY against make eval) ---
+    # "Lasting" defaults, validated by v11: with novelty 1.0, a non-transient fact of
+    # importance >= 5 is durable, 3-4 is session and 1-2 is dropped as noise.
+    # The legacy policy was w_imp 0.4, w_spec 0.3, w_nov 0.3, ephemeral_floor 0.45,
+    # cosine novelty and "just" as a transient marker (see mnemo.audit.LEGACY_*).
+    w_imp: float = 0.6
     """write_score weight: importance/10."""
 
-    w_spec: float = 0.3
-    """write_score weight: specificity (predicate in the controlled vocabulary)."""
+    w_spec: float = 0.0
+    """write_score weight: specificity (predicate in the controlled vocabulary). Zero
+    because the extractor's vocabulary is open (v10/v11)."""
 
-    w_nov: float = 0.3
-    """write_score weight: novelty (1 - max cosine to existing HEAD facts)."""
+    w_nov: float = 0.4
+    """write_score weight: novelty (see novelty_mode)."""
 
     w_src: float = 0.4
     """Penalty subtracted when the fact came from an assistant turn."""
@@ -119,22 +124,22 @@ class Settings(BaseSettings):
     transient_markers: list[str] = [
         "today",
         "right now",
-        "just",
         "currently",
         "at the moment",
         "this morning",
         "waiting for",
     ]
-    """Whole-word, case-insensitive markers that flag a source turn as transient."""
+    """Whole-word, case-insensitive markers that flag a source turn as transient.
+    "just" is excluded: it marks recently completed events ("I just baked ...")."""
 
-    novelty_mode: Literal["cosine", "identity"] = "cosine"
+    novelty_mode: Literal["cosine", "identity"] = "identity"
     """cosine: 1 - max similarity to current facts. identity: 1.0, because exact
     repeats and (with routing) restatements are resolved by fact identity instead."""
 
     durable_cutoff: float = Field(0.70, ge=0.0, le=1.0)
     """write_score >= this => durable; below => demote to session."""
 
-    ephemeral_floor: float = Field(0.45, ge=0.0, le=1.0)
+    ephemeral_floor: float = Field(0.55, ge=0.0, le=1.0)
     """write_score < this => true noise: not stored at all."""
 
     # --- Decay / reinforcement (spec §4 Layer 5; MemoryBank R = e^(−t/S)) ---

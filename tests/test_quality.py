@@ -184,9 +184,9 @@ def test_junk_scores_below_floor_and_is_dropped() -> None:
 
 
 def test_borderline_is_demoted_to_session_not_dropped() -> None:
-    # mid importance, out-of-vocab, novel -> between floor and cutoff
+    # low-but-real importance, novel -> between the noise floor and the durable cutoff
     score = write_score(
-        importance=5, spec=0.2, novelty=1.0, from_assistant=False, transient=False, settings=S
+        importance=4, spec=0.2, novelty=1.0, from_assistant=False, transient=False, settings=S
     )
     assert S.ephemeral_floor <= score < S.durable_cutoff
     assert tier_for(score, S) == "session"

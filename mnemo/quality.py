@@ -26,9 +26,6 @@ HYPOTHETICAL = re.compile(
     re.I,
 )
 SARCASM = re.compile(r"\b(yeah,? right|as if|sure,? because)\b", re.I)
-TRANSIENT = re.compile(
-    r"\b(today|right now|just|currently|at the moment|this morning|waiting for)\b", re.I
-)
 
 
 class Verdict(BaseModel):
@@ -588,8 +585,9 @@ def specificity(predicate: str, vocab: Sequence[str]) -> float:
 
 
 def is_transient(source_text: str, markers: Sequence[str] | None = None) -> bool:
+    """Whole-word marker match; ``None`` uses the configured default markers."""
     if markers is None:
-        return bool(TRANSIENT.search(source_text))
+        markers = Settings.model_fields["transient_markers"].default
     if not markers:
         return False
     pattern = r"\b(" + "|".join(re.escape(m) for m in markers) + r")\b"

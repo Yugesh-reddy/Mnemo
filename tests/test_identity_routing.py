@@ -20,12 +20,16 @@ class Script:
     """Extractor: turn text -> candidates. Verifier: substring entailment, plus
     explicit contradiction (stored value, turn) and restatement (candidate, stored) pairs."""
 
-    def __init__(self, facts, *, contradicts=(), restates=()):
+    def __init__(self, facts, *, contradicts=(), restates=(), importance=5):
         self.facts, self.contradicts, self.restates = facts, set(contradicts), set(restates)
+        self.importance = importance
         self.calls: list[tuple[str, str]] = []
 
     def extract(self, text, role="user"):
-        return [ExtractedFact(subject="user", predicate=p, object=v) for p, v in self.facts[text]]
+        return [
+            ExtractedFact(subject="user", predicate=p, object=v, importance=self.importance)
+            for p, v in self.facts[text]
+        ]
 
     def verify(self, candidate, source_text):
         value = str(candidate.object)
@@ -191,7 +195,8 @@ async def test_restating_another_sessions_value_writes_it_in_this_session(
     worker_connections, fake_embedder
 ):
     """v9 bug: a session-tier value from another session is invisible here and
-    expires with its session, so a restatement must not be dropped as a duplicate."""
+    expires with its session, so a restatement must not be dropped as a duplicate.
+    Importance 3 keeps both values in the session tier under the lasting defaults."""
     conn, _ = worker_connections
     first = "I baked a chocolate cake for my sister's birthday party."
     second = "Last weekend I baked a chocolate cake for my sister's birthday."
@@ -199,6 +204,7 @@ async def test_restating_another_sessions_value_writes_it_in_this_session(
     script = Script(
         {first: [("completed_baking", specific)], second: [("completed_baking", restated)]},
         restates={(restated, specific)},
+        importance=3,
     )
     store = await run_turns(conn, fake_embedder, script, [first, second])
     facts = [f for f in await store.list_current() if f.predicate == "completed_baking"]
@@ -212,3 +218,22 @@ async def test_restating_another_sessions_value_writes_it_in_this_session(
     assert len(identity["restates_other_session"]) == 1
     hits = await store.search("chocolate cake", session_id="s1", reinforce=False)
     assert restated in {str(h.value) for h in hits}
+
+
+async def test_restating_a_durable_value_from_another_session_is_a_duplicate(
+    worker_connections, fake_embedder
+):
+    """Durable values are visible in every session, so they absorb restatements."""
+    conn, _ = worker_connections
+    first = "I baked a chocolate cake for my sister's birthday party."
+    second = "Last weekend I baked a chocolate cake for my sister's birthday."
+    specific, restated = "a chocolate cake for my sister's birthday party", "a chocolate cake"
+    script = Script(
+        {first: [("completed_baking", specific)], second: [("completed_baking", restated)]},
+        restates={(restated, specific)},
+        importance=7,
+    )
+    store = await run_turns(conn, fake_embedder, script, [first, second])
+    facts = [f for f in await store.list_current() if f.predicate == "completed_baking"]
+    assert [(str(f.value), f.tier) for f in facts] == [(specific, "durable")]
+    assert (await decisions(conn))[-1]["reason"].endswith("identity=restatement")

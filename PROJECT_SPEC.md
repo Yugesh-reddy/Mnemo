@@ -236,8 +236,10 @@ Foundation is largely built already (real Postgres, embeddings, LLM extractor, M
 | importance | 1–10, LLM-assigned | Generative Agents (Park 2023) |
 | NLI auto-accept | entailment p > 0.99 | Deep-Research gatekeeper (2026) |
 | dedup → UPDATE | cosine ≥ 0.90 | common practice |
-| write-score weights | w_imp .4 / w_spec .3 / w_nov .3 | tune for F1 |
+| write-score weights | w_imp .6 / w_spec 0 / w_nov .4 (was .4/.3/.3; §18) | v11 |
+| novelty | identity: 1.0 (was cosine; §18) | v11 |
 | tier: durable | write_score ≥ 0.70 (demote below) | — |
+| tier: noise floor | write_score < 0.55 is dropped (was 0.45; §18) | v11 |
 | decay | R=e^(−t/S), S+1 on recall | MemoryBank (Zhong 2024) |
 | importance-mod decay | λ_eff = 0.16·(1−imp·0.8) | production variant (2026) |
 | consolidation trigger | every 50 events / cluster ≥ 3 | Generative Agents |
@@ -468,3 +470,28 @@ wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
   a runtime-generated reference. The model never supplies identity references.
   Each decision records its route and verdicts. The default flips only if the
   frozen v9 measurement passes.
+
+## 18. Lasting tiering — September 24, 2026
+
+The owner approved this change to §4 step 4 and §13 under rule 6 (Option A), and
+[v11](docs/quality-v11/README.md) validated it. Under the old settings no extracted
+fact could become durable: specificity rewarded a controlled vocabulary the
+open-vocabulary extractor no longer uses, cosine novelty over "user predicate
+value" strings was uniformly low, and "just" flagged completed events as
+transient. Every extracted memory expired with its session.
+
+- **Weights.** `w_imp` 0.6, `w_spec` 0, `w_nov` 0.4; `novelty_mode=identity` scores
+  novelty 1.0, because repeats are resolved by fact identity. Durable cutoff 0.70,
+  noise floor 0.55, transient penalty 0.15, assistant penalty 0.4.
+- **Bands.** A verified, non-transient fact of importance 5–10 is durable, 3–4 is
+  session and 1–2 is dropped as noise. A transient-marked turn needs importance 8+
+  to be durable; below that it stays in session (importance 3+) or is dropped.
+- **Transient markers.** today, right now, currently, at the moment, this morning,
+  waiting for (whole words). "just" is no longer a marker.
+- **Forgetting.** Durable facts decay: unused ones are archived (reversibly) after
+  roughly 9–23 days depending on importance, and each recall strengthens them.
+  Importance does not reliably separate lasting from momentary facts (v10), so some
+  momentary facts become durable and fade this way.
+- **Audit.** At the legacy values (cosine novelty, legacy markers), the audit
+  snapshot omits the new fields, so fingerprints recorded before this change remain
+  reproducible from the legacy settings.
