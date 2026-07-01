@@ -1,0 +1,19 @@
+{
+  "phase": "suite-azure",
+  "command": [
+    "scripts/identity_suite.py",
+    "--cases",
+    "docs/quality-v9/identity-cases.json",
+    "--output",
+    "docs/quality-v12/suite-azure.json",
+    "--identity-judge",
+    "azure"
+  ],
+  "identity_judge": "azure",
+  "started_at_utc": "2026-09-25T02:34:41.067174+00:00",
+  "manifest_sha256": "4de4c0ae8d983b1e4047eb8887c9a01eb7fc10c107e065181ef3bb2f08e50d26",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 151.3176647079963,
+  "finished_at_utc": "2026-09-25T02:37:12.385826+00:00"
+}

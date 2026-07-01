@@ -1,0 +1,129 @@
+{
+  "decided_at_utc": "2026-09-25T02:48:49.463819+00:00",
+  "rule": {
+    "v11_retrieved": 16,
+    "min_gate_clean": 12,
+    "success_requires_all": [
+      "suite-azure: every gate-clean case passes",
+      "suite-azure: at least 12 of 14 cases are gate-clean",
+      "luna-azure: retrieved complete targets > 16/23 (v11, routing off)",
+      "luna-azure: not below luna-local",
+      "luna-azure: still > 16/23 without restatement-link-only credit",
+      "luna-azure: zero unsupported and zero forbidden writes",
+      "luna-azure: every written must-keep target durable",
+      "the judge finished within budget in both paid phases"
+    ],
+    "on_success": "Routing is shown to work with an adequate judge. Enabling it in production needs a supported way to configure that judge; that is a follow-up, and the local-only default stays off.",
+    "on_failure": "Record why; routing stays off; no threshold or prompt change follows."
+  },
+  "checks": {
+    "suite_azure_gate_clean_cases_all_pass": false,
+    "suite_azure_at_least_12_gate_clean": true,
+    "luna_azure_retrieved_above_v11": true,
+    "luna_azure_not_below_local_judge": true,
+    "luna_azure_above_v11_without_restatement_links": true,
+    "luna_azure_zero_unsupported_writes": true,
+    "luna_azure_zero_forbidden_writes": true,
+    "luna_azure_written_targets_durable": true,
+    "judge_finished_within_budget": true
+  },
+  "outcome": "failure",
+  "retrieved": {
+    "luna-local": 20,
+    "luna-azure": 20
+  },
+  "unique_complete_by_stage": {
+    "luna-local": {
+      "candidate": 20,
+      "historical": 20,
+      "current": 20,
+      "visible": 20,
+      "retrieved": 20
+    },
+    "luna-azure": {
+      "candidate": 20,
+      "historical": 20,
+      "current": 20,
+      "visible": 20,
+      "retrieved": 20
+    }
+  },
+  "write_review": {
+    "luna-local": {
+      "total": 55,
+      "supported": 51,
+      "unsupported": 0,
+      "ambiguous": 4,
+      "supported_precision": 0.9272727272727272
+    },
+    "luna-azure": {
+      "total": 56,
+      "supported": 52,
+      "unsupported": 0,
+      "ambiguous": 4,
+      "supported_precision": 0.9285714285714286
+    }
+  },
+  "restatement_only_targets": [],
+  "suite": {
+    "local": {
+      "passed": 9,
+      "total": 14,
+      "gate_clean": 13,
+      "gate_clean_passed": 9,
+      "gate_rejected_cases": [
+        "location_move"
+      ],
+      "failed_cases": [
+        "meeting_free_day_correction",
+        "employer_change",
+        "diet_change",
+        "location_move",
+        "correct_one_interview"
+      ],
+      "false_replacements": 1,
+      "extra_current_values": 5,
+      "judge": {}
+    },
+    "azure": {
+      "passed": 11,
+      "total": 14,
+      "gate_clean": 13,
+      "gate_clean_passed": 11,
+      "gate_rejected_cases": [
+        "location_move"
+      ],
+      "failed_cases": [
+        "location_move",
+        "concurrent_skills",
+        "correct_one_interview"
+      ],
+      "false_replacements": 2,
+      "extra_current_values": 2,
+      "judge": {
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "requests": 28,
+          "input_tokens": 10825,
+          "output_tokens": 1786,
+          "unmetered_requests": 0
+        },
+        "stopped": null
+      }
+    }
+  },
+  "judge_usage": {
+    "suite-azure": {
+      "requests": 28,
+      "input_tokens": 10825,
+      "output_tokens": 1786,
+      "unmetered_requests": 0
+    },
+    "luna-azure": {
+      "requests": 14,
+      "input_tokens": 5876,
+      "output_tokens": 999,
+      "unmetered_requests": 0
+    }
+  }
+}

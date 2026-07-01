@@ -1177,6 +1177,10 @@ is fine.
 - **Grouped undo / archive-as-undo**: needs all affected expected revisions in one transaction.
 - **Consolidation (Layer 4)**: stays off; `mem_provenance` has no `agent_reflection` member —
   adding it is a schema decision that must come with source lineage + NLI gating + trust cap.
+- [x] **Routing judge (v12)**: Luna dev 20/23 retrieved with routing on (ceiling), but the
+  identity suite passed 11/13 gate-clean cases; the entailment question makes a strong judge
+  read siblings as contradictions ([v12](quality-v12/README.md)). Next: a routing-specific
+  replace/coexist/restate question under a new protocol.
 - [x] **Durability (v11)**: lasting tiering with a 0.55 noise floor passed every check
   (must-keep targets durable, `make eval` unchanged); it becomes the default
   ([v11](quality-v11/README.md)).

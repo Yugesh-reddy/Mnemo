@@ -1,6 +1,54 @@
 # v12: identity routing with a stronger judge
 
-**Status: protocol frozen; not yet run.** Results replace this line after the run.
+**Decision: failure; routing stays off. The judge's question is wrong, not the
+model.** With routing and v11's lasting tiering, Luna's development candidates
+reach **20/23 retrieved under either judge**, the ceiling for this set (the other
+three are the two locked-ambiguous targets and the partial stand-mixer target).
+There were zero unsupported or forbidden writes and every must-keep target is
+durable. The identity suite improved from 9 to **11 of 13** gate-clean cases with
+Azure Luna as judge, but not to all 13. The protocol was committed in `b83250e`
+before any run; the judge used 42 requests (16.7k input / 2.8k output tokens)
+across both paid phases.
+
+| Measurement | Local judge | **Azure Luna judge** |
+| --- | ---: | ---: |
+| Luna dev: retrieved complete targets | 20/23 | 20/23 |
+| Luna dev: supported / unsupported / ambiguous writes | 51 / 0 / 4 | 52 / 0 / 4 |
+| Luna dev routes: new member / restatement / correction | 2 / 4 / 0 | 4 / 2 / 0 |
+| Suite: gate-clean cases passed | 9 / 13 | **11 / 13** |
+| Suite: false replacements / extra values | 1 / 5 | 2 / 2 |
+| Judge requests (tokens) | – | 28 suite + 14 dev (19.5k total) |
+
+Location_move is gate-rejected in both arms ("moved to Denver") and excluded, as
+declared.
+
+### What Luna fixed and what it broke
+
+Luna labelled the meeting-day, employer and diet corrections as contradictions at
+0.99, so all three now replace the old value; the local judge had stopped at 0.95.
+But it also labelled **"I learned how to make vegan lasagna"** as contradicting
+"learned to make sauerkraut and kimchi" at 0.99 ("the source states lasagna, *not*
+sauerkraut and kimchi"). Concurrent skills, which the local judge passed, became a
+false replacement. The interview cases scored 0.98, just below the 0.99 threshold,
+so "a second interview on May 10" coexisted by luck; correcting it to May 11
+contradicted both interviews at 0.99 and became unresolved.
+
+The routing checks reuse the write gate's question, "does this source support the
+assertion (entailment, contradiction or neutral)?" For a relation that can hold
+several values, a capable model treats "a different value is stated" as
+contradiction, which is exactly the confusion routing must avoid. A stronger model
+only makes that answer more confident. The development turns contain no genuine
+correction, so they can't reveal this; the suite does.
+
+### What this implies
+
+Routing needs a question built for routing: does this turn say the stored value
+**is no longer true** (corrected, changed, moved, replaced), does it **add another**
+item alongside, or does it **restate** it? That is a new judge prompt and a new
+frozen protocol. No threshold or prompt change follows from v12. See
+[the decision](decision.json).
+
+## Protocol (frozen before the run)
 
 [v9](../quality-v9/README.md) showed that identity routing keeps coexisting facts,
 but the local `qwen3.5:4b-mlx` judge rated real corrections and coexisting siblings

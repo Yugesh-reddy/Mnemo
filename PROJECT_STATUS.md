@@ -150,6 +150,15 @@ verifier rated real corrections and coexisting interviews as contradictions at t
 same 0.95, so three corrections left stale values. The frozen rule failed and the
 default stays off. Grouped undo and consolidation remain deferred.
 
+**Routing judge (v12) failed; routing stays off.** With lasting tiering, routing
+brings Luna's development candidates to 20/23 retrieved (the set's ceiling) under
+either judge, with zero unsupported writes. On the identity suite, Azure Luna as
+judge passed 11/13 gate-clean cases (local 9/13): it fixed the three corrections
+but turned two coexisting skills into a false replacement. The routing check
+reuses the gate's entailment question, and a strong model reads "a different value"
+as contradiction. The next step is a routing-specific question
+([v12](docs/quality-v12/README.md)).
+
 **Durability fixed in v11.** With the noise floor raised to 0.55, the lasting
 policy passed every check ([v11](docs/quality-v11/README.md)): every written must-keep
 target is durable (Luna 20/20, qwen 16/16), unsupported and forbidden writes are

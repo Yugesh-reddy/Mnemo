@@ -1,0 +1,21 @@
+{
+  "phase": "luna-local",
+  "command": [
+    "scripts/replay_extraction_probe.py",
+    "--probe",
+    "docs/quality-v8/extraction.json",
+    "--manifest",
+    "mnemo/data/quality-v4/manifest.json",
+    "--output",
+    "docs/quality-v12/luna-local.json",
+    "--identity-judge",
+    "verifier"
+  ],
+  "identity_judge": "verifier",
+  "started_at_utc": "2026-09-25T02:37:12.574115+00:00",
+  "manifest_sha256": "4de4c0ae8d983b1e4047eb8887c9a01eb7fc10c107e065181ef3bb2f08e50d26",
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_seconds": 360.7768175000092,
+  "finished_at_utc": "2026-09-25T02:43:13.357733+00:00"
+}
