@@ -13,6 +13,9 @@ from mcp.types import TextContent
 
 from mnemo.config import get_settings
 
+# The server's global namespace and, inside a git checkout, its project scope.
+IN_SCOPES = "(namespace=$1 OR starts_with(namespace, $1 || '@'))"
+
 
 def payload(result, *, code=None):
     assert result.isError == (code is not None), result.content
@@ -210,7 +213,7 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
         )
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memory_mutation_receipt WHERE namespace=$1", namespace
+                "SELECT count(*) FROM memory_mutation_receipt WHERE " + IN_SCOPES, namespace
             )
             == 4
         )
@@ -219,12 +222,12 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
             == 4
         )
         assert (
-            await conn.fetchval("SELECT count(*) FROM extraction_job WHERE namespace=$1", namespace)
+            await conn.fetchval("SELECT count(*) FROM extraction_job WHERE " + IN_SCOPES, namespace)
             == 0
         )
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM quality_decision WHERE namespace=$1", namespace
+                "SELECT count(*) FROM quality_decision WHERE " + IN_SCOPES, namespace
             )
             == 0
         )

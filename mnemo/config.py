@@ -210,6 +210,11 @@ class Settings(BaseSettings):
     namespace: str = "default"
     user_id: str = "default"
     agent_id: str = "default"
+    actor: str | None = None
+    """Who writes through this server (e.g. claude-code, codex); recorded on every change
+    but never used to filter reads. Unset: the agent_id."""
+    project: str | None = None
+    """The direct server's project scope. Unset: detected from its working directory."""
 
     @model_validator(mode="after")
     def validate_configuration(self) -> Settings:
