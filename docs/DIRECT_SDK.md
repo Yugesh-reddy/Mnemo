@@ -71,6 +71,9 @@ The synchronous client opens and closes a connection per call. Inside an async
 application, bind `DirectMemory` to a `MnemoStore` using your own connection or
 pool. The same guarded contract is exposed by `mnemo-mcp-direct` (or
 `make mcp-direct`), with six tools: create, get, search, update, history and revert,
-each prefixed `memory_`. Set scope with `MNEMO_NAMESPACE`, `MNEMO_USER_ID` and
-`MNEMO_AGENT_ID`; the configured agent is also the recorded actor. Tool arguments
-cannot select scope or trust. The existing `make mcp` retains its legacy behavior.
+each prefixed `memory_`. The server adds a project scope (its git repository, or
+`MNEMO_PROJECT`) next to the global `MNEMO_NAMESPACE`; `memory_create` chooses between
+the two with `scope`, and search reads both. `MNEMO_ACTOR` (default: the agent ID) is
+recorded on each change and never filters reads. Tool arguments cannot choose any
+other scope, the user or agent ID, or trust. The existing `make mcp` retains its
+legacy behavior. See the README for sharing one memory between Claude Code and Codex.

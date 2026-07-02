@@ -1181,6 +1181,8 @@ is fine.
   identity suite passed 11/13 gate-clean cases; the entailment question makes a strong judge
   read siblings as contradictions ([v12](quality-v12/README.md)). Next: a routing-specific
   replace/coexist/restate question under a new protocol.
+  **Parked (owner, September 26):** the direct MCP path lets the calling agent decide
+  replace/coexist; routing research resumes only if coding agents need automatic capture.
 - [x] **Durability (v11)**: lasting tiering with a 0.55 noise floor passed every check
   (must-keep targets durable, `make eval` unchanged); it becomes the default
   ([v11](quality-v11/README.md)).

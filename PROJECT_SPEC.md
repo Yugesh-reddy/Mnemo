@@ -19,12 +19,27 @@ The quality work is summarized in `docs/MASTER_PLAN.md`;
 
 ---
 
-## 0. One product, not two (read this first)
-Earlier drafts split into "git for agent memory" (versioning) and a "quality pipeline." **They are the same product.** Resolution, final:
-- **The product is the write-quality pipeline** — deciding *what is worth remembering* (salience scoring, NLI verification, tiering, dedup, decay). This attacks the loud, validated pain: agent memory stores ~96–98% junk and invents false facts (Mem0 issue #4573).
-- **The versioned event store is its foundation** — memory revisions are append-only events, and quality decisions have their own audit log. Revert preserves history. Versioning is not unique to Mnemo: Timescale's Memory Engine also records history and restores revisions through [database triggers](https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/database/space/migrate/idempotent/004_memory_event.sql). Mnemo combines database-enforced payload immutability, mandatory expected-revision guards and durable retry receipts in its direct API.
-- **`blame` / `revert` are the safety net** — for whatever junk or wrong fact slips through the gate, a human (or agent) can see where it came from and undo it.
-- **Lead with the outcome (debugging / stores-less), keep the architecture honest (it's a versioned memory store).** Hero demo = the precision/recall side-by-side; rollback = the secondary demo.
+## 0. What Mnemo is for (read this first)
+**Goal (restated by the owner, September 26, 2026):** one shared memory on the local
+machine that Claude Code, Codex and other coding agents use over MCP, with
+versioning ("git for memory") on top. The memory itself has to work first: shared
+across agents, scoped by project, easy to write and to find. More of the git layer
+is built only after that.
+- **The direct MCP profile is the primary path** (§15, §19). Agents write, read and
+  correct memories explicitly through guarded tools; the calling agent decides what
+  to remember and whether a new value replaces an old one.
+- **The versioned event store is the foundation.** Memory revisions are append-only
+  events; revert preserves history. Versioning is not unique to Mnemo: Timescale's
+  Memory Engine also records history and restores revisions through [database triggers](https://github.com/timescale/memory-engine/blob/2ef90da9385448e0bbb02ed1da82c04bd663602d/packages/database/space/migrate/idempotent/004_memory_event.sql).
+  Mnemo combines database-enforced payload immutability, mandatory expected-revision
+  guards and durable retry receipts in its direct API.
+- **`blame` / `revert` are the safety net.** A human or agent can see where a memory
+  came from and undo a wrong change.
+- **The automatic extraction pipeline is parked.** The write-quality pipeline
+  (§4, §13, §17, §18: extraction, verification, tiering, identity routing) stays
+  available, tested and documented, but no further extraction or routing
+  experiments run (no v13 judge, sealed holdout `b46e15ed` stays closed) unless a
+  coding-agent evaluation shows that agents need automatic capture.
 
 ---
 
@@ -378,7 +393,8 @@ additive API does not change extraction quality or authorize gate tuning.
 
 The direct MCP profile advertises exactly `memory_create`, `memory_get`,
 `memory_search`, `memory_update`, `memory_history` and `memory_revert`. Scope and
-actor come from local configuration, never tool arguments. Contract errors and
+actor come from local configuration, never tool arguments (amended by §19: create
+chooses between the server's project and global scopes). Contract errors and
 invalid arguments return the JSON error object above with `isError=true`.
 The server owns a dimension-validated connection pool and embedder, starts no
 extraction/verification/decay work, and disables search reinforcement. Hosts must
@@ -495,3 +511,33 @@ transient. Every extracted memory expired with its session.
 - **Audit.** At the legacy values (cosine novelty, legacy markers), the audit
   snapshot omits the new fields, so fingerprints recorded before this change remain
   reproducible from the legacy settings.
+
+## 19. Shared scope for coding agents — September 26, 2026
+
+The owner approved this change to the direct MCP profile (§15) under rule 6.
+Before it, every read was filtered by `agent_id`, and the configured agent was also
+the recorded actor. A live test showed Codex could not find what Claude Code had
+stored; sharing required one `agent_id`, which erased who made each change.
+
+- **Actor is not scope.** `MNEMO_ACTOR` names the agent writing through a server
+  (for example `claude-code`, `codex`) and is recorded on every event and receipt.
+  It never filters reads. Unset, it falls back to `MNEMO_AGENT_ID`, the previous
+  behavior. Agents that share memory use the same namespace, user and agent ID.
+- **Two scopes per server.** The global scope is `MNEMO_NAMESPACE`. The project scope
+  is the namespace `<MNEMO_NAMESPACE>@<project>`, where the project is `MNEMO_PROJECT`
+  or is detected from the server's working directory: the repository's `origin`
+  remote (else another remote), normalized to `host/owner/repo` in lower case
+  without credentials, port or `.git`; else `path:<repository top level>`. Outside a
+  repository there is no project scope. Detection runs once at server start.
+- **Tools.** `memory_create` takes an optional `scope` (`project` or `global`); it
+  defaults to `project` when one exists, else `global`. Requesting `project` without
+  one is `INVALID_INPUT`. `memory_search` searches both scopes and merges hits by
+  score (project first on ties), labelling each with its scope. The fact-ID tools
+  (`get`, `update`, `history`, `revert`) act in whichever of the two scopes holds the
+  fact; any other fact is `NOT_FOUND`. Every result carries `scope`. Tool arguments
+  still cannot choose any other namespace, the user or agent ID, or trust.
+- **Unchanged.** No migration; identity keys, receipts, locks and guards stay per
+  scope exactly as in §15. The Python SDK and the legacy MCP server keep a single
+  configured namespace. Settings from the client configuration take precedence;
+  `MNEMO_*` keys in the working directory's `.env` apply only to settings the client
+  leaves unset.

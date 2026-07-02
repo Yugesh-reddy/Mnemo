@@ -48,41 +48,69 @@ the blast radius: two events, attributed to the agent's actor and request IDs,
 visible in `memory_history`, reversible with two `memory_revert` calls. These
 runs measure host behavior; they do not establish general agent reliability.
 
-## Connect an MCP client
+## Share memory between Claude Code and Codex
 
-After installation and migration, use this local-server configuration for
-[Claude Desktop](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
-Replace the executable path with your checkout's absolute path. For
-[Cursor](https://cursor.com/docs/mcp), put it in `.cursor/mcp.json` or
-`~/.cursor/mcp.json` and add `"type": "stdio"` inside the `mnemo` entry.
+Each coding agent starts its own `mnemo-mcp-direct` process, and all of them use
+one Postgres database. Give each agent its own `MNEMO_ACTOR` so history shows who
+changed what, and leave `MNEMO_AGENT_ID` unset. Reads never filter by actor.
 
-```json
-{
-  "mcpServers": {
-    "mnemo": {
-      "command": "/absolute/path/to/Mnemo/.venv/bin/mnemo-mcp-direct",
-      "env": {
-        "MNEMO_DSN": "postgresql://mnemo:mnemo@localhost:5432/mnemo",
-        "MNEMO_BACKEND": "hash",
-        "MNEMO_EMBED_DIM": "768",
-        "MNEMO_WORKER_ENABLED": "false",
-        "MNEMO_NAMESPACE": "default"
-      }
-    }
-  }
-}
+Memory has two scopes:
+
+- **project**: the git repository the agent is working in, taken from the server's
+  working directory (the `origin` remote, else the repository path). SSH and HTTPS
+  clones of one repository share it. Writes go here by default inside a repository.
+- **global**: visible from every project. Create with `scope="global"` for facts
+  such as your own preferences. Outside a repository it is the only scope.
+
+`memory_search` returns hits from both, each labelled with its scope. Set
+`MNEMO_PROJECT` to override detection.
+
+Claude Code, configured once for every repository (replace the executable path
+with your checkout's absolute path):
+
+```bash
+claude mcp add mnemo --scope user \
+  -e MNEMO_DSN=postgresql://mnemo:mnemo@localhost:5432/mnemo \
+  -e MNEMO_BACKEND=ollama -e MNEMO_EMBED_DIM=768 \
+  -e MNEMO_WORKER_ENABLED=false -e MNEMO_ACTOR=claude-code \
+  -- /absolute/path/to/Mnemo/.venv/bin/mnemo-mcp-direct
 ```
 
-For semantic embeddings, install `nomic-embed-text` with Ollama and change
-`MNEMO_BACKEND` to `ollama`, using a database with matching embeddings. The direct
-server only needs an embedder. `make mcp-direct` runs the same stdio server from
-the checkout. Configuration comes from `.env` / `MNEMO_*`; see [.env.example](.env.example).
+Codex, in `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`):
+
+```toml
+[mcp_servers.mnemo]
+command = "/absolute/path/to/Mnemo/.venv/bin/mnemo-mcp-direct"
+default_tools_approval_mode = "approve"  # lets `codex exec` call the tools unattended
+
+[mcp_servers.mnemo.env]
+MNEMO_DSN = "postgresql://mnemo:mnemo@localhost:5432/mnemo"
+MNEMO_BACKEND = "ollama"
+MNEMO_EMBED_DIM = "768"
+MNEMO_WORKER_ENABLED = "false"
+MNEMO_ACTOR = "codex"
+```
+
+Checked live on September 26, 2026 with a scratch database. Claude Code, started
+in a subdirectory of a test repository, created a memory in that repository's
+project scope. Codex, started in the same repository with its own actor, found
+it, read it and updated it with the revision guard. History shows `claude-code`,
+then `codex`.
+
+`MNEMO_BACKEND=ollama` needs `ollama pull nomic-embed-text`. The `hash` backend
+needs no model server, but its search only matches words. Keep one backend per
+database. Other clients such as Claude Desktop or
+[Cursor](https://cursor.com/docs/mcp) take the same command and environment in
+their JSON configuration (Cursor also needs `"type": "stdio"`). They are not
+started inside a repository, so they see only the global scope unless you set
+`MNEMO_PROJECT`. `make mcp-direct` runs the same server from the checkout; see
+[.env.example](.env.example) for every setting.
 
 | Tool | Contract |
 |---|---|
-| `memory_create` | Create a new subject/predicate identity; existing identity returns `ALREADY_EXISTS`. |
+| `memory_create` | Create a new subject/predicate identity in the project (default) or global scope; an existing identity in that scope returns `ALREADY_EXISTS`. |
 | `memory_get` | Read current value and event ID, or a full historical value and restore eligibility. |
-| `memory_search` | Find candidates with fact/event IDs; no reinforcement or raw-cache merge. |
+| `memory_search` | Find candidates in the project and global scopes with fact/event IDs; no reinforcement or raw-cache merge. |
 | `memory_update` | Update by fact ID using the expected event ID and a request UUID. |
 | `memory_history` | Page through revisions, newest first, with value previews and a continuation cursor. |
 | `memory_revert` | Copy a historical value into a new revision, preserving its provenance and trust. |

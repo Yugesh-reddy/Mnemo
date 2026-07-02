@@ -1,6 +1,6 @@
 # Mnemo — implementation status
 
-Updated September 22, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
+Updated September 26, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
 implemented and locally verified. Phase 5's bounded pilots are complete:
 **Qwen 2/6 with zero unintended mutations; Azure Luna 4/6 with two unintended
@@ -10,6 +10,30 @@ event was altered; the two unintended events are attributed, visible in history
 and reversible with the same tools. Hosted CI and
 merge protection were declined by the owner; they are not prerequisites for
 this delivery.
+
+## Shared memory for coding agents (September 26, 2026)
+
+The owner restated the goal: one local memory shared by Claude Code, Codex and other
+coding agents over MCP, with versioning on top once the memory itself works
+([spec §0](PROJECT_SPEC.md#0-what-mnemo-is-for-read-this-first)). The extraction
+and routing experiments are parked (no v13, holdout still sealed).
+
+A live audit found the direct server could not share: every read was filtered by
+`agent_id`, so Codex found nothing Claude Code had stored, and giving both one
+`agent_id` recorded Codex's change as Claude's. The direct server now separates the
+two ([spec §19](PROJECT_SPEC.md#19-shared-scope-for-coding-agents--september-26-2026)):
+`MNEMO_ACTOR` records who wrote, and memory lives in a project scope (the server's
+git repository) plus a global scope. No migration. `tests/test_project.py` and
+`tests/test_mcp_shared_scope_stdio.py` cover remote normalization, detection from a
+subdirectory, two agents sharing with attribution, isolation between projects,
+global visibility and the actor fallback. A live run with the real CLIs and a
+scratch database confirmed it: Claude Code created a memory in a test repository's
+project scope and Codex, with its own actor, found and updated it.
+
+Next: memory and tools shaped for coding agents (short notes with a topic, write-time
+duplicate checks returned to the caller), hooks so agents recall memory without
+being asked, and a coding-agent evaluation that replaces the chat-data eval as the
+bar for this path.
 
 ## Shipped through Phase 5
 
@@ -76,8 +100,9 @@ scope.
 
 ## Verification
 
-`make test-db`: **360 passed, 1 live-Ollama skip** (including nine export/import
-and nine v8 Azure-adapter tests). `make lint` passes Ruff and Black (87 Python files),
+`make test-db` (September 26): **425 passed, 1 live-Ollama skip**, including the shared-scope
+tests. Earlier: 360 passed (including nine export/import
+and nine v8 Azure-adapter tests). `make lint` passes Ruff and Black (101 Python files),
 and `uv lock --check` passes. The pilot adds 23 regression cases and the Azure adapter adds 16
 transport/configuration cases; two previously
 skipped live embedding checks now pass. Pilot tests cover
