@@ -1,0 +1,228 @@
+{
+  "name": "coding-agent memory scenarios",
+  "version": 1,
+  "status": "authored before any run; provisional agent-written checks, not independent human gold",
+  "rules": [
+    "Each scenario gets its own namespace and fresh fixture repositories (alpha, beta) whose files contain none of the facts below.",
+    "Sessions run in order, one CLI invocation each, with no shared conversation; only Mnemo can carry information between them.",
+    "Prompts never mention Mnemo or tools. Answer checks are case-insensitive regular expressions on the final reply; store checks count current memories whose 'subject predicate value' text matches.",
+    "A scenario passes only if every check passes."
+  ],
+  "scenarios": [
+    {
+      "id": "recall_convention",
+      "tests": "a convention told to one agent is applied by the other in a later session",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Heads-up for future work in this repo: every PR title must start with the ticket key in the form WID-<number>, followed by a colon, like 'WID-142: Fix login redirect'."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I'm opening a PR that fixes the login timeout; the ticket number is 318. What should the PR title be? Reply with only the title."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 1, "match": "WID-318\\s*:"}
+      ]
+    },
+    {
+      "id": "handoff",
+      "tests": "a note left by one agent at the end of its work reaches the next agent",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I'm stopping for today. Note for whoever picks this up next: test_sync_timeout is flaky because of an upstream bug, so run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What exact command should I use to run this repo's test suite right now? Reply with only the command."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 1, "match": "not sync_timeout"}
+      ]
+    },
+    {
+      "id": "correction",
+      "tests": "a changed fact replaces the old one instead of leaving it current",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "FYI, we deploy this service to production every Tuesday."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Heads-up: starting this week, production deploys for this service move from Tuesday to Thursday."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Which weekday do we deploy this service to production? Reply with one word."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 2, "match": "^\\W*thursday\\W*$"},
+        {"kind": "store", "match": "tuesday", "exclude": "thursday", "max": 0, "note": "no memory still says Tuesday"}
+      ]
+    },
+    {
+      "id": "multi_valued",
+      "tests": "a second value for the same kind of fact is added, not substituted",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "For reference, our local services: the API listens on port 8081 and the background worker on port 8090."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Also note: the admin UI runs locally on port 8095."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "List every local port our services use, as comma-separated numbers only."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 2, "match": "8081"},
+        {"kind": "answer", "session": 2, "match": "8090"},
+        {"kind": "answer", "session": 2, "match": "8095"}
+      ]
+    },
+    {
+      "id": "project_isolation",
+      "tests": "a project's memory stays out of another project and remains available in its own",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Remember: this repo's staging database is named widget_stage_07."
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What's the name of this repo's staging database? If you don't know, reply UNKNOWN."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "What's the name of this repo's staging database? If you don't know, reply UNKNOWN."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 1, "match": "widget_stage_07", "absent": true},
+        {"kind": "answer", "session": 1, "match": "unknown"},
+        {"kind": "answer", "session": 2, "match": "widget_stage_07"}
+      ]
+    },
+    {
+      "id": "global_preference",
+      "tests": "a preference stated for all projects applies in a different project",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "A rule for all of my projects, not just this one: always manage Python packages with uv, never pip."
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What single command would you run to add the requests package to this project? Reply with only the command."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 1, "match": "\\buv\\b"},
+        {"kind": "answer", "session": 1, "match": "^\\W*pip", "absent": true},
+        {"kind": "store", "match": "\\buv\\b", "scope": "global", "min": 1}
+      ]
+    },
+    {
+      "id": "no_duplicate",
+      "tests": "restating a known fact does not create a second memory",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Note: our Python code style is black with a line length of 100."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Reminder about our formatting rule: black, max line length 100."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What line length do we format Python code to? Reply with the number only."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 2, "match": "^\\W*100\\W*$"},
+        {"kind": "store", "match": "\\b100\\b", "min": 1, "max": 1, "note": "exactly one memory holds the rule"}
+      ]
+    },
+    {
+      "id": "undo_wrong",
+      "tests": "a memory the user retracts stops being current",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Please remember: the on-call handoff for this team happens on Fridays."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Correction: I was wrong earlier, there is no on-call handoff day at all. Please remove that memory."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Is there a fixed on-call handoff day for this team? Reply with the day, or NONE."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 2, "match": "\\bnone\\b"},
+        {"kind": "answer", "session": 2, "match": "friday", "absent": true},
+        {"kind": "store", "match": "friday", "exclude": "\\bno\\b|\\bnot\\b|none|wrong|incorrect|retract|removed", "max": 0}
+      ]
+    },
+    {
+      "id": "no_junk",
+      "tests": "small talk and a generic question are not stored",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Ugh, long day, I'm tired and grabbing a coffee first. Quick question while I wait: what does `git status -sb` show? One sentence."
+        }
+      ],
+      "checks": [
+        {"kind": "writes", "session": 0, "max": 0}
+      ]
+    },
+    {
+      "id": "no_invention",
+      "tests": "with nothing stored, the agent does not claim a memory",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "Who is the release manager for this repo? If you don't know, reply UNKNOWN."
+        }
+      ],
+      "checks": [
+        {"kind": "answer", "session": 0, "match": "unknown"}
+      ]
+    }
+  ]
+}
