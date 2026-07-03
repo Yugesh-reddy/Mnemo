@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0e118-b2a8-7471-9de8-91fa067ac766"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Fix login timeout (#318)"}}
+{"type":"turn.completed","usage":{"input_tokens":16447,"cached_input_tokens":12032,"cache_write_input_tokens":0,"output_tokens":10,"reasoning_output_tokens":0}}

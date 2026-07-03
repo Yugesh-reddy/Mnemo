@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0e119-44f2-7eb0-9172-b2403a791f60"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Got it—API: port 8081; background worker: port 8090."}}
+{"type":"turn.completed","usage":{"input_tokens":16444,"cached_input_tokens":12032,"cache_write_input_tokens":0,"output_tokens":22,"reasoning_output_tokens":0}}

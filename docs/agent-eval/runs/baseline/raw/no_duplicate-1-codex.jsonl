@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0e11a-b967-7350-bcb0-ee75dcb0c66a"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Got it—I’ll use Black with a maximum line length of 100."}}
+{"type":"turn.completed","usage":{"input_tokens":16427,"cached_input_tokens":12032,"cache_write_input_tokens":0,"output_tokens":19,"reasoning_output_tokens":0}}

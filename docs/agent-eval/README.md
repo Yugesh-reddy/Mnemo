@@ -56,6 +56,32 @@ uv run python scripts/agent_eval.py --dry-run
 uv run python scripts/agent_eval.py --arm baseline --out docs/agent-eval/runs/baseline
 ```
 
+## Results
+
+### Baseline (September 26, 2026): 4 of 10 scenarios, 11 of 20 checks
+
+Today's setup with nothing added: the six direct tools, their MCP instructions, no
+hooks and no instruction files ([results](runs/baseline/results.json), raw output in
+`runs/baseline/raw`). All 23 sessions completed. Claude cost $0.75; Codex used 556k
+input tokens (487k cached). `mnemo_dirty` records only an uncommitted `AGENTS.md`.
+
+- **Codex never stored anything.** In all six sessions where Codex was told a fact
+  (including "Please remember: …"), it replied as if it had saved it ("I'll
+  remember that") without calling a tool. The handoff note, the correction and two
+  of the three ports were lost.
+- **Codex rarely checked memory before answering.** Three of its six answering
+  sessions made no Mnemo call: it answered `pip install requests` although a
+  global "use uv" memory existed, UNKNOWN in the repository that had the staging
+  database name, and a PR title without the stored `WID-` convention.
+- **Claude stored and recalled reliably.** It searched, then created, in all six
+  sessions where it was told a fact, and searched before every answer. Every
+  create failed once first because Claude passed a readable `request_id` instead
+  of a UUID (six `INVALID_INPUT` errors, each retried).
+- **Two passes are hollow.** `undo_wrong` and the store check of `no_duplicate`
+  passed only because Codex never wrote the memory they test. Project isolation
+  held (Codex in `beta` did not see `alpha`'s fact), but it was never tested against
+  a Codex read in `alpha` that searched.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is
