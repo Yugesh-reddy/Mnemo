@@ -65,8 +65,25 @@ Memory has two scopes:
 `memory_search` returns hits from both, each labelled with its scope. Set
 `MNEMO_PROJECT` to override detection.
 
-Claude Code, configured once for every repository (replace the executable path
-with your checkout's absolute path):
+The quickest setup, after `make install && make up`:
+
+```bash
+uv run mnemo-install          # shows every change and asks first; --dry-run to only look
+uv run mnemo-install --uninstall
+```
+
+It applies pending migrations, registers the server for Claude Code (user scope)
+and Codex (tools pre-approved, in `$CODEX_HOME/config.toml`), and adds the
+[memory policy](mnemo/memory_policy.md) to `~/.claude/CLAUDE.md` and
+`$CODEX_HOME/AGENTS.md`. The policy matters: in the
+[coding-agent eval](docs/agent-eval/README.md) Codex saved nothing it was told
+until its instructions said when to use memory. Everything written to a file sits
+between `mnemo:begin`/`mnemo:end` markers, and `--uninstall` removes exactly that.
+If your `codex` wrapper pins another home, it is detected; otherwise pass
+`--codex-home`. The settings come from `.env` / `MNEMO_*`, as for the server.
+
+To configure by hand instead, Claude Code, once for every repository (replace the
+executable path with your checkout's absolute path):
 
 ```bash
 claude mcp add mnemo --scope user \
@@ -90,6 +107,9 @@ MNEMO_EMBED_DIM = "768"
 MNEMO_WORKER_ENABLED = "false"
 MNEMO_ACTOR = "codex"
 ```
+
+When configuring by hand, also paste [the memory policy](mnemo/memory_policy.md)
+into `~/.claude/CLAUDE.md` and `$CODEX_HOME/AGENTS.md`.
 
 Checked live on September 26, 2026 with a scratch database. Claude Code, started
 in a subdirectory of a test repository, created a memory in that repository's

@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct demo demo-direct ui export import
+.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct agents demo demo-direct ui export import
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -42,6 +42,9 @@ mcp:  ## Run the MCP server (stdio)
 
 mcp-direct:  ## Run six guarded memory tools over MCP (no extraction or decay)
 	$(RUN) python -m mnemo.mcp_direct
+
+agents:  ## Connect Claude Code and Codex to Mnemo (shows changes, asks first)
+	$(RUN) mnemo-install
 
 demo:  ## Run the end-to-end rollback demo (spec §10)
 	$(RUN) python examples/agent.py demo
