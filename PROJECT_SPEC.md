@@ -541,3 +541,26 @@ stored; sharing required one `agent_id`, which erased who made each change.
   configured namespace. Settings from the client configuration take precedence;
   `MNEMO_*` keys in the working directory's `.env` apply only to settings the client
   leaves unset.
+
+## 20. Agent-facing tool text and optional request IDs — September 26, 2026
+
+The owner approved these changes to the direct MCP profile (§15) under rule 6, after
+the [coding-agent eval baseline](docs/agent-eval/README.md): every Claude create
+first failed on a readable `request_id`, and Codex never saved a memory it was told.
+
+- **Optional request IDs.** `request_id` is optional on `memory_create`,
+  `memory_update` and `memory_revert`. Absent or blank, the server generates a new
+  UUID, so that call has no retry key. A UUID is used as given; any other text of at
+  most 200 characters becomes `uuid5(REQUEST_ID_NAMESPACE, text)`, so repeating the
+  same text still replays the original result and reusing it for a different change
+  is still `REQUEST_ID_REUSED`. The Python SDK keeps requiring UUIDs.
+- **Actionable ID errors.** A malformed `fact_id`, `event_id`, `to_event_id` or
+  `expected_event_id` returns `INVALID_INPUT` naming the field (in `details.field`)
+  and the tools that return valid IDs.
+- **When to use memory.** The server instructions and tool descriptions tell agents
+  to search before answering about the project's conventions, commands, decisions,
+  ongoing work or the user's preferences; to save what the user wants kept, updating
+  an existing memory rather than adding another; to claim a save only after it
+  succeeds; and not to save small talk, one-off questions or secrets. The same policy
+  ships as `mnemo/memory_policy.md` for agents' instruction files, because tool text
+  alone did not make Codex save (0 of 2), while the policy in `AGENTS.md` did (2 of 2).

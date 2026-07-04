@@ -55,6 +55,8 @@ mnemo-demo = "examples.agent:app"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# Recorded eval evidence (including the scripts that produced it) stays byte-for-byte.
+extend-exclude = ["docs/agent-eval/runs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
@@ -66,6 +68,7 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.black]
 line-length = 100
 target-version = ["py312"]
+extend-exclude = "docs/agent-eval/runs"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

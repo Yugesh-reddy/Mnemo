@@ -1,0 +1,132 @@
+{
+  "policy": "# Shared memory\n\nYou share a persistent memory with other coding agents through the `mnemo` MCP tools\n(memory_search, memory_create, memory_get, memory_update).\n\n- When the user tells you something worth keeping for later sessions (a convention,\n  command, decision, handoff note, correction or preference), save it with\n  memory_create, or memory_update if it changes an existing memory. Only say you\n  saved it after the tool call succeeds.\n- Before answering questions about this project's conventions, commands, decisions\n  or the user's preferences, search memory first.\n- Use scope 'global' only for things the user says apply to all projects.\n",
+  "rows": [
+    {
+      "condition": "read_only",
+      "prompt": "explicit",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Got it\u2014the team\u2019s on-call handoff happens on Fridays.",
+      "usage": {
+        "input_tokens": 17238,
+        "cached_input_tokens": 12800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "condition": "read_only",
+      "prompt": "handoff",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Handoff note: `test_sync_timeout` is flaky due to an upstream bug. Until the vendor ships a fix, run:\n\n```sh\npytest -k 'not sync_timeout'\n```",
+      "usage": {
+        "input_tokens": 16455,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 83,
+        "reasoning_output_tokens": 39
+      }
+    },
+    {
+      "condition": "workspace_write",
+      "prompt": "explicit",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Got it \u2014 this team\u2019s on-call handoff happens on Fridays.",
+      "usage": {
+        "input_tokens": 16765,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 18,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "condition": "workspace_write",
+      "prompt": "handoff",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Saved in [HANDOFF.md](/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-diag-i5gtrutv/alpha/HANDOFF.md): use `pytest -k 'not sync_timeout'` until the vendor fixes the upstream bug.",
+      "usage": {
+        "input_tokens": 68471,
+        "cached_input_tokens": 62592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 336,
+        "reasoning_output_tokens": 8
+      }
+    },
+    {
+      "condition": "reasoning_medium",
+      "prompt": "explicit",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Got it\u2014the team\u2019s on-call handoff happens on Fridays.",
+      "usage": {
+        "input_tokens": 16422,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "condition": "reasoning_medium",
+      "prompt": "handoff",
+      "status": "ok",
+      "writes": 0,
+      "mnemo_calls": [],
+      "answer": "Handoff note: `test_sync_timeout` is flaky due to an upstream bug. Until the vendor ships a fix, run:\n\n```sh\npytest -k 'not sync_timeout'\n```\n\nThis note is in the conversation; no repository files wer",
+      "usage": {
+        "input_tokens": 16453,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 101,
+        "reasoning_output_tokens": 43
+      }
+    },
+    {
+      "condition": "agents_md",
+      "prompt": "explicit",
+      "status": "ok",
+      "writes": 1,
+      "mnemo_calls": [
+        "mnemo:memory_search",
+        "mnemo:memory_create"
+      ],
+      "answer": "Saved: this team\u2019s on-call handoff happens on Fridays.",
+      "usage": {
+        "input_tokens": 68556,
+        "cached_input_tokens": 62464,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 176,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "condition": "agents_md",
+      "prompt": "handoff",
+      "status": "ok",
+      "writes": 1,
+      "mnemo_calls": [
+        "mnemo:memory_search",
+        "mnemo:memory_create",
+        "mnemo:memory_create"
+      ],
+      "answer": "Saved to project memory: `test_sync_timeout` is flaky due to an upstream bug. Run `pytest -k 'not sync_timeout'` until the vendor ships a fix.",
+      "usage": {
+        "input_tokens": 86420,
+        "cached_input_tokens": 83456,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 330,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ]
+}

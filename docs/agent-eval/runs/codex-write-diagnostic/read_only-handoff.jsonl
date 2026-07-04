@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0e11d-2bf1-7400-8506-3d07229ef158"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Handoff note: `test_sync_timeout` is flaky due to an upstream bug. Until the vendor ships a fix, run:\n\n```sh\npytest -k 'not sync_timeout'\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":16455,"cached_input_tokens":12032,"cache_write_input_tokens":0,"output_tokens":83,"reasoning_output_tokens":39}}

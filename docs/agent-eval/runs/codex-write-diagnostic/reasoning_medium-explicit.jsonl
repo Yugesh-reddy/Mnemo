@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0e11d-9fcd-7b11-a1ce-412d1771c719"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Got it—the team’s on-call handoff happens on Fridays."}}
+{"type":"turn.completed","usage":{"input_tokens":16422,"cached_input_tokens":12032,"cache_write_input_tokens":0,"output_tokens":17,"reasoning_output_tokens":0}}

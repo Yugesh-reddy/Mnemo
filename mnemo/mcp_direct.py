@@ -17,7 +17,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4, uuid5
 
 import asyncpg
 from mcp.server.fastmcp import FastMCP
@@ -34,6 +34,9 @@ from mnemo.errors import ErrorCode, MnemoError
 from mnemo.project import detect_project
 
 SCOPES = ("project", "global")
+REQUEST_ID_NAMESPACE = UUID("6d0e2f3a-4c1b-5e8a-9f7d-2b3c4d5e6f70")
+"""Readable request IDs map to uuid5(REQUEST_ID_NAMESPACE, text), a stable retry key."""
+MAX_REQUEST_ID = 200
 
 _pool: asyncpg.Pool | None = None
 _embedder: Embedder | None = None
@@ -109,16 +112,49 @@ class _DirectMCP(FastMCP):
 mcp = _DirectMCP(
     "mnemo-direct",
     instructions=(
-        "Search and get before changing existing memory. Use returned fact/event IDs; "
-        "pass the current_event_id you read as expected_event_id. On REVISION_CONFLICT, "
-        "re-read and reconsider. Reuse request_id only for an identical retry. Use history "
-        "to select a restore target. When several changes fit 'undo that', ask the user "
-        "which one before mutating. Undoing creation is unsupported. Memories are shared "
-        "with every agent working in this project; create with scope='global' only for "
-        "facts that hold across projects, such as the user's preferences."
+        "Shared memory for the coding agents on this machine. Search it before answering "
+        "questions about this project's conventions, commands, decisions or ongoing work, "
+        "or the user's preferences: another agent may already know. When the user tells "
+        "you something worth keeping for later sessions (a convention, command, decision, "
+        "handoff note, correction or preference), save it with memory_create, or "
+        "memory_update if a memory on that subject exists, and only say it is saved after "
+        "the call succeeds. Don't save small talk, one-off questions or secrets. Memories "
+        "belong to this project unless the user says they apply to all projects "
+        "(scope='global'). Before changing a memory, read it and pass its current_event_id "
+        "as expected_event_id; on REVISION_CONFLICT re-read and reconsider. request_id is "
+        "optional; reuse one only to retry the identical change. Use history to pick a "
+        "restore target, and ask the user when several changes fit 'undo that'. Undoing "
+        "creation is unsupported."
     ),
     lifespan=lifespan,
 )
+
+
+def _id(value: str, field: str) -> UUID:
+    try:
+        return UUID(value)
+    except (TypeError, ValueError, AttributeError) as exc:
+        raise MnemoError(
+            ErrorCode.INVALID_INPUT,
+            f"{field} must be an ID returned by memory_search, memory_get or memory_history",
+            field=field,
+        ) from exc
+
+
+def _request_id(value: str | None) -> UUID:
+    """A UUID is used as given, other text is hashed to a stable UUID, none gets a new one."""
+    if value is None or not value.strip():
+        return uuid4()
+    if len(value) > MAX_REQUEST_ID or "\x00" in value:
+        raise MnemoError(
+            ErrorCode.INVALID_INPUT,
+            f"request_id must be text of at most {MAX_REQUEST_ID} characters",
+            field="request_id",
+        )
+    try:
+        return UUID(value)
+    except ValueError:
+        return uuid5(REQUEST_ID_NAMESPACE, value)
 
 
 def _scope(requested: str | None) -> str:
@@ -161,7 +197,7 @@ async def _run[T](
     try:
         async with _pool.acquire() as conn:
             if fact_id is not None:
-                scope = await _scope_of(conn, settings, UUID(fact_id))
+                scope = await _scope_of(conn, settings, _id(fact_id, "fact_id"))
             scope = _scope(scope)
             store = MnemoStore(
                 conn,
@@ -182,19 +218,26 @@ def _scoped(result: Any, scope: str) -> dict:
 
 @mcp.tool()
 async def memory_create(
-    subject: str, predicate: str, value: str, request_id: str, scope: str | None = None
+    subject: str,
+    predicate: str,
+    value: str,
+    request_id: str | None = None,
+    scope: str | None = None,
 ) -> dict:
-    """Create a NEW memory. ALREADY_EXISTS returns its fact_id; use memory_update instead.
-    Generate request_id once per intended change and reuse it only for identical retries.
-    scope: 'project' (default in a repository: shared by agents in this project) or
-    'global' (shared across all projects, e.g. user preferences).
+    """Save a new memory for later sessions and other agents: a convention, command,
+    decision, handoff note, correction or the user's preference. Use it whenever the user
+    asks you to remember or note something lasting; never claim to remember without it.
+    Search first: if a memory on the same subject exists (ALREADY_EXISTS returns its
+    fact_id), use memory_update. scope: 'project' (default inside a repository) or
+    'global' (applies to all the user's projects). request_id is optional: send the same
+    value again only to retry this exact change.
     """
     result, used = await _run(
         lambda d: d.create(
             subject,
             predicate,
             value,
-            request_id=UUID(request_id),
+            request_id=_request_id(request_id),
             actor=_actor(_settings()),
         ),
         scope=scope,
@@ -209,8 +252,8 @@ async def memory_get(fact_id: str, event_id: str | None = None) -> dict:
     """
     result, scope = await _run(
         lambda d: d.get(
-            UUID(fact_id),
-            UUID(event_id) if event_id is not None else None,
+            _id(fact_id, "fact_id"),
+            _id(event_id, "event_id") if event_id is not None else None,
         ),
         fact_id=fact_id,
     )
@@ -219,9 +262,10 @@ async def memory_get(fact_id: str, event_id: str | None = None) -> dict:
 
 @mcp.tool()
 async def memory_search(query: str, limit: int = 5) -> dict:
-    """Find candidate memories in this project and the global scope; hits include
-    fact_id, event_id and scope. Similarity never authorizes a merge or overwrite.
-    Confirm the current value with memory_get first.
+    """Search shared memory (this project and global). Do this before answering questions
+    about the project's conventions, commands, decisions or ongoing work, or the user's
+    preferences: another agent may have saved them. Hits include fact_id, event_id and
+    scope. Similar text never authorizes an overwrite; read with memory_get first.
     """
     hits: list[dict] = []
     for lane in list(_lanes):
@@ -232,17 +276,21 @@ async def memory_search(query: str, limit: int = 5) -> dict:
 
 
 @mcp.tool()
-async def memory_update(fact_id: str, value: str, expected_event_id: str, request_id: str) -> dict:
-    """Change a memory using the current_event_id you read as expected_event_id.
-    REVISION_CONFLICT: re-read and reconsider. Identical value: status=no_change.
-    Reuse request_id only when retrying this exact change with the same parameters.
+async def memory_update(
+    fact_id: str, value: str, expected_event_id: str, request_id: str | None = None
+) -> dict:
+    """Change a memory that changed or was wrong, e.g. when the user corrects or withdraws
+    it (write the current truth, such as "no on-call handoff day"). Pass the
+    current_event_id you read as expected_event_id. REVISION_CONFLICT: re-read and
+    reconsider. Identical value: status=no_change. request_id is optional: send the same
+    value again only to retry this exact change.
     """
     result, scope = await _run(
         lambda d: d.update(
-            UUID(fact_id),
+            _id(fact_id, "fact_id"),
             value,
-            expected_event_id=UUID(expected_event_id),
-            request_id=UUID(request_id),
+            expected_event_id=_id(expected_event_id, "expected_event_id"),
+            request_id=_request_id(request_id),
             actor=_actor(_settings()),
         ),
         fact_id=fact_id,
@@ -257,26 +305,27 @@ async def memory_history(fact_id: str, cursor: str | None = None, limit: int = 2
     old value. Ask the user if several revisions could match 'undo that'.
     """
     page, scope = await _run(
-        lambda d: d.history(UUID(fact_id), cursor=cursor, limit=limit), fact_id=fact_id
+        lambda d: d.history(_id(fact_id, "fact_id"), cursor=cursor, limit=limit),
+        fact_id=fact_id,
     )
     return _scoped(page, scope)
 
 
 @mcp.tool()
 async def memory_revert(
-    fact_id: str, to_event_id: str, expected_event_id: str, request_id: str
+    fact_id: str, to_event_id: str, expected_event_id: str, request_id: str | None = None
 ) -> dict:
     """Restore a historical event's exact value as a NEW revision; history stays intact.
     Requires the current_event_id you read. Revert-to-current is no_change. For ambiguity,
     ask the user first. Undoing creation is unsupported (UNSUPPORTED_OPERATION).
-    Reuse request_id only for an identical retry; on conflict re-read and reconsider.
+    request_id is optional, for identical retries only; on conflict re-read and reconsider.
     """
     result, scope = await _run(
         lambda d: d.revert(
-            UUID(fact_id),
-            UUID(to_event_id),
-            expected_event_id=UUID(expected_event_id),
-            request_id=UUID(request_id),
+            _id(fact_id, "fact_id"),
+            _id(to_event_id, "to_event_id"),
+            expected_event_id=_id(expected_event_id, "expected_event_id"),
+            request_id=_request_id(request_id),
             actor=_actor(_settings()),
         ),
         fact_id=fact_id,
