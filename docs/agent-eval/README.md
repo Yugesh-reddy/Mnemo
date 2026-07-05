@@ -82,6 +82,41 @@ input tokens (487k cached). `mnemo_dirty` records only an uncommitted `AGENTS.md
   held (Codex in `beta` did not see `alpha`'s fact), but it was never tested against
   a Codex read in `alpha` that searched.
 
+### Policy arm (September 26, 2026): 10 of 10 scenarios, 20 of 20 checks
+
+Three changes from the baseline, all in commit `0cb5a23`: `request_id` is optional
+(any text), the tool descriptions and server instructions say when to search and
+save, and the [memory policy](../../mnemo/memory_policy.md) is in each fixture
+repository's `AGENTS.md` and `CLAUDE.md` (`--repo-file`), standing in for the global
+instruction files `mnemo-install` writes ([results](runs/policy/results.json)).
+Claude cost $0.74; Codex used 719k input tokens (637k cached). The working tree
+also held the user's `AGENTS.md` edit and the not-yet-committed installer, which the
+server does not import.
+
+Every pass was checked against the store and the transcripts, and none is hollow:
+
+- **Codex now saves and corrects.** It stored the handoff note, both ports and the
+  on-call day, each after searching, and changed Tuesday to Thursday with a guarded
+  update (search, get, update). Claude withdrew the on-call memory the same way
+  ("This team has no on-call handoff day").
+- **Both agents search before answering.** 22 of 23 sessions used Mnemo; the one
+  that did not was the small-talk session, which correctly stored nothing. Codex
+  found the `WID-` convention, the staging database in `alpha` (and nothing in
+  `beta`), and the global uv rule from another repository.
+- **No duplicate, no friction.** Codex found the formatting rule already stored and
+  did not add it again. There were no tool errors (baseline: six).
+
+Which change did what: a Codex-only diagnostic isolates the policy file. Without it
+Codex saved 0 of 6 facts in the [write diagnostic](runs/codex-write-diagnostic/)
+(read-only or writable sandbox, reasoning effort none or medium) and 0 of 2 with the
+new tool text alone ([tool-text diagnostic](runs/codex-tool-text-diagnostic/)); with
+the policy in `AGENTS.md` it saved 2 of 2. With a writable sandbox and no policy,
+Codex wrote the handoff to a `HANDOFF.md` file in the repository instead.
+
+A first attempt at this arm stopped after four scenarios when the operator's session
+ended; it is kept in [runs/policy-aborted-1](runs/policy-aborted-1/NOTE.md) and was
+not scored. Its four completed scenarios also passed, with the same saves and searches.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is

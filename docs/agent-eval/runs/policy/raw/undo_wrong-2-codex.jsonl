@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a0e127-cf37-72f2-9e40-6fb565489dee"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the team’s shared memory."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff day"},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff day"},"result":{"content":[{"type":"text","text":"{\n  \"hits\": [\n    {\n      \"fact_id\": \"e0ac7ca2-b588-43ee-bbf6-d92b65e064bb\",\n      \"event_id\": \"c8854c2e-c3be-4e06-b720-694238291401\",\n      \"subject\": \"team\",\n      \"predicate\": \"on_call_handoff_day\",\n      \"value\": \"This team has no on-call handoff day.\",\n      \"score\": 0.7924921371720933,\n      \"scope\": \"project\"\n    }\n  ]\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"NONE"}}
+{"type":"turn.completed","usage":{"input_tokens":55298,"cached_input_tokens":50944,"cache_write_input_tokens":0,"output_tokens":98,"reasoning_output_tokens":0}}

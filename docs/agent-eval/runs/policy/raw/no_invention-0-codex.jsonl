@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a0e128-0470-7852-a603-aaa37d8cc499"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the shared memory for this repo’s release manager.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"release manager","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"release manager","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"UNKNOWN"}}
+{"type":"turn.completed","usage":{"input_tokens":51044,"cached_input_tokens":48896,"cache_write_input_tokens":0,"output_tokens":86,"reasoning_output_tokens":0}}

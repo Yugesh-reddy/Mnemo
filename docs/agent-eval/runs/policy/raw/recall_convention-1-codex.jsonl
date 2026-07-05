@@ -1,0 +1,6 @@
+{"type":"thread.started","thread_id":"01a0e125-055b-7710-abc0-10a2e4d0ddaa"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"id":"item_0","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"PR title convention ticket number","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_0","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"PR title convention ticket number","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": [\n    {\n      \"fact_id\": \"0ba673aa-ecfd-41d0-a0b1-f0054157e7f0\",\n      \"event_id\": \"bf85d07f-f029-4295-a729-c2c480974405\",\n      \"subject\": \"PR titles\",\n      \"predicate\": \"convention\",\n      \"value\": \"Every PR title must start with the ticket key in the form WID-<number> followed by a colon, e.g. 'WID-142: Fix login redirect'.\",\n      \"score\": 0.7108798815302154,\n      \"scope\": \"project\"\n    }\n  ]\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"WID-318: Fix login timeout"}}
+{"type":"turn.completed","usage":{"input_tokens":51218,"cached_input_tokens":45440,"cache_write_input_tokens":0,"output_tokens":84,"reasoning_output_tokens":0}}

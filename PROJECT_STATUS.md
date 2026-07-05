@@ -30,10 +30,20 @@ global visibility and the actor fallback. A live run with the real CLIs and a
 scratch database confirmed it: Claude Code created a memory in a test repository's
 project scope and Codex, with its own actor, found and updated it.
 
-Next: memory and tools shaped for coding agents (short notes with a topic, write-time
-duplicate checks returned to the caller), hooks so agents recall memory without
-being asked, and a coding-agent evaluation that replaces the chat-data eval as the
-bar for this path.
+The [coding-agent eval](docs/agent-eval/README.md) is now the bar for this path:
+ten scenarios run real Claude Code and Codex sessions in throwaway repositories
+against a scratch database. The baseline passed 4 of 10: Codex never saved anything
+it was told and often answered without searching, and every Claude create first
+failed on the UUID `request_id`. After making `request_id` optional, saying in the
+tool text when to use memory, and giving both agents a short memory policy
+([spec §20](PROJECT_SPEC.md#20-agent-facing-tool-text-and-optional-request-ids--september-26-2026)),
+the same scenarios passed 10 of 10 with no tool errors; diagnostics show the policy
+file is what makes Codex save. `mnemo-install` (`make agents`) registers the server
+with both agents and adds that policy to their global instruction files, showing
+every change first and removing exactly what it added on `--uninstall`.
+
+Next: harder and repeated eval runs (real repositories, rates instead of single
+observations), then the versioning features on top.
 
 ## Shipped through Phase 5
 
@@ -100,8 +110,8 @@ scope.
 
 ## Verification
 
-`make test-db` (September 26): **425 passed, 1 live-Ollama skip**, including the shared-scope
-tests. Earlier: 360 passed (including nine export/import
+`make test-db` (September 26): **451 passed, 1 live-Ollama skip**, including the shared-scope,
+request-ID, installer and agent-eval tests. Earlier: 360 passed (including nine export/import
 and nine v8 Azure-adapter tests). `make lint` passes Ruff and Black (101 Python files),
 and `uv lock --check` passes. The pilot adds 23 regression cases and the Azure adapter adds 16
 transport/configuration cases; two previously
