@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     )
 
     # --- Database ---
+    db_port: int = Field(5432, ge=1, le=65535)
+    """Host port of the Compose Postgres (docker-compose.yml reads MNEMO_DB_PORT too).
+    Unless dsn/test_dsn are set explicitly, they point at localhost on this port."""
     dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo"
     test_dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo_test"
 
@@ -218,6 +221,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_configuration(self) -> Settings:
+        for field, database in (("dsn", "mnemo"), ("test_dsn", "mnemo_test")):
+            if field not in self.model_fields_set:
+                url = f"postgresql://mnemo:mnemo@localhost:{self.db_port}/{database}"
+                setattr(self, field, url)
         if self.backend == "hash":
             if "worker_enabled" not in self.model_fields_set:
                 self.worker_enabled = False

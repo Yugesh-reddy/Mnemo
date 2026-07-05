@@ -42,3 +42,23 @@ def test_gate_knobs_have_spec_defaults() -> None:
     assert s.ephemeral_floor == 0.55
     assert "preferred_database" in s.predicate_vocab
     assert "timezone" in s.predicate_vocab
+
+
+def test_database_port_sets_both_default_dsns(monkeypatch) -> None:
+    for name in ("MNEMO_DSN", "MNEMO_TEST_DSN", "MNEMO_DB_PORT"):
+        monkeypatch.delenv(name, raising=False)
+    assert Settings(_env_file=None).dsn == "postgresql://mnemo:mnemo@localhost:5432/mnemo"
+    moved = Settings(_env_file=None, db_port=5433)
+    assert moved.dsn == "postgresql://mnemo:mnemo@localhost:5433/mnemo"
+    assert moved.test_dsn == "postgresql://mnemo:mnemo@localhost:5433/mnemo_test"
+    explicit = Settings(_env_file=None, db_port=5433, dsn="postgresql://u:p@db:6000/x")
+    assert explicit.dsn == "postgresql://u:p@db:6000/x"
+    assert explicit.test_dsn == "postgresql://mnemo:mnemo@localhost:5433/mnemo_test"
+
+
+def test_compose_publishes_postgres_on_localhost_only() -> None:
+    from pathlib import Path
+
+    compose = (Path(__file__).resolve().parents[1] / "docker-compose.yml").read_text()
+    assert '"127.0.0.1:${MNEMO_DB_PORT:-5432}:5432"' in compose
+    assert '- "5432:5432"' not in compose
