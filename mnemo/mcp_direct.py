@@ -5,7 +5,9 @@ with its own MNEMO_ACTOR; they share memory through two scopes. The project scop
 belongs to the repository the server was started in (or MNEMO_PROJECT) and is shared
 by every agent working there; the global scope is shared everywhere. Reads never
 filter by actor. Domain errors and invalid tool arguments return JSON
-{code, message, details} with MCP's isError flag set.
+{code, message, details} with MCP's isError flag set. When Postgres or the embedding
+service is unusable, tools return SERVICE_UNAVAILABLE saying how to fix it; the server
+starts without Postgres and connects on the first call after it comes up.
 """
 
 from __future__ import annotations
@@ -32,6 +34,7 @@ from mnemo.direct import DirectMemory
 from mnemo.embedder import Embedder, build_embedder
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.project import detect_project
+from mnemo.services import service_error
 
 SCOPES = ("project", "global")
 REQUEST_ID_NAMESPACE = UUID("6d0e2f3a-4c1b-5e8a-9f7d-2b3c4d5e6f70")
@@ -39,6 +42,7 @@ REQUEST_ID_NAMESPACE = UUID("6d0e2f3a-4c1b-5e8a-9f7d-2b3c4d5e6f70")
 MAX_REQUEST_ID = 200
 
 _pool: asyncpg.Pool | None = None
+_pool_lock: asyncio.Lock | None = None
 _embedder: Embedder | None = None
 _lanes: dict[str, str] = {}  # scope -> namespace, resolved once per server process
 
@@ -59,24 +63,47 @@ def _actor(settings: Settings) -> str:
     return settings.actor or settings.agent_id
 
 
+async def _open_pool(settings: Settings) -> asyncpg.Pool:
+    async def init(conn: asyncpg.Connection) -> None:
+        await register_vector(conn)
+        await validate_embedding_dimension(conn, settings.embed_dim)
+
+    return await asyncpg.create_pool(settings.dsn, init=init, min_size=1, max_size=5, timeout=5)
+
+
+async def _get_pool(settings: Settings) -> asyncpg.Pool:
+    """The shared pool, opened on first use if Postgres was down at startup."""
+    global _pool
+    if _pool is None:
+        assert _pool_lock is not None
+        async with _pool_lock:
+            if _pool is None:
+                try:
+                    _pool = await _open_pool(settings)
+                except Exception as exc:
+                    error = service_error(exc, settings) or MnemoError(
+                        ErrorCode.SERVICE_UNAVAILABLE, str(exc), service="postgres"
+                    )
+                    raise error from exc
+    return _pool
+
+
 @asynccontextmanager
 async def lifespan(server: FastMCP) -> AsyncIterator[dict[str, Any]]:
-    global _pool, _embedder, _lanes
+    global _pool, _pool_lock, _embedder, _lanes
     settings = _settings()
     _lanes = _resolve_lanes(settings)
     embedder = build_embedder(settings)
-    pool = None
+    _pool_lock = asyncio.Lock()
     try:
-
-        async def init(conn: asyncpg.Connection) -> None:
-            await register_vector(conn)
-            await validate_embedding_dimension(conn, settings.embed_dim)
-
-        pool = await asyncpg.create_pool(settings.dsn, init=init, min_size=1, max_size=5)
-        _pool, _embedder = pool, embedder
-        yield {"pool": pool, "embedder": embedder}
+        try:
+            _pool = await _open_pool(settings)
+        except Exception:
+            _pool = None  # tools report the problem and retry until Postgres is back
+        _embedder = embedder
+        yield {"embedder": embedder}
     finally:
-        _pool, _embedder = None, None
+        pool, _pool, _embedder = _pool, None, None
         try:
             if pool is not None:
                 await pool.close()
@@ -191,11 +218,12 @@ async def _run[T](
     fact_id: str | None = None,
 ) -> tuple[T, str]:
     """Run fn in one scope: the one holding fact_id, else the requested/default scope."""
-    if _pool is None or _embedder is None:
+    if _embedder is None:
         raise RuntimeError("Direct MCP lifespan is not running")
     settings = _settings()
     try:
-        async with _pool.acquire() as conn:
+        pool = await _get_pool(settings)
+        async with pool.acquire() as conn:
             if fact_id is not None:
                 scope = await _scope_of(conn, settings, _id(fact_id, "fact_id"))
             scope = _scope(scope)
@@ -210,6 +238,13 @@ async def _run[T](
             return await fn(DirectMemory(store)), scope
     except ValueError as exc:
         raise MnemoError(ErrorCode.INVALID_INPUT, str(exc)) from exc
+    except MnemoError:
+        raise
+    except Exception as exc:
+        error = service_error(exc, settings)
+        if error is None:
+            raise
+        raise error from exc
 
 
 def _scoped(result: Any, scope: str) -> dict:

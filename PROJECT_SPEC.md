@@ -387,6 +387,7 @@ Errors are `MnemoError` with a stable code, message and details dictionary:
 | `UNSUPPORTED_STATE` | Current or target state is ineligible for guarded mutation |
 | `REQUEST_ID_REUSED` | Request ID already belongs to another mutation payload |
 | `UNSUPPORTED_OPERATION` | Creation undo (no restore target) is unsupported |
+| `SERVICE_UNAVAILABLE` | Postgres or the embedding backend is unusable (§21); `details.service` names it |
 
 See [the direct SDK guide](docs/DIRECT_SDK.md) for a lifecycle example. This
 additive API does not change extraction quality or authorize gate tuning.
@@ -564,3 +565,26 @@ first failed on a readable `request_id`, and Codex never saved a memory it was t
   succeeds; and not to save small talk, one-off questions or secrets. The same policy
   ships as `mnemo/memory_policy.md` for agents' instruction files, because tool text
   alone did not make Codex save (0 of 2), while the policy in `AGENTS.md` did (2 of 2).
+
+## 21. Local services: exposure, diagnosis and pre-flight — September 27, 2026
+
+The owner approved these changes to make Mnemo installable by others.
+
+- **Localhost only.** Compose publishes Postgres on `127.0.0.1`, never on other
+  interfaces, at `MNEMO_DB_PORT` (default 5432). The default `dsn` and `test_dsn`
+  follow `MNEMO_DB_PORT` unless set explicitly.
+- **`SERVICE_UNAVAILABLE`.** The direct MCP server reports an unusable dependency as
+  `SERVICE_UNAVAILABLE` with `details.service` (`postgres`, `ollama`, `openai`) and a
+  message naming the fix: Postgres unreachable (start Docker, `make up`), database
+  missing, credentials rejected, tables missing (`make migrate`), Ollama unreachable
+  (start it), embedding model missing (`ollama pull <model>`), or OpenAI key rejected.
+  Messages never include DSN credentials.
+- **Starts without Postgres.** If Postgres is down at startup, the server still
+  starts and lists its tools; each call retries the connection and succeeds once
+  Postgres is back, without restarting the agent. Reads that need no embedding (get,
+  history, revert) keep working while only the embedding service is down.
+- **Installer pre-flight.** Before changing anything, `mnemo-install` checks that
+  Postgres accepts a connection and, for the Ollama backend, that Ollama is running;
+  on a problem it prints the fix and changes nothing. A missing embedding model is
+  listed as a step and downloaded through Ollama's API only after confirmation.
+  `--skip-checks` bypasses the probes.

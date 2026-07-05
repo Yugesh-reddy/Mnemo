@@ -10,6 +10,10 @@ tools pre-approved in ``$CODEX_HOME/config.toml`` and the policy in
 ``$CODEX_HOME/AGENTS.md``. Text written into a file sits between mnemo markers, so it
 can be updated or removed without touching the rest of the file. Each agent gets its
 own MNEMO_ACTOR; all of them share one database, namespace and user.
+
+Before changing anything it checks that Postgres is reachable and, for the default
+Ollama backend, that Ollama is running; a missing embedding model is downloaded after
+you confirm. Problems are reported with the command that fixes them.
 """
 
 from __future__ import annotations
@@ -29,6 +33,9 @@ from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
 
+import httpx
+
+from mnemo import services
 from mnemo.config import Settings, get_settings
 
 MD_BEGIN = "<!-- mnemo:begin (managed by mnemo-install; edits inside are replaced) -->"
@@ -222,6 +229,53 @@ def plan(
     return commands, [c for c in changes if c.before != c.after], notes
 
 
+class Services:
+    """The pre-flight probes; tests substitute fakes."""
+
+    def postgres_problem(self, settings: Settings) -> str | None:
+        return asyncio.run(services.postgres_problem(settings))
+
+    def ollama_models(self, host: str) -> list[str]:
+        return services.ollama_models(host)
+
+    def pull(self, host: str, model: str) -> None:
+        services.pull_model(host, model)
+
+
+@dataclass
+class Preflight:
+    ready: list[str]
+    problems: list[str]
+    pull_model: bool = False
+
+
+def preflight(settings: Settings, backend: str, probe: Services) -> Preflight:
+    result = Preflight(ready=[], problems=[])
+    problem = probe.postgres_problem(settings)
+    location = services.where(settings.dsn)
+    if problem:
+        result.problems.append(problem)
+    else:
+        result.ready.append(f"Postgres at {location}")
+    host, model = settings.ollama_host, settings.embed_model
+    if backend == "ollama":
+        try:
+            installed = probe.ollama_models(host)
+        except httpx.HTTPError:
+            result.problems.append(
+                f"Can't reach Ollama at {host}. Start the Ollama app (or run `ollama serve`), "
+                "or install with --backend hash (search then matches exact words only)."
+            )
+        else:
+            result.pull_model = not services.has_model(installed, model)
+            result.ready.append(f"Ollama at {host}")
+    elif backend == "openai" and not settings.openai_api_key:
+        result.problems.append("The openai backend needs OPENAI_API_KEY in the environment.")
+    elif backend == "hash":
+        result.ready.append("hash embeddings (no model server; search matches exact words)")
+    return result
+
+
 async def migrate(dsn: str, embed_dim: int) -> list[str]:
     from mnemo.db import apply_migrations, connect
 
@@ -237,6 +291,7 @@ def main(
     *,
     runner: Runner | None = None,
     ask: Callable[[str], str] = input,
+    probe: Services | None = None,
 ) -> int:
     parser = argparse.ArgumentParser(
         description="Register Mnemo with Claude Code and Codex and add the memory policy."
@@ -249,11 +304,22 @@ def main(
     parser.add_argument("--claude-dir", type=Path, default=Path.home() / ".claude")
     parser.add_argument("--codex-home", type=Path)
     parser.add_argument("--skip-migrate", action="store_true")
+    parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
     args = parser.parse_args(argv)
     run = runner or (lambda cmd: subprocess.run(list(cmd), capture_output=True, text=True))
     settings = get_settings()
     backend = args.backend or settings.backend
     codex_home = args.codex_home or default_codex_home()
+    checks = Preflight(ready=[], problems=[])
+    if not (args.uninstall or args.skip_checks):
+        checks = preflight(settings, backend, probe or Services())
+        for line in checks.ready:
+            print(f"ok   {line}")
+        for problem in checks.problems:
+            print(f"FIX  {problem}")
+        if checks.problems:
+            print("Fix the problems above, then run mnemo-install again.")
+            return 2
     try:
         commands, changes, notes = plan(
             agents=args.agent or ["claude", "codex"],
@@ -269,17 +335,19 @@ def main(
         print(f"mnemo-install: {exc}", file=sys.stderr)
         return 2
     migrating = not (args.uninstall or args.skip_migrate)
-    print(f"Database: {settings.dsn.rsplit('@', 1)[-1]} (backend {backend})")
+    print(f"Database: {services.where(settings.dsn)} (backend {backend})")
     print(f"Codex home: {codex_home}  (pass --codex-home if your codex uses another)")
     for note in notes:
         print(f"Note: {note}")
+    if checks.pull_model:
+        print(f"- Download the embedding model {settings.embed_model} into Ollama (about 270 MB)")
     if migrating:
         print("- Apply any pending database migrations")
     for step in commands:
         print(f"- {step.description}")
     for change in changes:
         print(change.diff(), end="")
-    if not (commands or changes or migrating):
+    if not (commands or changes or migrating or checks.pull_model):
         print("Nothing to change.")
         return 0
     if args.dry_run:
@@ -287,8 +355,27 @@ def main(
     if not args.yes and ask("Apply these changes? [y/N] ").strip().lower() not in ("y", "yes"):
         print("Nothing changed.")
         return 1
+    if checks.pull_model:
+        print(f"Downloading {settings.embed_model}...", flush=True)
+        try:
+            (probe or Services()).pull(settings.ollama_host, settings.embed_model)
+        except (httpx.HTTPError, RuntimeError) as exc:
+            print(
+                f"mnemo-install: download failed: {exc}. Run `ollama pull "
+                f"{settings.embed_model}` and try again.",
+                file=sys.stderr,
+            )
+            return 1
     if migrating:
-        applied = asyncio.run(migrate(settings.dsn, settings.embed_dim))
+        try:
+            applied = asyncio.run(migrate(settings.dsn, settings.embed_dim))
+        except Exception as exc:
+            error = services.service_error(exc, settings)
+            print(
+                f"mnemo-install: migration failed: {error.message if error else exc}",
+                file=sys.stderr,
+            )
+            return 1
         print(f"Migrations applied: {', '.join(applied) or 'none pending'}")
     for step in commands:
         result = run(step.argv)

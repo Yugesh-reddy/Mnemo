@@ -153,6 +153,7 @@ Errors are JSON `{code, message, details}` with MCP's `isError` flag set:
 | `UNSUPPORTED_STATE` | This current state or historical revision cannot be restored here. |
 | `REQUEST_ID_REUSED` | An ID was reused with different parameters. Retry the original or start a new request. |
 | `UNSUPPORTED_OPERATION` | Creation undo is not supported by the direct API. |
+| `SERVICE_UNAVAILABLE` | Postgres or the embedding service is down, missing a model, or not migrated; the message says which command fixes it. |
 
 ## What the store guarantees
 

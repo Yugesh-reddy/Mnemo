@@ -7,6 +7,7 @@ import subprocess
 import tomllib
 from pathlib import Path
 
+import httpx
 import pytest
 
 import mnemo.install as inst
@@ -101,8 +102,9 @@ def homes(tmp_path, monkeypatch):
     return claude, codex
 
 
-def args(claude: Path, codex: Path, *extra: str) -> list[str]:
-    return ["--claude-dir", str(claude), "--codex-home", str(codex), "--skip-migrate", *extra]
+def args(claude: Path, codex: Path, *extra: str, checks: bool = False) -> list[str]:
+    base = ["--claude-dir", str(claude), "--codex-home", str(codex), "--skip-migrate"]
+    return base + ([] if checks else ["--skip-checks"]) + list(extra)
 
 
 def test_dry_run_shows_every_change_and_writes_nothing(homes, capsys):
@@ -172,3 +174,80 @@ def test_an_unmanaged_codex_server_stops_the_install(homes, capsys):
 
 async def test_migrate_is_idempotent_on_a_migrated_database(_disposable_test_db):
     assert await inst.migrate(_disposable_test_db, inst.get_settings().embed_dim) == []
+
+
+class FakeServices:
+    def __init__(self, postgres=None, models=("nomic-embed-text:latest",), ollama_up=True):
+        self.problem, self.models, self.up, self.pulled = postgres, list(models), ollama_up, []
+
+    def postgres_problem(self, settings):
+        return self.problem
+
+    def ollama_models(self, host):
+        if not self.up:
+            raise httpx.ConnectError("refused")
+        return self.models
+
+    def pull(self, host, model):
+        self.pulled.append((host, model))
+
+
+@pytest.fixture
+def ollama_settings(monkeypatch):
+    for name in ("MNEMO_BACKEND", "MNEMO_EMBED_MODEL", "MNEMO_OLLAMA_HOST"):
+        monkeypatch.delenv(name, raising=False)
+    inst.get_settings.cache_clear()
+    yield
+    inst.get_settings.cache_clear()
+
+
+def test_postgres_down_stops_before_any_change(homes, ollama_settings, capsys):
+    claude, codex = homes
+    cli = FakeCli()
+    probe = FakeServices(postgres="Can't reach Postgres at localhost:5432/mnemo. Run `make up`.")
+    assert inst.main(args(claude, codex, "--yes", checks=True), runner=cli, probe=probe) == 2
+    out = capsys.readouterr().out
+    assert "FIX  Can't reach Postgres" in out and "run mnemo-install again" in out
+    assert cli.calls == [] and not (claude / "CLAUDE.md").exists()
+
+
+def test_ollama_down_suggests_starting_it_or_the_hash_backend(homes, ollama_settings, capsys):
+    claude, codex = homes
+    probe = FakeServices(ollama_up=False)
+    assert (
+        inst.main(args(claude, codex, "--dry-run", checks=True), runner=FakeCli(), probe=probe) == 2
+    )
+    out = capsys.readouterr().out
+    assert "ollama serve" in out and "--backend hash" in out
+    probe = FakeServices(ollama_up=False)
+    assert (
+        inst.main(
+            args(claude, codex, "--dry-run", "--backend", "hash", checks=True),
+            runner=FakeCli(),
+            probe=probe,
+        )
+        == 0
+    )
+
+
+def test_a_missing_model_is_downloaded_only_after_confirmation(homes, ollama_settings, capsys):
+    claude, codex = homes
+    probe = FakeServices(models=["qwen3.5:4b-mlx"])
+    assert (
+        inst.main(
+            args(claude, codex, checks=True), runner=FakeCli(), probe=probe, ask=lambda _: "n"
+        )
+        == 1
+    )
+    assert probe.pulled == []
+    assert "Download the embedding model nomic-embed-text" in capsys.readouterr().out
+    assert inst.main(args(claude, codex, "--yes", checks=True), runner=FakeCli(), probe=probe) == 0
+    assert probe.pulled == [("http://localhost:11434", "nomic-embed-text")]
+    assert "ok   Postgres at" in capsys.readouterr().out
+
+
+def test_an_installed_model_is_not_downloaded_again(homes, ollama_settings):
+    claude, codex = homes
+    probe = FakeServices()
+    assert inst.main(args(claude, codex, "--yes", checks=True), runner=FakeCli(), probe=probe) == 0
+    assert probe.pulled == []
