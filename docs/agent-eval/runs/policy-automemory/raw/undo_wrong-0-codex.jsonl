@@ -1,0 +1,9 @@
+{"type":"thread.started","thread_id":"01a0e3af-f8da-7d11-ae73-b0f8825bbf79"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the team’s existing memory and save the handoff day.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff day"},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff day"},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_create","arguments":{"subject":"team","predicate":"on_call_handoff_day","value":"Fridays","scope":"project"},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_create","arguments":{"subject":"team","predicate":"on_call_handoff_day","value":"Fridays","scope":"project"},"result":{"content":[{"type":"text","text":"{\n  \"status\": \"applied\",\n  \"fact_id\": \"6e912007-8e94-4825-b75c-3c01c8910e35\",\n  \"event_id\": \"4de7fd21-14e8-4c2d-8488-c92d076d61e4\",\n  \"previous_event_id\": null,\n  \"restored_from_event_id\": null,\n  \"value\": \"Fridays\",\n  \"request_id\": \"da05ba07-5d0b-4f27-ba87-e4d12397c808\",\n  \"replayed\": false,\n  \"scope\": \"project\"\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"Saved: this team’s on-call handoff happens on Fridays."}}
+{"type":"turn.completed","usage":{"input_tokens":70783,"cached_input_tokens":64000,"cache_write_input_tokens":0,"output_tokens":150,"reasoning_output_tokens":0}}

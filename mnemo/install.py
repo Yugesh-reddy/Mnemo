@@ -161,6 +161,30 @@ def _read(path: Path) -> str:
     return path.read_text() if path.exists() else ""
 
 
+def claude_settings(text: str, auto_memory: str) -> str:
+    """settings.json with autoMemoryEnabled false ("off") or the key removed ("on")."""
+    try:
+        data = json.loads(text) if text.strip() else {}
+    except json.JSONDecodeError as exc:
+        raise InstallError(f"~/.claude/settings.json is not valid JSON ({exc})") from exc
+    if not isinstance(data, dict):
+        raise InstallError("~/.claude/settings.json is not a JSON object")
+    if auto_memory == "off":
+        data["autoMemoryEnabled"] = False
+    else:
+        data.pop("autoMemoryEnabled", None)
+    updated = json.dumps(data, indent=2) + "\n"
+    return text if json.loads(text or "{}") == data else updated
+
+
+def _auto_memory_off(text: str) -> bool:
+    try:
+        data = json.loads(text) if text.strip() else {}
+    except json.JSONDecodeError:
+        return False
+    return isinstance(data, dict) and data.get("autoMemoryEnabled") is False
+
+
 def plan(
     *,
     agents: Sequence[str],
@@ -171,6 +195,7 @@ def plan(
     backend: str,
     command: str,
     runner: Runner,
+    claude_auto_memory: str | None = None,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
     commands: list[Command] = []
     changes: list[FileChange] = []
@@ -210,6 +235,23 @@ def plan(
             else upsert_block(before, policy, MD_BEGIN, MD_END)
         )
         changes.append(FileChange(path, before, after))
+        settings_path = claude_dir / "settings.json"
+        current = _read(settings_path)
+        if claude_auto_memory:
+            changes.append(
+                FileChange(settings_path, current, claude_settings(current, claude_auto_memory))
+            )
+        elif uninstall:
+            if _auto_memory_off(current):
+                notes.append(
+                    "Claude Code's auto-memory is still off; add --claude-auto-memory on "
+                    "to turn it back on."
+                )
+        elif not _auto_memory_off(current):
+            notes.append(
+                "Claude Code's own auto-memory stays on (with the policy, Claude still saved "
+                "to Mnemo in the eval). --claude-auto-memory off turns it off."
+            )
     if "codex" in agents:
         config_path = codex_home / "config.toml"
         before = _read(config_path)
@@ -305,6 +347,11 @@ def main(
     parser.add_argument("--codex-home", type=Path)
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
+    parser.add_argument(
+        "--claude-auto-memory",
+        choices=["off", "on"],
+        help="turn Claude Code's own auto-memory off, or back on (default: leave it)",
+    )
     args = parser.parse_args(argv)
     run = runner or (lambda cmd: subprocess.run(list(cmd), capture_output=True, text=True))
     settings = get_settings()
@@ -330,6 +377,7 @@ def main(
             backend=backend,
             command=server_command(),
             runner=run,
+            claude_auto_memory=args.claude_auto_memory,
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)

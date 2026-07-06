@@ -251,3 +251,37 @@ def test_an_installed_model_is_not_downloaded_again(homes, ollama_settings):
     probe = FakeServices()
     assert inst.main(args(claude, codex, "--yes", checks=True), runner=FakeCli(), probe=probe) == 0
     assert probe.pulled == []
+
+
+def test_claude_auto_memory_can_be_turned_off_and_back_on(homes, capsys):
+    claude, codex = homes
+    claude.mkdir()
+    (claude / "settings.json").write_text('{\n  "theme": "dark",\n  "model": "opus"\n}\n')
+    assert inst.main(args(claude, codex, "--dry-run"), runner=FakeCli()) == 0
+    assert "--claude-auto-memory off turns it off" in capsys.readouterr().out
+    assert (
+        inst.main(args(claude, codex, "--yes", "--claude-auto-memory", "off"), runner=FakeCli())
+        == 0
+    )
+    data = json.loads((claude / "settings.json").read_text())
+    assert data == {"theme": "dark", "model": "opus", "autoMemoryEnabled": False}
+    capsys.readouterr()
+    assert inst.main(args(claude, codex, "--uninstall", "--dry-run"), runner=FakeCli()) == 0
+    assert "--claude-auto-memory on" in capsys.readouterr().out
+    assert (
+        inst.main(
+            args(claude, codex, "--uninstall", "--yes", "--claude-auto-memory", "on"),
+            runner=FakeCli(),
+        )
+        == 0
+    )
+    assert json.loads((claude / "settings.json").read_text()) == {"theme": "dark", "model": "opus"}
+
+
+def test_invalid_claude_settings_stop_the_install(homes, capsys):
+    claude, codex = homes
+    claude.mkdir()
+    (claude / "settings.json").write_text("{not json")
+    code = inst.main(args(claude, codex, "--yes", "--claude-auto-memory", "off"), runner=FakeCli())
+    assert code == 2 and "not valid JSON" in capsys.readouterr().err
+    assert (claude / "settings.json").read_text() == "{not json"

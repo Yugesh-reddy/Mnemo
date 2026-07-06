@@ -588,3 +588,7 @@ The owner approved these changes to make Mnemo installable by others.
   on a problem it prints the fix and changes nothing. A missing embedding model is
   listed as a step and downloaded through Ollama's API only after confirmation.
   `--skip-checks` bypasses the probes.
+- **Claude's own auto-memory.** The installer leaves Claude Code's auto-memory as it
+  is by default; `--claude-auto-memory off` sets `autoMemoryEnabled: false` in
+  `~/.claude/settings.json` (shown as a diff) and `--claude-auto-memory on` removes the
+  key again. With the policy installed, Claude saved nothing there in the eval.

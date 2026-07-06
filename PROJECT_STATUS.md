@@ -42,6 +42,15 @@ file is what makes Codex save. `mnemo-install` (`make agents`) registers the ser
 with both agents and adds that policy to their global instruction files, showing
 every change first and removing exactly what it added on `--uninstall`.
 
+Readiness for other users (September 27): Postgres is published on localhost only,
+on a configurable port; the server returns `SERVICE_UNAVAILABLE` with the fixing
+command when Postgres, Ollama or the embedding model is missing, and starts without
+Postgres; `mnemo-install` checks the services first and downloads a missing model
+after confirmation ([spec §21](PROJECT_SPEC.md#21-local-services-exposure-diagnosis-and-pre-flight--september-27-2026)).
+A third eval arm left Claude Code's own auto-memory on: 10 of 10 again, and Claude
+saved nothing there, so the installer leaves it on by default and offers
+`--claude-auto-memory off`.
+
 Next: harder and repeated eval runs (real repositories, rates instead of single
 observations), then the versioning features on top.
 

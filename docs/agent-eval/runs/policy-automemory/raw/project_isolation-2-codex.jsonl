@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a0e3af-17f6-7801-960c-018bb64e318e"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check this project’s memory for the staging database name.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"staging database name","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"staging database name","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": [\n    {\n      \"fact_id\": \"14a8dc3a-0154-4ba7-b798-18856c8f5639\",\n      \"event_id\": \"465cab6e-80c5-439e-81d1-2d472cbbe86d\",\n      \"subject\": \"staging database\",\n      \"predicate\": \"is named\",\n      \"value\": \"widget_stage_07\",\n      \"score\": 0.7749945252525542,\n      \"scope\": \"project\"\n    }\n  ]\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"widget_stage_07"}}
+{"type":"turn.completed","usage":{"input_tokens":51174,"cached_input_tokens":45440,"cache_write_input_tokens":0,"output_tokens":91,"reasoning_output_tokens":0}}

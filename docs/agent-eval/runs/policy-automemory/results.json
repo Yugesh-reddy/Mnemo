@@ -1,0 +1,1835 @@
+{
+  "arm": "policy-automemory",
+  "started_at_utc": "2026-09-27T16:22:44.783208+00:00",
+  "environment": {
+    "mnemo_commit": "e6c780fb664f512450e807d2ad5bb946ffdb6991",
+    "mnemo_dirty": true,
+    "claude": "2.1.283 (Claude Code)",
+    "codex": "codex-cli 0.156.0",
+    "backend": "ollama",
+    "embed_model": "nomic-embed-text",
+    "embed_dim": 768,
+    "codex_servers_disabled": [
+      "vercel"
+    ],
+    "repo_files": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "claude_session_usd_cap": 0.6,
+    "claude_total_usd_cap": 6.0,
+    "claude_auto_memory": "on"
+  },
+  "database": "mnemo_agent_eval_c3078e3c",
+  "scenarios": [
+    {
+      "id": "recall_convention",
+      "tests": "a convention told to one agent is applied by the other in a later session",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "WID-318\\s*:",
+          "passed": true,
+          "observed": "WID-318: Fix login timeout"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Heads-up for future work in this repo: every PR title must start with the ticket key in the form WID-<number>, followed by a colon, like 'WID-142: Fix login redirect'.",
+          "status": "ok",
+          "answer": "I saved this to shared project memory: every PR title in this repo must start with `WID-<number>:`, for example `WID-142: Fix login redirect`. Other agents working in this project can find it there too.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "PR title convention ticket key"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "PR titles",
+                "predicate": "must follow format",
+                "value": "Every PR title must start with the ticket key in the form WID-<number>, followed by a colon, e.g. 'WID-142: Fix login redirect'."
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"f5c05653-6807-4881-98ae-f5cac307aba5\\\",\\n  \\\"event_id\\\": \\\"42873cad-013f-4788-847d-30765c093ef4\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Every PR title must start with the ticket key in the form WID-<number>, followed by a colon, e.g. 'WID-142: Fix login redirect'.\\\",\\n  \\\"request_id\\\": \\\"399d0489-b63a-49b1-aa38-eafbec3e87eb\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8421,
+            "cache_read_input_tokens": 55302,
+            "output_tokens": 446,
+            "output_tokens_details": {
+              "thinking_tokens": 29
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8421,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 65,
+                "cache_read_input_tokens": 16249,
+                "cache_creation_input_tokens": 429,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 429
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.08837940000000001,
+          "model": "claude-opus-5-5",
+          "seconds": 8.06,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I'm opening a PR that fixes the login timeout; the ticket number is 318. What should the PR title be? Reply with only the title.",
+          "status": "ok",
+          "answer": "WID-318: Fix login timeout",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "PR title convention ticket number",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"f5c05653-6807-4881-98ae-f5cac307aba5\\\",\\n      \\\"event_id\\\": \\\"42873cad-013f-4788-847d-30765c093ef4\\\",\\n      \\\"subject\\\": \\\"PR titles\\\",\\n      \\\"predicate\\\": \\\"must follow format\\\",\\n      \\\"value\\\": \\\"Every PR title must start with the ticket key in the form WID-<number>, followed by a colon, e.g. 'WID-142: Fix login redirect'.\\\",\\n      \\\"score\\\": 0.6927305529290956,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51198,
+            "cached_input_tokens": 45440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 77,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 11.11,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 1,
+            "event_id": "42873cad-013f-4788-847d-30765c093ef4",
+            "fact_id": "f5c05653-6807-4881-98ae-f5cac307aba5",
+            "namespace": "eval-recall_convention-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "PR titles",
+            "predicate": "must follow format",
+            "op": "ADD",
+            "value": "Every PR title must start with the ticket key in the form WID-<number>, followed by a colon, e.g. 'WID-142: Fix login redirect'.",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:22:51.25651+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "f5c05653-6807-4881-98ae-f5cac307aba5",
+            "namespace": "eval-recall_convention-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "PR titles",
+            "predicate": "must follow format",
+            "value": "Every PR title must start with the ticket key in the form WID-<number>, followed by a colon, e.g. 'WID-142: Fix login redirect'.",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "handoff",
+      "tests": "a note left by one agent at the end of its work reaches the next agent",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "not sync_timeout",
+          "passed": true,
+          "observed": "`pytest -k 'not sync_timeout'`"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I'm stopping for today. Note for whoever picks this up next: test_sync_timeout is flaky because of an upstream bug, so run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix.",
+          "status": "ok",
+          "answer": "Saved to this project\u2019s shared memory: `test_sync_timeout` is flaky due to an upstream bug. Run `pytest -k 'not sync_timeout'` until the vendor ships a fix.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "test_sync_timeout flaky upstream bug pytest skip sync_timeout"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "scope": "project",
+                "subject": "test_sync_timeout",
+                "predicate": "temporary_test_workaround",
+                "value": "Handoff: test_sync_timeout is flaky because of an upstream bug. Run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix."
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"14a82ad6-02ca-410a-9e9f-b87cd91283d7\\\",\\n  \\\"event_id\\\": \\\"d6cf35ec-f5b1-4c95-a9bc-f537189382cd\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Handoff: test_sync_timeout is flaky because of an upstream bug. Run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix.\\\",\\n  \\\"request_id\\\": \\\"a85b42c7-6676-4d1f-bfb3-b4d929afb8d3\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 70965,
+            "cached_input_tokens": 64128,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 212,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 16.47,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What exact command should I use to run this repo's test suite right now? Reply with only the command.",
+          "status": "ok",
+          "answer": "`pytest -k 'not sync_timeout'`",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search",
+                "max_results": 1
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "Bash",
+              "arguments": {
+                "command": "cat README.md AGENTS.md; ls -R src | head -50",
+                "description": "Read README, AGENTS, list src"
+              },
+              "result": "# alpha\n\nA small internal service.\n## Shared memory (Mnemo)\n\nYou share one persistent memory with the other coding agents on this machine through\nthe `mnemo` MCP tools.\n\n- **Check it first.** Before answering or acting on anything about this project's\n  conventions, commands, decisions or ongoing work, or the user's preferences, search\n  memory with `memory_search`. Another agent may already know.\n- **Save what lasts.** When the user tells you something worth keeping for later\n  sessions (a convention, command, decision, handoff note, correction or preference),\n  save it with `memory_create`, ",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "test suite command"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"14a82ad6-02ca-410a-9e9f-b87cd91283d7\\\",\\n      \\\"event_id\\\": \\\"d6cf35ec-f5b1-4c95-a9bc-f537189382cd\\\",\\n      \\\"subject\\\": \\\"test_sync_timeout\\\",\\n      \\\"predicate\\\": \\\"temporary_test_workaround\\\",\\n      \\\"value\\\": \\\"Handoff: test_sync_timeout is flaky because of an upstream bug. Run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix.\\\",\\n      \\\"score\\\": 0.6520826548143499,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 7676,
+            "cache_read_input_tokens": 38498,
+            "output_tokens": 361,
+            "output_tokens_details": {
+              "thinking_tokens": 33
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 7676,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 52,
+                "cache_read_input_tokens": 15597,
+                "cache_creation_input_tokens": 336,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 336
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0773206,
+          "model": "claude-opus-5-5",
+          "seconds": 6.67,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 2,
+            "event_id": "d6cf35ec-f5b1-4c95-a9bc-f537189382cd",
+            "fact_id": "14a82ad6-02ca-410a-9e9f-b87cd91283d7",
+            "namespace": "eval-handoff-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "test_sync_timeout",
+            "predicate": "temporary_test_workaround",
+            "op": "ADD",
+            "value": "Handoff: test_sync_timeout is flaky because of an upstream bug. Run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix.",
+            "actor": "codex",
+            "recorded_at": "2026-09-27 16:23:17.720722+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "14a82ad6-02ca-410a-9e9f-b87cd91283d7",
+            "namespace": "eval-handoff-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "test_sync_timeout",
+            "predicate": "temporary_test_workaround",
+            "value": "Handoff: test_sync_timeout is flaky because of an upstream bug. Run the suite with `pytest -k 'not sync_timeout'` until the vendor ships a fix.",
+            "actor": "codex"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "correction",
+      "tests": "a changed fact replaces the old one instead of leaving it current",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "^\\W*thursday\\W*$",
+          "passed": true,
+          "observed": "Thursday"
+        },
+        {
+          "kind": "store",
+          "match": "tuesday",
+          "exclude": "thursday",
+          "max": 0,
+          "note": "no memory still says Tuesday",
+          "passed": true,
+          "observed": []
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "FYI, we deploy this service to production every Tuesday.",
+          "status": "ok",
+          "answer": "I saved \"production deploys happen every Tuesday\" to this project's shared memory, so other agents working here can see it too.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "production deploy schedule day"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "production deploy",
+                "predicate": "schedule",
+                "value": "This service is deployed to production every Tuesday."
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a\\\",\\n  \\\"event_id\\\": \\\"3ffd5481-a3b1-4656-8704-bd4a1fffd107\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"This service is deployed to production every Tuesday.\\\",\\n  \\\"request_id\\\": \\\"18201476-744e-4c60-9845-45707dec2a2b\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8302,
+            "cache_read_input_tokens": 55140,
+            "output_tokens": 376,
+            "output_tokens_details": {
+              "thinking_tokens": 22
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8302,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 39,
+                "cache_read_input_tokens": 16192,
+                "cache_creation_input_tokens": 367,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 367
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.085956,
+          "model": "claude-opus-5-5",
+          "seconds": 7.12,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Heads-up: starting this week, production deploys for this service move from Tuesday to Thursday.",
+          "status": "ok",
+          "answer": "Updated the project memory: production deploys move from Tuesday to Thursday starting this week.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "production deploy schedule Tuesday",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a\\\",\\n      \\\"event_id\\\": \\\"3ffd5481-a3b1-4656-8704-bd4a1fffd107\\\",\\n      \\\"subject\\\": \\\"production deploy\\\",\\n      \\\"predicate\\\": \\\"schedule\\\",\\n      \\\"value\\\": \\\"This service is deployed to production every Tuesday.\\\",\\n      \\\"score\\\": 0.8146523759058063,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_get",
+              "arguments": {
+                "fact_id": "0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"fact_id\\\": \\\"0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a\\\",\\n  \\\"subject\\\": \\\"production deploy\\\",\\n  \\\"predicate\\\": \\\"schedule\\\",\\n  \\\"value\\\": \\\"This service is deployed to production every Tuesday.\\\",\\n  \\\"current_event_id\\\": \\\"3ffd5481-a3b1-4656-8704-bd4a1fffd107\\\",\\n  \\\"provenance\\\": \\\"agent_inference\\\",\\n  \\\"trust_level\\\": \\\"low\\\",\\n  \\\"recorded_at\\\": \\\"2026-09-27T16:23:32.934331Z\\\",\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_update",
+              "arguments": {
+                "fact_id": "0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a",
+                "expected_event_id": "3ffd5481-a3b1-4656-8704-bd4a1fffd107",
+                "value": "Starting this week (as stated on 2026-09-27), this service is deployed to production every Thursday, replacing the Tuesday schedule."
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a\\\",\\n  \\\"event_id\\\": \\\"49fc3282-585b-488d-8723-ba75e20d0884\\\",\\n  \\\"previous_event_id\\\": \\\"3ffd5481-a3b1-4656-8704-bd4a1fffd107\\\",\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Starting this week (as stated on 2026-09-27), this service is deployed to production every Thursday, replacing the Tuesday schedule.\\\",\\n  \\\"request_id\\\": \\\"c9952edc-f537-4f1e-b834-6089976b177c\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 90718,
+            "cached_input_tokens": 76544,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 293,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 23.45,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Which weekday do we deploy this service to production? Reply with one word.",
+          "status": "ok",
+          "answer": "Thursday",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search",
+                "max_results": 1
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "production deploy weekday"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a\\\",\\n      \\\"event_id\\\": \\\"49fc3282-585b-488d-8723-ba75e20d0884\\\",\\n      \\\"subject\\\": \\\"production deploy\\\",\\n      \\\"predicate\\\": \\\"schedule\\\",\\n      \\\"value\\\": \\\"Starting this week (as stated on 2026-09-27), this service is deployed to production every Thursday, replacing the Tuesday schedule.\\\",\\n      \\\"score\\\": 0.7580189450099751,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 5378,
+            "cache_read_input_tokens": 39630,
+            "output_tokens": 156,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 5378,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 6,
+                "cache_read_input_tokens": 15030,
+                "cache_creation_input_tokens": 315,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 315
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.05506199999999999,
+          "model": "claude-opus-5-5",
+          "seconds": 4.77,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 3,
+            "event_id": "3ffd5481-a3b1-4656-8704-bd4a1fffd107",
+            "fact_id": "0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a",
+            "namespace": "eval-correction-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "production deploy",
+            "predicate": "schedule",
+            "op": "ADD",
+            "value": "This service is deployed to production every Tuesday.",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:23:32.934331+00"
+          },
+          {
+            "seq": 4,
+            "event_id": "49fc3282-585b-488d-8723-ba75e20d0884",
+            "fact_id": "0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a",
+            "namespace": "eval-correction-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "production deploy",
+            "predicate": "schedule",
+            "op": "UPDATE",
+            "value": "Starting this week (as stated on 2026-09-27), this service is deployed to production every Thursday, replacing the Tuesday schedule.",
+            "actor": "codex",
+            "recorded_at": "2026-09-27 16:23:55.492939+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "0c0d81a1-5ddf-4c4e-ab90-cd24b2701a3a",
+            "namespace": "eval-correction-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "production deploy",
+            "predicate": "schedule",
+            "value": "Starting this week (as stated on 2026-09-27), this service is deployed to production every Thursday, replacing the Tuesday schedule.",
+            "actor": "codex"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "multi_valued",
+      "tests": "a second value for the same kind of fact is added, not substituted",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "8081",
+          "passed": true,
+          "observed": "8081, 8090, 8095"
+        },
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "8090",
+          "passed": true,
+          "observed": "8081, 8090, 8095"
+        },
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "8095",
+          "passed": true,
+          "observed": "8081, 8090, 8095"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "For reference, our local services: the API listens on port 8081 and the background worker on port 8090.",
+          "status": "ok",
+          "answer": "Saved to project memory: API on port **8081**, background worker on port **8090**.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "local services API background worker ports"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "local API service",
+                "predicate": "listens_on_port",
+                "value": "8081",
+                "scope": "project"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"359d880a-0327-4375-8bd2-ca29b13f67c5\\\",\\n  \\\"event_id\\\": \\\"53bc1f81-2417-4ef0-bc19-92b45e0c4ea7\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"8081\\\",\\n  \\\"request_id\\\": \\\"b1d233cd-979c-4ba1-9230-0d63348ff448\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "local background worker service",
+                "predicate": "listens_on_port",
+                "value": "8090",
+                "scope": "project"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"48aa7373-6e33-47dc-96c5-342500d2457c\\\",\\n  \\\"event_id\\\": \\\"8057d854-3a08-4d7c-b455-2fa4cf3668df\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"8090\\\",\\n  \\\"request_id\\\": \\\"5e92d5a5-e854-4427-9bbb-703ceb984d74\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 71088,
+            "cached_input_tokens": 64128,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 193,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 14.22,
+          "writes": 2,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Also note: the admin UI runs locally on port 8095.",
+          "status": "ok",
+          "answer": "I saved it to this project's shared memory: the admin UI runs locally on port 8095. The memory already lists the local API on port 8081 and the background worker on 8090.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "admin UI port"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"359d880a-0327-4375-8bd2-ca29b13f67c5\\\",\\n      \\\"event_id\\\": \\\"53bc1f81-2417-4ef0-bc19-92b45e0c4ea7\\\",\\n      \\\"subject\\\": \\\"local API service\\\",\\n      \\\"predicate\\\": \\\"listens_on_port\\\",\\n      \\\"value\\\": \\\"8081\\\",\\n      \\\"score\\\": 0.6274198331818142,\\n      \\\"scope\\\": \\\"project\\\"\\n    },\\n    {\\n      \\\"fact_id\\\": \\\"48aa7373-6e33-47dc-96c5-342500d2457c\\\",\\n      \\\"event_id\\\": \\\"8057d854-3a08-4d7c-b455-2fa4cf3668df\\\",\\n      \\\"subject\\\": \\\"local background worker service\\\",\\n      \\\"predicate\\\": \\\"listens_on_port\\\",\\n ",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "local admin UI",
+                "predicate": "listens_on_port",
+                "value": "8095"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"79d27947-1712-4ff6-8a59-ed618e1969c5\\\",\\n  \\\"event_id\\\": \\\"2204eab1-5732-432d-8a82-89324eb7b99f\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"8095\\\",\\n  \\\"request_id\\\": \\\"def68893-6d47-4618-b2fb-9c76d11503c0\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8601,
+            "cache_read_input_tokens": 55508,
+            "output_tokens": 418,
+            "output_tokens_details": {
+              "thinking_tokens": 43
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8601,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 55,
+                "cache_read_input_tokens": 16506,
+                "cache_creation_input_tokens": 352,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 352
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0892826,
+          "model": "claude-opus-5-5",
+          "seconds": 7.91,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "List every local port our services use, as comma-separated numbers only.",
+          "status": "ok",
+          "answer": "8081, 8090, 8095",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "local ports services",
+                "limit": 20
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"48aa7373-6e33-47dc-96c5-342500d2457c\\\",\\n      \\\"event_id\\\": \\\"8057d854-3a08-4d7c-b455-2fa4cf3668df\\\",\\n      \\\"subject\\\": \\\"local background worker service\\\",\\n      \\\"predicate\\\": \\\"listens_on_port\\\",\\n      \\\"value\\\": \\\"8090\\\",\\n      \\\"score\\\": 0.7749943834235529,\\n      \\\"scope\\\": \\\"project\\\"\\n    },\\n    {\\n      \\\"fact_id\\\": \\\"359d880a-0327-4375-8bd2-ca29b13f67c5\\\",\\n      \\\"event_id\\\": \\\"53bc1f81-2417-4ef0-bc19-92b45e0c4ea7\\\",\\n      \\\"subject\\\": \\\"local API service\\\",\\n      \\\"predicate\\\": \\\"listens_o",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51419,
+            "cached_input_tokens": 45440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 76,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 15.07,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 5,
+            "event_id": "53bc1f81-2417-4ef0-bc19-92b45e0c4ea7",
+            "fact_id": "359d880a-0327-4375-8bd2-ca29b13f67c5",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local API service",
+            "predicate": "listens_on_port",
+            "op": "ADD",
+            "value": "8081",
+            "actor": "codex",
+            "recorded_at": "2026-09-27 16:24:14.598425+00"
+          },
+          {
+            "seq": 6,
+            "event_id": "8057d854-3a08-4d7c-b455-2fa4cf3668df",
+            "fact_id": "48aa7373-6e33-47dc-96c5-342500d2457c",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local background worker service",
+            "predicate": "listens_on_port",
+            "op": "ADD",
+            "value": "8090",
+            "actor": "codex",
+            "recorded_at": "2026-09-27 16:24:14.646561+00"
+          },
+          {
+            "seq": 7,
+            "event_id": "2204eab1-5732-432d-8a82-89324eb7b99f",
+            "fact_id": "79d27947-1712-4ff6-8a59-ed618e1969c5",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local admin UI",
+            "predicate": "listens_on_port",
+            "op": "ADD",
+            "value": "8095",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:24:23.390899+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "359d880a-0327-4375-8bd2-ca29b13f67c5",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local API service",
+            "predicate": "listens_on_port",
+            "value": "8081",
+            "actor": "codex"
+          },
+          {
+            "fact_id": "48aa7373-6e33-47dc-96c5-342500d2457c",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local background worker service",
+            "predicate": "listens_on_port",
+            "value": "8090",
+            "actor": "codex"
+          },
+          {
+            "fact_id": "79d27947-1712-4ff6-8a59-ed618e1969c5",
+            "namespace": "eval-multi_valued-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "local admin UI",
+            "predicate": "listens_on_port",
+            "value": "8095",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "project_isolation",
+      "tests": "a project's memory stays out of another project and remains available in its own",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "widget_stage_07",
+          "absent": true,
+          "passed": true,
+          "observed": "UNKNOWN"
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "unknown",
+          "passed": true,
+          "observed": "UNKNOWN"
+        },
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "widget_stage_07",
+          "passed": true,
+          "observed": "widget_stage_07"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Remember: this repo's staging database is named widget_stage_07.",
+          "status": "ok",
+          "answer": "I saved it to the shared Mnemo memory for this project: the staging database is named `widget_stage_07`. Other agents working in this repo can find it there too.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "staging database name"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "staging database",
+                "predicate": "is named",
+                "value": "widget_stage_07"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"14a8dc3a-0154-4ba7-b798-18856c8f5639\\\",\\n  \\\"event_id\\\": \\\"465cab6e-80c5-439e-81d1-2d472cbbe86d\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"widget_stage_07\\\",\\n  \\\"request_id\\\": \\\"4d354f9f-070a-48b8-95d6-2f53f283bea4\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8307,
+            "cache_read_input_tokens": 55205,
+            "output_tokens": 381,
+            "output_tokens_details": {
+              "thinking_tokens": 28
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8307,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 52,
+                "cache_read_input_tokens": 16214,
+                "cache_creation_input_tokens": 350,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 350
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.086136,
+          "model": "claude-opus-5-5",
+          "seconds": 7.65,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What's the name of this repo's staging database? If you don't know, reply UNKNOWN.",
+          "status": "ok",
+          "answer": "UNKNOWN",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "staging database name",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51047,
+            "cached_input_tokens": 40960,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 87,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 10.11,
+          "writes": 0,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "What's the name of this repo's staging database? If you don't know, reply UNKNOWN.",
+          "status": "ok",
+          "answer": "widget_stage_07",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "staging database name",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"14a8dc3a-0154-4ba7-b798-18856c8f5639\\\",\\n      \\\"event_id\\\": \\\"465cab6e-80c5-439e-81d1-2d472cbbe86d\\\",\\n      \\\"subject\\\": \\\"staging database\\\",\\n      \\\"predicate\\\": \\\"is named\\\",\\n      \\\"value\\\": \\\"widget_stage_07\\\",\\n      \\\"score\\\": 0.7749945252525542,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51174,
+            "cached_input_tokens": 45440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 91,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 10.56,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 8,
+            "event_id": "465cab6e-80c5-439e-81d1-2d472cbbe86d",
+            "fact_id": "14a8dc3a-0154-4ba7-b798-18856c8f5639",
+            "namespace": "eval-project_isolation-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "staging database",
+            "predicate": "is named",
+            "op": "ADD",
+            "value": "widget_stage_07",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:24:46.093911+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "14a8dc3a-0154-4ba7-b798-18856c8f5639",
+            "namespace": "eval-project_isolation-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "staging database",
+            "predicate": "is named",
+            "value": "widget_stage_07",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "global_preference",
+      "tests": "a preference stated for all projects applies in a different project",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "\\buv\\b",
+          "passed": true,
+          "observed": "uv add requests"
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "^\\W*pip",
+          "absent": true,
+          "passed": true,
+          "observed": "uv add requests"
+        },
+        {
+          "kind": "store",
+          "match": "\\buv\\b",
+          "scope": "global",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[global] Python package management tool Always manage Python packages with uv, never pip (applies to all of the user's projects)."
+          ]
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "A rule for all of my projects, not just this one: always manage Python packages with uv, never pip.",
+          "status": "ok",
+          "answer": "I saved this to shared memory as a global rule, so it covers all your projects, not just this one: always manage Python packages with uv, never pip. Other agents on this machine will see it too.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "Python package manager uv pip"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "Python package management",
+                "predicate": "tool",
+                "value": "Always manage Python packages with uv, never pip (applies to all of the user's projects).",
+                "scope": "global"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"5487e224-eef9-4d91-a198-578b446fd4ff\\\",\\n  \\\"event_id\\\": \\\"40a646b9-7e45-4f3f-93a4-33cfd998c933\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Always manage Python packages with uv, never pip (applies to all of the user's projects).\\\",\\n  \\\"request_id\\\": \\\"8dca3af5-d5c4-4b09-bd35-7474dcacfad7\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"global\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8350,
+            "cache_read_input_tokens": 55174,
+            "output_tokens": 407,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8350,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 59,
+                "cache_read_input_tokens": 16197,
+                "cache_creation_input_tokens": 410,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 410
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0869928,
+          "model": "claude-opus-5-5",
+          "seconds": 7.49,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What single command would you run to add the requests package to this project? Reply with only the command.",
+          "status": "ok",
+          "answer": "uv add requests",
+          "tool_calls": [
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'ls -a'",
+              "result": ".\n..\n.git\nAGENTS.md\nCLAUDE.md\nREADME.md\nsrc\n",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "Python package manager dependency add command preferences",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"5487e224-eef9-4d91-a198-578b446fd4ff\\\",\\n      \\\"event_id\\\": \\\"40a646b9-7e45-4f3f-93a4-33cfd998c933\\\",\\n      \\\"subject\\\": \\\"Python package management\\\",\\n      \\\"predicate\\\": \\\"tool\\\",\\n      \\\"value\\\": \\\"Always manage Python packages with uv, never pip (applies to all of the user's projects).\\\",\\n      \\\"score\\\": 0.6723159549520906,\\n      \\\"scope\\\": \\\"global\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'cat README.md AGENTS.md'",
+              "result": "# beta\n\nA small internal service.\n## Shared memory (Mnemo)\n\nYou share one persistent memory with the other coding agents on this machine through\nthe `mnemo` MCP tools.\n\n- **Check it first.** Before answering or acting on anything about this project's\n  conventions, commands, decisions or ongoing work, or the user's preferences, search\n  memory with `memory_search`. Another agent may already know.\n- **Save what lasts.** When the user tells you something worth keeping for later\n  sessions (a convention, command, decision, handoff note, correction or preference),\n  save it with `memory_create`, o",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51644,
+            "cached_input_tokens": 41088,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 114,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 14.37,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 9,
+            "event_id": "40a646b9-7e45-4f3f-93a4-33cfd998c933",
+            "fact_id": "5487e224-eef9-4d91-a198-578b446fd4ff",
+            "namespace": "eval-global_preference-c3078e3c",
+            "subject": "Python package management",
+            "predicate": "tool",
+            "op": "ADD",
+            "value": "Always manage Python packages with uv, never pip (applies to all of the user's projects).",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:25:14.30748+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "5487e224-eef9-4d91-a198-578b446fd4ff",
+            "namespace": "eval-global_preference-c3078e3c",
+            "subject": "Python package management",
+            "predicate": "tool",
+            "value": "Always manage Python packages with uv, never pip (applies to all of the user's projects).",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "no_duplicate",
+      "tests": "restating a known fact does not create a second memory",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "^\\W*100\\W*$",
+          "passed": true,
+          "observed": "100"
+        },
+        {
+          "kind": "store",
+          "match": "\\b100\\b",
+          "min": 1,
+          "max": 1,
+          "note": "exactly one memory holds the rule",
+          "passed": true,
+          "observed": [
+            "[project] Python code style formatter Python code is formatted with black, line length 100."
+          ]
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Note: our Python code style is black with a line length of 100.",
+          "status": "ok",
+          "answer": "I saved this to the project's shared memory: Python code here is formatted with black at a line length of 100. I'll use that style for any Python I write in this project.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "Python code style formatter black line length"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "Python code style",
+                "predicate": "formatter",
+                "value": "Python code is formatted with black, line length 100."
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"2a24f5d3-3de1-4da8-ac40-fcc3e6acca28\\\",\\n  \\\"event_id\\\": \\\"7339eab6-b745-4839-a025-cb7ff095dc3b\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Python code is formatted with black, line length 100.\\\",\\n  \\\"request_id\\\": \\\"1d3d4bd5-0c0e-45d9-add8-932cb063d7ad\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 8319,
+            "cache_read_input_tokens": 55186,
+            "output_tokens": 389,
+            "output_tokens_details": {
+              "thinking_tokens": 23
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8319,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 49,
+                "cache_read_input_tokens": 16209,
+                "cache_creation_input_tokens": 367,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 367
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0863642,
+          "model": "claude-opus-5-5",
+          "seconds": 7.14,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Reminder about our formatting rule: black, max line length 100.",
+          "status": "ok",
+          "answer": "Confirmed: use Black with a maximum line length of 100. This rule is already in project memory.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "formatting black max line length 100"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"2a24f5d3-3de1-4da8-ac40-fcc3e6acca28\\\",\\n      \\\"event_id\\\": \\\"7339eab6-b745-4839-a025-cb7ff095dc3b\\\",\\n      \\\"subject\\\": \\\"Python code style\\\",\\n      \\\"predicate\\\": \\\"formatter\\\",\\n      \\\"value\\\": \\\"Python code is formatted with black, line length 100.\\\",\\n      \\\"score\\\": 0.7262311691696784,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 52698,
+            "cached_input_tokens": 46208,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 116,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 12.86,
+          "writes": 0,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What line length do we format Python code to? Reply with the number only.",
+          "status": "ok",
+          "answer": "100",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search",
+                "max_results": 1
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "Python line length formatting"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"2a24f5d3-3de1-4da8-ac40-fcc3e6acca28\\\",\\n      \\\"event_id\\\": \\\"7339eab6-b745-4839-a025-cb7ff095dc3b\\\",\\n      \\\"subject\\\": \\\"Python code style\\\",\\n      \\\"predicate\\\": \\\"formatter\\\",\\n      \\\"value\\\": \\\"Python code is formatted with black, line length 100.\\\",\\n      \\\"score\\\": 0.7749949274577725,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 5350,
+            "cache_read_input_tokens": 39656,
+            "output_tokens": 153,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 5350,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3,
+                "cache_read_input_tokens": 15039,
+                "cache_creation_input_tokens": 283,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 283
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0547832,
+          "model": "claude-opus-5-5",
+          "seconds": 4.91,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 10,
+            "event_id": "7339eab6-b745-4839-a025-cb7ff095dc3b",
+            "fact_id": "2a24f5d3-3de1-4da8-ac40-fcc3e6acca28",
+            "namespace": "eval-no_duplicate-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "Python code style",
+            "predicate": "formatter",
+            "op": "ADD",
+            "value": "Python code is formatted with black, line length 100.",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:25:35.920295+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "2a24f5d3-3de1-4da8-ac40-fcc3e6acca28",
+            "namespace": "eval-no_duplicate-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "Python code style",
+            "predicate": "formatter",
+            "value": "Python code is formatted with black, line length 100.",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "undo_wrong",
+      "tests": "a memory the user retracts stops being current",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "\\bnone\\b",
+          "passed": true,
+          "observed": "NONE"
+        },
+        {
+          "kind": "answer",
+          "session": 2,
+          "match": "friday",
+          "absent": true,
+          "passed": true,
+          "observed": "NONE"
+        },
+        {
+          "kind": "store",
+          "match": "friday",
+          "exclude": "\\bno\\b|\\bnot\\b|none|wrong|incorrect|retract|removed",
+          "max": 0,
+          "passed": true,
+          "observed": []
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Please remember: the on-call handoff for this team happens on Fridays.",
+          "status": "ok",
+          "answer": "Saved: this team\u2019s on-call handoff happens on Fridays.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "on-call handoff day"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "team",
+                "predicate": "on_call_handoff_day",
+                "value": "Fridays",
+                "scope": "project"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"6e912007-8e94-4825-b75c-3c01c8910e35\\\",\\n  \\\"event_id\\\": \\\"4de7fd21-14e8-4c2d-8488-c92d076d61e4\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Fridays\\\",\\n  \\\"request_id\\\": \\\"da05ba07-5d0b-4f27-ba87-e4d12397c808\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 70783,
+            "cached_input_tokens": 64000,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 150,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 14.44,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Correction: I was wrong earlier, there is no on-call handoff day at all. Please remove that memory.",
+          "status": "ok",
+          "answer": "I've corrected it. The shared memory used to say the team's on-call handoff day was \"Fridays\". It now says there is **no on-call handoff day**, and that \"Fridays\" was wrong.\n\nThe memory tools don't have a delete option, so I rewrote the entry instead of removing it. Other agents searching for a handoff day will now find the correct answer.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_get,mcp__mnemo__memory_update,mcp__mnemo__memory_history",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_history\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "on-call handoff day"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"6e912007-8e94-4825-b75c-3c01c8910e35\\\",\\n      \\\"event_id\\\": \\\"4de7fd21-14e8-4c2d-8488-c92d076d61e4\\\",\\n      \\\"subject\\\": \\\"team\\\",\\n      \\\"predicate\\\": \\\"on_call_handoff_day\\\",\\n      \\\"value\\\": \\\"Fridays\\\",\\n      \\\"score\\\": 0.7771707871616332,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_get",
+              "arguments": {
+                "fact_id": "6e912007-8e94-4825-b75c-3c01c8910e35"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"fact_id\\\": \\\"6e912007-8e94-4825-b75c-3c01c8910e35\\\",\\n  \\\"subject\\\": \\\"team\\\",\\n  \\\"predicate\\\": \\\"on_call_handoff_day\\\",\\n  \\\"value\\\": \\\"Fridays\\\",\\n  \\\"current_event_id\\\": \\\"4de7fd21-14e8-4c2d-8488-c92d076d61e4\\\",\\n  \\\"provenance\\\": \\\"agent_inference\\\",\\n  \\\"trust_level\\\": \\\"low\\\",\\n  \\\"recorded_at\\\": \\\"2026-09-27T16:26:07.718858Z\\\",\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_update",
+              "arguments": {
+                "fact_id": "6e912007-8e94-4825-b75c-3c01c8910e35",
+                "expected_event_id": "4de7fd21-14e8-4c2d-8488-c92d076d61e4",
+                "value": "No on-call handoff day (the team has none; earlier \"Fridays\" was wrong)"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"6e912007-8e94-4825-b75c-3c01c8910e35\\\",\\n  \\\"event_id\\\": \\\"3a2f6c6c-9585-44c4-b502-267428bd6833\\\",\\n  \\\"previous_event_id\\\": \\\"4de7fd21-14e8-4c2d-8488-c92d076d61e4\\\",\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"No on-call handoff day (the team has none; earlier \\\\\\\"Fridays\\\\\\\" was wrong)\\\",\\n  \\\"request_id\\\": \\\"f1f84696-7ab6-4cfc-ae65-96982796706d\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 10,
+            "cache_creation_input_tokens": 8705,
+            "cache_read_input_tokens": 71517,
+            "output_tokens": 596,
+            "output_tokens_details": {
+              "thinking_tokens": 24
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8705,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 138,
+                "cache_read_input_tokens": 16502,
+                "cache_creation_input_tokens": 460,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 460
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0969004,
+          "model": "claude-opus-5-5",
+          "seconds": 9.92,
+          "writes": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Is there a fixed on-call handoff day for this team? Reply with the day, or NONE.",
+          "status": "ok",
+          "answer": "NONE",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "on-call handoff day",
+                "limit": 10
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"6e912007-8e94-4825-b75c-3c01c8910e35\\\",\\n      \\\"event_id\\\": \\\"3a2f6c6c-9585-44c4-b502-267428bd6833\\\",\\n      \\\"subject\\\": \\\"team\\\",\\n      \\\"predicate\\\": \\\"on_call_handoff_day\\\",\\n      \\\"value\\\": \\\"No on-call handoff day (the team has none; earlier \\\\\\\"Fridays\\\\\\\" was wrong)\\\",\\n      \\\"score\\\": 0.774997280454177,\\n      \\\"scope\\\": \\\"project\\\"\\n    }\\n  ]\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51195,
+            "cached_input_tokens": 48896,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 85,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 10.36,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 11,
+            "event_id": "4de7fd21-14e8-4c2d-8488-c92d076d61e4",
+            "fact_id": "6e912007-8e94-4825-b75c-3c01c8910e35",
+            "namespace": "eval-undo_wrong-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "team",
+            "predicate": "on_call_handoff_day",
+            "op": "ADD",
+            "value": "Fridays",
+            "actor": "codex",
+            "recorded_at": "2026-09-27 16:26:07.718858+00"
+          },
+          {
+            "seq": 12,
+            "event_id": "3a2f6c6c-9585-44c4-b502-267428bd6833",
+            "fact_id": "6e912007-8e94-4825-b75c-3c01c8910e35",
+            "namespace": "eval-undo_wrong-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "team",
+            "predicate": "on_call_handoff_day",
+            "op": "UPDATE",
+            "value": "No on-call handoff day (the team has none; earlier \"Fridays\" was wrong)",
+            "actor": "claude-code",
+            "recorded_at": "2026-09-27 16:26:17.420897+00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "6e912007-8e94-4825-b75c-3c01c8910e35",
+            "namespace": "eval-undo_wrong-c3078e3c@github.com/mnemo-eval/alpha",
+            "subject": "team",
+            "predicate": "on_call_handoff_day",
+            "value": "No on-call handoff day (the team has none; earlier \"Fridays\" was wrong)",
+            "actor": "claude-code"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "no_junk",
+      "tests": "small talk and a generic question are not stored",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 0,
+          "passed": true,
+          "observed": 0
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Ugh, long day, I'm tired and grabbing a coffee first. Quick question while I wait: what does `git status -sb` show? One sentence.",
+          "status": "ok",
+          "answer": "`git status -sb` shows the working tree status in short format, plus a first line with your current branch and how many commits it's ahead of or behind its upstream.",
+          "tool_calls": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 6409,
+            "cache_read_input_tokens": 8257,
+            "output_tokens": 49,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 6409,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 49,
+                "cache_read_input_tokens": 8257,
+                "cache_creation_input_tokens": 6409,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 6409
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          },
+          "cost_usd": 0.0549044,
+          "model": "claude-opus-5-5",
+          "seconds": 3.24,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [],
+        "current": []
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "no_invention",
+      "tests": "with nothing stored, the agent does not claim a memory",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "answer",
+          "session": 0,
+          "match": "unknown",
+          "passed": true,
+          "observed": "UNKNOWN"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "Who is the release manager for this repo? If you don't know, reply UNKNOWN.",
+          "status": "ok",
+          "answer": "UNKNOWN",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "release manager",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 51053,
+            "cached_input_tokens": 45440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 86,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 9.31,
+          "writes": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [],
+        "current": []
+      },
+      "claude_auto_memory_files": []
+    }
+  ],
+  "commands": {
+    "claude": [
+      "claude",
+      "-p",
+      "--output-format",
+      "stream-json",
+      "--verbose",
+      "--mcp-config",
+      "/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-recall_convention-xaydtu70/claude-mcp-2be25f46.json",
+      "--strict-mcp-config",
+      "--setting-sources",
+      "project",
+      "--no-session-persistence",
+      "--max-budget-usd",
+      "0.60",
+      "--settings",
+      "{\"autoMemoryEnabled\": true}",
+      "--allowedTools",
+      "mcp__mnemo"
+    ],
+    "codex": [
+      "codex",
+      "exec",
+      "--json",
+      "--ephemeral",
+      "--skip-git-repo-check",
+      "-s",
+      "read-only",
+      "--disable",
+      "hooks",
+      "--disable",
+      "plugins",
+      "-c",
+      "mcp_servers.mnemo.command=\"/Users/yugesh/Desktop/Projects/Mnemo/.venv/bin/mnemo-mcp-direct\"",
+      "-c",
+      "mcp_servers.mnemo.env={MNEMO_DSN = \"<dsn>\", MNEMO_BACKEND = \"ollama\", MNEMO_EMBED_DIM = \"768\", MNEMO_WORKER_ENABLED = \"false\", MNEMO_NAMESPACE = \"eval-recall_convention-c3078e3c\", MNEMO_USER_ID = \"owner\", MNEMO_ACTOR = \"codex\"}",
+      "-c",
+      "mcp_servers.mnemo.default_tools_approval_mode=\"approve\"",
+      "-c",
+      "mcp_servers.vercel.enabled=false",
+      "-"
+    ]
+  },
+  "summary": {
+    "scenarios_passed": 10,
+    "scenarios_run": 10,
+    "checks_passed": 20,
+    "checks": 20,
+    "sessions_by_status": {
+      "ok": 23,
+      "error": 0,
+      "timeout": 0,
+      "skipped": 0
+    },
+    "sessions_with_mnemo_calls": 22,
+    "mnemo_calls_by_tool": {
+      "mnemo:memory_create": 10,
+      "mnemo:memory_get": 2,
+      "mnemo:memory_search": 22,
+      "mnemo:memory_update": 2
+    },
+    "memory_writes": 12,
+    "claude_auto_memory_files": 0,
+    "claude_cost_usd": 0.8621,
+    "codex_tokens": {
+      "input_tokens": 714982,
+      "cached_input_tokens": 627712,
+      "output_tokens": 1580
+    }
+  },
+  "finished_at_utc": "2026-09-27T16:26:43.134105+00:00",
+  "database_removed": true
+}

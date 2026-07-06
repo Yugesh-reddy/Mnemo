@@ -117,6 +117,23 @@ A first attempt at this arm stopped after four scenarios when the operator's ses
 ended; it is kept in [runs/policy-aborted-1](runs/policy-aborted-1/NOTE.md) and was
 not scored. Its four completed scenarios also passed, with the same saves and searches.
 
+### Policy with Claude's auto-memory on (September 27, 2026): 10 of 10, 20 of 20
+
+The policy arm again, but with Claude Code's built-in auto-memory left on, as it is
+for users by default (`--claude-auto-memory on`; commit `e6c780f`,
+[results](runs/policy-automemory/results.json)). Every Claude session started with
+its auto-memory folder active (`memory_paths.auto` in the session's init event;
+absent in the other arms). Claude never wrote there: it made no Write or Edit call
+in any session, so nothing was blocked, and all its saves went to Mnemo, as in the
+policy arm. All scenarios passed with the same saves, updates and searches (12
+memory events, 22 of 23 sessions using Mnemo, no tool errors). Claude cost $0.86;
+Codex used 715k input tokens (628k cached).
+
+So with the policy installed, turning auto-memory off is not needed for sharing;
+`mnemo-install` leaves it alone by default and offers `--claude-auto-memory off`.
+This is one run on short sessions: in long real sessions Claude may still choose
+its own memory for some things.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is
