@@ -6,8 +6,10 @@ Only Mnemo can carry information between sessions. Afterwards the final replies 
 the stored memories are checked. Prompts, replies, tool calls, memory events, usage
 and cost are recorded; existing evidence is never overwritten.
 
-Isolation: Claude runs with auto-memory off, no session persistence, only project
-settings (the fixture's own, if an arm adds them) and only the Mnemo MCP server.
+Isolation: Claude runs with auto-memory off (unless --claude-auto-memory on), no session
+persistence, only project settings (the fixture's own, if an arm adds them) and only the
+Mnemo MCP server. With auto-memory on, whatever Claude saves to its own per-project memory
+folder is copied into the evidence and the fixture's folders are then removed.
 Codex runs ephemeral and read-only, with hooks, plugins and every other configured
 MCP server turned off. Neither changes the user's configuration.
 
@@ -137,7 +139,16 @@ def mnemo_env(dsn: str, namespace: str, actor: str, backend: str, embed_dim: int
     }
 
 
-def claude_command(mcp_config: Path, max_usd: float, model: str | None = None) -> list[str]:
+def claude_env(auto_memory: bool) -> dict[str, str]:
+    env = dict(os.environ)
+    if not auto_memory:
+        env["CLAUDE_CODE_DISABLE_AUTO_MEMORY"] = "1"
+    return env
+
+
+def claude_command(
+    mcp_config: Path, max_usd: float, model: str | None = None, *, auto_memory: bool = False
+) -> list[str]:
     """The prompt goes on stdin, so variadic flags cannot swallow it."""
     command = [
         "claude",
@@ -156,6 +167,8 @@ def claude_command(mcp_config: Path, max_usd: float, model: str | None = None) -
     ]
     if model:
         command += ["--model", model]
+    if auto_memory:
+        command += ["--settings", json.dumps({"autoMemoryEnabled": True})]
     return command + ["--allowedTools", "mcp__mnemo"]
 
 
@@ -393,6 +406,9 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
             for tool in sorted({c["tool"] for c in mnemo_calls})
         },
         "memory_writes": sum(s["writes"] for s in sessions),
+        "claude_auto_memory_files": sum(
+            len(s.get("claude_auto_memory_files", [])) for s in scenarios
+        ),
         "claude_cost_usd": round(sum(s["cost_usd"] or 0 for s in sessions), 4),
         "codex_tokens": {
             key: sum(s["usage"].get(key, 0) for s in sessions if s["agent"] == "codex")
@@ -402,6 +418,38 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
 
 
 # ---- orchestration -----------------------------------------------------------------
+
+
+CLAUDE_PROJECTS = Path.home() / ".claude" / "projects"
+
+
+def auto_memory_dirs(work: Path, projects: Path = CLAUDE_PROJECTS) -> list[Path]:
+    """Claude's per-project folders for the fixture repositories under ``work``.
+
+    Claude names them after the project path with every other character turned into
+    "-"; ``work``'s own name is unique (mkdtemp), so containment finds them whether
+    the path was recorded through /var or /private/var.
+    """
+    marker = re.sub(r"[^A-Za-z0-9]", "-", work.name)
+    if not projects.is_dir():
+        return []
+    return sorted(path for path in projects.iterdir() if path.is_dir() and marker in path.name)
+
+
+def collect_auto_memory(work: Path, out: Path, projects: Path = CLAUDE_PROJECTS) -> list[str]:
+    """Copy Claude's auto-memory for the fixtures into ``out``, then remove the folders."""
+    saved: list[str] = []
+    for folder in auto_memory_dirs(work, projects):
+        memory = folder / "memory"
+        if memory.is_dir():
+            for file in sorted(memory.rglob("*")):
+                if file.is_file():
+                    target = out / folder.name / file.relative_to(memory)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(file, target)
+                    saved.append(str(target.relative_to(out)))
+        shutil.rmtree(folder)
+    return saved
 
 
 def make_repo(root: Path, name: str, files: dict[str, str]) -> Path:
@@ -440,8 +488,11 @@ def run_session(
     if session.agent == "claude":
         config = work / f"claude-mcp-{uuid4().hex[:8]}.json"
         config.write_text(json.dumps(claude_mcp_config(env)))
-        command = claude_command(config, args.claude_session_usd, args.claude_model)
-        child_env = {**os.environ, "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}
+        auto_memory = args.claude_auto_memory == "on"
+        command = claude_command(
+            config, args.claude_session_usd, args.claude_model, auto_memory=auto_memory
+        )
+        child_env = claude_env(auto_memory)
         parse: Callable[[str], dict[str, Any]] = parse_claude
     else:
         command = codex_command(env, codex_disable, args.codex_model)
@@ -479,7 +530,13 @@ async def run(args: argparse.Namespace) -> int:
     codex_disable = other_codex_servers()
     if args.dry_run:
         env = mnemo_env("<dsn>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
-        print("claude:", " ".join(claude_command(Path("<mcp.json>"), args.claude_session_usd)))
+        claude = claude_command(
+            Path("<mcp.json>"),
+            args.claude_session_usd,
+            args.claude_model,
+            auto_memory=args.claude_auto_memory == "on",
+        )
+        print("claude:", " ".join(claude))
         print("codex: ", " ".join(codex_command(env, codex_disable, args.codex_model)))
         print(f"{len(scenarios)} scenarios, {sum(len(s.sessions) for s in scenarios)} sessions")
         return 0
@@ -507,6 +564,7 @@ async def run(args: argparse.Namespace) -> int:
             "repo_files": sorted(files),
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
+            "claude_auto_memory": args.claude_auto_memory,
         },
         "database": db_name,
         "scenarios": [],
@@ -560,6 +618,7 @@ async def run(args: argparse.Namespace) -> int:
                 report.setdefault("commands", {}).setdefault(session.agent, _redact(command, dsn))
             state = await store_state(conn, namespace)
             checks = evaluate(scenario, records, state["current"])
+            auto_memory = collect_auto_memory(work, out / "claude-auto-memory" / scenario.id)
             report["scenarios"].append(
                 {
                     "id": scenario.id,
@@ -568,6 +627,7 @@ async def run(args: argparse.Namespace) -> int:
                     "checks": checks,
                     "sessions": [record.model_dump(mode="json") for record in records],
                     "store": state,
+                    "claude_auto_memory_files": auto_memory,
                 }
             )
             shutil.rmtree(work, ignore_errors=True)
@@ -613,6 +673,12 @@ def main() -> None:
     parser.add_argument("--codex-model")
     parser.add_argument("--claude-session-usd", type=float, default=0.60)
     parser.add_argument("--max-claude-usd", type=float, default=6.00)
+    parser.add_argument(
+        "--claude-auto-memory",
+        choices=["off", "on"],
+        default="off",
+        help="leave Claude Code's own auto-memory on (its saves are copied into the evidence)",
+    )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()

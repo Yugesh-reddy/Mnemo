@@ -203,3 +203,32 @@ def test_summary_counts_passes_calls_and_spend():
     assert summary["sessions_with_mnemo_calls"] == 1
     assert summary["mnemo_calls_by_tool"] == {"mnemo:memory_search": 1}
     assert summary["claude_cost_usd"] == 0.1 and summary["codex_tokens"]["input_tokens"] == 7
+
+
+def test_auto_memory_on_keeps_claudes_memory_and_says_so(tmp_path):
+    assert ae.claude_env(False)["CLAUDE_CODE_DISABLE_AUTO_MEMORY"] == "1"
+    assert "CLAUDE_CODE_DISABLE_AUTO_MEMORY" not in ae.claude_env(True)
+    command = ae.claude_command(tmp_path / "mcp.json", 0.6, auto_memory=True)
+    assert json.loads(command[command.index("--settings") + 1]) == {"autoMemoryEnabled": True}
+    assert command[-2:] == ["--allowedTools", "mcp__mnemo"]
+    assert "--settings" not in ae.claude_command(tmp_path / "mcp.json", 0.6)
+
+
+def test_fixture_auto_memory_is_copied_then_removed_and_nothing_else_is_touched(tmp_path):
+    projects = tmp_path / "projects"
+    work = tmp_path / "var" / "mnemo-eval-handoff-ab_c12x"
+    ours = projects / "-private-var-folders-T-mnemo-eval-handoff-ab-c12x-alpha"
+    (ours / "memory").mkdir(parents=True)
+    (ours / "memory" / "MEMORY.md").write_text("- [Tests](tests.md)\n")
+    (ours / "memory" / "tests.md").write_text("run pytest -k 'not sync_timeout'\n")
+    bare = projects / "-var-folders-T-mnemo-eval-handoff-ab-c12x-beta"
+    bare.mkdir(parents=True)
+    other = projects / "-Users-me-code-mnemo-eval-handoff-zzzzzzzz"
+    (other / "memory").mkdir(parents=True)
+    assert ae.auto_memory_dirs(work, projects) == [ours, bare]
+    out = tmp_path / "evidence"
+    saved = ae.collect_auto_memory(work, out, projects)
+    assert saved == [f"{ours.name}/MEMORY.md", f"{ours.name}/tests.md"]
+    assert (out / ours.name / "tests.md").read_text().startswith("run pytest")
+    assert not ours.exists() and not bare.exists() and other.exists()
+    assert ae.auto_memory_dirs(work, tmp_path / "missing") == []
