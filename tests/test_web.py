@@ -6,6 +6,7 @@ connection (rolled back per test), so the whole flow runs without a live pool.
 
 from __future__ import annotations
 
+import re
 from html.parser import HTMLParser
 from uuid import UUID, uuid4
 
@@ -243,3 +244,22 @@ async def test_operations_explains_a_rejected_memory(db, fake_embedder):
         assert "denial" in response.text and "Queue and archival activity" in response.text
     finally:
         app.dependency_overrides.clear()
+
+
+def test_templates_load_nothing_from_the_internet():
+    from pathlib import Path
+
+    templates = Path(__file__).resolve().parents[1] / "web" / "templates"
+    for page in templates.glob("*.html"):
+        text = page.read_text()
+        assert not re.search(r'(src|href)="(https?:)?//', text), page.name
+
+
+async def test_bundled_assets_are_served_locally(web_client):
+    page = await web_client.get("/")
+    assert '<link rel="stylesheet" href="/static/app.css">' in page.text
+    assert '<script src="/static/htmx.min.js"></script>' in page.text
+    css = await web_client.get("/static/app.css")
+    assert css.status_code == 200 and ".bg-slate-50{" in css.text
+    htmx = await web_client.get("/static/htmx.min.js")
+    assert htmx.status_code == 200 and "htmx" in htmx.text[:2000]

@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct agents demo demo-direct ui export import
+.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct agents css demo demo-direct ui export import
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -60,6 +60,9 @@ import:  ## Restore an export into an empty, migrated store (FILE=export.json)
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
+
+css:  ## Rebuild web/static/app.css from the templates (needs Node for npx)
+	npx -y tailwindcss@3.4.19 -c web/tailwind.config.js -i web/tailwind.css -o web/static/app.css --minify
 
 worker:  ## Run extraction with lease renewal and scheduled decay
 	$(RUN) python -m mnemo.worker

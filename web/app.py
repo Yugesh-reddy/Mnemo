@@ -1,7 +1,8 @@
 """Minimal web UI (FastAPI + HTMX + Tailwind) — spec §11.
 
 Three views: memory list/search, fact detail (blame + revert + inline edit), and diff.
-Server-rendered Jinja2; HTMX/Tailwind come from CDNs in the templates. Run: ``make ui``.
+Server-rendered Jinja2 with bundled htmx and a prebuilt Tailwind stylesheet in
+``web/static`` (``make css`` rebuilds it), so the UI works offline. Run: ``make ui``.
 
 The ``get_store`` dependency hands each request a MnemoStore on a pooled connection;
 tests override it to point at a disposable DB.
@@ -18,6 +19,7 @@ import asyncpg
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from mnemo.config import get_settings
@@ -28,6 +30,7 @@ from mnemo.embedder import build_embedder
 from mnemo.errors import ErrorCode, MnemoError
 
 TEMPLATES = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
+STATIC = Path(__file__).parent / "static"
 
 
 @asynccontextmanager
@@ -53,6 +56,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Mnemo", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
 async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
