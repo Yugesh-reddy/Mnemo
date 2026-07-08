@@ -576,7 +576,7 @@ The owner approved these changes to make Mnemo installable by others.
 - **`SERVICE_UNAVAILABLE`.** The direct MCP server reports an unusable dependency as
   `SERVICE_UNAVAILABLE` with `details.service` (`postgres`, `ollama`, `openai`) and a
   message naming the fix: Postgres unreachable (start Docker, `make up`), database
-  missing, credentials rejected, tables missing (`make migrate`), Ollama unreachable
+  missing, credentials rejected, tables or columns missing (`make migrate`), Ollama unreachable
   (start it), embedding model missing (`ollama pull <model>`), or OpenAI key rejected.
   Messages never include DSN credentials.
 - **Starts without Postgres.** If Postgres is down at startup, the server still

@@ -5,13 +5,13 @@ MCP clients on your machine read and write the same memory, for each project and
 across projects. Every change is kept, attributed to the agent that made it, and can
 be undone. Everything runs locally.
 
-[![CI disabled](https://img.shields.io/badge/CI-disabled-lightgrey)](.github/workflows/correctness.yml)
 [![License MIT](https://img.shields.io/badge/license-MIT-blue)](pyproject.toml)
 
 ## Quick start
 
-You need macOS or Linux with Python 3.12 and [uv](https://docs.astral.sh/uv/),
-[Docker](https://www.docker.com/) running, and [Ollama](https://ollama.com/) running.
+You need a Mac with Python 3.12 and [uv](https://docs.astral.sh/uv/), and with
+[Docker](https://www.docker.com/) and [Ollama](https://ollama.com/) running. Linux
+should work too but hasn't been tested yet.
 
 ```bash
 git clone https://github.com/Yugesh-reddy/Mnemo.git && cd Mnemo
@@ -23,17 +23,24 @@ make agents    # connect Claude Code and Codex (shows every change, asks first)
 `make agents` checks that Postgres and Ollama are running, downloads the
 `nomic-embed-text` embedding model if it is missing, sets up the database, registers
 Mnemo with Claude Code and Codex, and adds a short
-[memory policy](mnemo/memory_policy.md) to their global instructions. Then open a
-new session in any repository:
+[memory policy](mnemo/memory_policy.md) to their global instructions. Then start a
+new session in any repository. For example, tell Claude Code:
 
-> **You, in Claude Code:** Heads-up: in this repo we run tests with `make test-db`.
->
-> **You, later, in Codex (same repo):** How do I run the tests here?
-> **Codex:** `make test-db`
+> Heads-up: in this repo we run tests with `make test-db`.
+
+Later, ask Codex in the same repository:
+
+> How do I run the tests here?
+
+Codex finds the note in the shared memory and answers `make test-db`.
 
 `uv run mnemo-install --uninstall` removes exactly what `make agents` added; your
 memories stay in the database. If port 5432 is taken on your machine, run
 `echo MNEMO_DB_PORT=5433 >> .env` before `make up`.
+
+To update, run `git pull && make install && make agents`: `make agents` applies any
+new database migrations and refreshes both agents' configuration. Until the
+database is migrated, the tools answer with an error that says to run `make migrate`.
 
 ## What you get
 
@@ -203,12 +210,16 @@ Extraction-pipeline working tables are not exported ([spec §16](PROJECT_SPEC.md
 ## Review memory in the browser
 
 ```bash
-MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false make ui
-# http://127.0.0.1:8000
+make ui                                                        # global memories
+MNEMO_NAMESPACE='default@github.com/you/your-repo' make ui      # one project's memories
+# then open http://127.0.0.1:8000
 ```
 
-Set `MNEMO_NAMESPACE` to the namespace you want to inspect (project scopes are
-`<namespace>@<project>`). Search → open history → revert a revision. A stale form
+A project's scope is `<MNEMO_NAMESPACE>@<project>`, where the project is the
+repository's remote in lower case (for example `github.com/you/your-repo`), or
+`path:<repository path>` when it has no remote. The UI needs the same embedding
+backend as the agents (Ollama by default). Search → open history → revert a
+revision. A stale form
 returns HTTP 409, shows the latest state, and writes nothing. Repeated submissions
 replay their receipt. Unrestorable revisions have no restore button. **Manual
 correction** records a human-reviewed value through the legacy write path; it does

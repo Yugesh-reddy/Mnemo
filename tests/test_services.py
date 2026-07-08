@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncpg
 import httpx
 import pytest
 
@@ -44,3 +45,15 @@ def test_embedding_errors_name_the_fix():
     refused = httpx.ConnectError("refused", request=request)
     assert "ollama serve" in services.service_error(refused, settings).message
     assert services.service_error(ValueError("x"), settings) is None
+
+
+@pytest.mark.parametrize(
+    "exc",
+    [
+        asyncpg.UndefinedTableError('relation "memory_mutation_receipt" does not exist'),
+        asyncpg.UndefinedColumnError('column "identity_mode" does not exist'),
+    ],
+)
+def test_a_database_behind_on_migrations_says_to_migrate(exc):
+    error = services.service_error(exc, Settings(_env_file=None))
+    assert error.details == {"service": "postgres"} and "make migrate" in error.message

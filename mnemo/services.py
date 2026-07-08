@@ -25,11 +25,12 @@ def service_error(exc: BaseException, settings: Settings) -> MnemoError | None:
         return MnemoError(ErrorCode.SERVICE_UNAVAILABLE, message, service=service)
 
     location = where(settings.dsn)
-    if isinstance(exc, asyncpg.UndefinedTableError):
+    if isinstance(exc, asyncpg.UndefinedTableError | asyncpg.UndefinedColumnError):
         return unavailable(
             "postgres",
-            f"The database at {location} has no Mnemo tables. Run `make migrate` (or "
-            "`mnemo-install`) in the Mnemo checkout.",
+            f"The database at {location} is missing Mnemo tables or columns (not set up, "
+            "or older than this version). Run `make migrate` (or `mnemo-install`) in the "
+            "Mnemo checkout.",
         )
     if isinstance(exc, asyncpg.InvalidCatalogNameError):
         return unavailable(
