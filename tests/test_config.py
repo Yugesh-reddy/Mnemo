@@ -62,3 +62,5 @@ def test_compose_publishes_postgres_on_localhost_only() -> None:
     compose = (Path(__file__).resolve().parents[1] / "docker-compose.yml").read_text()
     assert '"127.0.0.1:${MNEMO_DB_PORT:-5432}:5432"' in compose
     assert '- "5432:5432"' not in compose
+    # No fixed container name, so separate checkouts (Compose projects) can run side by side.
+    assert "container_name" not in compose

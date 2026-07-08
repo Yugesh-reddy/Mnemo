@@ -1,7 +1,9 @@
 services:
+  # The container is named after the Compose project (by default the checkout's
+  # directory), so separate checkouts can each run one; give them different
+  # MNEMO_DB_PORT values.
   db:
     image: pgvector/pgvector:pg16
-    container_name: mnemo-db
     environment:
       POSTGRES_USER: mnemo
       POSTGRES_PASSWORD: mnemo
