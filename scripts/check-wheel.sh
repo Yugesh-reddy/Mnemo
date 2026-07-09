@@ -21,6 +21,11 @@ assert len(list(MIGRATIONS_DIR.glob('*.sql'))) >= 7
 assert MIGRATIONS_DIR.joinpath('0010_mutation_receipts.sql').is_file()
 assert files('mnemo').joinpath('data/longmemeval-car.json').is_file()
 assert TEMPLATES.env.get_template('list.html')
+from web.app import STATIC
+from mnemo.cli import COMPOSE_FILE
+assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.min.js').is_file()
+assert COMPOSE_FILE.is_file() and 'site-packages' in COMPOSE_FILE.parts  # packaged copy
+assert files('mnemo').joinpath('memory_policy.md').is_file()
 assert len(mnemo.eval.load_benchmark_dataset('all').turns) == 200
 assert len(mnemo.eval.load_naturalistic_dataset().turns) == 200
 for version in ('v2', 'v3', 'v4'):
@@ -37,6 +42,8 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-eval" --json > eval.json
 "$mnemo_wheel_env/venv/bin/mnemo-worker" --help
 "$mnemo_wheel_env/venv/bin/mnemo-mcp-direct" --version
+"$mnemo_wheel_env/venv/bin/mnemo" --help >/dev/null
+"$mnemo_wheel_env/venv/bin/mnemo" install --help >/dev/null
 "$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
 "$mnemo_wheel_env/venv/bin/mnemo-audit-eval" --help
 "$mnemo_wheel_env/venv/bin/mnemo-eval-suite" --help

@@ -9,22 +9,22 @@ be undone. Everything runs locally.
 
 ## Quick start
 
-You need a Mac with Python 3.12 and [uv](https://docs.astral.sh/uv/), and with
+You need a Mac with [uv](https://docs.astral.sh/uv/), and with
 [Docker](https://www.docker.com/) and [Ollama](https://ollama.com/) running. Linux
 should work too but hasn't been tested yet.
 
 ```bash
-git clone https://github.com/Yugesh-reddy/Mnemo.git && cd Mnemo
-make install   # Python environment
-make up        # Postgres + pgvector in Docker, reachable from this machine only
-make agents    # connect Claude Code and Codex (shows every change, asks first)
+uv tool install git+https://github.com/Yugesh-reddy/Mnemo
+mnemo up        # Postgres + pgvector in Docker, reachable from this machine only
+mnemo install   # connect Claude Code and Codex (shows every change, asks first)
 ```
 
-`make agents` checks that Postgres and Ollama are running, downloads the
+`mnemo install` checks that Postgres and Ollama are running, downloads the
 `nomic-embed-text` embedding model if it is missing, sets up the database, registers
 Mnemo with Claude Code and Codex, and adds a short
-[memory policy](mnemo/memory_policy.md) to their global instructions. Then start a
-new session in any repository. For example, tell Claude Code:
+[memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
+the installed tool's own server. Then start a new session in any repository. For
+example, tell Claude Code:
 
 > Heads-up: in this repo we run tests with `make test-db`.
 
@@ -34,13 +34,20 @@ Later, ask Codex in the same repository:
 
 Codex finds the note in the shared memory and answers `make test-db`.
 
-`uv run mnemo-install --uninstall` removes exactly what `make agents` added; your
-memories stay in the database. If port 5432 is taken on your machine, run
-`echo MNEMO_DB_PORT=5433 >> .env` before `make up`.
+`mnemo uninstall` removes exactly what `mnemo install` added; your memories stay in
+the database, and `mnemo down` stops it. If port 5432 is taken on your machine, run
+both commands with another port, for example `MNEMO_DB_PORT=5433 mnemo up` and
+`MNEMO_DB_PORT=5433 mnemo install` (or put `MNEMO_DB_PORT=5433` in a `.env` in the
+directory you run them from).
 
-To update, run `git pull && make install && make agents`: `make agents` applies any
-new database migrations and refreshes both agents' configuration. Until the
-database is migrated, the tools answer with an error that says to run `make migrate`.
+To update, run `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo`
+and then `mnemo install`, which applies any new database migrations and refreshes
+both agents' configuration. Until the database is migrated, the tools answer with an
+error that says to run `make migrate` (`mnemo migrate` when installed as a tool).
+
+**From a checkout** (to change Mnemo itself): `git clone` it, then `make install`,
+`make up` and `make agents`. `make agents` installs the tool from your checkout first,
+so the agents keep working if you move or delete it; rerun it after changing code.
 
 ## What you get
 
@@ -66,7 +73,7 @@ and used by the other, an end-of-day handoff, a correction, several values of on
 kind, isolation between projects, a preference for all projects, a restated rule, a
 retracted memory, small talk, and a question nothing answers. Without instructions,
 Codex never saved what it was told, and the setup passed **4 of 10**. With the memory
-policy that `make agents` installs, it passed **10 of 10**, including with Claude
+policy that `mnemo install` installs, it passed **10 of 10**, including with Claude
 Code's own auto-memory left on. Each scenario ran once on tiny planted repositories,
 so this shows the approach works, not how often it works in long, real sessions.
 
@@ -111,31 +118,33 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 | `MNEMO_DB_PORT` | `5432` | Host port of the Compose Postgres; the default DSNs follow it. |
 | `MNEMO_DSN` | `postgresql://mnemo:mnemo@localhost:<port>/mnemo` | Database for memories. |
 | `MNEMO_BACKEND` | `ollama` | Embeddings: `ollama` (local), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
-| `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `make agents`. |
+| `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `mnemo install`. |
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
 
-`mnemo-install` options: `--dry-run` shows the changes only, `--agent claude|codex`
+`mnemo install` options: `--dry-run` shows the changes only, `--agent claude|codex`
 limits them to one agent, `--codex-home` points at another Codex home (a `codex`
 wrapper that pins one is detected), `--backend hash` avoids Ollama, and
 `--claude-auto-memory off` also turns off Claude Code's built-in memory.
 
 ### Configure by hand
 
-Claude Code, once for every repository (use your checkout's absolute path):
+With the tool installed, the server is `mnemo-mcp-direct` in `uv tool dir --bin`
+(usually `~/.local/bin`); use its absolute path. Claude Code, once for every
+repository:
 
 ```bash
 claude mcp add mnemo --scope user \
   -e MNEMO_BACKEND=ollama -e MNEMO_EMBED_DIM=768 \
   -e MNEMO_WORKER_ENABLED=false -e MNEMO_ACTOR=claude-code \
-  -- /absolute/path/to/Mnemo/.venv/bin/mnemo-mcp-direct
+  -- /Users/you/.local/bin/mnemo-mcp-direct
 ```
 
 Codex, in `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`):
 
 ```toml
 [mcp_servers.mnemo]
-command = "/absolute/path/to/Mnemo/.venv/bin/mnemo-mcp-direct"
+command = "/Users/you/.local/bin/mnemo-mcp-direct"
 default_tools_approval_mode = "approve"  # lets `codex exec` call the tools unattended
 
 [mcp_servers.mnemo.env]
@@ -150,8 +159,8 @@ Also paste [the memory policy](mnemo/memory_policy.md) into `~/.claude/CLAUDE.md
 clients such as Claude Desktop or [Cursor](https://cursor.com/docs/mcp) take the same
 command and environment in their JSON configuration (Cursor also needs
 `"type": "stdio"`). They are not started inside a repository, so they see only the
-global scope unless you set `MNEMO_PROJECT`. `make mcp-direct` runs the server from
-the checkout.
+global scope unless you set `MNEMO_PROJECT`. In a checkout, `make mcp-direct` runs
+the server from source.
 
 ## What Mnemo depends on
 
@@ -174,7 +183,8 @@ The optional web UI loads Tailwind and htmx from public CDNs.
 | Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
 | Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |
 
-To see the versioning without any agent or model, run `make demo-direct`. It
+To see the versioning without any agent or model, run `make demo-direct` in a
+checkout. It
 remembers PostgreSQL, changes it to MySQL, rejects a stale update, inspects history
 and restores PostgreSQL; retrying the restore returns its receipt:
 
@@ -212,6 +222,7 @@ Extraction-pipeline working tables are not exported ([spec §16](PROJECT_SPEC.md
 ```bash
 make ui                                                        # global memories
 MNEMO_NAMESPACE='default@github.com/you/your-repo' make ui      # one project's memories
+# installed as a tool: mnemo ui (same MNEMO_NAMESPACE)
 # then open http://127.0.0.1:8000
 ```
 
@@ -251,8 +262,7 @@ or access control, and memories are stored unencrypted, so don't save secrets.
 Identity is one current value per subject/predicate in a scope. Direct mutations
 accept strings up to 8192 UTF-8 bytes and operate on active, durable, non-expiring
 memories. Creation undo, grouped undo, branching, merging and multi-user access are
-out of scope for now. The installed agents run the server from this checkout, so
-keep it where it is (or rerun `make agents` after moving it).
+out of scope for now.
 
 ## Architecture
 

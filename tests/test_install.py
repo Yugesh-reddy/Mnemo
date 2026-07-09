@@ -285,3 +285,15 @@ def test_invalid_claude_settings_stop_the_install(homes, capsys):
     code = inst.main(args(claude, codex, "--yes", "--claude-auto-memory", "off"), runner=FakeCli())
     assert code == 2 and "not valid JSON" in capsys.readouterr().err
     assert (claude / "settings.json").read_text() == "{not json"
+
+
+@pytest.mark.parametrize("checkout", [True, False])
+def test_running_from_a_checkout_is_flagged(homes, monkeypatch, capsys, checkout):
+    claude, codex = homes
+    monkeypatch.setattr(inst, "running_from_checkout", lambda: checkout)
+    assert inst.main(args(claude, codex, "--dry-run"), runner=FakeCli()) == 0
+    assert ("moving or deleting it breaks them" in capsys.readouterr().out) is checkout
+
+
+def test_this_test_run_is_from_the_checkout():
+    assert inst.running_from_checkout()

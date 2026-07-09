@@ -592,3 +592,15 @@ The owner approved these changes to make Mnemo installable by others.
   is by default; `--claude-auto-memory off` sets `autoMemoryEnabled: false` in
   `~/.claude/settings.json` (shown as a diff) and `--claude-auto-memory on` removes the
   key again. With the policy installed, Claude saved nothing there in the eval.
+- **Installed tool.** `uv tool install git+https://github.com/Yugesh-reddy/Mnemo`
+  provides `mnemo` (`up`, `down`, `install`, `uninstall`, `migrate`, `ui`). The wheel
+  ships the Compose file; `mnemo up` runs it as Compose project `mnemo`, the project a
+  checkout named Mnemo also uses, so both manage the same database. `mnemo install`
+  registers the tool's own `mnemo-mcp-direct`, so agents do not depend on a checkout;
+  `make agents` installs the tool from the checkout first, and the installer warns when
+  it would point agents at a checkout.
+- **Separate checkouts.** There is no fixed container name: each Compose project (by
+  default the checkout directory) runs its own container and volume, on its own
+  `MNEMO_DB_PORT`.
+- **Offline web UI.** htmx 1.9.12 and a stylesheet prebuilt with Tailwind 3.4.19 are
+  served from `web/static`; templates reference no external assets.

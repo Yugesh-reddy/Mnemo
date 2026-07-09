@@ -43,8 +43,9 @@ mcp:  ## Run the MCP server (stdio)
 mcp-direct:  ## Run six guarded memory tools over MCP (no extraction or decay)
 	$(RUN) python -m mnemo.mcp_direct
 
-agents:  ## Connect Claude Code and Codex to Mnemo (shows changes, asks first)
-	$(RUN) mnemo-install
+agents:  ## Install the mnemo tool from this checkout, then connect Claude Code and Codex
+	uv tool install --force --reinstall --python 3.12 .
+	"$$(uv tool dir --bin)/mnemo" install $(ARGS)
 
 demo:  ## Run the end-to-end rollback demo (spec §10)
 	$(RUN) python examples/agent.py demo

@@ -36,11 +36,13 @@ packages = ["mnemo", "web", "examples"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "migrations" = "mnemo/migrations"
+"docker-compose.yml" = "mnemo/docker-compose.yml"
 
 [tool.hatch.build.targets.sdist]
 include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "docker-compose.yml", "pyproject.toml", "uv.lock"]
 
 [project.scripts]
+mnemo = "mnemo.cli:main"
 mnemo-migrate = "mnemo.db:main"
 mnemo-mcp = "mnemo.mcp_server:main"
 mnemo-mcp-direct = "mnemo.mcp_direct:main"

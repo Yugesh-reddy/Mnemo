@@ -117,6 +117,11 @@ def server_command() -> str:
     return str(Path(sys.executable).parent / "mnemo-mcp-direct")
 
 
+def running_from_checkout() -> bool:
+    """True when this code runs from a source checkout rather than an installed package."""
+    return "site-packages" not in Path(__file__).resolve().parts
+
+
 def default_codex_home() -> Path:
     """CODEX_HOME, else the home a `codex` wrapper script pins, else ~/.codex."""
     if os.environ.get("CODEX_HOME"):
@@ -385,6 +390,12 @@ def main(
     migrating = not (args.uninstall or args.skip_migrate)
     print(f"Database: {services.where(settings.dsn)} (backend {backend})")
     print(f"Codex home: {codex_home}  (pass --codex-home if your codex uses another)")
+    if not args.uninstall and running_from_checkout():
+        print(
+            f"Note: the agents will run {server_command()} from this checkout; moving or "
+            "deleting it breaks them. `make agents` installs the mnemo tool and connects "
+            "that instead."
+        )
     for note in notes:
         print(f"Note: {note}")
     if checks.pull_model:

@@ -51,6 +51,11 @@ A third eval arm left Claude Code's own auto-memory on: 10 of 10 again, and Clau
 saved nothing there, so the installer leaves it on by default and offers
 `--claude-auto-memory off`.
 
+Mnemo now installs as a tool (`uv tool install git+…`, then `mnemo up` and
+`mnemo install`), so agents run the tool's server instead of a checkout; `make agents`
+does the same from a checkout. Separate checkouts can each run their own database,
+and the web UI serves its styling and htmx locally.
+
 Next: harder and repeated eval runs (real repositories, rates instead of single
 observations), then the versioning features on top.
 
