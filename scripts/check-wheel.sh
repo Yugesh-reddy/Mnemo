@@ -1,11 +1,54 @@
 #!/usr/bin/env bash
+# Installs the built wheel into a fresh environment and exercises it against a
+# throwaway database on the MNEMO_TEST_DSN server, which is dropped on exit; it never
+# touches the configured (real) database.
 set -euo pipefail
 mnemo_checkout="$(pwd)"
 mnemo_wheel_env="$(mktemp -d)"
-trap 'rm -rf "$mnemo_wheel_env"' EXIT
+mnemo_wheel_db="mnemo_wheel_$(od -An -N4 -tx4 /dev/urandom | tr -d ' ')"
+
+scratch_database() {  # create|drop; prints the scratch DSN
+  "$mnemo_wheel_env/venv/bin/python" - "$mnemo_wheel_db" "$1" <<'PY'
+import asyncio
+import sys
+from urllib.parse import urlsplit, urlunsplit
+
+import asyncpg
+
+from mnemo.config import get_settings
+
+name, action = sys.argv[1], sys.argv[2]
+parts = urlsplit(get_settings().test_dsn)
+
+
+async def main() -> None:
+    conn = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
+    try:
+        if action == "create":
+            await conn.execute(f'CREATE DATABASE "{name}"')
+        else:
+            await conn.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
+    finally:
+        await conn.close()
+
+
+asyncio.run(main())
+print(urlunsplit(parts._replace(path="/" + name)))
+PY
+}
+
+cleanup() {
+  if [ -x "$mnemo_wheel_env/venv/bin/python" ]; then
+    (cd "$mnemo_wheel_env" && scratch_database drop >/dev/null) || true
+  fi
+  rm -rf "$mnemo_wheel_env"
+}
+trap cleanup EXIT
 uv venv "$mnemo_wheel_env/venv" --python 3.12
 uv pip install --python "$mnemo_wheel_env/venv/bin/python" "$mnemo_checkout"/dist/*.whl
 cd "$mnemo_wheel_env"
+MNEMO_DSN="$(scratch_database create)"
+export MNEMO_DSN
 "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 from importlib.resources import files
 import json
