@@ -518,6 +518,11 @@ def run_session(
 
 
 async def run(args: argparse.Namespace) -> int:
+    global SERVER
+    if args.server:
+        SERVER = Path(args.server).expanduser().resolve()
+        if not SERVER.is_file():
+            raise SystemExit(f"no MCP server at {SERVER}")
     scenarios = load_scenarios()
     if args.only:
         wanted = set(args.only.split(","))
@@ -557,6 +562,7 @@ async def run(args: argparse.Namespace) -> int:
             "mnemo_dirty": bool(_version(["git", "-C", str(ROOT), "status", "--porcelain"])),
             "claude": _version(["claude", "--version"]),
             "codex": _version(["codex", "--version"]),
+            "server": str(SERVER),
             "backend": args.backend,
             "embed_model": settings.embed_model,
             "embed_dim": settings.embed_dim,
@@ -669,6 +675,10 @@ def main() -> None:
         help="copy a file into every fixture repository (e.g. AGENTS.md, .claude/settings.json)",
     )
     parser.add_argument("--backend", default="ollama", choices=["ollama", "hash"])
+    parser.add_argument(
+        "--server",
+        help="mnemo-mcp-direct to test (default: this checkout's), e.g. an installed tool",
+    )
     parser.add_argument("--claude-model")
     parser.add_argument("--codex-model")
     parser.add_argument("--claude-session-usd", type=float, default=0.60)

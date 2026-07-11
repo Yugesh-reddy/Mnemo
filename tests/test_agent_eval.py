@@ -232,3 +232,11 @@ def test_fixture_auto_memory_is_copied_then_removed_and_nothing_else_is_touched(
     assert (out / ours.name / "tests.md").read_text().startswith("run pytest")
     assert not ours.exists() and not bare.exists() and other.exists()
     assert ae.auto_memory_dirs(work, tmp_path / "missing") == []
+
+
+def test_the_server_under_test_can_be_an_installed_tool(monkeypatch, tmp_path):
+    tool = tmp_path / "tools" / "mnemo" / "bin" / "mnemo-mcp-direct"
+    monkeypatch.setattr(ae, "SERVER", tool)
+    env = ae.mnemo_env("dsn", "ns", "codex", "ollama", 768)
+    assert ae.claude_mcp_config(env)["mcpServers"]["mnemo"]["command"] == str(tool)
+    assert f"mcp_servers.mnemo.command={json.dumps(str(tool))}" in ae.codex_command(env, [])
