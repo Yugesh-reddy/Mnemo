@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a0e478-38d6-7bd2-a12b-d84b6500a503"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the team’s saved memory."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff fixed day","limit":10},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"on-call handoff fixed day","limit":10},"result":{"content":[{"type":"text","text":"{\n  \"hits\": [\n    {\n      \"fact_id\": \"b7d863c1-eb9f-4ca1-bdb5-1d415678eefd\",\n      \"event_id\": \"0a99f1e4-7240-46e5-8c34-827f50112a66\",\n      \"subject\": \"team\",\n      \"predicate\": \"on_call_handoff_day\",\n      \"value\": \"This team has no on-call handoff day. (An earlier note saying it was Fridays was wrong.)\",\n      \"score\": 0.7607632015334186,\n      \"scope\": \"project\"\n    }\n  ]\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"NONE"}}
+{"type":"turn.completed","usage":{"input_tokens":51187,"cached_input_tokens":45440,"cache_write_input_tokens":0,"output_tokens":86,"reasoning_output_tokens":0}}

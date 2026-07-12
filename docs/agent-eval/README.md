@@ -134,6 +134,22 @@ So with the policy installed, turning auto-memory off is not needed for sharing;
 This is one run on short sessions: in long real sessions Claude may still choose
 its own memory for some things.
 
+### Installed tool, as a new user gets it (September 27, 2026): 10 of 10, 20 of 20
+
+The final check of the release setup: Mnemo installed with `uv tool install
+git+https://github.com/Yugesh-reddy/Mnemo` into a fresh tool directory (uv chose
+Python 3.13), both agents pointed at that tool's `mnemo-mcp-direct` (`--server`),
+the memory policy in the fixtures' instruction files, and Claude's auto-memory on
+(commit `511a9f5`, [results](runs/installed-tool/results.json)). All scenarios
+passed with no tool errors: 12 memory events, both corrections made across agents
+(Claude added and Codex updated the deploy day; Codex added and Claude withdrew the
+on-call day), 22 of 23 sessions using Mnemo, nothing saved to Claude's own memory.
+Claude cost $0.91; Codex used 717k input tokens (641k cached). Separately, the
+installed tool's `mnemo install --yes` and `mnemo uninstall --yes` ran against a
+scratch database and a temporary Codex home: the pre-flight checks passed, all 11
+migrations applied, Codex was pointed at the tool's server, and uninstall restored
+the original `config.toml` exactly.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is

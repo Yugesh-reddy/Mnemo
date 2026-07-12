@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a0e476-ea6b-7012-825d-2e82206829d7"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check this project’s memory for the staging database name.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"staging database name","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"staging database name","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"UNKNOWN"}}
+{"type":"turn.completed","usage":{"input_tokens":51039,"cached_input_tokens":45440,"cache_write_input_tokens":0,"output_tokens":88,"reasoning_output_tokens":0}}

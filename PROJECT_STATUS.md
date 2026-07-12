@@ -56,6 +56,9 @@ Mnemo now installs as a tool (`uv tool install git+…`, then `mnemo up` and
 does the same from a checkout. Separate checkouts can each run their own database,
 and the web UI serves its styling and htmx locally.
 
+The final eval ran against Mnemo installed from GitHub as a tool, exactly as a new
+user gets it: 10 of 10 with Claude's auto-memory on and no tool errors.
+
 Next: harder and repeated eval runs (real repositories, rates instead of single
 observations), then the versioning features on top.
 
