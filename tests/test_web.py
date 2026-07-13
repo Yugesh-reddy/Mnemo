@@ -258,8 +258,20 @@ def test_templates_load_nothing_from_the_internet():
 async def test_bundled_assets_are_served_locally(web_client):
     page = await web_client.get("/")
     assert '<link rel="stylesheet" href="/static/app.css">' in page.text
-    assert '<script src="/static/htmx.min.js"></script>' in page.text
+    assert '<script src="/static/htmx.js"></script>' in page.text
     css = await web_client.get("/static/app.css")
     assert css.status_code == 200 and ".bg-slate-50{" in css.text
-    htmx = await web_client.get("/static/htmx.min.js")
+    htmx = await web_client.get("/static/htmx.js")
     assert htmx.status_code == 200 and "htmx" in htmx.text[:2000]
+
+
+def test_bundled_scripts_are_readable_source_not_minified():
+    """Minified one-line JS reads as obfuscated to code reviewers and trust scanners."""
+    from pathlib import Path
+
+    static = Path(__file__).resolve().parents[1] / "web" / "static"
+    scripts = sorted(static.glob("*.js"))
+    assert [path.name for path in scripts] == ["htmx.js"]
+    for path in scripts:
+        lines = path.read_text().splitlines()
+        assert len(lines) > 1000 and max(len(line) for line in lines) < 500, path.name

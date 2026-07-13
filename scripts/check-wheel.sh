@@ -66,7 +66,7 @@ assert files('mnemo').joinpath('data/longmemeval-car.json').is_file()
 assert TEMPLATES.env.get_template('list.html')
 from web.app import STATIC
 from mnemo.cli import COMPOSE_FILE
-assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.min.js').is_file()
+assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.js').is_file()
 assert COMPOSE_FILE.is_file() and 'site-packages' in COMPOSE_FILE.parts  # packaged copy
 assert files('mnemo').joinpath('memory_policy.md').is_file()
 assert len(mnemo.eval.load_benchmark_dataset('all').turns) == 200
