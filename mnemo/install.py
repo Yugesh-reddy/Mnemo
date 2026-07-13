@@ -12,8 +12,10 @@ can be updated or removed without touching the rest of the file. Each agent gets
 own MNEMO_ACTOR; all of them share one database, namespace and user.
 
 Before changing anything it checks that Postgres is reachable and, for the default
-Ollama backend, that Ollama is running; a missing embedding model is downloaded after
-you confirm. Problems are reported with the command that fixes them.
+Ollama backend, that Ollama is running; a missing embedding model (Ollama's, or the
+local backend's, which runs inside Mnemo) is downloaded after you confirm. It refuses
+a backend or model whose vectors would not match the memories already stored.
+Problems are reported with the command that fixes them.
 """
 
 from __future__ import annotations
@@ -36,7 +38,8 @@ from pathlib import Path
 import httpx
 
 from mnemo import services
-from mnemo.config import Settings, get_settings
+from mnemo.config import LOCAL_MODELS, Settings, get_settings
+from mnemo.embedder import build_embedder, download_local_model, local_model_ready
 
 MD_BEGIN = "<!-- mnemo:begin (managed by mnemo-install; edits inside are replaced) -->"
 MD_END = "<!-- mnemo:end -->"
@@ -101,7 +104,7 @@ def codex_config(text: str, command: str, env: dict[str, str]) -> str:
 
 
 def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
-    return {
+    env = {
         "MNEMO_DSN": settings.dsn,
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(settings.embed_dim),
@@ -110,6 +113,11 @@ def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
         "MNEMO_USER_ID": settings.user_id,
         "MNEMO_ACTOR": actor,
     }
+    if backend == "local":
+        # Pinned so a later default can't silently change the vectors of new writes.
+        env["MNEMO_EMBED_MODEL"] = settings.embed_model
+        env["MNEMO_MODEL_DIR"] = str(settings.model_dir)
+    return env
 
 
 def server_command() -> str:
@@ -288,6 +296,21 @@ class Services:
     def pull(self, host: str, model: str) -> None:
         services.pull_model(host, model)
 
+    def local_model_ready(self, settings: Settings) -> bool:
+        return local_model_ready(settings.embed_model, settings.model_dir)
+
+    def download_local(self, settings: Settings) -> None:
+        download_local_model(settings.embed_model, settings.model_dir)
+
+    def embedding_mismatch(self, settings: Settings, backend: str) -> str | None:
+        embedder = build_embedder(settings)
+        try:
+            return asyncio.run(services.embedding_mismatch(settings, backend, embedder.embed))
+        finally:
+            close = getattr(embedder, "close", None)
+            if close:
+                close()
+
 
 @dataclass
 class Preflight:
@@ -316,6 +339,9 @@ def preflight(settings: Settings, backend: str, probe: Services) -> Preflight:
         else:
             result.pull_model = not services.has_model(installed, model)
             result.ready.append(f"Ollama at {host}")
+    elif backend == "local":
+        result.pull_model = not probe.local_model_ready(settings)
+        result.ready.append(f"local embeddings ({settings.embed_model}, no model server)")
     elif backend == "openai" and not settings.openai_api_key:
         result.problems.append("The openai backend needs OPENAI_API_KEY in the environment.")
     elif backend == "hash":
@@ -324,13 +350,31 @@ def preflight(settings: Settings, backend: str, probe: Services) -> Preflight:
 
 
 async def migrate(dsn: str, embed_dim: int) -> list[str]:
-    from mnemo.db import apply_migrations, connect
+    import asyncpg
 
-    conn = await connect(dsn)
+    from mnemo.db import apply_migrations, register_vector
+
+    # Not mnemo.db.connect: it checks the dimension of the process-wide settings,
+    # which differ from embed_dim when --backend selects another model.
+    conn = await asyncpg.connect(dsn)
     try:
+        await register_vector(conn)
         return await apply_migrations(conn, embed_dim=embed_dim)
     finally:
         await conn.close()
+
+
+def _mismatch(probe: Services, settings: Settings, backend: str) -> bool:
+    """Print and report a stored-vector mismatch; embedding failures are not one."""
+    try:
+        problem = probe.embedding_mismatch(settings, backend)
+    except Exception as exc:  # the server reports embedding failures with their fix
+        print(f"Note: could not compare stored memories with {backend} embeddings ({exc}).")
+        return False
+    if problem:
+        print(f"FIX  {problem}")
+        print("No agent configuration or database was changed.")
+    return bool(problem)
 
 
 def main(
@@ -347,7 +391,7 @@ def main(
     parser.add_argument("--uninstall", action="store_true")
     parser.add_argument("--yes", action="store_true", help="apply without asking")
     parser.add_argument("--dry-run", action="store_true", help="show changes, write nothing")
-    parser.add_argument("--backend", choices=["ollama", "hash", "openai"])
+    parser.add_argument("--backend", choices=["ollama", "local", "hash", "openai"])
     parser.add_argument("--claude-dir", type=Path, default=Path.home() / ".claude")
     parser.add_argument("--codex-home", type=Path)
     parser.add_argument("--skip-migrate", action="store_true")
@@ -361,6 +405,9 @@ def main(
     run = runner or (lambda cmd: subprocess.run(list(cmd), capture_output=True, text=True))
     settings = get_settings()
     backend = args.backend or settings.backend
+    if backend != settings.backend:
+        # Re-resolve backend-dependent defaults (model, dimension, search floor).
+        settings = Settings(backend=backend)
     codex_home = args.codex_home or default_codex_home()
     checks = Preflight(ready=[], problems=[])
     if not (args.uninstall or args.skip_checks):
@@ -398,7 +445,14 @@ def main(
         )
     for note in notes:
         print(f"Note: {note}")
-    if checks.pull_model:
+    if checks.pull_model and backend == "local":
+        size = LOCAL_MODELS.get(settings.embed_model, (0, 0, 0))[2]
+        about = f" (about {size} MB)" if size else ""
+        print(
+            f"- Download the embedding model {settings.embed_model}{about} from Hugging Face "
+            f"into {settings.model_dir}"
+        )
+    elif checks.pull_model:
         print(f"- Download the embedding model {settings.embed_model} into Ollama (about 270 MB)")
     if migrating:
         print("- Apply any pending database migrations")
@@ -409,7 +463,10 @@ def main(
     if not (commands or changes or migrating or checks.pull_model):
         print("Nothing to change.")
         return 0
+    checking = not (args.uninstall or args.skip_checks)
     if args.dry_run:
+        if checking and not checks.pull_model:
+            return 2 if _mismatch(probe or Services(), settings, backend) else 0
         return 0
     if not args.yes and ask("Apply these changes? [y/N] ").strip().lower() not in ("y", "yes"):
         print("Nothing changed.")
@@ -417,14 +474,20 @@ def main(
     if checks.pull_model:
         print(f"Downloading {settings.embed_model}...", flush=True)
         try:
-            (probe or Services()).pull(settings.ollama_host, settings.embed_model)
-        except (httpx.HTTPError, RuntimeError) as exc:
-            print(
-                f"mnemo-install: download failed: {exc}. Run `ollama pull "
-                f"{settings.embed_model}` and try again.",
-                file=sys.stderr,
+            if backend == "local":
+                (probe or Services()).download_local(settings)
+            else:
+                (probe or Services()).pull(settings.ollama_host, settings.embed_model)
+        except (httpx.HTTPError, RuntimeError, ValueError, OSError) as exc:
+            retry = (
+                "Check your internet connection"
+                if backend == "local"
+                else f"Run `ollama pull {settings.embed_model}`"
             )
+            print(f"mnemo-install: download failed: {exc}. {retry} and try again.", file=sys.stderr)
             return 1
+    if checking and _mismatch(probe or Services(), settings, backend):
+        return 2
     if migrating:
         try:
             applied = asyncio.run(migrate(settings.dsn, settings.embed_dim))

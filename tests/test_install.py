@@ -177,8 +177,16 @@ async def test_migrate_is_idempotent_on_a_migrated_database(_disposable_test_db)
 
 
 class FakeServices:
-    def __init__(self, postgres=None, models=("nomic-embed-text:latest",), ollama_up=True):
+    def __init__(
+        self,
+        postgres=None,
+        models=("nomic-embed-text:latest",),
+        ollama_up=True,
+        local_ready=True,
+        mismatch=None,
+    ):
         self.problem, self.models, self.up, self.pulled = postgres, list(models), ollama_up, []
+        self.local_ready, self.mismatch, self.compared = local_ready, mismatch, []
 
     def postgres_problem(self, settings):
         return self.problem
@@ -191,10 +199,21 @@ class FakeServices:
     def pull(self, host, model):
         self.pulled.append((host, model))
 
+    def local_model_ready(self, settings):
+        return self.local_ready
+
+    def download_local(self, settings):
+        self.pulled.append(("local", settings.embed_model))
+        self.local_ready = True
+
+    def embedding_mismatch(self, settings, backend):
+        self.compared.append((backend, settings.embed_model))
+        return self.mismatch
+
 
 @pytest.fixture
 def ollama_settings(monkeypatch):
-    for name in ("MNEMO_BACKEND", "MNEMO_EMBED_MODEL", "MNEMO_OLLAMA_HOST"):
+    for name in ("MNEMO_BACKEND", "MNEMO_EMBED_MODEL", "MNEMO_EMBED_DIM", "MNEMO_OLLAMA_HOST"):
         monkeypatch.delenv(name, raising=False)
     inst.get_settings.cache_clear()
     yield
@@ -253,6 +272,45 @@ def test_an_installed_model_is_not_downloaded_again(homes, ollama_settings):
     assert probe.pulled == []
 
 
+def test_local_backend_downloads_its_model_and_pins_it_for_the_agents(
+    homes, ollama_settings, capsys
+):
+    claude, codex = homes
+    probe = FakeServices(ollama_up=False, local_ready=False)  # no Ollama needed
+    code = inst.main(
+        args(claude, codex, "--backend", "local", checks=True),
+        runner=FakeCli(),
+        probe=probe,
+        ask=lambda _: "n",
+    )
+    assert code == 1 and probe.pulled == []
+    out = capsys.readouterr().out
+    assert "Download the embedding model BAAI/bge-small-en-v1.5 (about 67 MB)" in out
+    cli = FakeCli()
+    code = inst.main(
+        args(claude, codex, "--backend", "local", "--yes", checks=True), runner=cli, probe=probe
+    )
+    assert code == 0
+    assert probe.pulled == [("local", "BAAI/bge-small-en-v1.5")]
+    assert probe.compared == [("local", "BAAI/bge-small-en-v1.5")]
+    env = tomllib.loads((codex / "config.toml").read_text())["mcp_servers"]["mnemo"]["env"]
+    assert env["MNEMO_BACKEND"] == "local" and env["MNEMO_EMBED_DIM"] == "384"
+    assert env["MNEMO_EMBED_MODEL"] == "BAAI/bge-small-en-v1.5" and env["MNEMO_MODEL_DIR"]
+
+
+def test_memories_from_another_model_stop_the_install(homes, ollama_settings, capsys):
+    claude, codex = homes
+    problem = "The memories in localhost:5432/mnemo were embedded by a different model"
+    probe = FakeServices(mismatch=problem)
+    cli = FakeCli()
+    code = inst.main(args(claude, codex, "--yes", checks=True), runner=cli, probe=probe)
+    assert code == 2 and f"FIX  {problem}" in capsys.readouterr().out
+    assert [c[:3] for c in cli.calls] == [["claude", "mcp", "get"]]  # nothing registered
+    assert not (claude / "CLAUDE.md").exists()
+    assert (codex / "config.toml").read_text() == EXISTING_TOML
+    assert inst.main(args(claude, codex, "--dry-run", checks=True), runner=cli, probe=probe) == 2
+
+
 def test_claude_auto_memory_can_be_turned_off_and_back_on(homes, capsys):
     claude, codex = homes
     claude.mkdir()
@@ -297,3 +355,27 @@ def test_running_from_a_checkout_is_flagged(homes, monkeypatch, capsys, checkout
 
 def test_this_test_run_is_from_the_checkout():
     assert inst.running_from_checkout()
+
+
+async def test_migrate_checks_the_dimension_it_is_given_not_the_global_one(_disposable_test_db):
+    # Reinstalling with --backend local (384 dimensions) while the process-wide settings
+    # say 768 must migrate the 384-dimensional store, not reject it.
+    from urllib.parse import urlsplit, urlunsplit
+    from uuid import uuid4
+
+    import asyncpg
+
+    assert inst.get_settings().embed_dim == 768
+    parts = urlsplit(_disposable_test_db)
+    name = "mnemo_dim_" + uuid4().hex[:12]
+    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
+    await admin.execute(f'CREATE DATABASE "{name}"')
+    try:
+        dsn = urlunsplit(parts._replace(path="/" + name))
+        assert await inst.migrate(dsn, 384)  # fresh store, created at 384
+        assert await inst.migrate(dsn, 384) == []
+        with pytest.raises(ValueError, match="uses 384 dimensions; configured embed_dim is 768"):
+            await inst.migrate(dsn, 768)
+    finally:
+        await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
+        await admin.close()

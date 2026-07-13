@@ -1,14 +1,17 @@
-"""Embeddings via Ollama (default), OpenAI, or deterministic non-semantic hashes.
+"""Embeddings via Ollama (default), a model inside Mnemo, OpenAI, or non-semantic hashes.
 
-The core is async; ``embed`` here is sync (simple httpx) and the store calls it via
-``asyncio.to_thread`` so a network round-trip never blocks the event loop. The hash
-backend supports tests and direct-memory demos without a model server.
+The core is async; ``embed`` here is sync and the store calls it via
+``asyncio.to_thread`` so a network round-trip or model run never blocks the event
+loop. The local backend runs an ONNX model in process, so no model server is needed.
+The hash backend supports tests and direct-memory demos without any model.
 """
 
 from __future__ import annotations
 
 import hashlib
-from typing import Protocol, runtime_checkable
+import threading
+from pathlib import Path
+from typing import Any, Protocol, runtime_checkable
 
 import httpx
 
@@ -113,11 +116,80 @@ class OpenAIEmbedder:
         self._client.close()
 
 
+class LocalModelUnavailable(RuntimeError):
+    """The local embedding model is not downloaded (or cannot be loaded)."""
+
+    def __init__(self, model: str, cache_dir: Path, reason: str) -> None:
+        super().__init__(f"{model} in {cache_dir}: {reason}")
+        self.model = model
+        self.cache_dir = cache_dir
+        self.reason = reason
+
+
+def _text_embedding(model: str, cache_dir: Path, *, offline: bool) -> Any:
+    from fastembed import TextEmbedding
+    from loguru import logger
+
+    # fastembed logs a cache miss as an ERROR before raising; the raise is enough.
+    logger.disable("fastembed")
+    return TextEmbedding(model, cache_dir=str(cache_dir), local_files_only=offline)
+
+
+class LocalEmbedder:
+    """Embeddings from an ONNX model run inside this process (fastembed). No server.
+
+    The model loads on the first call, so tools that need no embedding never load
+    it, and it is never downloaded here: ``mnemo install`` downloads it into
+    ``cache_dir`` (see :func:`download_local_model`). Queries and memories are
+    embedded the same way, as with the other backends.
+    """
+
+    def __init__(self, *, model: str, dim: int, cache_dir: Path) -> None:
+        self.model = model
+        self.dim = dim
+        self.cache_dir = cache_dir
+        self._lock = threading.Lock()
+        self._model: Any = None
+
+    def _loaded(self) -> Any:
+        if self._model is None:
+            try:
+                self._model = _text_embedding(self.model, self.cache_dir, offline=True)
+            except ValueError as exc:
+                raise LocalModelUnavailable(self.model, self.cache_dir, str(exc)) from exc
+        return self._model
+
+    def embed(self, text: str) -> list[float]:
+        # One lock covers loading and inference: calls are a few milliseconds each.
+        with self._lock:
+            vector = next(iter(self._loaded().embed([text])))
+        if len(vector) != self.dim:
+            raise ValueError(f"{self.model} returned dim {len(vector)}, expected {self.dim}")
+        return [float(x) for x in vector]
+
+
+def local_model_ready(model: str, cache_dir: Path) -> bool:
+    """True when the model loads from the cache without a download."""
+    try:
+        _text_embedding(model, cache_dir, offline=True)
+    except ValueError:
+        return False
+    return True
+
+
+def download_local_model(model: str, cache_dir: Path) -> None:
+    """Download the model into cache_dir (from Hugging Face) so the server can load it."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    _text_embedding(model, cache_dir, offline=False)
+
+
 def build_embedder(settings: Settings | None = None) -> Embedder:
     """Construct the configured embedder; hash vectors are non-semantic."""
     s = settings or get_settings()
     if s.backend == "hash":
         return HashEmbedder(s.embed_dim)
+    if s.backend == "local":
+        return LocalEmbedder(model=s.embed_model, dim=s.embed_dim, cache_dir=s.model_dir)
     if s.backend == "openai":
         return OpenAIEmbedder(
             model=s.embed_model,

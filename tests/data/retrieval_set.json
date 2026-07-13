@@ -1,0 +1,329 @@
+{
+  "about": "Retrieval parity set for the single-file stack (docs/SQLITE_PLAN.md). Memories a coding project would hold, questions worded differently from the stored text, and off-topic questions that should return nothing. Written by the reviewing agent on 2026-11-14; not independent gold.",
+  "memories": [
+    {
+      "subject": "tests",
+      "predicate": "run command",
+      "value": "make test-db (needs Postgres running)"
+    },
+    {
+      "subject": "deploys",
+      "predicate": "schedule",
+      "value": "Production deploys happen every Thursday"
+    },
+    {
+      "subject": "code style",
+      "predicate": "formatter",
+      "value": "black with a line length of 100"
+    },
+    {
+      "subject": "pull requests",
+      "predicate": "title format",
+      "value": "Start with the ticket key, e.g. 'WID-142: Fix login'"
+    },
+    {
+      "subject": "staging database",
+      "predicate": "name",
+      "value": "widget_stage_07"
+    },
+    {
+      "subject": "python packages",
+      "predicate": "manager",
+      "value": "Always use uv, never pip"
+    },
+    {
+      "subject": "local services",
+      "predicate": "ports",
+      "value": "API 8081, worker 8090, admin UI 8095"
+    },
+    {
+      "subject": "test_sync_timeout",
+      "predicate": "status",
+      "value": "Flaky because of an upstream bug; skip with -k 'not sync_timeout'"
+    },
+    {
+      "subject": "branches",
+      "predicate": "naming",
+      "value": "feature/<ticket>-<slug>, never commit directly to main"
+    },
+    {
+      "subject": "commits",
+      "predicate": "message style",
+      "value": "Conventional Commits; no AI co-author trailers"
+    },
+    {
+      "subject": "CI",
+      "predicate": "provider",
+      "value": "GitHub Actions is disabled; run make lint and make test-db locally before pushing"
+    },
+    {
+      "subject": "database migrations",
+      "predicate": "how to add",
+      "value": "numbered raw SQL files in migrations/, never edit an applied one"
+    },
+    {
+      "subject": "secrets",
+      "predicate": "storage",
+      "value": "API keys live in the 1Password vault 'Widget Dev'; never put them in .env.example"
+    },
+    {
+      "subject": "logging",
+      "predicate": "library",
+      "value": "structlog with JSON output in production"
+    },
+    {
+      "subject": "error tracking",
+      "predicate": "service",
+      "value": "Sentry project widget-api"
+    },
+    {
+      "subject": "feature flags",
+      "predicate": "system",
+      "value": "LaunchDarkly; flags are prefixed wid_"
+    },
+    {
+      "subject": "frontend",
+      "predicate": "framework",
+      "value": "Next.js 15 App Router with Tailwind"
+    },
+    {
+      "subject": "API",
+      "predicate": "authentication",
+      "value": "JWT access tokens (15 min) with refresh tokens in httpOnly cookies"
+    },
+    {
+      "subject": "release manager",
+      "predicate": "person",
+      "value": "Priya owns releases; ask her before tagging"
+    },
+    {
+      "subject": "on-call",
+      "predicate": "rotation",
+      "value": "weekly, handoff on Mondays at 10am Central"
+    },
+    {
+      "subject": "code review",
+      "predicate": "policy",
+      "value": "two approvals for anything touching billing/"
+    },
+    {
+      "subject": "billing module",
+      "predicate": "owner",
+      "value": "payments team; do not refactor without asking Marco"
+    },
+    {
+      "subject": "Docker images",
+      "predicate": "registry",
+      "value": "ghcr.io/acme/widget"
+    },
+    {
+      "subject": "Kubernetes",
+      "predicate": "namespace",
+      "value": "widget-prod and widget-staging on the acme-east cluster"
+    },
+    {
+      "subject": "background jobs",
+      "predicate": "queue",
+      "value": "Celery with Redis; long tasks go to the 'slow' queue"
+    },
+    {
+      "subject": "caching",
+      "predicate": "TTL policy",
+      "value": "Redis, 5 minute default TTL, never cache user PII"
+    },
+    {
+      "subject": "type checking",
+      "predicate": "tool",
+      "value": "mypy strict on src/, not required for tests/"
+    },
+    {
+      "subject": "docstrings",
+      "predicate": "style",
+      "value": "Google style, required for public functions"
+    },
+    {
+      "subject": "dependencies",
+      "predicate": "upgrade cadence",
+      "value": "Renovate PRs are merged on Fridays"
+    },
+    {
+      "subject": "Python version",
+      "predicate": "supported",
+      "value": "3.12 only"
+    },
+    {
+      "subject": "Node version",
+      "predicate": "supported",
+      "value": "22 LTS, managed with fnm"
+    },
+    {
+      "subject": "database",
+      "predicate": "engine",
+      "value": "Postgres 16 with pgvector"
+    },
+    {
+      "subject": "ORM",
+      "predicate": "choice",
+      "value": "no ORM; raw SQL through asyncpg"
+    },
+    {
+      "subject": "performance budget",
+      "predicate": "API latency",
+      "value": "p95 under 300 ms for /search"
+    },
+    {
+      "subject": "user",
+      "predicate": "working style",
+      "value": "prefers small diffs and one commit per milestone"
+    },
+    {
+      "subject": "user",
+      "predicate": "communication",
+      "value": "wants a recommendation, not a list of options"
+    },
+    {
+      "subject": "documentation",
+      "predicate": "location",
+      "value": "architecture notes in docs/ARCHITECTURE.md; update when schemas change"
+    },
+    {
+      "subject": "legacy importer",
+      "predicate": "status",
+      "value": "deprecated; do not add features, scheduled for removal in Q1"
+    },
+    {
+      "subject": "rate limiting",
+      "predicate": "implementation",
+      "value": "token bucket in Redis, 100 requests/min per API key"
+    },
+    {
+      "subject": "timezone handling",
+      "predicate": "rule",
+      "value": "store UTC, display in the user's timezone; never use naive datetimes"
+    }
+  ],
+  "questions": [
+    {
+      "query": "How do I run the tests here?",
+      "answer": 0
+    },
+    {
+      "query": "command to execute the unit test suite",
+      "answer": 0
+    },
+    {
+      "query": "when do we ship to prod?",
+      "answer": 1
+    },
+    {
+      "query": "release day",
+      "answer": 1
+    },
+    {
+      "query": "what linter or formatting rules apply to python files",
+      "answer": 2
+    },
+    {
+      "query": "max characters per line",
+      "answer": 2
+    },
+    {
+      "query": "how should I name my PR",
+      "answer": 3
+    },
+    {
+      "query": "which db does staging use",
+      "answer": 4
+    },
+    {
+      "query": "install a dependency",
+      "answer": 5
+    },
+    {
+      "query": "add the requests library to this project",
+      "answer": 5
+    },
+    {
+      "query": "what port does the backend listen on",
+      "answer": 6
+    },
+    {
+      "query": "why is CI red on the sync test",
+      "answer": 7
+    },
+    {
+      "query": "known flaky tests",
+      "answer": 7
+    },
+    {
+      "query": "what should I call my git branch",
+      "answer": 8
+    },
+    {
+      "query": "how do I write the commit message",
+      "answer": 9
+    },
+    {
+      "query": "where are credentials kept",
+      "answer": 12
+    },
+    {
+      "query": "how do I change the schema",
+      "answer": 11
+    },
+    {
+      "query": "who approves a release",
+      "answer": 18
+    },
+    {
+      "query": "who do I talk to before touching payments code",
+      "answer": 21
+    },
+    {
+      "query": "where do slow async tasks run",
+      "answer": 24
+    },
+    {
+      "query": "is it ok to cache the user's email",
+      "answer": 25
+    },
+    {
+      "query": "how are exceptions reported in production",
+      "answer": 14
+    },
+    {
+      "query": "what happens with datetimes",
+      "answer": 39
+    },
+    {
+      "query": "how many reviewers do I need",
+      "answer": 20
+    },
+    {
+      "query": "which python should I use",
+      "answer": 29
+    },
+    {
+      "query": "where do container images get pushed",
+      "answer": 22
+    },
+    {
+      "query": "does the user want options or a decision",
+      "answer": 35
+    },
+    {
+      "query": "can I extend the old importer",
+      "answer": 37
+    }
+  ],
+  "off_topic": [
+    "what should I name my cat?",
+    "kubernetes ingress annotation for websockets",
+    "recipe for sourdough bread",
+    "how tall is mount everest",
+    "what is the capital of australia",
+    "best gift for my mother's birthday",
+    "how do I center a div in CSS",
+    "explain the borrow checker in rust"
+  ]
+}

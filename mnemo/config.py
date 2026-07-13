@@ -7,10 +7,21 @@ similarity/confidence thresholds from spec §5. No magic numbers scattered in co
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic import AliasChoices, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+LOCAL_MODELS: dict[str, tuple[int, float, int]] = {
+    # model: (dimension, search floor, download size in MB). Measured through the
+    # direct search on tests/data/retrieval_set.json (November 14, 2026): the floor
+    # keeps unrelated questions from returning memories. bge-small peaks near 300 MB
+    # per server process, bge-base near 770 MB.
+    "BAAI/bge-small-en-v1.5": (384, 0.60, 67),
+    "BAAI/bge-base-en-v1.5": (768, 0.55, 210),
+}
+DEFAULT_LOCAL_MODEL = "BAAI/bge-small-en-v1.5"
 
 
 class Settings(BaseSettings):
@@ -31,7 +42,11 @@ class Settings(BaseSettings):
     test_dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo_test"
 
     # --- Backend selection ---
-    backend: Literal["ollama", "openai", "hash"] = "ollama"
+    backend: Literal["ollama", "openai", "hash", "local"] = "ollama"
+    """local: an embedding model running inside Mnemo (no model server)."""
+
+    model_dir: Path = Path.home() / ".mnemo" / "models"
+    """Where the local backend keeps its model; `mnemo install` downloads it here."""
 
     # --- Ollama (default backend) ---
     ollama_host: str = "http://localhost:11434"
@@ -232,6 +247,25 @@ class Settings(BaseSettings):
                 raise ValueError(
                     "backend=hash has no extractor/verifier; set MNEMO_WORKER_ENABLED=false"
                 )
+        self.model_dir = self.model_dir.expanduser()
+        if self.backend == "local":
+            # Only embeddings run in process; the parked extraction worker needs a
+            # model server, so it stays off unless explicitly enabled.
+            if "worker_enabled" not in self.model_fields_set:
+                self.worker_enabled = False
+            if "embed_model" not in self.model_fields_set:
+                self.embed_model = DEFAULT_LOCAL_MODEL
+            known = LOCAL_MODELS.get(self.embed_model)
+            if known is None and "embed_dim" not in self.model_fields_set:
+                raise ValueError(
+                    f"set MNEMO_EMBED_DIM for the local model {self.embed_model!r}; "
+                    f"known models: {', '.join(LOCAL_MODELS)}"
+                )
+            if known is not None:
+                if "embed_dim" not in self.model_fields_set:
+                    self.embed_dim = known[0]
+                if "search_floor" not in self.model_fields_set:
+                    self.search_floor = known[1]
         # A backend switch must not silently send Ollama model names to OpenAI.
         if self.backend == "openai":
             if "embed_model" not in self.model_fields_set:

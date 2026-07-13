@@ -8,6 +8,7 @@ Ollama embeddings when the local model is available.
 from __future__ import annotations
 
 import math
+from pathlib import Path
 
 import asyncpg
 import httpx
@@ -202,3 +203,50 @@ async def test_live_embeddings_preserve_the_demo_correction(db) -> None:
         assert results and results[0].value == "MongoDB"
     finally:
         emb.close()
+
+
+# ---- local backend (in-process model) ------------------------------------------
+
+
+def test_local_backend_resolves_model_dimension_floor_and_no_worker(tmp_path) -> None:
+    settings = Settings(_env_file=None, backend="local", model_dir=tmp_path)
+    assert settings.embed_model == "BAAI/bge-small-en-v1.5"
+    assert (settings.embed_dim, settings.search_floor) == (384, 0.60)
+    assert settings.worker_enabled is False
+    base = Settings(_env_file=None, backend="local", embed_model="BAAI/bge-base-en-v1.5")
+    assert (base.embed_dim, base.search_floor) == (768, 0.55)
+    explicit = Settings(_env_file=None, backend="local", search_floor=0.7, embed_dim=384)
+    assert (explicit.embed_dim, explicit.search_floor) == (384, 0.7)
+    with pytest.raises(ValueError, match="MNEMO_EMBED_DIM"):
+        Settings(_env_file=None, backend="local", embed_model="some/other-model")
+    assert Settings(_env_file=None, model_dir="~/x").model_dir == Path.home() / "x"
+
+
+def test_local_embedder_loads_lazily_and_never_downloads(tmp_path) -> None:
+    from mnemo.embedder import LocalEmbedder, LocalModelUnavailable, build_embedder
+
+    settings = Settings(_env_file=None, backend="local", model_dir=tmp_path)
+    embedder = build_embedder(settings)
+    assert isinstance(embedder, LocalEmbedder) and embedder._model is None
+    with pytest.raises(LocalModelUnavailable) as raised:
+        embedder.embed("PostgreSQL")  # empty cache: refuses instead of downloading
+    assert raised.value.model == "BAAI/bge-small-en-v1.5" and raised.value.cache_dir == tmp_path
+    assert list(tmp_path.iterdir()) == [] or not any(tmp_path.rglob("*.onnx"))
+
+
+def _local_model_ready() -> bool:
+    from mnemo.embedder import local_model_ready
+
+    settings = Settings(backend="local")
+    return local_model_ready(settings.embed_model, settings.model_dir)
+
+
+@pytest.mark.skipif(not _local_model_ready(), reason="local embedding model not downloaded")
+def test_local_embedder_live_is_deterministic_and_normalized() -> None:
+    from mnemo.embedder import build_embedder
+
+    embedder = build_embedder(Settings(backend="local"))
+    vector = embedder.embed("the user prefers PostgreSQL")
+    assert len(vector) == embedder.dim
+    assert vector == embedder.embed("the user prefers PostgreSQL")
+    assert math.isclose(math.sqrt(sum(x * x for x in vector)), 1.0, abs_tol=1e-3)

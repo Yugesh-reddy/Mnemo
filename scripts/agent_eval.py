@@ -43,7 +43,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from mnemo.config import get_settings  # noqa: E402
+from mnemo.config import Settings, get_settings  # noqa: E402
 from mnemo.db import apply_migrations  # noqa: E402
 
 SCENARIOS = ROOT / "docs" / "agent-eval" / "scenarios.json"
@@ -532,6 +532,8 @@ async def run(args: argparse.Namespace) -> int:
         source, _, dest = spec.partition(":")
         files[dest or Path(source).name] = Path(source).read_text()
     settings = get_settings()
+    if args.backend != settings.backend:  # dimension follows the backend's model
+        settings = Settings(backend=args.backend)
     codex_disable = other_codex_servers()
     if args.dry_run:
         env = mnemo_env("<dsn>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
@@ -674,7 +676,7 @@ def main() -> None:
         metavar="SRC[:DEST]",
         help="copy a file into every fixture repository (e.g. AGENTS.md, .claude/settings.json)",
     )
-    parser.add_argument("--backend", default="ollama", choices=["ollama", "hash"])
+    parser.add_argument("--backend", default="ollama", choices=["ollama", "local", "hash"])
     parser.add_argument(
         "--server",
         help="mnemo-mcp-direct to test (default: this checkout's), e.g. an installed tool",

@@ -117,15 +117,24 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 |---|---|---|
 | `MNEMO_DB_PORT` | `5432` | Host port of the Compose Postgres; the default DSNs follow it. |
 | `MNEMO_DSN` | `postgresql://mnemo:mnemo@localhost:<port>/mnemo` | Database for memories. |
-| `MNEMO_BACKEND` | `ollama` | Embeddings: `ollama` (local), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
+| `MNEMO_BACKEND` | `ollama` | Embeddings: `ollama` (local server), `local` (a model inside Mnemo, no server; see below), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
 | `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `mnemo install`. |
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
 
 `mnemo install` options: `--dry-run` shows the changes only, `--agent claude|codex`
 limits them to one agent, `--codex-home` points at another Codex home (a `codex`
-wrapper that pins one is detected), `--backend hash` avoids Ollama, and
-`--claude-auto-memory off` also turns off Claude Code's built-in memory.
+wrapper that pins one is detected), `--backend local` or `--backend hash` avoids
+Ollama, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
+
+**`--backend local` (experimental)** runs the embedding model inside each Mnemo server
+instead of in Ollama. `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB,
+from Hugging Face) into `~/.mnemo/models`; nothing is downloaded later. Each agent
+session's server then uses about 300 MB of memory. On a 28-question check it found
+memories about as well as Ollama (see `tests/test_retrieval_quality.py`); the model is
+English-only. It uses 384-dimensional vectors, so it needs a new database, and the
+installer refuses to switch a database whose memories another model embedded.
+Postgres is still required; [the plan](docs/SQLITE_PLAN.md) replaces it with one file.
 
 ### Configure by hand
 

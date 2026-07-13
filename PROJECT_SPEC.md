@@ -604,3 +604,26 @@ The owner approved these changes to make Mnemo installable by others.
   `MNEMO_DB_PORT`.
 - **Offline web UI.** htmx 1.9.12 and a stylesheet prebuilt with Tailwind 3.4.19 are
   served from `web/static`; templates reference no external assets.
+
+## 22. In-process embeddings — November 14, 2026
+
+The owner asked for the single-file stack in [the plan](docs/SQLITE_PLAN.md) to be
+implemented; this is its Phase 1, still on Postgres.
+
+- **`MNEMO_BACKEND=local`** embeds with an ONNX model inside the server process
+  (`fastembed`), so no model server runs. Default model `BAAI/bge-small-en-v1.5`
+  (384 dimensions, search floor 0.60); `BAAI/bge-base-en-v1.5` (768, 0.55) is the other
+  known model. Each known model sets its dimension and floor unless they are set
+  explicitly. The extraction worker defaults off, as with `hash`.
+- **Loading.** The model loads on the first embedding call and is never downloaded by
+  the server. `mnemo-install --backend local` downloads it into `MNEMO_MODEL_DIR`
+  (default `~/.mnemo/models`) after confirmation and pins `MNEMO_EMBED_MODEL` and
+  `MNEMO_MODEL_DIR` in each agent's configuration. A missing model is
+  `SERVICE_UNAVAILABLE` with `details.service = "local"`, naming `mnemo install`.
+- **Model switches.** Before changing anything, the installer re-embeds the text of up
+  to five of the newest stored memories with the configured backend; if none reproduces
+  its stored vector (cosine below 0.99), it refuses, because search would stop finding
+  existing memories. The same model gives 1.0; Ollama's nomic-embed-text against the
+  quantized nomic model in fastembed gives 0.96.
+- **Default unchanged.** `ollama` stays the default until the plan's agent-eval gate.
+
