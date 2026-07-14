@@ -576,7 +576,6 @@ async def pilot(model: str | None, output: Path, *, provider: str = "ollama") ->
                     settings=Settings(
                         _env_file=None,
                         backend="hash",
-                        worker_enabled=False,
                         embed_dim=settings.embed_dim,
                         search_reinforce=False,
                     ),

@@ -1,7 +1,0 @@
-{
-  "policy_sha256": "e83de34c8b51dcd9a72bdf63782907c725fce1d5c2527d9e1618748361744626",
-  "commit": "3aaaed1862667483bbe9c0c2b8e63d68830f3bc8",
-  "recorded_at": "2026-09-14T00:10:19.707553+00:00",
-  "dataset_sha256": "f15d941125a0764309fa29505ad29ca21451aa247ce7bf767c36daafea5fe2b5",
-  "scope": "Frozen candidate policy for naturalistic development measurement, before any outputs. Holdout still unopened."
-}

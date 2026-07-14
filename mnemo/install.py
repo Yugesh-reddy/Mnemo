@@ -108,7 +108,6 @@ def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
         "MNEMO_DSN": settings.dsn,
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(settings.embed_dim),
-        "MNEMO_WORKER_ENABLED": "false",
         "MNEMO_NAMESPACE": settings.namespace,
         "MNEMO_USER_ID": settings.user_id,
         "MNEMO_ACTOR": actor,

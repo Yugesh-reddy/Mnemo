@@ -24,8 +24,8 @@ def demo_settings() -> Settings:
     """Honor an explicit backend; otherwise choose hash. No background work runs."""
     settings = Settings()
     if "backend" not in settings.model_fields_set:
-        return Settings(backend="hash", worker_enabled=False)
-    return settings.model_copy(update={"worker_enabled": False})
+        return Settings(backend="hash")
+    return settings
 
 
 def run_scenario(

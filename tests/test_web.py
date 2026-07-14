@@ -217,35 +217,6 @@ async def test_manual_correction_is_explicit_human_review(store, web_client):
     assert current.provenance == "human_review" and current.trust_level == "high"
 
 
-async def test_operations_explains_a_rejected_memory(db, fake_embedder):
-    from mnemo.extraction import ExtractionWorker
-    from mnemo.models import ExtractedFact
-
-    class Unsupported:
-        def extract(self, text, role):
-            return [ExtractedFact(subject="user", predicate="location", object="Portland")]
-
-    store = MnemoStore(db, fake_embedder)
-    await store.observe("denial", "I do not live in Portland.", "s")
-    await ExtractionWorker(db, fake_embedder, Unsupported()).process_one()
-    assert not await store.search("Portland")
-
-    async def override():
-        yield store
-
-    app.dependency_overrides[get_store] = override
-    try:
-        async with httpx.AsyncClient(
-            transport=ASGITransport(app=app), base_url="http://t"
-        ) as client:
-            response = await client.get("/operations", params={"turn_id": "denial"})
-        assert response.status_code == 200
-        assert "rejected" in response.text and "Portland" in response.text
-        assert "denial" in response.text and "Queue and archival activity" in response.text
-    finally:
-        app.dependency_overrides.clear()
-
-
 def test_templates_load_nothing_from_the_internet():
     from pathlib import Path
 

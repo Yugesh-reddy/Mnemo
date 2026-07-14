@@ -1,8 +1,0 @@
-{
-  "frozen_at": "2026-09-14T00:11:24.124827+00:00",
-  "policy_sha256": "e83de34c8b51dcd9a72bdf63782907c725fce1d5c2527d9e1618748361744626",
-  "development_probe_sha256": "db5ad8a69e3b8b39cbcbcf230149833052e921303f3dae1ffa6bb758dba1a5f5",
-  "commit": "3aaaed1862667483bbe9c0c2b8e63d68830f3bc8",
-  "scope": "Development changes stop after the 20-source probe and required-DB tests. The 200-turn authored validation is in progress. Its outputs and the newly opened external holdout will not change this policy.",
-  "holdout": "e3038f8c; still unopened at freeze"
-}

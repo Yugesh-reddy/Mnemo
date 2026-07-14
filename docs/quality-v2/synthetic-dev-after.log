@@ -1,6 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 10275.41it/s]
-PRECISION / RECALL WRITE-QUALITY EVAL (mnemo-synthetic-quality-corpus; synthetic)
-  NAIVE : visible  70 | P   4.3% | R  12.0% | F1   6.3% | must-keep  37.5% | false now/history 6/29 | events 94 | 3570.7 ms
-  GATED : visible  24 | P  20.8% | R  20.0% | F1  20.4% | must-keep  37.5% | false now/history 0/0 | events 25 | 121580.1 ms

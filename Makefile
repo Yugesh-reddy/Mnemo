@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp mcp-direct agents css demo demo-direct ui export import
+.PHONY: help install up down migrate seed test lint fmt mcp agents css demo ui export import test-db
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -26,9 +26,6 @@ seed:  ## Load demo seed data
 test:  ## Run pytest
 	$(RUN) pytest -q
 
-eval:  ## Precision/recall junk-rate eval — the north star
-	$(RUN) python -m mnemo.eval
-
 lint:  ## ruff check + black --check
 	$(RUN) ruff check .
 	$(RUN) black --check .
@@ -37,21 +34,15 @@ fmt:  ## ruff --fix + black
 	$(RUN) ruff check --fix .
 	$(RUN) black .
 
-mcp:  ## Run the MCP server (stdio)
-	$(RUN) python -m mnemo.mcp_server
-
-mcp-direct:  ## Run six guarded memory tools over MCP (no extraction or decay)
+mcp:  ## Run the six guarded memory tools over MCP (stdio)
 	$(RUN) python -m mnemo.mcp_direct
 
 agents:  ## Install the mnemo tool from this checkout, then connect Claude Code and Codex
 	uv tool install --force --reinstall --python 3.12 .
 	"$$(uv tool dir --bin)/mnemo" install $(ARGS)
 
-demo:  ## Run the end-to-end rollback demo (spec §10)
-	$(RUN) python examples/agent.py demo
-
-demo-direct:  ## Direct write -> history -> revert through the SDK, no models
-	MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false $(RUN) python -m examples.direct_memory
+demo:  ## Direct write -> history -> revert through the SDK, no models
+	MNEMO_BACKEND=hash $(RUN) python -m examples.direct_memory
 
 export:  ## Export the configured scope as versioned JSON (OUT=file, default stdout)
 	$(RUN) python -m mnemo.transfer export --out $(or $(OUT),-)
@@ -64,12 +55,6 @@ ui:  ## Run the FastAPI + HTMX web UI
 
 css:  ## Rebuild web/static/app.css from the templates (needs Node for npx)
 	npx -y tailwindcss@3.4.19 -c web/tailwind.config.js -i web/tailwind.css -o web/static/app.css --minify
-
-worker:  ## Run extraction with lease renewal and scheduled decay
-	$(RUN) python -m mnemo.worker
-
-health:  ## Print scoped queue health and archival activity
-	$(RUN) python -m mnemo.worker --health
 
 test-db:  ## Required Postgres correctness checks
 	MNEMO_REQUIRE_DB=1 $(RUN) pytest -q

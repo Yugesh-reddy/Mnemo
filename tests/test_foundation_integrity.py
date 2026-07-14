@@ -11,6 +11,7 @@ import pytest
 
 from mnemo.core import MnemoStore
 from mnemo.db import register_vector
+from tests.conftest import legacy_archive
 
 
 async def test_foreign_event_and_cross_scope_operations_fail(store, db, fake_embedder) -> None:
@@ -26,7 +27,7 @@ async def test_foreign_event_and_cross_scope_operations_fail(store, db, fake_emb
     assert await other.log(fact_id=own.fact_id) == []
 
 
-async def test_revert_and_archive_preserve_payload_lineage_and_embedding(store, db) -> None:
+async def test_revert_preserves_payload_lineage_and_embedding_from_archive(store, db) -> None:
     vector = [0.0] * store.settings.embed_dim
     vector[0] = 1.0
     source = {"turn_ids": ["turn-json"], "doc": "profile.json"}
@@ -40,10 +41,7 @@ async def test_revert_and_archive_preserve_payload_lineage_and_embedding(store, 
         importance=8,
         write_score=0.83,
     )
-    archived = await store.archive_if_head(
-        event.fact_id, event.event_id, actor="test", reason="archive regression"
-    )
-    assert archived is not None
+    archived = await legacy_archive(store, event.fact_id, event.event_id)
     restored = await store.revert(event.fact_id, event.event_id)
 
     rows = await db.fetch(
@@ -59,19 +57,6 @@ async def test_revert_and_archive_preserve_payload_lineage_and_embedding(store, 
     assert all(row["write_score"] == pytest.approx(0.83) for row in rows)
 
 
-async def test_archive_rechecks_selected_head(store) -> None:
-    first = await store.add("user", "project", "alpha", provenance="direct_user_statement")
-    await store.add("user", "project", "beta", provenance="direct_user_statement")
-    assert (
-        await store.archive_if_head(
-            first.fact_id, first.event_id, actor="test", reason="stale candidate"
-        )
-        is None
-    )
-    current = await store.get(first.fact_id)
-    assert current is not None and current.object_text == "beta"
-
-
 @pytest.mark.parametrize("before,after", [("Friday", "Monday"), (100, 150)])
 async def test_identical_embeddings_do_not_suppress_corrections(store, before, after) -> None:
     vector = [1.0] + [0.0] * (store.settings.embed_dim - 1)
@@ -80,28 +65,6 @@ async def test_identical_embeddings_do_not_suppress_corrections(store, before, a
     assert changed.op == "UPDATE"
     assert changed.parent_event_id == first.event_id
     assert (await store.get(first.fact_id)).value == after
-
-
-async def test_archival_failure_rolls_back_event_and_head(store, db, monkeypatch) -> None:
-    first = await store.add("user", "profile", {"budget": 150})
-
-    async def broken_head(*args):
-        raise RuntimeError("injected HEAD failure")
-
-    monkeypatch.setattr(store, "_set_head", broken_head)
-    with pytest.raises(RuntimeError, match="injected"):
-        await store.archive_if_head(
-            first.fact_id, first.event_id, actor="test", reason="failure regression"
-        )
-    history = await store.blame(fact_id=first.fact_id)
-    assert len(history) == 1
-    assert history[0].superseded_by is None
-    assert (
-        await db.fetchval(
-            "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", first.fact_id
-        )
-        == first.event_id
-    )
 
 
 async def test_event_payload_guard_allows_only_bookkeeping(store, db) -> None:

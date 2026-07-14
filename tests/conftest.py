@@ -147,3 +147,35 @@ async def worker_connections(_disposable_test_db):
         await b.close()
         await drop_isolated_schema(a, schema)
         await a.close()
+
+
+async def legacy_archive(store, fact_id, event_id):
+    """Write the archived HEAD that the removed decay job left in older databases.
+
+    Decay copied HEAD into a new ``tier='ephemeral'`` revision. Mnemo no longer
+    creates one, but stores upgraded from earlier versions can contain it, so
+    reads and reverts must still handle it.
+    """
+    from mnemo.core import _EVENT_COLS
+    from mnemo.models import Event
+
+    row = await store.conn.fetchrow(
+        f"""
+        INSERT INTO memory_event
+            (fact_id, op, object_text, object_number, object_json, embedding,
+             provenance, actor, confidence, trust_level, source_span, session_id,
+             expires_at, valid_from, valid_to, parent_event_id, importance, write_score,
+             tier, reason, strength, recall_count, last_used)
+        SELECT fact_id, 'UPDATE', object_text, object_number, object_json, embedding,
+               provenance, 'decay', confidence, trust_level, source_span, session_id,
+               expires_at, valid_from, valid_to, event_id, importance, write_score,
+               'ephemeral', 'archived by decay', strength, recall_count, last_used
+        FROM memory_event WHERE event_id=$1
+        RETURNING {_EVENT_COLS}
+        """,
+        event_id,
+    )
+    event = Event.from_row(row)
+    await store._supersede(event_id, event.event_id)
+    await store._set_head(fact_id, event.event_id)
+    return event

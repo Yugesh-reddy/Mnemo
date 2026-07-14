@@ -42,7 +42,6 @@ def server_env(dsn: str, namespace: str, actor: str, project: str | None) -> dic
         "MNEMO_DSN": dsn,
         "MNEMO_BACKEND": "hash",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
-        "MNEMO_WORKER_ENABLED": "false",
         "MNEMO_NAMESPACE": namespace,
         "MNEMO_USER_ID": "owner",
         "MNEMO_ACTOR": actor,

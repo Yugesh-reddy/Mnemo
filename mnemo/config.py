@@ -1,7 +1,7 @@
 """Centralized configuration for Mnemo.
 
-Every tunable lives here — DSN, backend selection, embedding dimension, and the
-similarity/confidence thresholds from spec §5. No magic numbers scattered in code.
+Every tunable lives here: DSN, backend selection, embedding dimension and the
+search settings. No magic numbers scattered in code.
 """
 
 from __future__ import annotations
@@ -72,22 +72,12 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("MNEMO_AZURE_API_KEY", "AZURE_OPENAI_API_KEY"),
     )
 
-    # --- Embedding / extraction models ---
+    # --- Embedding model ---
     # Dimension MUST match the vector(N) used in migrations (see CLAUDE.md "Embedding dimension").
     embed_model: str = "nomic-embed-text"
     embed_dim: int = 768
-    extractor_model: str = "llama3.2:3b"
 
-    # --- Thresholds (spec §5) ---
-    update_sim: float = Field(0.90, ge=0.0, le=1.0)
-    """Legacy similarity setting; value equivalence now governs no-op decisions."""
-
-    dedup_sim: float = Field(0.92, ge=0.0, le=1.0)
-    """Legacy similarity setting; identity aliases govern safe deduplication."""
-
-    confidence_floor: float = Field(0.5, ge=0.0, le=1.0)
-    """Drop extracted facts whose confidence is below this."""
-
+    # --- Search ---
     search_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
 
@@ -95,15 +85,6 @@ class Settings(BaseSettings):
     search_hnsw_max_scan_tuples: int = Field(20000, ge=1, le=1_000_000)
     search_reinforce: bool = True
     session_ttl_seconds: float = Field(86400.0, gt=0.0)
-
-    # Verification runs off the event loop. Optional NLI models load only when selected.
-    verifier_backend: Literal["heuristic", "cross_encoder", "ollama", "openai"] = "heuristic"
-    verifier_model: str = "cross-encoder/nli-deberta-v3-small"
-    verifier_entailment_threshold: float = Field(0.99, ge=0.0, le=1.0)
-    verifier_timeout_seconds: float = Field(20.0, gt=0.0)
-    verifier_max_retries: int = Field(1, ge=0, le=3)
-    verifier_fallback_backend: Literal["none", "ollama", "openai"] = "none"
-    verifier_fallback_model: str | None = None
 
     # --- Retrieval rerank (spec §5: rerank over top-k, not a custom index) ---
     search_w_rel: float = 0.5
@@ -118,113 +99,6 @@ class Settings(BaseSettings):
     recency_gamma: float = 0.995
     """Per-hour recency decay in the rerank (Generative Agents)."""
 
-    # --- Quality gate (spec §4 Layer 2 / §13 / §18; tune ONLY against make eval) ---
-    # "Lasting" defaults, validated by v11: with novelty 1.0, a non-transient fact of
-    # importance >= 5 is durable, 3-4 is session and 1-2 is dropped as noise.
-    # The legacy policy was w_imp 0.4, w_spec 0.3, w_nov 0.3, ephemeral_floor 0.45,
-    # cosine novelty and "just" as a transient marker (see mnemo.audit.LEGACY_*).
-    w_imp: float = 0.6
-    """write_score weight: importance/10."""
-
-    w_spec: float = 0.0
-    """write_score weight: specificity (predicate in the controlled vocabulary). Zero
-    because the extractor's vocabulary is open (v10/v11)."""
-
-    w_nov: float = 0.4
-    """write_score weight: novelty (see novelty_mode)."""
-
-    w_src: float = 0.4
-    """Penalty subtracted when the fact came from an assistant turn."""
-
-    transient_penalty: float = 0.15
-    """Penalty when the source turn is explicitly transient ('today', 'right now')."""
-
-    transient_markers: list[str] = [
-        "today",
-        "right now",
-        "currently",
-        "at the moment",
-        "this morning",
-        "waiting for",
-    ]
-    """Whole-word, case-insensitive markers that flag a source turn as transient.
-    "just" is excluded: it marks recently completed events ("I just baked ...")."""
-
-    novelty_mode: Literal["cosine", "identity"] = "identity"
-    """cosine: 1 - max similarity to current facts. identity: 1.0, because exact
-    repeats and (with routing) restatements are resolved by fact identity instead."""
-
-    durable_cutoff: float = Field(0.70, ge=0.0, le=1.0)
-    """write_score >= this => durable; below => demote to session."""
-
-    ephemeral_floor: float = Field(0.55, ge=0.0, le=1.0)
-    """write_score < this => true noise: not stored at all."""
-
-    # --- Decay / reinforcement (spec §4 Layer 5; MemoryBank R = e^(−t/S)) ---
-    decay_lambda_base: float = 0.16
-    """Base decay rate; effective λ = base · (1 − (importance/10) · 0.8)."""
-
-    decay_archive_below: float = Field(0.35, ge=0.0, le=1.0)
-    """Retention below this archives the fact (reversible tier demotion)."""
-
-    predicate_vocab: list[str] = [
-        "name",
-        "role",
-        "preferred_database",
-        "uses_database",
-        "preferred_language",
-        "primary_language",
-        "team_lead",
-        "ship_day",
-        "location",
-        "timezone",
-        "deploy_method",
-        "goal",
-        "currently_debugging",
-        "dislikes",
-    ]
-    """Controlled predicate vocabulary — specificity=1.0 in-vocab, 0.2 otherwise."""
-
-    # --- Identity routing (spec §17; off until the v9 measurement passes) ---
-    identity_routing: Literal["off", "contradiction"] = "off"
-    """off: every extracted value updates the one attribute per subject/predicate.
-    contradiction: a value replaces an existing one only when its turn contradicts
-    it; values an existing one already states are duplicates; others coexist as
-    members. Single-value predicates below always use the attribute."""
-
-    single_value_predicates: list[str] = [
-        "name",
-        "role",
-        "preferred_database",
-        "preferred_language",
-        "primary_language",
-        "team_lead",
-        "ship_day",
-        "location",
-        "timezone",
-        "deploy_method",
-        "currently_debugging",
-    ]
-    """Predicates (after alias canonicalization) that hold exactly one value."""
-
-    # --- Extraction worker ---
-    extractor_max_retries: int = Field(2, ge=0, le=2)
-    extractor_timeout_seconds: float = Field(120.0, gt=0.0)
-
-    job_lease_seconds: float = Field(60.0, gt=0.0)
-    """A 'processing' job whose updated_at is older than this is presumed orphaned
-    (its worker died mid-extraction) and is eligible to be reclaimed. The
-    worker refreshes the lease every third of this interval."""
-
-    job_max_attempts: int = Field(3, ge=1)
-    """A job is marked 'failed' (not requeued forever) once attempts exceeds this.
-    Default 3 = the initial try + 2 retries (kept in lockstep with extractor_max_retries)."""
-
-    job_retry_base_seconds: float = Field(1.0, ge=0.0)
-    job_retry_max_seconds: float = Field(60.0, ge=0.0)
-    worker_poll_seconds: float = Field(0.5, gt=0.0)
-    worker_enabled: bool = True
-    decay_interval_seconds: float = Field(3600.0, gt=0.0)
     namespace: str = "default"
     user_id: str = "default"
     agent_id: str = "default"
@@ -240,19 +114,8 @@ class Settings(BaseSettings):
             if field not in self.model_fields_set:
                 url = f"postgresql://mnemo:mnemo@localhost:{self.db_port}/{database}"
                 setattr(self, field, url)
-        if self.backend == "hash":
-            if "worker_enabled" not in self.model_fields_set:
-                self.worker_enabled = False
-            elif self.worker_enabled:
-                raise ValueError(
-                    "backend=hash has no extractor/verifier; set MNEMO_WORKER_ENABLED=false"
-                )
         self.model_dir = self.model_dir.expanduser()
         if self.backend == "local":
-            # Only embeddings run in process; the parked extraction worker needs a
-            # model server, so it stays off unless explicitly enabled.
-            if "worker_enabled" not in self.model_fields_set:
-                self.worker_enabled = False
             if "embed_model" not in self.model_fields_set:
                 self.embed_model = DEFAULT_LOCAL_MODEL
             known = LOCAL_MODELS.get(self.embed_model)
@@ -272,14 +135,8 @@ class Settings(BaseSettings):
                 self.embed_model = "text-embedding-3-small"
             if "embed_dim" not in self.model_fields_set:
                 self.embed_dim = 1536
-            if "extractor_model" not in self.model_fields_set:
-                self.extractor_model = "gpt-4o-mini"
         if not 1 <= self.embed_dim <= 2000:
             raise ValueError("embed_dim must be 1..2000 for the vector HNSW index")
-        if self.ephemeral_floor > self.durable_cutoff:
-            raise ValueError("ephemeral_floor must not exceed durable_cutoff")
-        if self.job_retry_base_seconds > self.job_retry_max_seconds:
-            raise ValueError("job_retry_base_seconds must not exceed job_retry_max_seconds")
         if not 0 < self.recency_gamma <= 1:
             raise ValueError("recency_gamma must be in (0, 1]")
         return self

@@ -136,7 +136,6 @@ def test_install_then_uninstall_round_trips(homes, capsys):
     assert policy in (codex / "AGENTS.md").read_text()
     server = tomllib.loads((codex / "config.toml").read_text())["mcp_servers"]["mnemo"]
     assert server["env"]["MNEMO_ACTOR"] == "codex"
-    assert server["env"]["MNEMO_WORKER_ENABLED"] == "false"
     add = cli.calls[-1]
     assert add[:4] == ["claude", "mcp", "add-json", "mnemo"] and add[-2:] == ["--scope", "user"]
     registered = json.loads(add[4])

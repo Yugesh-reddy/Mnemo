@@ -1,15 +1,0 @@
-/Users/yugesh/Desktop/Projects/Mnemo/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
-  warnings.warn(
-Loading weights:   0%|          | 0/106 [00:00<?, ?it/s]Loading weights: 100%|██████████| 106/106 [00:00<00:00, 6945.84it/s]
-{
-  "before": {
-    "fn": 7,
-    "fp": 6
-  },
-  "after": {
-    "tp": 5,
-    "fn": 2,
-    "tn": 5,
-    "fp": 1
-  }
-}

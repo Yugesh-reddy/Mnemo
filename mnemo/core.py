@@ -10,14 +10,12 @@ Legacy calls use the ``attribute`` identity: one HEAD per key. Member/occurrence
 identities (migration 0011) carry a nonzero ``identity_ref`` so several facts can
 share one key. Exact values and narrow identity aliases no-op; changed values
 append revisions regardless of cosine. ``search``
-is hybrid keyword + vector and merges un-reconciled fast_cache rows (§8) when given a
-session. ``observe`` feeds the async extraction worker (mnemo/extraction.py).
+is hybrid keyword + vector over HEAD.
 """
 
 from __future__ import annotations
 
 import asyncio
-import hashlib
 import json
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -238,22 +236,6 @@ class MnemoStore:
     async def _embed(self, text: str) -> list[float]:
         """Embed off the event loop (the backend call may hit the network)."""
         return await asyncio.to_thread(self.embedder.embed, text)
-
-    async def _max_cosine(self, vec_literal: str | None) -> float:
-        """Best cosine between a candidate and any HEAD fact (0.0 on empty store)."""
-        if vec_literal is None:
-            return 0.0
-        value = await self.conn.fetchval(
-            """
-            SELECT max(1 - (embedding <=> $4::vector)) FROM memory_current
-            WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND embedding IS NOT NULL
-            """,
-            self.namespace,
-            self.user_id,
-            self.agent_id,
-            vec_literal,
-        )
-        return float(value) if value is not None else 0.0
 
     async def _set_head(self, fact_id: UUID, event_id: UUID) -> None:
         await self.conn.execute(
@@ -490,12 +472,8 @@ class MnemoStore:
         reinforce: bool | None = None,
     ) -> list[Fact]:
         """Hybrid search over HEAD (memory_current): keyword matches first, then
-        vector neighbours at/above ``search_floor``.
-
-        When ``session_id`` is given, un-reconciled fast_cache rows for that session
-        are merged in (immediate next-turn recall, spec §8). The ``reconciled`` flag
-        is the dedup: a cache row is dropped the moment its semantic fact lands, so a
-        belief is never double-counted (raw + semantic)."""
+        vector neighbours at/above ``search_floor``. ``session_id`` admits that
+        session's session-tier facts."""
         if not 1 <= k <= 1000:
             raise ValueError("k must be 1..1000")
         for name, value in (("as_of", as_of), ("valid_at", valid_at)):
@@ -537,10 +515,6 @@ class MnemoStore:
                 include_superseded,
             )
             results = [Fact.from_row(r, score=float(r["score"])) for r in rows]
-            if session_id is not None and recorded_at is None:
-                cache = await self._search_fast_cache(query, vec, like, session_id, candidate_limit)
-                semantic_caches = _source_cache_ids(results)
-                results.extend(f for f in cache if str(f.fact_id) not in semantic_caches)
 
         results.sort(key=lambda fact: (fact.score or 0.0, str(fact.fact_id)), reverse=True)
         results = results[:k]
@@ -671,124 +645,6 @@ class MnemoStore:
             recorded_at,
             valid_at,
         )
-
-    async def _search_fast_cache(
-        self, query: str, vec: str | None, like: str, session_id: str, k: int
-    ) -> list[Fact]:
-        rows = await self.conn.fetch(
-            """WITH candidates AS (
-              SELECT *, COALESCE(1-(embedding <=> $5::vector),0) AS cosine,
-                to_tsvector('english', raw_text) @@ plainto_tsquery('english',$6) AS lexical,
-                raw_text ILIKE $7 AS keyword
-              FROM fast_cache WHERE namespace=$1 AND user_id=$2 AND agent_id=$3
-                AND session_id=$4 AND role <> 'assistant' AND NOT reconciled
-                AND created_at > now()-make_interval(secs => $8)
-            ) SELECT *, $9*GREATEST(cosine, CASE WHEN lexical THEN 0.85 ELSE 0 END,
-                CASE WHEN keyword THEN 0.8 ELSE 0 END)
-                + $10*power($11, GREATEST(0,EXTRACT(EPOCH FROM (now()-created_at))/3600))
-                + $12*0.5 AS score FROM candidates
-              WHERE lexical OR keyword OR cosine >= $13
-              ORDER BY score DESC, cache_id LIMIT $14""",
-            self.namespace,
-            self.user_id,
-            self.agent_id,
-            session_id,
-            vec,
-            query,
-            like,
-            self.settings.session_ttl_seconds,
-            self.settings.search_w_rel,
-            self.settings.search_w_rec,
-            self.settings.recency_gamma,
-            self.settings.search_w_imp,
-            self.settings.search_floor,
-            k,
-        )
-        return [
-            Fact(
-                fact_id=r["cache_id"],
-                namespace=self.namespace,
-                user_id=self.user_id,
-                agent_id=self.agent_id,
-                session_id=session_id,
-                kind="raw",
-                event_id=None,
-                object_text=r["raw_text"],
-                raw_text=r["raw_text"],
-                provenance="fast_cache",
-                trust_level="low",
-                source="fast_cache",
-                tier="session",
-                score=float(r["score"]),
-            )
-            for r in rows
-        ]
-
-    async def observe(
-        self, turn_id: str, text: str, session_id: str, *, role: str = "user"
-    ) -> None:
-        """Synchronously cache a turn and enqueue extraction (spec §8).
-
-        Writes a fast_cache row (for immediate recall) and an extraction_job (for the
-        async worker), in one transaction.
-        """
-        if role not in {"user", "assistant", "tool", "document"}:
-            raise ValueError("role must be user, assistant, tool, or document")
-        if not session_id or not turn_id:
-            raise ValueError("session_id and turn_id are required")
-        ingest_key = hashlib.sha256(f"{role}\0{turn_id}\0{text}".encode()).hexdigest()
-        args = (self.namespace, self.user_id, self.agent_id, session_id, ingest_key)
-        duplicate = await self.conn.fetchval(
-            "SELECT 1 FROM fast_cache WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 "
-            "AND session_id=$4 AND ingest_key=$5",
-            *args,
-        )
-        if duplicate or await self._latest_observation_matches(session_id, role, text):
-            return
-        embedding = await self._embed(text) if role != "assistant" else None
-        async with self.conn.transaction():
-            await self._lock_scope()
-            if await self._latest_observation_matches(session_id, role, text):
-                return
-            cache_id = await self.conn.fetchval(
-                """INSERT INTO fast_cache
-                    (namespace, user_id, agent_id, session_id, ingest_key,
-                     turn_id, raw_text, embedding, role, created_at)
-                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8::vector,$9,clock_timestamp())
-                   ON CONFLICT (namespace,user_id,agent_id,session_id,ingest_key)
-                     WHERE ingest_key IS NOT NULL DO NOTHING RETURNING cache_id""",
-                *args,
-                turn_id,
-                text,
-                to_vector_literal(embedding),
-                role,
-            )
-            if cache_id is None:
-                return
-            await self.conn.execute(
-                """INSERT INTO extraction_job
-                    (namespace, user_id, agent_id, session_id, turn_id, payload,
-                     cache_id, created_at)
-                   VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7,clock_timestamp())""",
-                self.namespace,
-                self.user_id,
-                self.agent_id,
-                session_id,
-                turn_id,
-                json.dumps({"text": text, "role": role}),
-                cache_id,
-            )
-
-    async def _latest_observation_matches(self, session_id: str, role: str, text: str) -> bool:
-        row = await self.conn.fetchrow(
-            "SELECT role, raw_text FROM fast_cache WHERE namespace=$1 AND user_id=$2 "
-            "AND agent_id=$3 AND session_id=$4 ORDER BY created_at DESC LIMIT 1",
-            self.namespace,
-            self.user_id,
-            self.agent_id,
-            session_id,
-        )
-        return row is not None and row["role"] == role and row["raw_text"] == text
 
     async def list_current(self, *, limit: int = 200) -> list[Fact]:
         """All HEAD facts (most recently changed first) — for the UI list view."""
@@ -1041,52 +897,6 @@ class MnemoStore:
             )
             return event
 
-    async def archive_if_head(
-        self,
-        fact_id: UUID,
-        expected_event_id: UUID,
-        *,
-        actor: str,
-        reason: str,
-        expected_last_used: datetime | None = None,
-    ) -> Event | None:
-        """Append an archival event only if ``expected_event_id`` is still HEAD."""
-        async with self.conn.transaction():
-            await self._lock_scope()
-            fact = await self._locked_fact(fact_id)
-            if fact is None or fact["current_event_id"] != expected_event_id:
-                return None
-            if expected_last_used is not None:
-                last_used = await self.conn.fetchval(
-                    "SELECT last_used FROM memory_event WHERE event_id=$1", expected_event_id
-                )
-                if last_used != expected_last_used:
-                    return None  # a recall after selection invalidates the decay decision
-            row = await self.conn.fetchrow(
-                f"""
-                INSERT INTO memory_event
-                    (fact_id, op, object_text, object_number, object_json, embedding,
-                     provenance, actor, confidence, trust_level, source_span,
-                     session_id, expires_at, valid_from, valid_to, parent_event_id, importance,
-                       write_score,
-                     tier, reason, strength, recall_count, last_used)
-                SELECT fact_id, 'UPDATE', object_text, object_number, object_json, embedding,
-                       provenance, $2, confidence, trust_level, source_span,
-                       session_id, expires_at, valid_from, valid_to, event_id, importance,
-                       write_score,
-                       'ephemeral', $3, strength, recall_count, last_used
-                FROM memory_event WHERE event_id=$1
-                RETURNING {_EVENT_COLS}
-                """,
-                expected_event_id,
-                actor,
-                reason,
-            )
-            event = Event.from_row(row)
-            await self._supersede(expected_event_id, event.event_id)
-            await self._set_head(fact_id, event.event_id)
-            return event
-
     async def log(self, *, fact_id: UUID | None = None, limit: int = 50) -> list[Event]:
         """Event history for a fact (newest first), or the recent global timeline."""
         if fact_id is not None:
@@ -1240,14 +1050,3 @@ def _entry(row: Any, change: str, *, old: Any, new: Any) -> DiffEntry:
         old=old,
         new=new,
     )
-
-
-def _source_cache_ids(facts: list[Fact]) -> set[str]:
-    ids: set[str] = set()
-    for fact in facts:
-        span = fact.source_span
-        if isinstance(span, str):
-            span = json.loads(span)
-        if isinstance(span, dict):
-            ids.update(span.get("cache_ids", []))
-    return ids

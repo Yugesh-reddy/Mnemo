@@ -38,7 +38,7 @@ def test_hash_backend_builds_hash_embedder_without_network(monkeypatch) -> None:
         raise AssertionError("hash embeddings must not construct a network client")
 
     monkeypatch.setattr(httpx, "Client", no_http_client)
-    settings = Settings(_env_file=None, backend="hash", embed_dim=64, worker_enabled=False)
+    settings = Settings(_env_file=None, backend="hash", embed_dim=64)
     embedder = build_embedder(settings)
     assert isinstance(embedder, HashEmbedder)
     assert embedder.dim == 64
@@ -208,11 +208,10 @@ async def test_live_embeddings_preserve_the_demo_correction(db) -> None:
 # ---- local backend (in-process model) ------------------------------------------
 
 
-def test_local_backend_resolves_model_dimension_floor_and_no_worker(tmp_path) -> None:
+def test_local_backend_resolves_model_dimension_and_floor(tmp_path) -> None:
     settings = Settings(_env_file=None, backend="local", model_dir=tmp_path)
     assert settings.embed_model == "BAAI/bge-small-en-v1.5"
     assert (settings.embed_dim, settings.search_floor) == (384, 0.60)
-    assert settings.worker_enabled is False
     base = Settings(_env_file=None, backend="local", embed_model="BAAI/bge-base-en-v1.5")
     assert (base.embed_dim, base.search_floor) == (768, 0.55)
     explicit = Settings(_env_file=None, backend="local", search_floor=0.7, embed_dim=384)

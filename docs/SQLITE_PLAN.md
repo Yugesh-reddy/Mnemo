@@ -1,8 +1,9 @@
 # Mnemo — single-file local stack plan
 
 **Status: the owner asked for it to be implemented (November 14, 2026). Verified and
-corrected (§3.1); Phase 0's test and Phase 1 are done (uncommitted). Phase 2 onward waits
-for the owner's answer to D2.** It changes the pinned stack, the schema and several spec
+corrected (§3.1); Phase 0's test, Phase 1 and Phase 2 are done (D2 and D5 approved).
+The owner put the trust features (§9) and an agent eval with a poisoning scenario
+before Phase 3.** It changes the pinned stack, the schema and several spec
 contracts under `AGENTS.md` rule 6. Checkout: `446e4b7`.
 
 > **For the executing agent:** read `PROJECT_SPEC.md`, `AGENTS.md`, then this file.
@@ -309,20 +310,27 @@ tool installs on Python 3.12 and 3.13.
 
 Subtract first, so the port is of a smaller codebase.
 
-- [ ] Tag `archive/extraction-pipeline`.
-- [ ] Remove `extraction`, `quality`, `worker`, `runtime`, `decay`, `audit`,
+- [x] Tag `archive/extraction-pipeline`.
+- [x] Remove `extraction`, `quality`, `worker`, `runtime`, `decay`, `audit`,
       `mcp_server`, `benchmark`, the seven `eval*` modules, `mnemo/data`,
       `examples/agent.py`, and the eight pipeline scripts under `scripts/`.
-- [ ] `core.py`: remove `observe`, the fast-cache search and merge, `_max_cosine`,
+- [x] `core.py`: remove `observe`, the fast-cache search and merge, `_max_cosine`,
       `archive_if_head`.
-- [ ] `web/app.py`: remove `/health`, `/decisions`, `/operations` and the template.
-- [ ] `pyproject.toml`: remove seven console scripts and the `nli` extra.
-- [ ] Remove 24 test files; split `test_temporal_cache`, `test_demo`, `test_web` (§6).
+- [x] `web/app.py`: remove `/health`, `/decisions`, `/operations` and the template.
+- [x] `pyproject.toml`: remove seven console scripts and the `nli` extra.
+- [x] Remove 24 test files; split `test_temporal_cache`, `test_demo`, `test_web` (§6).
       `test_retrieval_plan` (HNSW plans) is Postgres-specific, not pipeline: remove it
       in Phase 4.
-- [ ] If D5: remove the evidence folders from `main`.
+- [x] If D5: remove the evidence folders from `main`.
 
 **Exit:** the remaining suite is green on Postgres; lint and the wheel check pass.
+
+Done November 15, 2026. Beyond the list: the pipeline settings went too (unknown
+`MNEMO_` variables are ignored), `make demo` now runs the direct demo, and
+`test_mcp_direct_stdio` was removed because it drove the legacy server. Tests that read
+an archived HEAD now build it with `tests/conftest.py::legacy_archive`, since stores
+upgraded from earlier versions can still contain one. 280 passed with Ollama and the
+local model available.
 
 ### Phase 3 — SQLite store (large)
 

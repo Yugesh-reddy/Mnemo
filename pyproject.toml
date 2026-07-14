@@ -20,7 +20,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-nli = ["sentence-transformers>=3.0"]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
@@ -45,16 +44,9 @@ include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md
 [project.scripts]
 mnemo = "mnemo.cli:main"
 mnemo-migrate = "mnemo.db:main"
-mnemo-mcp = "mnemo.mcp_server:main"
 mnemo-mcp-direct = "mnemo.mcp_direct:main"
-mnemo-worker = "mnemo.worker:main"
 mnemo-transfer = "mnemo.transfer:main"
 mnemo-install = "mnemo.install:main"
-mnemo-eval = "mnemo.eval:main"
-mnemo-audit-eval = "mnemo.eval_audit:main"
-mnemo-eval-suite = "mnemo.eval_suite:main"
-mnemo-benchmark = "mnemo.benchmark:main"
-mnemo-demo = "examples.agent:app"
 
 [tool.ruff]
 line-length = 100

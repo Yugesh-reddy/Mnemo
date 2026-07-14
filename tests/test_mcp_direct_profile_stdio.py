@@ -34,7 +34,6 @@ async def test_direct_profile_ollama_starts_without_background_models(_disposabl
         "MNEMO_BACKEND": "ollama",
         "MNEMO_OLLAMA_HOST": "http://127.0.0.1:1",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
-        "MNEMO_WORKER_ENABLED": "true",
     }
     params = StdioServerParameters(command=sys.executable, args=["-m", "mnemo.mcp_direct"], env=env)
     async with asyncio.timeout(15):
@@ -55,7 +54,6 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
         "MNEMO_DSN": _disposable_test_db,
         "MNEMO_BACKEND": "hash",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
-        "MNEMO_WORKER_ENABLED": "false",
         "MNEMO_NAMESPACE": namespace,
         "MNEMO_USER_ID": "profile-user",
         "MNEMO_AGENT_ID": "profile-agent",

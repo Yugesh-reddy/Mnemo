@@ -17,7 +17,6 @@ from uuid import UUID, uuid4
 
 import asyncpg
 from fastapi import Depends, FastAPI, Form, Request
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -191,41 +190,3 @@ async def diff_view(
 async def do_commit(label: str = Form(""), store: MnemoStore = Depends(get_store)):
     await store.commit(label.strip() or None)
     return RedirectResponse("/diff", status_code=303)
-
-
-@app.get("/health")
-async def health(store: MnemoStore = Depends(get_store)):
-    from mnemo.audit import queue_health
-
-    return await queue_health(
-        store.conn, namespace=store.namespace, user_id=store.user_id, agent_id=store.agent_id
-    )
-
-
-@app.get("/decisions")
-async def quality_decisions(
-    turn_id: str | None = None, limit: int = 100, store: MnemoStore = Depends(get_store)
-):
-    from mnemo.audit import decisions
-
-    return await decisions(
-        store.conn,
-        namespace=store.namespace,
-        user_id=store.user_id,
-        agent_id=store.agent_id,
-        turn_id=turn_id,
-        limit=limit,
-    )
-
-
-@app.get("/operations", response_class=HTMLResponse)
-async def operations(request: Request, turn_id: str = "", store: MnemoStore = Depends(get_store)):
-    return TEMPLATES.TemplateResponse(
-        request,
-        "operations.html",
-        {
-            "health": jsonable_encoder(await health(store)),
-            "decisions": jsonable_encoder(await quality_decisions(turn_id or None, 100, store)),
-            "turn_id": turn_id,
-        },
-    )

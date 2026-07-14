@@ -48,7 +48,7 @@ _lanes: dict[str, str] = {}  # scope -> namespace, resolved once per server proc
 
 
 def _settings() -> Settings:
-    return get_settings().model_copy(update={"worker_enabled": False, "search_reinforce": False})
+    return get_settings().model_copy(update={"search_reinforce": False})
 
 
 def _resolve_lanes(settings: Settings) -> dict[str, str]:

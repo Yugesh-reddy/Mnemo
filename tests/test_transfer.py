@@ -12,7 +12,7 @@ from mnemo.db import drop_isolated_schema, prepare_isolated_schema
 from mnemo.direct import DirectMemory
 from mnemo.transfer import TransferError, export_store, import_store
 
-SETTINGS = Settings(backend="hash", worker_enabled=False)
+SETTINGS = Settings(backend="hash")
 BIG = Decimal("12345678901234567890.123456789")
 
 
@@ -161,7 +161,7 @@ async def test_import_refuses_a_non_empty_destination(source_and_destination, fa
     [
         ('"format_version": 1', '"format_version": 2', SETTINGS, "format_version"),
         ('"0010_mutation_receipts.sql"', '"0011_future.sql"', SETTINGS, "schema mismatch"),
-        ("", "", Settings(backend="ollama", worker_enabled=False), "embedding mismatch"),
+        ("", "", Settings(backend="ollama"), "embedding mismatch"),
         ('"facts": 6', '"facts": 5', SETTINGS, "counts"),
     ],
 )

@@ -117,9 +117,6 @@ class Mnemo:
     def commit(self, label: str | None = None) -> Commit:
         return self._run(lambda s: s.commit(label))
 
-    def observe(self, turn_id: str, text: str, session_id: str, *, role: str = "user") -> None:
-        return self._run(lambda s: s.observe(turn_id, text, session_id, role=role))
-
 
 class _DirectSDK:
     """Synchronous adapter for DirectMemory; validation and transactions stay in the core."""

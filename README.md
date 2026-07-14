@@ -168,7 +168,7 @@ Also paste [the memory policy](mnemo/memory_policy.md) into `~/.claude/CLAUDE.md
 clients such as Claude Desktop or [Cursor](https://cursor.com/docs/mcp) take the same
 command and environment in their JSON configuration (Cursor also needs
 `"type": "stdio"`). They are not started inside a repository, so they see only the
-global scope unless you set `MNEMO_PROJECT`. In a checkout, `make mcp-direct` runs
+global scope unless you set `MNEMO_PROJECT`. In a checkout, `make mcp` runs
 the server from source.
 
 ## What Mnemo depends on
@@ -192,7 +192,7 @@ The optional web UI loads Tailwind and htmx from public CDNs.
 | Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
 | Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |
 
-To see the versioning without any agent or model, run `make demo-direct` in a
+To see the versioning without any agent or model, run `make demo` in a
 checkout. It
 remembers PostgreSQL, changes it to MySQL, rejects a stale update, inspects history
 and restores PostgreSQL; retrying the restore returns its receipt:
@@ -207,7 +207,7 @@ switching between hash and semantic embeddings for the same scope.
 
 The [Python guide](docs/DIRECT_SDK.md) shows `Mnemo.direct` and the async
 `DirectMemory(store)` interface. Existing `add`, `search`, `blame`, `revert`,
-`diff`, `log`, `commit`, and `observe` APIs remain available with their legacy
+`diff`, `log` and `commit` APIs remain available with their legacy
 contracts. Legacy `add` performs alias deduplication; direct updates preserve
 exact spelling changes. Legacy human-review revert is not revision-guarded.
 
@@ -224,7 +224,7 @@ commits, receipts, the applied migrations and the embedding backend/model/dim.
 Import checks the schema and embedding configuration, then restores the rows in
 one transaction. It re-exports what it wrote and rolls back if anything differs,
 so IDs, sequence numbers, history and receipt replays come through unchanged.
-Extraction-pipeline working tables are not exported ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
+The archived extraction pipeline's working tables are not exported ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
 
 ## Review memory in the browser
 
@@ -260,9 +260,9 @@ behavior. The [correctness workflow](.github/workflows/correctness.yml) is retai
 tested on macOS only. Optional live-Ollama tests skip when their models are
 unavailable.
 
-`mnemo/` contains the async store, direct API, SDK, MCP servers, installer and the
-parked extraction pipeline; `migrations/` holds the SQL; `web/`, `examples/`,
-`scripts/` and `tests/` hold the UI, demos, eval harnesses and checks.
+`mnemo/` contains the async store, direct API, SDK, MCP server and installer;
+`migrations/` holds the SQL; `web/`, `examples/`, `scripts/` and `tests/` hold the
+UI, demos, the agent eval and checks.
 [The spec](PROJECT_SPEC.md) defines contracts; [the plan](docs/MASTER_PLAN.md) and
 [status](PROJECT_STATUS.md) track delivery.
 
@@ -281,41 +281,21 @@ flowchart LR
     Codex[Codex] --> Direct
     UI[Web revert] --> Direct
     Direct --> Core[Scoped event store]
-    Turns[Optional observations] --> Cache[Fast cache + extraction queue]
-    Cache --> Worker[Evidence verification / scoring / tiering]
-    Worker --> Core
     Core --> Events[Append-only events]
     Core --> Heads[Current HEADs]
     Direct --> Receipts[Durable mutation receipts]
     Events --> History[History / as-of reads / diff]
 ```
 
-## History: the automatic extraction pipeline (parked)
+## History: the automatic extraction pipeline (archived)
 
-Mnemo began as a write-quality pipeline: `observe` records conversation turns, and a
-worker extracts facts, checks them against their source, deduplicates, scores and
-tiers them, and records each decision. It still works (`make mcp` starts the legacy
-tools and worker, `make worker` a separate consumer; [setup](docs/EXTRACTION.md)),
-but it is parked: coding agents save what matters themselves, and the experiments
-below did not reach the quality target.
-
-`make eval` is an **18-turn scripted regression**, currently gated precision/recall
-**90.9% / 100%**, must-keep recall **100%**, and zero forbidden writes. It replays
-labeled candidates; it is not real-conversation extraction accuracy, a LongMemEval
-retrieval result, or a competitor comparison.
-
-Small local models did not meet the memory-quality target. The recorded 200-turn
-authored development run achieved **1.41% strict precision / 2.41% recall**; the
-48-turn external holdout had **0/9 exact must-keep matches**. The later bounded
-development baseline retrieved **16/23** complete distinct targets. Swapping only the
-extraction model to Azure `gpt-5.6-luna` raised complete extraction to **20/23**
-([v8](docs/quality-v8/README.md)), but one value per subject/predicate overwrote
-four correct facts. Member/occurrence identities (spec §17) and optional
-contradiction routing followed; routing stays off because the judge read "another
-item" as "a correction" ([v9](docs/quality-v9/README.md),
-[v12](docs/quality-v12/README.md)). Lasting tiering made important extracted facts
-durable ([v11](docs/quality-v11/README.md)). See [v4](docs/quality-v4/README.md),
-[v7](docs/quality-v7/README.md) and [current status](PROJECT_STATUS.md).
+Mnemo began as a write-quality pipeline: it recorded conversation turns, and a worker
+extracted facts, checked them against their source, deduplicated, scored and tiered
+them. Coding agents save what matters themselves, and small local models did not
+reach the quality target, so the pipeline, its evals and its evidence were removed
+from `main`. They remain at the git tag `archive/extraction-pipeline`
+(`git checkout archive/extraction-pipeline`). Its tables stay in the schema so
+existing stores keep working.
 
 An earlier [host-agent pilot](docs/direct-pilot/README.md) let Qwen or Azure Luna
 drive the direct tools, one attempt per scenario: both reached the intended end state
@@ -327,8 +307,3 @@ visible in history and reversible.
 ## License
 
 The project declares the **MIT license** in [pyproject.toml](pyproject.toml).
-Bundled LongMemEval material comes from
-[xiaowu0162/LongMemEval](https://github.com/xiaowu0162/LongMemEval) and its
-[cleaned dataset](https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned),
-with the upstream [MIT license](mnemo/data/LongMemEval-LICENSE.txt) preserved.
-Mnemo's atomic labels are provisional; see [data attribution](mnemo/data/README.md).

@@ -10,6 +10,7 @@ import pytest
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
 from mnemo.db import register_vector
+from tests.conftest import legacy_archive
 
 ZERO = UUID(int=0)
 
@@ -145,10 +146,8 @@ async def test_revert_and_archive_stay_inside_one_member(store):
     await store.revert(b1.fact_id, b1.event_id)
     assert await heads(store, "attended") == ["fermentation workshop", "vegan class"]
     assert (await store.get(a.fact_id)).event_id == a.event_id
-    archived = await store.archive_if_head(
-        b1.fact_id, (await store.get(b1.fact_id)).event_id, actor="test", reason="archive one"
-    )
-    assert archived is not None and b2.fact_id == b1.fact_id
+    archived = await legacy_archive(store, b1.fact_id, (await store.get(b1.fact_id)).event_id)
+    assert archived.tier == "ephemeral" and b2.fact_id == b1.fact_id
     assert await heads(store, "attended") == ["vegan class"]
 
 
@@ -248,7 +247,7 @@ async def test_export_round_trip_keeps_member_identity(_disposable_test_db, fake
     from mnemo.db import drop_isolated_schema, prepare_isolated_schema
     from mnemo.transfer import export_store, import_store
 
-    settings = Settings(backend="hash", worker_enabled=False)
+    settings = Settings(backend="hash")
     schemas = ["mnemo_worker_" + uuid4().hex for _ in range(2)]
     source, destination = [await prepare_isolated_schema(_disposable_test_db, s) for s in schemas]
     try:

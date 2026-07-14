@@ -132,7 +132,6 @@ def mnemo_env(dsn: str, namespace: str, actor: str, backend: str, embed_dim: int
         "MNEMO_DSN": dsn,
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(embed_dim),
-        "MNEMO_WORKER_ENABLED": "false",
         "MNEMO_NAMESPACE": namespace,
         "MNEMO_USER_ID": "owner",
         "MNEMO_ACTOR": actor,

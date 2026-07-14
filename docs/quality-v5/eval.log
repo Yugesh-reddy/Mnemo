@@ -1,4 +1,0 @@
-uv run python -m mnemo.eval
-PRECISION / RECALL WRITE-QUALITY EVAL (mnemo-synthetic-smoke; synthetic)
-  NAIVE : visible  15 | P  60.0% | R  90.0% | F1  72.0% | must-keep  90.0% | false now/history 2/5 | events 18 | 121.4 ms
-  GATED : visible  11 | P  90.9% | R 100.0% | F1  95.2% | must-keep 100.0% | false now/history 0/0 | events 11 | 308.5 ms

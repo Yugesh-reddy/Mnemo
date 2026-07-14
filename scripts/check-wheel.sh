@@ -52,49 +52,27 @@ export MNEMO_DSN
 "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 from importlib.resources import files
 import json
-import mnemo.eval
-import mnemo.eval_suite
-import mnemo.benchmark
-import mnemo.worker
-import mnemo.mcp_server
 import mnemo.mcp_direct
 from mnemo.db import MIGRATIONS_DIR
 from web.app import TEMPLATES
 assert len(list(MIGRATIONS_DIR.glob('*.sql'))) >= 7
 assert MIGRATIONS_DIR.joinpath('0010_mutation_receipts.sql').is_file()
-assert files('mnemo').joinpath('data/longmemeval-car.json').is_file()
 assert TEMPLATES.env.get_template('list.html')
 from web.app import STATIC
 from mnemo.cli import COMPOSE_FILE
 assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.js').is_file()
 assert COMPOSE_FILE.is_file() and 'site-packages' in COMPOSE_FILE.parts  # packaged copy
 assert files('mnemo').joinpath('memory_policy.md').is_file()
-assert len(mnemo.eval.load_benchmark_dataset('all').turns) == 200
-assert len(mnemo.eval.load_naturalistic_dataset().turns) == 200
-for version in ('v2', 'v3', 'v4'):
-    directory = files('mnemo').joinpath(f'data/quality-{version}')
-    manifest = directory.joinpath('manifest.json')
-    assert len(mnemo.eval_suite.load_cases(manifest, 'dev')) == 3
-    # Verify packaged resources without opening held-out source/label contents.
-    for record in json.loads(manifest.read_text())['records']:
-        assert directory.joinpath(record['path']).is_file()
-        if 'labels' in record:
-            assert directory.joinpath(record['labels']).is_file()
-print('Installed wheel: runtime imports, migrations, data and templates verified')
+print('Installed wheel: runtime imports, migrations and templates verified')
 PY
-"$mnemo_wheel_env/venv/bin/mnemo-eval" --json > eval.json
-"$mnemo_wheel_env/venv/bin/mnemo-worker" --help
 "$mnemo_wheel_env/venv/bin/mnemo-mcp-direct" --version
 "$mnemo_wheel_env/venv/bin/mnemo" --help >/dev/null
 "$mnemo_wheel_env/venv/bin/mnemo" install --help >/dev/null
 "$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
-"$mnemo_wheel_env/venv/bin/mnemo-audit-eval" --help
-"$mnemo_wheel_env/venv/bin/mnemo-eval-suite" --help
-"$mnemo_wheel_env/venv/bin/mnemo-benchmark" --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
-MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false \
+MNEMO_BACKEND=hash \
   "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
-MNEMO_BACKEND=hash MNEMO_WORKER_ENABLED=false \
+MNEMO_BACKEND=hash \
   "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 import asyncio
 import json

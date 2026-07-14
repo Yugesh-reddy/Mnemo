@@ -3,11 +3,9 @@
 The correctness amendment in §14 and direct-memory contract in §15 supersede
 earlier wording where indicated. The implementation plan is in `docs/MASTER_PLAN.md`;
 executed checks and remaining quality limits are in `PROJECT_STATUS.md`.
-The quality work is summarized in `docs/MASTER_PLAN.md`;
-`docs/quality-v5/README.md` records partial extraction recovery and its development measurements;
-`docs/quality-v4/README.md` records the evidence-grounded extraction cycle;
-`docs/quality-v3/README.md` records the preceding structured-verification cycle;
-`docs/quality-v2/README.md` preserves earlier source review and frozen validation.
+Sections marked **(archived)** describe the extraction pipeline, which left `main` in
+§23; its code, evals and evidence (`docs/quality-v*`) are at the git tag
+`archive/extraction-pipeline`.
 
 > **Working name:** Mnemo · **One-liner:** *Agent memory that stores less and remembers what matters.*
 > A quality gate keeps junk out, provenance tells you where every fact came from, and one-click
@@ -35,11 +33,10 @@ is built only after that.
   guards and durable retry receipts in its direct API.
 - **`blame` / `revert` are the safety net.** A human or agent can see where a memory
   came from and undo a wrong change.
-- **The automatic extraction pipeline is parked.** The write-quality pipeline
-  (§4, §13, §17, §18: extraction, verification, tiering, identity routing) stays
-  available, tested and documented, but no further extraction or routing
-  experiments run (no v13 judge, sealed holdout `b46e15ed` stays closed) unless a
-  coding-agent evaluation shows that agents need automatic capture.
+- **The automatic extraction pipeline is archived (§23).** The write-quality
+  pipeline (§4, §13, §17 routing, §18: extraction, verification, tiering, decay)
+  is no longer on `main`; it is at the tag `archive/extraction-pipeline` and would
+  return only if a coding-agent evaluation shows that agents need automatic capture.
 
 ---
 
@@ -166,7 +163,7 @@ Plus `fact_state_as_of(namespace,user,seq)` (latest non-superseded event per fac
 
 ---
 
-## 4. The write path — quality pipeline semantics (Layers 0–5)
+## 4. The write path — quality pipeline semantics (Layers 0–5) (archived)
 Runs async behind the fast cache. The *why* (formulas, citations) is in `MODEL_COUNCIL_solution.md`.
 
 0. **Extract** — salience-first fact decomposition (FActScore/FactEHR style): atomic facts only, **exclude** pleasantries/acknowledgments; emit `{subject,predicate,object,kind,importance∈[1,10],tier_guess,assertion_type}`; controlled predicate vocab; **never** extract user-facts from assistant turns.
@@ -192,22 +189,22 @@ Each is one transaction over the append-only log; `memory_fact.current_event_id`
 
 ---
 
-## 6. Two-tier memory + handshake
+## 6. Two-tier memory + handshake (archived)
 `observe()` writes the turn to `fast_cache` **synchronously** (immediate next-turn recall) and enqueues extraction. `search` merges un-reconciled cache rows + semantic HEAD, **deduped by fact_key/turn_id**. **Handshake:** when the worker commits a reconciled fact, set `fast_cache.reconciled=true` for that `turn_id`; the merge drops reconciled raw rows in favor of the semantic fact (no stale reads, no double-count).
 
 ---
 
-## 7. The eval harness — the north star (first-class, NOT a non-goal)
+## 7. The eval harness — the north star (first-class, NOT a non-goal) (archived)
 `mnemo/eval.py` + `make eval`. Given a labeled conversation, ground-truth (predicate,value) sets, and a forbidden set, report **precision / recall / F1 / false-fact count** for naive (store-everything) vs gated. Build it **early** and tune every gate knob against it. Run it on a labeled **LoCoMo / LongMemEval** conversation for the real number — that number is the demo. (We measure precision/recall as a quality gate; we do **not** position the project as a retrieval-leaderboard winner.)
 
 ---
 
-## 8. MCP server + SDK
+## 8. MCP server + SDK (archived)
 SDK (`mnemo.Mnemo`): `add, search, blame, revert, diff, log, commit, observe`. MCP tools (stdio): `memory_observe, memory_search, memory_add, memory_get, memory_blame, memory_revert, memory_diff, memory_log`. Tight, action-oriented tool descriptions.
 
 ---
 
-## 9. Demos & definition of done
+## 9. Demos & definition of done (archived)
 - **Hero demo (the pitch):** precision/recall side-by-side — same conversation, naive vs Mnemo (`make eval`), e.g. junk and false memories removed, important facts kept. This is the GIF.
 - **Secondary demo:** rollback — agent states a wrong fact → web UI → `blame` shows the bad source → revert → behavior corrects.
 
@@ -245,7 +242,7 @@ Foundation is largely built already (real Postgres, embeddings, LLM extractor, M
 
 ---
 
-## 13. Parameter starting points (tune against the eval — §7)
+## 13. Parameter starting points (tune against the eval — §7) (archived)
 | Knob | Start | Source |
 |---|---|---|
 | importance | 1–10, LLM-assigned | Generative Agents (Park 2023) |
@@ -488,7 +485,7 @@ wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
   Each decision records its route and verdicts. The default flips only if the
   frozen v9 measurement passes.
 
-## 18. Lasting tiering — September 24, 2026
+## 18. Lasting tiering — September 24, 2026 (archived)
 
 The owner approved this change to §4 step 4 and §13 under rule 6 (Option A), and
 [v11](docs/quality-v11/README.md) validated it. Under the old settings no extracted
@@ -627,3 +624,22 @@ implemented; this is its Phase 1, still on Postgres.
   quantized nomic model in fastembed gives 0.96.
 - **Default unchanged.** `ollama` stays the default until the plan's agent-eval gate.
 
+## 23. Extraction pipeline archived — November 15, 2026
+
+The owner chose the order: archive the pipeline, then the trust features, then the
+SQLite port ([the plan](docs/SQLITE_PLAN.md), decisions D2 and D5).
+
+- **Removed from `main`:** `observe`, the extraction worker, quality gate, verifier,
+  decay, audit, the legacy `mnemo-mcp` server, the evals and benchmark, their console
+  scripts, the `nli` extra, the pipeline settings (`MNEMO_WORKER_ENABLED`, the gate
+  weights, verifier, job and decay settings; unknown `MNEMO_` variables are ignored),
+  the web UI's operations page, `docs/quality-v*`, `docs/evaluation` and `mnemo/data`.
+  All of it is at the tag `archive/extraction-pipeline`.
+- **Search** no longer merges `fast_cache` rows; a session ID only admits that
+  session's session-tier memories.
+- **Schema unchanged.** The pipeline's tables and columns stay, so existing stores
+  keep working and export still excludes `fast_cache`, `extraction_job` and
+  `quality_decision`. An archived HEAD left by the old decay job still reads and
+  reverts as before; nothing creates a new one.
+- **`make demo`** now runs the direct demo (`make demo-direct` before); `make mcp` runs
+  `mnemo-mcp-direct`. `make eval`, `make worker` and `make health` are gone.

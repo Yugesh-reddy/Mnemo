@@ -14,6 +14,7 @@ from mnemo.core import MnemoStore
 from mnemo.db import register_vector
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import MutationResult
+from tests.conftest import legacy_archive
 
 
 def direct(store):
@@ -369,9 +370,7 @@ async def test_13_unsupported_states_cannot_be_revived(store, state):
     d = direct(store)
     first = await create(d)
     if state == "archived":
-        bad = await store.archive_if_head(
-            first.fact_id, first.event_id, actor="test", reason="test"
-        )
+        bad = await legacy_archive(store, first.fact_id, first.event_id)
     elif state == "invalidated":
         bad = await store.invalidate(first.fact_id)
     elif state in ("session", "session_id"):

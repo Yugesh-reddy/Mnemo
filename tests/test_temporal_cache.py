@@ -1,4 +1,4 @@
-"""Temporal visibility and comparable scores across the two retrieval tiers."""
+"""Temporal visibility: session tier, validity windows, history and archived heads."""
 
 from datetime import UTC, datetime, timedelta
 
@@ -6,6 +6,7 @@ import pytest
 
 from mnemo.config import Settings
 from mnemo.core import MnemoStore
+from tests.conftest import legacy_archive
 
 
 async def test_session_restriction_and_expiry(db, fake_embedder):
@@ -56,16 +57,9 @@ async def test_historical_revision_after_correction_and_invalidation(
     assert await conn.fetchval("SELECT sum(recall_count) FROM memory_event") == 0
 
 
-async def test_k_one_raw_cache_is_ranked_before_weaker_semantic(store):
-    await store.add("user", "note", "Postgres", importance=1)
-    await store.observe("raw", "Postgres", "session")
-    results = await store.search("Postgres", k=1, session_id="session")
-    assert len(results) == 1 and results[0].source == "fast_cache"
-
-
 async def test_session_revert_renews_ttl_and_preserves_session(store, db):
     first = await store.add("user", "task", "debug", tier="session", session_id="session")
-    await store.archive_if_head(first.fact_id, first.event_id, actor="test", reason="archive")
+    await legacy_archive(store, first.fact_id, first.event_id)
     restored = await store.revert(first.fact_id, first.event_id)
     assert restored.session_id == "session"
     assert restored.expires_at >= first.expires_at
@@ -76,23 +70,10 @@ async def test_session_revert_renews_ttl_and_preserves_session(store, db):
 async def test_archival_is_removal_in_diff(store):
     first = await store.add("user", "note", "remember")
     before = await store.commit()
-    await store.archive_if_head(first.fact_id, first.event_id, actor="test", reason="archive")
+    await legacy_archive(store, first.fact_id, first.event_id)
     after = await store.commit()
     diff = await store.diff(before, after)
     assert len(diff.entries) == 1 and diff.entries[0].change == "removed"
-
-
-async def test_recalled_head_cannot_be_archived_from_stale_retention(store):
-    first = await store.add("user", "note", "remember")
-    await store.reinforce(first.fact_id)
-    result = await store.archive_if_head(
-        first.fact_id,
-        first.event_id,
-        actor="test",
-        reason="stale",
-        expected_last_used=first.last_used - timedelta(seconds=1),
-    )
-    assert result is None
 
 
 async def test_legacy_session_expiry_is_a_read_overlay(store, db):

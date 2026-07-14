@@ -1,9 +1,4 @@
-"""M6: the §10 rollback scenario, driven hermetically (stub extractor).
-
-Proves the demo's core claim without a live model: the agent's answer flips from the
-mis-inferred value back to the original because a human reverted the memory, and the
-full history (ADD → UPDATE → REVERT) is preserved.
-"""
+"""The direct demo: write, guarded update, revert, with the full history preserved."""
 
 from __future__ import annotations
 
@@ -15,38 +10,7 @@ import httpx
 import pytest
 from typer.testing import CliRunner
 
-from examples.agent import run_scenario
 from mnemo import Mnemo
-from mnemo.core import MnemoStore
-from mnemo.extraction import ExtractionWorker
-from mnemo.models import ExtractedFact
-
-
-class _StubExtractor:
-    def extract(self, text: str, role: str = "user") -> list[ExtractedFact]:
-        if "postgres" in text.lower():
-            return [
-                ExtractedFact(
-                    subject="user",
-                    predicate="uses_database",
-                    object="PostgreSQL",
-                    confidence=0.97,
-                    assertion_type="direct_user_statement",
-                )
-            ]
-        return []
-
-
-async def test_rollback_scenario_changes_behavior(
-    store: MnemoStore, db: asyncpg.Connection
-) -> None:
-    worker = ExtractionWorker(db, store.embedder, _StubExtractor())
-    result = await run_scenario(store, worker)
-
-    assert result["ops"] == ["ADD", "UPDATE", "REVERT"]
-    assert "mongo" in str(result["answer_wrong"]).lower()
-    assert "postg" in str(result["answer_fixed"]).lower()
-    assert str(result["answer_wrong"]).lower() != str(result["answer_fixed"]).lower()
 
 
 def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory) -> None:
@@ -101,21 +65,10 @@ def test_direct_demo_defaults_to_hash_and_respects_configured_backend(
 
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("MNEMO_BACKEND", raising=False)
-    monkeypatch.setenv("MNEMO_WORKER_ENABLED", "false" if backend == "hash" else "true")
     if backend:
         monkeypatch.setenv("MNEMO_BACKEND", backend)
     settings = demo_settings()
     assert settings.backend == (backend or "hash")
-    assert settings.worker_enabled is False
-
-
-def test_direct_demo_rejects_contradictory_hash_worker_configuration(monkeypatch) -> None:
-    from examples.direct_memory import demo_settings
-
-    monkeypatch.setenv("MNEMO_BACKEND", "hash")
-    monkeypatch.setenv("MNEMO_WORKER_ENABLED", "true")
-    with pytest.raises(ValueError, match="MNEMO_WORKER_ENABLED=false"):
-        demo_settings()
 
 
 def test_direct_demo_respects_backend_from_dotenv(monkeypatch, tmp_path) -> None:

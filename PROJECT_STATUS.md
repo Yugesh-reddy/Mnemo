@@ -11,6 +11,15 @@ and reversible with the same tools. Hosted CI and
 merge protection were declined by the owner; they are not prerequisites for
 this delivery.
 
+## Extraction pipeline archived (November 15, 2026)
+
+The pipeline, its evals, benchmark and evidence folders left `main`; they are at the
+git tag `archive/extraction-pipeline` ([spec §23](PROJECT_SPEC.md#23-extraction-pipeline-archived--november-15-2026)).
+Links below to `docs/quality-v*`, `docs/evaluation` and `mnemo/data` resolve at that
+tag. The schema is unchanged. Next, in the owner's order: the trust features
+(retract, source on writes, who/when/trust in search hits, OpenCode), an agent eval
+with a poisoning scenario, then the SQLite port ([plan](docs/SQLITE_PLAN.md)).
+
 ## Shared memory for coding agents (September 26, 2026)
 
 The owner restated the goal: one local memory shared by Claude Code, Codex and other

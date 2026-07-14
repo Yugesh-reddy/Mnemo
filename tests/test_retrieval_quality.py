@@ -50,7 +50,7 @@ def _available(backend: str) -> bool:
 
 
 async def _measure(dsn: str, backend: str) -> dict:
-    settings = Settings(backend=backend, search_reinforce=False, worker_enabled=False)
+    settings = Settings(backend=backend, search_reinforce=False)
     schema = "mnemo_eval_" + uuid4().hex  # its own schema, at this model's dimension
     db = await prepare_isolated_schema(dsn, schema, embed_dim=settings.embed_dim)
     embedder = build_embedder(settings)
