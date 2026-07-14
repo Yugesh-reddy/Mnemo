@@ -94,6 +94,7 @@ class Fact(BaseModel):
     object_number: Decimal | None = None
     object_json: Any | None = None
     provenance: str = "agent_inference"
+    actor: str | None = None
     confidence: float = 1.0
     trust_level: str = "medium"
     source_span: Any | None = None
@@ -206,6 +207,9 @@ class CurrentValue(BaseModel):
     provenance: str
     trust_level: str
     recorded_at: datetime
+    status: Literal["active", "retracted"] = "active"
+    """retracted: hidden from search; value is what was retracted. Revert or update
+    restores it."""
 
 
 class HistoricalValue(BaseModel):
@@ -248,3 +252,7 @@ class SearchHit(BaseModel):
     predicate: str
     value: str
     score: float
+    provenance: str
+    trust_level: str
+    actor: str | None
+    recorded_at: datetime | None

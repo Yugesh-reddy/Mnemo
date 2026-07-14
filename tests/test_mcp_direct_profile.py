@@ -1,11 +1,11 @@
-"""Direct MCP schemas and isolation from the extraction runtime."""
+"""Direct MCP tool schemas, tool text and server lifespan."""
 
 import pytest
 
 from mnemo.config import Settings
 
 
-async def test_direct_profile_has_exactly_six_guarded_tool_schemas():
+async def test_direct_profile_has_exactly_seven_guarded_tool_schemas():
     import mnemo.mcp_direct as srv
 
     required = {
@@ -15,6 +15,7 @@ async def test_direct_profile_has_exactly_six_guarded_tool_schemas():
         "memory_update": {"fact_id", "value", "expected_event_id"},
         "memory_history": {"fact_id"},
         "memory_revert": {"fact_id", "to_event_id", "expected_event_id"},
+        "memory_retract": {"fact_id", "expected_event_id"},
     }
     tools = {tool.name: tool for tool in await srv.mcp.list_tools()}
     assert set(tools) == set(required)
@@ -25,6 +26,9 @@ async def test_direct_profile_has_exactly_six_guarded_tool_schemas():
             & tools[name].inputSchema["properties"].keys()
         )
         assert tools[name].description.strip()
+    for name in ("memory_create", "memory_update"):
+        source = tools[name].inputSchema["properties"]["source"]
+        assert source["enum"] == ["user", "tool", "agent"] and source["default"] == "agent"
 
 
 async def test_tool_text_tells_agents_when_to_use_memory():

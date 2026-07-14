@@ -217,7 +217,11 @@ async def test_0010_applies_over_populated_0009(db, tmp_path) -> None:
     await _legacy_fact(db, "preferred_language", "Python")
     snapshot = "SELECT row_to_json(f)::text FROM memory_fact f ORDER BY fact_id"
     before = await db.fetch(snapshot)
-    assert await mdb.apply_migrations(db) == ["0010_mutation_receipts.sql", "0011_identity.sql"]
+    assert await mdb.apply_migrations(db) == [
+        "0010_mutation_receipts.sql",
+        "0011_identity.sql",
+        "0012_retract_receipts.sql",
+    ]
     assert await db.fetchval("SELECT count(*) FROM memory_current") == 2
     assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0
     # 0011 then appends identity columns; everything that existed is unchanged.
@@ -236,7 +240,7 @@ async def test_0011_turns_existing_facts_into_attribute_identities(db, tmp_path)
     events = "SELECT to_jsonb(e)::text FROM memory_event e ORDER BY seq"
     view = "SELECT fact_id, event_id, object_text FROM memory_current ORDER BY fact_id"
     before = (await db.fetch(facts), await db.fetch(events), await db.fetch(view))
-    assert await mdb.apply_migrations(db) == ["0011_identity.sql"]
+    assert await mdb.apply_migrations(db) == ["0011_identity.sql", "0012_retract_receipts.sql"]
     migrated = [json.loads(r[0]) for r in await db.fetch(facts)]
     assert [
         {k: v for k, v in f.items() if k not in ("identity_mode", "identity_ref")} for f in migrated

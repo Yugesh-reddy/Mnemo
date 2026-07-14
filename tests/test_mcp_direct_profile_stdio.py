@@ -40,7 +40,7 @@ async def test_direct_profile_ollama_starts_without_background_models(_disposabl
         async with stdio_client(params) as (read, write):
             async with ClientSession(read, write) as client:
                 await client.initialize()
-                assert len((await client.list_tools()).tools) == 6
+                assert len((await client.list_tools()).tools) == 7
                 payload(
                     await client.call_tool("memory_get", {"fact_id": str(uuid4())}),
                     code="NOT_FOUND",
@@ -70,6 +70,7 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
                     "memory_update",
                     "memory_history",
                     "memory_revert",
+                    "memory_retract",
                 }
                 args = dict(
                     subject="user",

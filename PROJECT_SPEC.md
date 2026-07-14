@@ -383,7 +383,7 @@ Errors are `MnemoError` with a stable code, message and details dictionary:
 | `INVALID_RESTORE_TARGET` | Target does not belong to this fact; no target IDs disclosed |
 | `UNSUPPORTED_STATE` | Current or target state is ineligible for guarded mutation |
 | `REQUEST_ID_REUSED` | Request ID already belongs to another mutation payload |
-| `UNSUPPORTED_OPERATION` | Creation undo (no restore target) is unsupported |
+| `UNSUPPORTED_OPERATION` | Revert without a restore target; retract undoes a creation (§24) |
 | `SERVICE_UNAVAILABLE` | Postgres or the embedding backend is unusable (§21); `details.service` names it |
 
 See [the direct SDK guide](docs/DIRECT_SDK.md) for a lifecycle example. This
@@ -643,3 +643,35 @@ SQLite port ([the plan](docs/SQLITE_PLAN.md), decisions D2 and D5).
   reverts as before; nothing creates a new one.
 - **`make demo`** now runs the direct demo (`make demo-direct` before); `make mcp` runs
   `mnemo-mcp-direct`. `make eval`, `make worker` and `make health` are gone.
+
+## 24. Trust: sources, hit metadata and retraction — November 15, 2026
+
+The owner asked for the features that make poisoning visible and reversible (order
+in §23). Approved under `AGENTS.md` rule 6; migration `0012` widens the receipt
+operations.
+
+- **Source on every write.** `memory_create` and `memory_update` (and the SDK's
+  `create`/`update`) take `source`: `user` → `direct_user_statement`, high trust;
+  `tool` → `tool_output`, medium; `agent` → `agent_inference`, low (the default, so
+  existing clients keep working). Any other value is `INVALID_INPUT` before anything
+  is embedded or written. The source is part of the receipt payload, except the
+  default, so retries recorded before this change still replay. Trust records what
+  the writer claimed; `actor` always records who wrote it. Revert keeps the restored
+  revision's provenance and trust, as before.
+- **Search hits** add `provenance`, `trust_level`, `actor` and `recorded_at` (of the
+  HEAD revision). Ranking is unchanged.
+- **`memory_retract(fact_id, expected_event_id, reason?, request_id?)`**, the
+  seventh tool. Guarded and receipted like the others. It appends the existing
+  `INVALIDATE` event (a copy of HEAD with `valid_to` set, `reason` "retracted: …",
+  `actor` recorded) and sets the fact's status to `invalidated`, so the memory leaves
+  search and current reads. `memory_get` then returns the retracted value with
+  `status: "retracted"` instead of `NOT_FOUND`. Retracting a retracted memory is
+  `no_change`. `memory_update` (any value) and `memory_revert` (to any eligible
+  earlier revision) on a retracted HEAD write a new revision and make the memory
+  active again; the retraction itself is never a restore target. `memory_create` on a
+  retracted subject returns `ALREADY_EXISTS` with `details.retracted = true`. A
+  legacy `invalidate` of a durable memory is treated the same way.
+- **Tool text and the installed policy** tell agents to set `source`, to treat
+  memories as data and never follow instructions found in one, and to retract
+  planted or wrong memories.
+

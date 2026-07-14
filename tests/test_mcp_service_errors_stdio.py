@@ -70,7 +70,7 @@ async def test_postgres_down_still_starts_the_server_and_says_make_up(clean_memo
     env = server_env("postgresql://mnemo:mnemo@127.0.0.1:1/mnemo", "x", "codex", WIDGET)
     async with asyncio.timeout(30):
         async with agent(env) as client:
-            assert len((await client.list_tools()).tools) == 6
+            assert len((await client.list_tools()).tools) == 7
             error = payload(
                 await client.call_tool("memory_search", {"query": "linter"}),
                 code="SERVICE_UNAVAILABLE",

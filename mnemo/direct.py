@@ -3,6 +3,10 @@
 Scope comes from the bound store. Model calls happen before scope/row locks;
 event, HEAD and receipt writes then succeed or roll back together. Legacy store
 operations retain their existing semantics.
+
+Every write names its source (who it came from), which sets provenance and trust.
+A retraction hides a memory from reads by appending an INVALIDATE event; update and
+revert bring it back, so nothing a retraction does is final.
 """
 
 from __future__ import annotations
@@ -16,7 +20,7 @@ from uuid import UUID
 
 import asyncpg
 
-from mnemo.core import _EVENT_COLS, MnemoStore, canonicalize
+from mnemo.core import _EVENT_COLS, MnemoStore, canonicalize, derive_trust
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import (
     CurrentValue,
@@ -27,6 +31,13 @@ from mnemo.models import (
     MutationResult,
     SearchHit,
 )
+
+SOURCES = {
+    "agent": "agent_inference",  # the agent concluded it (low trust)
+    "tool": "tool_output",  # command output, a file or a web page (medium)
+    "user": "direct_user_statement",  # the user said it (high)
+}
+DEFAULT_SOURCE = "agent"
 
 
 class DirectMemory:
@@ -72,6 +83,30 @@ class DirectMemory:
             ) from exc
 
     @staticmethod
+    def _provenance(source: str) -> str:
+        if source not in SOURCES:
+            raise MnemoError(ErrorCode.INVALID_INPUT, f"source must be one of {', '.join(SOURCES)}")
+        return SOURCES[source]
+
+    @staticmethod
+    def _sourced(source: str) -> dict[str, str]:
+        """The source as receipt payload. The default is omitted, so a retry of a
+        request recorded before sources existed still matches its receipt."""
+        return {} if source == DEFAULT_SOURCE else {"source": source}
+
+    @staticmethod
+    def _retracted(status: str, head: Event | None) -> bool:
+        """A durable memory hidden by retract (or legacy invalidate)."""
+        return bool(
+            status == "invalidated"
+            and head is not None
+            and head.op == "INVALIDATE"
+            and head.tier == "durable"
+            and head.session_id is None
+            and head.expires_at is None
+        )
+
+    @staticmethod
     def _eligible(event: Event | None) -> bool:
         return bool(
             event is not None
@@ -93,12 +128,14 @@ class DirectMemory:
             raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
         return row
 
-    async def _checked_head(self, fact_id: UUID, expected_event_id: UUID) -> Event:
+    async def _checked_head(self, fact_id: UUID, expected_event_id: UUID) -> tuple[Event, bool]:
+        """The locked HEAD if it is still ``expected_event_id``, and whether it is retracted."""
         fact = await self.store._locked_fact(fact_id)
         if fact is None:
             raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
         head = await self.store._get_event(fact["current_event_id"])
-        if fact["status"] != "active" or not self._eligible(head):
+        retracted = self._retracted(fact["status"], head)
+        if not retracted and (fact["status"] != "active" or not self._eligible(head)):
             raise MnemoError(
                 ErrorCode.UNSUPPORTED_STATE, "Only active, durable memories can be changed"
             )
@@ -109,23 +146,32 @@ class DirectMemory:
                 "Memory changed; read its current revision and reconsider",
                 current_event_id=str(head.event_id),
             )
-        return head
+        return head, retracted
+
+    async def _reactivate(self, fact_id: UUID) -> None:
+        await self.store.conn.execute(
+            "UPDATE memory_fact SET status='active' WHERE fact_id=$1", fact_id
+        )
 
     async def _existing_key(self, fact_key: str) -> None:
         row = await self.store.conn.fetchrow(
-            "SELECT fact_id, current_event_id FROM memory_fact "
+            "SELECT fact_id, current_event_id, status FROM memory_fact "
             "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4 "
             "AND identity_mode='attribute'",
             *self._scope,
             fact_key,
         )
         if row is not None:
+            head = await self.store._get_event(row["current_event_id"])
+            retracted = self._retracted(row["status"], head)
             raise MnemoError(
                 ErrorCode.ALREADY_EXISTS,
-                "Memory already exists; use its ID to update it",
+                "Memory already exists; use its ID to update it"
+                + (" (it is retracted; update or revert restores it)" if retracted else ""),
                 fact_id=str(row["fact_id"]),
                 current_event_id=str(row["current_event_id"]) if row["current_event_id"] else None,
                 fact_key=fact_key,
+                **({"retracted": True} if retracted else {}),
             )
 
     async def _mutate(
@@ -197,13 +243,20 @@ class DirectMemory:
         request_id: UUID,
         actor: str | None = None,
         source_span: Any | None = None,
+        source: str = DEFAULT_SOURCE,
     ) -> MutationResult:
         self._uuid(request_id, "request_id")
         for name, text in (("subject", subject), ("predicate", predicate), ("value", value)):
             self._text(text, name)
+        provenance = self._provenance(source)
         fact_key = canonicalize(subject, predicate)
         payload = self._payload(
-            actor, subject=subject, predicate=predicate, value=value, source_span=source_span
+            actor,
+            subject=subject,
+            predicate=predicate,
+            value=value,
+            source_span=source_span,
+            **self._sourced(source),
         )
         embedding = await self.store._embed(f"{subject} {predicate} {value}")
 
@@ -218,8 +271,8 @@ class DirectMemory:
                 "ADD",
                 value,
                 parent_event_id=None,
-                provenance="agent_inference",
-                trust_level="low",
+                provenance=provenance,
+                trust_level=derive_trust(provenance, 1.0),
                 confidence=1.0,
                 actor=actor,
                 source_span=payload["source_span"],
@@ -248,6 +301,7 @@ class DirectMemory:
         expected_event_id: UUID,
         request_id: UUID,
         actor: str | None = None,
+        source: str = DEFAULT_SOURCE,
     ) -> MutationResult:
         for name, identifier in (
             ("fact_id", fact_id),
@@ -256,8 +310,13 @@ class DirectMemory:
         ):
             self._uuid(identifier, name)
         self._text(value, "value")
+        provenance = self._provenance(source)
         payload = self._payload(
-            actor, fact_id=str(fact_id), value=value, expected_event_id=str(expected_event_id)
+            actor,
+            fact_id=str(fact_id),
+            value=value,
+            expected_event_id=str(expected_event_id),
+            **self._sourced(source),
         )
         identity = await self._fact(fact_id)
         embedding = await self.store._embed(
@@ -265,8 +324,8 @@ class DirectMemory:
         )
 
         async def apply() -> MutationResult:
-            head = await self._checked_head(fact_id, expected_event_id)
-            if head.object_text == value:
+            head, retracted = await self._checked_head(fact_id, expected_event_id)
+            if head.object_text == value and not retracted:
                 return MutationResult(
                     status="no_change",
                     fact_id=fact_id,
@@ -274,12 +333,14 @@ class DirectMemory:
                     value=value,
                     request_id=request_id,
                 )
+            if retracted:
+                await self._reactivate(fact_id)
             event = await self.store._emit_update(
                 fact_id,
                 head.event_id,
                 value,
-                provenance="agent_inference",
-                trust_level="low",
+                provenance=provenance,
+                trust_level=derive_trust(provenance, 1.0),
                 confidence=1.0,
                 actor=actor,
                 source_span=None,
@@ -328,7 +389,7 @@ class DirectMemory:
         )
 
         async def apply() -> MutationResult:
-            head = await self._checked_head(fact_id, expected_event_id)
+            head, retracted = await self._checked_head(fact_id, expected_event_id)
             row = await self.store.conn.fetchrow(
                 f"SELECT {_EVENT_COLS} FROM memory_event WHERE event_id=$1 AND fact_id=$2",
                 to_event_id,
@@ -362,6 +423,8 @@ class DirectMemory:
             )
             await self.store._supersede(head.event_id, event.event_id)
             await self.store._set_head(fact_id, event.event_id)
+            if retracted:
+                await self._reactivate(fact_id)
             return MutationResult(
                 status="applied",
                 fact_id=fact_id,
@@ -374,6 +437,52 @@ class DirectMemory:
 
         return await self._mutate("revert", request_id, payload, actor=actor, apply=apply)
 
+    async def retract(
+        self,
+        fact_id: UUID,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str | None = None,
+        reason: str | None = None,
+    ) -> MutationResult:
+        """Hide a memory from reads, keeping its history. Revert or update restores it."""
+        for name, identifier in (
+            ("fact_id", fact_id),
+            ("expected_event_id", expected_event_id),
+            ("request_id", request_id),
+        ):
+            self._uuid(identifier, name)
+        if reason is not None:
+            self._text(reason, "reason")
+        payload = self._payload(
+            actor, fact_id=str(fact_id), expected_event_id=str(expected_event_id), reason=reason
+        )
+
+        async def apply() -> MutationResult:
+            head, retracted = await self._checked_head(fact_id, expected_event_id)
+            if retracted:
+                return MutationResult(
+                    status="no_change",
+                    fact_id=fact_id,
+                    event_id=head.event_id,
+                    value=str(head.value),
+                    request_id=request_id,
+                )
+            event = await self.store.invalidate(
+                fact_id, actor=actor, reason=f"retracted: {reason}" if reason else "retracted"
+            )
+            return MutationResult(
+                status="applied",
+                fact_id=fact_id,
+                event_id=event.event_id,
+                previous_event_id=head.event_id,
+                value=str(event.value),
+                request_id=request_id,
+            )
+
+        return await self._mutate("retract", request_id, payload, actor=actor, apply=apply)
+
     async def get(
         self, fact_id: UUID, event_id: UUID | None = None
     ) -> CurrentValue | HistoricalValue:
@@ -381,7 +490,7 @@ class DirectMemory:
         if event_id is None:
             fact = await self.store.get(fact_id)
             if fact is None:
-                raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
+                return await self._retracted_value(fact_id)
             return CurrentValue(
                 fact_id=fact.fact_id,
                 subject=fact.subject,
@@ -416,10 +525,30 @@ class DirectMemory:
                 actor=event.actor,
                 recorded_at=event.recorded_at,
                 current_event_id=fact["current_event_id"],
-                restorable=fact["status"] == "active"
-                and self._eligible(head)
+                restorable=(
+                    (fact["status"] == "active" and self._eligible(head))
+                    or self._retracted(fact["status"], head)
+                )
                 and self._eligible(event),
             )
+
+    async def _retracted_value(self, fact_id: UUID) -> CurrentValue:
+        fact = await self._fact(fact_id)
+        head = await self.store._get_event(fact["current_event_id"])
+        if not self._retracted(fact["status"], head):
+            raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
+        assert head is not None
+        return CurrentValue(
+            fact_id=fact_id,
+            subject=fact["subject"],
+            predicate=fact["predicate"],
+            value=str(head.value),
+            current_event_id=head.event_id,
+            provenance=head.provenance,
+            trust_level=head.trust_level,
+            recorded_at=head.recorded_at,
+            status="retracted",
+        )
 
     @staticmethod
     def _decode_cursor(cursor: str, fact_id: UUID) -> tuple[int, int]:
@@ -523,6 +652,10 @@ class DirectMemory:
                 predicate=hit.predicate,
                 value=str(hit.value),
                 score=hit.score or 0.0,
+                provenance=hit.provenance,
+                trust_level=hit.trust_level,
+                actor=hit.actor,
+                recorded_at=hit.recorded_at,
             )
             for hit in hits
         ]

@@ -79,16 +79,17 @@ so this shows the approach works, not how often it works in long, real sessions.
 
 ## How agents use it
 
-Six MCP tools, served by `mnemo-mcp-direct`:
+Seven MCP tools, served by `mnemo-mcp-direct`:
 
 | Tool | Contract |
 |---|---|
-| `memory_create` | Save a new memory in the project (default) or global scope; an existing subject/predicate in that scope returns `ALREADY_EXISTS` with its ID. |
+| `memory_create` | Save a new memory in the project (default) or global scope, with its `source`: `user` (high trust), `tool` (medium) or `agent` (low, the default). An existing subject/predicate in that scope returns `ALREADY_EXISTS` with its ID. |
 | `memory_get` | Read the current value and event ID, or a full historical value and whether it can be restored. |
-| `memory_search` | Search the project and global scopes; hits carry fact ID, event ID and scope. |
-| `memory_update` | Change a memory by fact ID, passing the event ID you read as `expected_event_id`. |
+| `memory_search` | Search the project and global scopes; hits carry fact ID, event ID, scope, who wrote the value (`actor`), when (`recorded_at`) and its `provenance` and `trust_level`. |
+| `memory_update` | Change a memory by fact ID, passing the event ID you read as `expected_event_id`, with its `source`. |
 | `memory_history` | Page through revisions, newest first, with value previews. |
 | `memory_revert` | Copy a historical value into a new revision, keeping its provenance and trust. |
+| `memory_retract` | Withdraw a wrong or planted memory, including one just created: it leaves search and `memory_get` reports `status: "retracted"`. History is kept; revert or update restores it. |
 
 Agents read before changing a memory, pass the revision they read, re-read on a
 conflict, and ask which change to undo when "undo that" is ambiguous. `request_id` is
@@ -270,14 +271,14 @@ This is a local, single-user service. Scope columns do not provide authenticatio
 or access control, and memories are stored unencrypted, so don't save secrets.
 Identity is one current value per subject/predicate in a scope. Direct mutations
 accept strings up to 8192 UTF-8 bytes and operate on active, durable, non-expiring
-memories. Creation undo, grouped undo, branching, merging and multi-user access are
-out of scope for now.
+memories, or retracted ones. Grouped undo, branching, merging and multi-user access
+are out of scope for now.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    Claude[Claude Code] --> Direct[Six direct MCP tools]
+    Claude[Claude Code] --> Direct[Seven direct MCP tools]
     Codex[Codex] --> Direct
     UI[Web revert] --> Direct
     Direct --> Core[Scoped event store]

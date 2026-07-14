@@ -136,6 +136,7 @@ class _DirectSDK:
         request_id: UUID,
         actor: str | None = None,
         source_span: Any | None = None,
+        source: str = "agent",
     ) -> MutationResult:
         return self._run(
             lambda d: d.create(
@@ -145,6 +146,7 @@ class _DirectSDK:
                 request_id=request_id,
                 actor=actor,
                 source_span=source_span,
+                source=source,
             )
         )
 
@@ -156,6 +158,7 @@ class _DirectSDK:
         expected_event_id: UUID,
         request_id: UUID,
         actor: str | None = None,
+        source: str = "agent",
     ) -> MutationResult:
         return self._run(
             lambda d: d.update(
@@ -164,6 +167,26 @@ class _DirectSDK:
                 expected_event_id=expected_event_id,
                 request_id=request_id,
                 actor=actor,
+                source=source,
+            )
+        )
+
+    def retract(
+        self,
+        fact_id: UUID,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str | None = None,
+        reason: str | None = None,
+    ) -> MutationResult:
+        return self._run(
+            lambda d: d.retract(
+                fact_id,
+                expected_event_id=expected_event_id,
+                request_id=request_id,
+                actor=actor,
+                reason=reason,
             )
         )
 

@@ -121,7 +121,7 @@ async def check_stdio():
         async with stdio_client(params) as (read, write):
             async with ClientSession(read, write) as session:
                 await session.initialize()
-                assert len((await session.list_tools()).tools) == 6
+                assert len((await session.list_tools()).tools) == 7
                 got = await session.call_tool('memory_get', {'fact_id': str(first.fact_id)})
                 assert not got.isError
                 assert json.loads(got.content[0].text)['current_event_id'] == str(restored.event_id)
@@ -134,7 +134,7 @@ async def check_stdio():
                 assert json.loads(stale.content[0].text)['code'] == 'REVISION_CONFLICT'
 
 asyncio.run(check_stdio())
-print('Installed wheel: direct MCP console entry point, six tools and JSON errors verified')
+print('Installed wheel: direct MCP console entry point, seven tools and JSON errors verified')
 PY
 
 # The source archive must support the same locked install as a fresh checkout.

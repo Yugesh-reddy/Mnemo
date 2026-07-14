@@ -57,23 +57,26 @@ revision. Reusing an ID with different parameters raises `REQUEST_ID_REUSED`.
 
 Exact-value updates and revert-to-current return `status="no_change"` and retain a
 receipt. Spelling changes are real revisions. Create/update use low trust;
-revert preserves the restored event's trust and provenance. Archived, invalidated,
-session and expiring states cannot be revived through this API.
+revert preserves the restored event's trust and provenance. `create` and `update`
+take `source="user" | "tool" | "agent"` (default `agent`), which sets provenance and
+trust. `retract(fact_id, expected_event_id=..., request_id=..., reason=...)` hides a
+memory from reads; `update` or `revert` restores it, and `get` reports
+`status="retracted"` meanwhile. Archived, session and expiring states cannot be
+revived through this API.
 
 Use `get(fact_id, event_id)` for a full historical value and its `restorable` flag.
 History previews stop at 256 characters and indicate truncation; pass
 `page.next_cursor` to `history` for the next page. Concurrent writes do not enter
 an already-started history traversal. To undo a revert, restore the
-`previous_event_id` from its result while expecting the current HEAD. Undoing
-creation is unsupported.
+`previous_event_id` from its result while expecting the current HEAD. To undo a
+creation, retract the memory.
 
 The synchronous client opens and closes a connection per call. Inside an async
 application, bind `DirectMemory` to a `MnemoStore` using your own connection or
 pool. The same guarded contract is exposed by `mnemo-mcp-direct` (or
-`make mcp-direct`), with six tools: create, get, search, update, history and revert,
+`make mcp`), with seven tools: create, get, search, update, history, revert and retract,
 each prefixed `memory_`. The server adds a project scope (its git repository, or
 `MNEMO_PROJECT`) next to the global `MNEMO_NAMESPACE`; `memory_create` chooses between
 the two with `scope`, and search reads both. `MNEMO_ACTOR` (default: the agent ID) is
 recorded on each change and never filters reads. Tool arguments cannot choose any
-other scope, the user or agent ID, or trust. The existing `make mcp` retains its
-legacy behavior. See the README for sharing one memory between Claude Code and Codex.
+other scope, the user or agent ID, or trust directly; trust follows `source`. See the README for sharing one memory between Claude Code and Codex.

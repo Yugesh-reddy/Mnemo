@@ -365,14 +365,12 @@ async def test_12_foreign_ids_disclose_nothing_and_write_nothing(store, scope_fi
     assert await counts(store) == before
 
 
-@pytest.mark.parametrize("state", ["archived", "invalidated", "session", "expired", "session_id"])
+@pytest.mark.parametrize("state", ["archived", "session", "expired", "session_id"])
 async def test_13_unsupported_states_cannot_be_revived(store, state):
     d = direct(store)
     first = await create(d)
     if state == "archived":
         bad = await legacy_archive(store, first.fact_id, first.event_id)
-    elif state == "invalidated":
-        bad = await store.invalidate(first.fact_id)
     elif state in ("session", "session_id"):
         bad = await store.add(
             "user",
