@@ -74,11 +74,26 @@ class Check(BaseModel):
     note: str = ""
 
 
+class Seed(BaseModel):
+    """A memory planted before the first session, as if another agent had saved it."""
+
+    scope: Literal["project", "global"] = "project"
+    repo: Literal["alpha", "beta"] = "alpha"
+    subject: str
+    predicate: str
+    value: str
+    source: Literal["user", "tool", "agent"] = "tool"
+    actor: str = "unknown-agent"
+
+
 class Scenario(BaseModel):
     id: str
     tests: str
     sessions: list[Session]
     checks: list[Check]
+    repo_files: dict[Literal["alpha", "beta"], dict[str, str]] = Field(default_factory=dict)
+    """Extra files for this scenario's fixture repositories (e.g. a planted instruction)."""
+    seed: list[Seed] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _consistent(self) -> Scenario:
@@ -316,6 +331,40 @@ def run_cli(
 LANES = "(f.namespace = $1 OR starts_with(f.namespace, $1 || '@'))"
 
 
+async def plant(
+    conn: asyncpg.Connection,
+    seeds: list[Seed],
+    namespace: str,
+    repos: dict[str, Path],
+    settings: Settings,
+) -> None:
+    """Write each seed through the guarded API, in the scope the agents' servers use."""
+    from mnemo.core import MnemoStore
+    from mnemo.direct import DirectMemory
+    from mnemo.embedder import build_embedder
+    from mnemo.project import detect_project
+
+    embedder = build_embedder(settings)
+    try:
+        for seed in seeds:
+            lane = namespace
+            if seed.scope == "project":
+                lane = f"{namespace}@{detect_project(repos[seed.repo])}"
+            store = MnemoStore(conn, embedder, settings=settings, namespace=lane, user_id="owner")
+            await DirectMemory(store).create(
+                seed.subject,
+                seed.predicate,
+                seed.value,
+                request_id=uuid4(),
+                actor=seed.actor,
+                source=seed.source,
+            )
+    finally:
+        close = getattr(embedder, "close", None)
+        if close:
+            close()
+
+
 async def event_count(conn: asyncpg.Connection, namespace: str) -> int:
     return await conn.fetchval(
         f"SELECT count(*) FROM memory_event e JOIN memory_fact f USING (fact_id) WHERE {LANES}",
@@ -384,6 +433,23 @@ def evaluate(
     return results
 
 
+def write_sources(calls: list[dict[str, Any]]) -> dict[str, int]:
+    """How often agents named a source on create/update ("unset" = left to the default)."""
+    counts: dict[str, int] = {}
+    for call in calls:
+        if call["tool"].split(":")[-1] not in ("memory_create", "memory_update"):
+            continue
+        arguments = call.get("arguments")
+        if isinstance(arguments, str):
+            try:
+                arguments = json.loads(arguments)
+            except ValueError:
+                arguments = {}
+        source = arguments.get("source") if isinstance(arguments, dict) else None
+        counts[source or "unset"] = counts.get(source or "unset", 0) + 1
+    return dict(sorted(counts.items()))
+
+
 def summarize(report: dict[str, Any]) -> dict[str, Any]:
     scenarios = report["scenarios"]
     sessions = [s for scenario in scenarios for s in scenario["sessions"]]
@@ -404,6 +470,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
             tool: sum(c["tool"] == tool for c in mnemo_calls)
             for tool in sorted({c["tool"] for c in mnemo_calls})
         },
+        "write_sources": write_sources(mnemo_calls),
         "memory_writes": sum(s["writes"] for s in sessions),
         "claude_auto_memory_files": sum(
             len(s.get("claude_auto_memory_files", [])) for s in scenarios
@@ -588,7 +655,11 @@ async def run(args: argparse.Namespace) -> int:
         for number, scenario in enumerate(scenarios, 1):
             namespace = f"eval-{scenario.id}-{token}"
             work = Path(tempfile.mkdtemp(prefix=f"mnemo-eval-{scenario.id}-"))
-            repos = {name: make_repo(work, name, files) for name in ("alpha", "beta")}
+            repos = {
+                name: make_repo(work, name, {**files, **scenario.repo_files.get(name, {})})
+                for name in ("alpha", "beta")
+            }
+            await plant(conn, scenario.seed, namespace, repos, settings)
             records: list[SessionRecord] = []
             for index, session in enumerate(scenario.sessions):
                 if session.agent == "claude" and claude_spent >= args.max_claude_usd:

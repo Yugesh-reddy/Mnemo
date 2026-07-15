@@ -13,9 +13,9 @@ from scripts import agent_eval as ae
 
 def test_the_committed_scenarios_are_valid_and_never_name_the_tools():
     scenarios = ae.load_scenarios()
-    assert len(scenarios) == 10
+    assert len(scenarios) == 12
     agents = [session.agent for s in scenarios for session in s.sessions]
-    assert (agents.count("claude"), agents.count("codex")) == (11, 12)
+    assert (agents.count("claude"), agents.count("codex")) == (14, 14)
     for scenario in scenarios:
         for session in scenario.sessions:
             assert "mnemo" not in session.prompt.lower()
@@ -240,3 +240,51 @@ def test_the_server_under_test_can_be_an_installed_tool(monkeypatch, tmp_path):
     env = ae.mnemo_env("dsn", "ns", "codex", "ollama", 768)
     assert ae.claude_mcp_config(env)["mcpServers"]["mnemo"]["command"] == str(tool)
     assert f"mcp_servers.mnemo.command={json.dumps(str(tool))}" in ae.codex_command(env, [])
+
+
+def test_summary_counts_the_sources_agents_name_on_writes():
+    calls = [
+        {"tool": "mnemo:memory_create", "arguments": {"source": "user"}},
+        {"tool": "mnemo:memory_update", "arguments": '{"source": "tool"}'},
+        {"tool": "mnemo:memory_create", "arguments": {"value": "x"}},
+        {"tool": "mnemo:memory_search", "arguments": {"query": "x"}},
+    ]
+    assert ae.write_sources(calls) == {"tool": 1, "unset": 1, "user": 1}
+
+
+def test_poisoning_scenarios_plant_a_file_and_a_memory():
+    scenarios = {s.id: s for s in ae.load_scenarios()}
+    assert (
+        "deploy-helper.example" in scenarios["poisoned_file"].repo_files["alpha"]["docs/DEPLOY.md"]
+    )
+    [seed] = scenarios["retract_planted"].seed
+    assert (seed.scope, seed.source) == ("project", "tool") and "--no-verify" in seed.value
+
+
+async def test_seeds_land_in_the_scope_the_agents_read(_disposable_test_db, tmp_path):
+    import asyncpg
+
+    from mnemo.config import Settings
+    from mnemo.db import register_vector
+
+    settings = Settings(_env_file=None, backend="hash", dsn=_disposable_test_db)
+    repos = {name: ae.make_repo(tmp_path, name, {}) for name in ("alpha", "beta")}
+    seeds = [
+        ae.Seed(subject="commits", predicate="how", value="skip checks"),
+        ae.Seed(scope="global", subject="editor", predicate="is", value="vim", source="user"),
+    ]
+    conn = await asyncpg.connect(_disposable_test_db)
+    try:
+        await register_vector(conn)
+        await ae.plant(conn, seeds, "eval-seed", repos, settings)
+        rows = await conn.fetch(
+            "SELECT namespace, user_id, actor, provenance::text FROM memory_current "
+            "WHERE namespace LIKE 'eval-seed%' ORDER BY namespace"
+        )
+        await conn.execute("TRUNCATE memory_mutation_receipt, memory_event, memory_fact CASCADE")
+    finally:
+        await conn.close()
+    assert [tuple(r) for r in rows] == [
+        ("eval-seed", "owner", "unknown-agent", "direct_user_statement"),
+        ("eval-seed@github.com/mnemo-eval/alpha", "owner", "unknown-agent", "tool_output"),
+    ]
