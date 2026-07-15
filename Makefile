@@ -37,7 +37,7 @@ fmt:  ## ruff --fix + black
 mcp:  ## Run the six guarded memory tools over MCP (stdio)
 	$(RUN) python -m mnemo.mcp_direct
 
-agents:  ## Install the mnemo tool from this checkout, then connect Claude Code and Codex
+agents:  ## Install the mnemo tool from this checkout, then connect the coding agents
 	uv tool install --force --reinstall --python 3.12 .
 	"$$(uv tool dir --bin)/mnemo" install $(ARGS)
 

@@ -1,4 +1,4 @@
-"""Register Mnemo with Claude Code and Codex, and add the shared-memory policy.
+"""Register Mnemo with Claude Code, Codex and OpenCode, and add the shared-memory policy.
 
     mnemo-install                 # show every change, then ask before applying
     mnemo-install --yes           # apply without asking
@@ -7,9 +7,12 @@
 Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``) and the
 policy in ``~/.claude/CLAUDE.md``. Codex gets an ``[mcp_servers.mnemo]`` table with its
 tools pre-approved in ``$CODEX_HOME/config.toml`` and the policy in
-``$CODEX_HOME/AGENTS.md``. Text written into a file sits between mnemo markers, so it
-can be updated or removed without touching the rest of the file. Each agent gets its
-own MNEMO_ACTOR; all of them share one database, namespace and user.
+``$CODEX_HOME/AGENTS.md``. OpenCode (when installed) gets ``mcp.servers.mnemo`` in its
+global ``opencode.json`` and the policy in its global ``AGENTS.md``, or in
+``~/.claude/CLAUDE.md`` while OpenCode is reading that file instead. Text written into a
+file sits between mnemo markers, so it can be updated or removed without touching the
+rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one database,
+namespace and user.
 
 Before changing anything it checks that Postgres is reachable and, for the default
 Ollama backend, that Ollama is running; a missing embedding model (Ollama's, or the
@@ -101,6 +104,139 @@ def codex_config(text: str, command: str, env: dict[str, str]) -> str:
     if parsed["command"] != command or parsed["env"] != env:
         raise InstallError("the generated Codex configuration did not round-trip")
     return updated
+
+
+def default_opencode_dir() -> Path:
+    return Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "opencode"
+
+
+def opencode_detected(opencode_dir: Path) -> bool:
+    return shutil.which("opencode") is not None or opencode_dir.is_dir()
+
+
+def strip_jsonc(text: str) -> str:
+    """JSON from JSONC: drop // and /* */ comments and trailing commas outside strings."""
+    out: list[str] = []
+    i, n = 0, len(text)
+    while i < n:
+        char = text[i]
+        if char == '"':
+            j = i + 1
+            while j < n and text[j] != '"':
+                j += 2 if text[j] == "\\" else 1
+            out.append(text[i : j + 1])
+            i = j + 1
+        elif text.startswith("//", i):
+            i = text.find("\n", i)
+            i = n if i < 0 else i
+        elif text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            i = n if end < 0 else end + 2
+        else:
+            out.append(char)
+            i += 1
+    # Trailing commas, now that strings are the only place a comma can hide.
+    result: list[str] = []
+    for piece in out:
+        if piece[0] in "}]" and result:
+            k = len(result) - 1
+            while k >= 0 and result[k].isspace():
+                k -= 1
+            if k >= 0 and result[k] == ",":
+                del result[k]
+        result.append(piece)
+    return "".join(result)
+
+
+def opencode_entry(command: str, env: dict[str, str]) -> dict:
+    return {"type": "local", "command": [command], "environment": env}
+
+
+def _ours(entry: object) -> bool:
+    """A server entry mnemo-install wrote: it runs a mnemo-mcp-direct."""
+    command = entry.get("command") if isinstance(entry, dict) else None
+    return (
+        isinstance(command, list)
+        and bool(command)
+        and Path(str(command[0])).name == "mnemo-mcp-direct"
+    )
+
+
+def opencode_config(text: str, path: Path, entry: dict | None) -> str:
+    """The config with mcp.servers.mnemo set to ``entry`` (None removes it).
+
+    Plain JSON is rewritten with its other settings kept. A JSONC file with comments
+    or trailing commas would lose them, so it is only left alone when it already says
+    the same; otherwise the error shows the entry to paste.
+    """
+    plain = True
+    try:
+        data = json.loads(text) if text.strip() else {}
+    except json.JSONDecodeError:
+        plain = False
+        try:
+            data = json.loads(strip_jsonc(text))
+        except json.JSONDecodeError as exc:
+            raise InstallError(f"{path} is not valid JSON or JSONC ({exc})") from exc
+    if not isinstance(data, dict):
+        raise InstallError(f"{path} is not a JSON object")
+    mcp = data.get("mcp", {})
+    servers = mcp.get("servers", {}) if isinstance(mcp, dict) else {}
+    legacy = mcp.get("mnemo") if isinstance(mcp, dict) else None
+    current = servers.get("mnemo") if isinstance(servers, dict) else None
+    for found in (current, legacy):
+        if found is not None and not _ours(found):
+            raise InstallError(
+                f"{path} already defines an MCP server named mnemo that mnemo-install did "
+                "not write; remove or rename it first"
+            )
+    if legacy is not None:
+        raise InstallError(
+            f'{path} defines mnemo in the deprecated "mcp" shape; delete "mcp.mnemo" and '
+            "run mnemo-install again"
+        )
+    if current == entry:
+        return text
+    if not plain:
+        snippet = json.dumps({"mcp": {"servers": {"mnemo": entry}}}, indent=2)
+        action = (
+            f"add this to it:\n{snippet}"
+            if entry is not None
+            else 'delete "mnemo" under "mcp" > "servers"'
+        )
+        raise InstallError(
+            f"{path} has comments or trailing commas, which rewriting would lose; {action}"
+        )
+    if entry is None:
+        del servers["mnemo"]
+        if not servers:
+            mcp.pop("servers")
+        if not mcp:
+            data.pop("mcp")
+    else:
+        data.setdefault("$schema", "https://opencode.ai/config.json")
+        data.setdefault("mcp", {}).setdefault("servers", {})["mnemo"] = entry
+    return json.dumps(data, indent=2) + "\n"
+
+
+def opencode_config_path(opencode_dir: Path) -> Path:
+    for name in ("opencode.jsonc", "opencode.json"):
+        if (opencode_dir / name).exists():
+            return opencode_dir / name
+    return opencode_dir / "opencode.json"
+
+
+def opencode_rules_path(opencode_dir: Path, claude_dir: Path) -> Path:
+    """The global rules file OpenCode reads: its own AGENTS.md, else ~/.claude/CLAUDE.md
+    when that exists and Claude Code support is not disabled."""
+    own = opencode_dir / "AGENTS.md"
+    disabled = any(
+        os.environ.get(name) == "1"
+        for name in ("OPENCODE_DISABLE_CLAUDE_CODE", "OPENCODE_DISABLE_CLAUDE_CODE_PROMPT")
+    )
+    if own.exists() or disabled or not (claude_dir / "CLAUDE.md").exists():
+        return own
+    return claude_dir / "CLAUDE.md"
 
 
 def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
@@ -208,11 +344,22 @@ def plan(
     command: str,
     runner: Runner,
     claude_auto_memory: str | None = None,
+    opencode_dir: Path | None = None,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
     commands: list[Command] = []
-    changes: list[FileChange] = []
     notes: list[str] = []
     policy = policy_text()
+    texts: dict[Path, tuple[str, str]] = {}  # path -> (on disk, planned)
+
+    def edit(path: Path, change: Callable[[str], str]) -> None:
+        before, current = texts.get(path, (_read(path), _read(path)))
+        texts[path] = (before, change(current))
+
+    def policy_block(text: str) -> str:
+        if uninstall:
+            return remove_block(text, MD_BEGIN, MD_END)
+        return upsert_block(text, policy, MD_BEGIN, MD_END)
+
     if "claude" in agents:
         if shutil.which("claude") is None:
             notes.append("Claude Code CLI not found; skipped its MCP registration.")
@@ -239,20 +386,11 @@ def plan(
                         + ["--scope", "user"],
                     )
                 )
-        path = claude_dir / "CLAUDE.md"
-        before = _read(path)
-        after = (
-            remove_block(before, MD_BEGIN, MD_END)
-            if uninstall
-            else upsert_block(before, policy, MD_BEGIN, MD_END)
-        )
-        changes.append(FileChange(path, before, after))
+        edit(claude_dir / "CLAUDE.md", policy_block)
         settings_path = claude_dir / "settings.json"
         current = _read(settings_path)
         if claude_auto_memory:
-            changes.append(
-                FileChange(settings_path, current, claude_settings(current, claude_auto_memory))
-            )
+            edit(settings_path, lambda text: claude_settings(text, claude_auto_memory))
         elif uninstall:
             if _auto_memory_off(current):
                 notes.append(
@@ -266,20 +404,34 @@ def plan(
             )
     if "codex" in agents:
         config_path = codex_home / "config.toml"
-        before = _read(config_path)
         if uninstall:
-            after = remove_block(before, TOML_BEGIN, TOML_END)
+            edit(config_path, lambda text: remove_block(text, TOML_BEGIN, TOML_END))
         else:
-            after = codex_config(before, command, server_env(settings, "codex", backend))
-        changes.append(FileChange(config_path, before, after))
-        path = codex_home / "AGENTS.md"
-        before = _read(path)
-        after = (
-            remove_block(before, MD_BEGIN, MD_END)
+            env = server_env(settings, "codex", backend)
+            edit(config_path, lambda text: codex_config(text, command, env))
+        edit(codex_home / "AGENTS.md", policy_block)
+    if "opencode" in agents:
+        opencode_dir = opencode_dir or default_opencode_dir()
+        config_path = opencode_config_path(opencode_dir)
+        entry = (
+            None
             if uninstall
-            else upsert_block(before, policy, MD_BEGIN, MD_END)
+            else opencode_entry(command, server_env(settings, "opencode", backend))
         )
-        changes.append(FileChange(path, before, after))
+        edit(config_path, lambda text: opencode_config(text, config_path, entry))
+        rules = opencode_rules_path(opencode_dir, claude_dir)
+        if rules == claude_dir / "CLAUDE.md":
+            if not uninstall:
+                notes.append(
+                    f"OpenCode reads {rules} (it has no AGENTS.md of its own), so the policy "
+                    "for OpenCode goes there."
+                )
+                edit(rules, policy_block)
+            elif "claude" not in agents:
+                notes.append(f"The policy stays in {rules}, which Claude Code also reads.")
+        else:
+            edit(rules, policy_block)
+    changes = [FileChange(path, before, after) for path, (before, after) in texts.items()]
     return commands, [c for c in changes if c.before != c.after], notes
 
 
@@ -384,15 +536,21 @@ def main(
     probe: Services | None = None,
 ) -> int:
     parser = argparse.ArgumentParser(
-        description="Register Mnemo with Claude Code and Codex and add the memory policy."
+        description="Register Mnemo with Claude Code, Codex and OpenCode and add the memory policy."
     )
-    parser.add_argument("--agent", choices=["claude", "codex"], action="append")
+    parser.add_argument(
+        "--agent",
+        choices=["claude", "codex", "opencode"],
+        action="append",
+        help="default: claude, codex, and opencode when it is installed",
+    )
     parser.add_argument("--uninstall", action="store_true")
     parser.add_argument("--yes", action="store_true", help="apply without asking")
     parser.add_argument("--dry-run", action="store_true", help="show changes, write nothing")
     parser.add_argument("--backend", choices=["ollama", "local", "hash", "openai"])
     parser.add_argument("--claude-dir", type=Path, default=Path.home() / ".claude")
     parser.add_argument("--codex-home", type=Path)
+    parser.add_argument("--opencode-dir", type=Path, help="default: ~/.config/opencode")
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
     parser.add_argument(
@@ -408,6 +566,10 @@ def main(
         # Re-resolve backend-dependent defaults (model, dimension, search floor).
         settings = Settings(backend=backend)
     codex_home = args.codex_home or default_codex_home()
+    opencode_dir = args.opencode_dir or default_opencode_dir()
+    agents = args.agent or ["claude", "codex"] + (
+        ["opencode"] if opencode_detected(opencode_dir) else []
+    )
     checks = Preflight(ready=[], problems=[])
     if not (args.uninstall or args.skip_checks):
         checks = preflight(settings, backend, probe or Services())
@@ -420,7 +582,7 @@ def main(
             return 2
     try:
         commands, changes, notes = plan(
-            agents=args.agent or ["claude", "codex"],
+            agents=agents,
             uninstall=args.uninstall,
             claude_dir=args.claude_dir,
             codex_home=codex_home,
@@ -429,6 +591,7 @@ def main(
             command=server_command(),
             runner=run,
             claude_auto_memory=args.claude_auto_memory,
+            opencode_dir=opencode_dir,
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)
@@ -436,6 +599,8 @@ def main(
     migrating = not (args.uninstall or args.skip_migrate)
     print(f"Database: {services.where(settings.dsn)} (backend {backend})")
     print(f"Codex home: {codex_home}  (pass --codex-home if your codex uses another)")
+    if "opencode" in agents:
+        print(f"OpenCode config: {opencode_dir}  (pass --opencode-dir for another)")
     if not args.uninstall and running_from_checkout():
         print(
             f"Note: the agents will run {server_command()} from this checkout; moving or "
@@ -506,7 +671,7 @@ def main(
     for change in changes:
         change.path.parent.mkdir(parents=True, exist_ok=True)
         change.path.write_text(change.after)
-    print("Done. Start new Claude Code and Codex sessions to pick up the changes.")
+    print("Done. Start new agent sessions to pick up the changes.")
     return 0
 
 

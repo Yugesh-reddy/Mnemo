@@ -1,7 +1,7 @@
 # Mnemo
 
-**One shared, versioned memory for your coding agents.** Claude Code, Codex and other
-MCP clients on your machine read and write the same memory, for each project and
+**One shared, versioned memory for your coding agents.** Claude Code, Codex, OpenCode
+and other MCP clients on your machine read and write the same memory, for each project and
 across projects. Every change is kept, attributed to the agent that made it, and can
 be undone. Everything runs locally.
 
@@ -16,13 +16,13 @@ should work too but hasn't been tested yet.
 ```bash
 uv tool install git+https://github.com/Yugesh-reddy/Mnemo
 mnemo up        # Postgres + pgvector in Docker, reachable from this machine only
-mnemo install   # connect Claude Code and Codex (shows every change, asks first)
+mnemo install   # connect Claude Code, Codex and OpenCode (shows every change, asks first)
 ```
 
 `mnemo install` checks that Postgres and Ollama are running, downloads the
 `nomic-embed-text` embedding model if it is missing, sets up the database, registers
-Mnemo with Claude Code and Codex, and adds a short
-[memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
+Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and adds a
+short [memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
 example, tell Claude Code:
 
@@ -123,10 +123,17 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
 
-`mnemo install` options: `--dry-run` shows the changes only, `--agent claude|codex`
-limits them to one agent, `--codex-home` points at another Codex home (a `codex`
-wrapper that pins one is detected), `--backend local` or `--backend hash` avoids
+`mnemo install` options: `--dry-run` shows the changes only,
+`--agent claude|codex|opencode` limits them to the agents named, `--codex-home` points
+at another Codex home (a `codex` wrapper that pins one is detected), `--opencode-dir`
+at another OpenCode config directory, `--backend local` or `--backend hash` avoids
 Ollama, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
+
+OpenCode gets `mcp.servers.mnemo` in `~/.config/opencode/opencode.json`. A
+`opencode.jsonc` with comments is never rewritten: the installer prints the entry to
+paste instead. The policy goes into `~/.config/opencode/AGENTS.md`, or into
+`~/.claude/CLAUDE.md` when OpenCode is reading that file because it has no
+`AGENTS.md` of its own (creating one would stop it reading CLAUDE.md).
 
 **`--backend local` (experimental)** runs the embedding model inside each Mnemo server
 instead of in Ollama. `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB,
@@ -146,7 +153,7 @@ repository:
 ```bash
 claude mcp add mnemo --scope user \
   -e MNEMO_BACKEND=ollama -e MNEMO_EMBED_DIM=768 \
-  -e MNEMO_WORKER_ENABLED=false -e MNEMO_ACTOR=claude-code \
+  -e MNEMO_ACTOR=claude-code \
   -- /Users/you/.local/bin/mnemo-mcp-direct
 ```
 
@@ -160,12 +167,28 @@ default_tools_approval_mode = "approve"  # lets `codex exec` call the tools unat
 [mcp_servers.mnemo.env]
 MNEMO_BACKEND = "ollama"
 MNEMO_EMBED_DIM = "768"
-MNEMO_WORKER_ENABLED = "false"
 MNEMO_ACTOR = "codex"
 ```
 
-Also paste [the memory policy](mnemo/memory_policy.md) into `~/.claude/CLAUDE.md` and
-`$CODEX_HOME/AGENTS.md`: without it, Codex did not save anything in the eval. Other
+OpenCode, in `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "mnemo": {
+        "type": "local",
+        "command": ["/Users/you/.local/bin/mnemo-mcp-direct"],
+        "environment": {"MNEMO_BACKEND": "ollama", "MNEMO_EMBED_DIM": "768", "MNEMO_ACTOR": "opencode"}
+      }
+    }
+  }
+}
+```
+
+Also paste [the memory policy](mnemo/memory_policy.md) into `~/.claude/CLAUDE.md`,
+`$CODEX_HOME/AGENTS.md` and OpenCode's rules file: without it, Codex did not save
+anything in the eval. Other
 clients such as Claude Desktop or [Cursor](https://cursor.com/docs/mcp) take the same
 command and environment in their JSON configuration (Cursor also needs
 `"type": "stdio"`). They are not started inside a repository, so they see only the
@@ -280,6 +303,7 @@ are out of scope for now.
 flowchart LR
     Claude[Claude Code] --> Direct[Seven direct MCP tools]
     Codex[Codex] --> Direct
+    OpenCode[OpenCode] --> Direct
     UI[Web revert] --> Direct
     Direct --> Core[Scoped event store]
     Core --> Events[Append-only events]

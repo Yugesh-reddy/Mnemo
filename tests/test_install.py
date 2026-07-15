@@ -1,4 +1,5 @@
-"""mnemo-install: managed blocks, Codex TOML, Claude registration, dry run and uninstall."""
+"""mnemo-install: managed blocks, Codex TOML, OpenCode JSON, Claude registration, dry run
+and uninstall."""
 
 from __future__ import annotations
 
@@ -11,6 +12,15 @@ import httpx
 import pytest
 
 import mnemo.install as inst
+
+
+@pytest.fixture(autouse=True)
+def _no_real_opencode(tmp_path, monkeypatch):
+    """Every test detects "opencode" on PATH; keep its default config dir in tmp."""
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    for name in ("OPENCODE_DISABLE_CLAUDE_CODE", "OPENCODE_DISABLE_CLAUDE_CODE_PROMPT"):
+        monkeypatch.delenv(name, raising=False)
+
 
 EXISTING_TOML = """model = "gpt-test"
 
@@ -104,6 +114,7 @@ def homes(tmp_path, monkeypatch):
 
 def args(claude: Path, codex: Path, *extra: str, checks: bool = False) -> list[str]:
     base = ["--claude-dir", str(claude), "--codex-home", str(codex), "--skip-migrate"]
+    base += ["--opencode-dir", str(claude.parent / "opencode")]
     return base + ([] if checks else ["--skip-checks"]) + list(extra)
 
 
@@ -378,3 +389,118 @@ async def test_migrate_checks_the_dimension_it_is_given_not_the_global_one(_disp
     finally:
         await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
         await admin.close()
+
+
+# ---- OpenCode ---------------------------------------------------------------
+
+OPENCODE = {"$schema": "https://opencode.ai/config.json", "model": "anthropic/claude-x"}
+
+
+def opencode_server(opencode: Path) -> dict:
+    return json.loads((opencode / "opencode.json").read_text())["mcp"]["servers"]["mnemo"]
+
+
+def test_opencode_gets_a_server_and_its_own_policy_file(homes, tmp_path):
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    (opencode / "opencode.json").write_text(json.dumps(OPENCODE))
+    (opencode / "AGENTS.md").write_text("# Mine\n")
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 0
+    server = opencode_server(opencode)
+    assert server["type"] == "local" and server["command"] == [inst.server_command()]
+    assert server["environment"]["MNEMO_ACTOR"] == "opencode"
+    assert json.loads((opencode / "opencode.json").read_text())["model"] == "anthropic/claude-x"
+    assert inst.policy_text().strip() in (opencode / "AGENTS.md").read_text()
+    assert not (claude / "CLAUDE.md").exists()
+
+    before = (opencode / "opencode.json").read_text()
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 0
+    assert (opencode / "opencode.json").read_text() == before
+
+    assert (
+        inst.main(
+            args(claude, codex, "--agent", "opencode", "--uninstall", "--yes"), runner=FakeCli()
+        )
+        == 0
+    )
+    assert json.loads((opencode / "opencode.json").read_text()) == OPENCODE
+    assert (opencode / "AGENTS.md").read_text() == "# Mine\n"
+
+
+def test_opencode_reading_claude_md_gets_the_policy_there(homes, tmp_path, capsys):
+    """Creating OpenCode's AGENTS.md would stop it reading ~/.claude/CLAUDE.md."""
+    claude, codex = homes
+    claude.mkdir()
+    (claude / "CLAUDE.md").write_text("# Claude rules OpenCode also follows\n")
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 0
+    opencode = tmp_path / "opencode"
+    assert not (opencode / "AGENTS.md").exists()
+    assert inst.policy_text().strip() in (claude / "CLAUDE.md").read_text()
+    assert "OpenCode reads" in capsys.readouterr().out
+    assert opencode_server(opencode)["environment"]["MNEMO_ACTOR"] == "opencode"
+
+
+def test_opencode_is_installed_by_default_only_when_detected(homes, tmp_path, monkeypatch):
+    claude, codex = homes
+    monkeypatch.setattr(
+        inst.shutil, "which", lambda name: None if name == "opencode" else f"/bin/{name}"
+    )
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    assert not (tmp_path / "opencode").exists()
+    (tmp_path / "opencode").mkdir()
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    assert opencode_server(tmp_path / "opencode")["environment"]["MNEMO_ACTOR"] == "opencode"
+
+
+def test_opencode_jsonc_with_comments_is_never_rewritten(homes, tmp_path, capsys):
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    jsonc = '{\n  // my theme\n  "theme": "dark",\n}\n'
+    (opencode / "opencode.jsonc").write_text(jsonc)
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 2
+    err = capsys.readouterr().err
+    assert "comments or trailing commas" in err and '"mnemo"' in err
+    assert (opencode / "opencode.jsonc").read_text() == jsonc
+    assert not (opencode / "opencode.json").exists()
+
+    # Once the user pastes the entry, a reinstall leaves the file alone.
+    entry = inst.opencode_entry(
+        inst.server_command(), inst.server_env(inst.get_settings(), "opencode", "ollama")
+    )
+    pasted = jsonc.replace(
+        '"theme": "dark",',
+        '"theme": "dark",\n  "mcp": ' + json.dumps({"servers": {"mnemo": entry}}) + ",",
+    )
+    (opencode / "opencode.jsonc").write_text(pasted)
+    assert (
+        inst.main(
+            args(claude, codex, "--agent", "opencode", "--backend", "ollama", "--yes"),
+            runner=FakeCli(),
+        )
+        == 0
+    )
+    assert (opencode / "opencode.jsonc").read_text() == pasted
+
+
+@pytest.mark.parametrize(
+    "config",
+    [
+        {"mcp": {"servers": {"mnemo": {"type": "local", "command": ["other-server"]}}}},
+        {"mcp": {"mnemo": {"type": "local", "command": ["something-else"]}}},
+    ],
+)
+def test_an_unmanaged_opencode_server_stops_the_install(homes, tmp_path, capsys, config):
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    (opencode / "opencode.json").write_text(json.dumps(config))
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 2
+    assert "did not write" in capsys.readouterr().err
+    assert json.loads((opencode / "opencode.json").read_text()) == config
+
+
+def test_strip_jsonc_keeps_strings_intact():
+    text = '{ // c\n "a": "x,}//y /* z */", /* b */ "l": [1, 2,],\n}'
+    assert json.loads(inst.strip_jsonc(text)) == {"a": "x,}//y /* z */", "l": [1, 2]}

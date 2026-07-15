@@ -5,7 +5,7 @@
 ---
 
 ## What this is
-Mnemo — **one shared, versioned memory for coding agents on the local machine.** Claude Code, Codex and other MCP clients read and write the same store through seven guarded tools (`mnemo-mcp-direct`); the agent decides what to remember and says where each value came from. The store is **append-only, versioned and bitemporal**, so every change is attributed, visible in history and reversible: `history`, `revert` and `retract` are the defence against wrong or poisoned memories. The automatic extraction pipeline is archived at the git tag `archive/extraction-pipeline` (spec §23).
+Mnemo — **one shared, versioned memory for coding agents on the local machine.** Claude Code, Codex, OpenCode and other MCP clients read and write the same store through seven guarded tools (`mnemo-mcp-direct`); the agent decides what to remember and says where each value came from. The store is **append-only, versioned and bitemporal**, so every change is attributed, visible in history and reversible: `history`, `revert` and `retract` are the defence against wrong or poisoned memories. The automatic extraction pipeline is archived at the git tag `archive/extraction-pipeline` (spec §23).
 
 ---
 
@@ -27,7 +27,7 @@ make lint / make fmt
 make mcp       # the seven guarded tools over MCP (stdio)
 make demo      # direct write -> guarded update -> revert, no models
 make ui        # FastAPI + HTMX web UI
-make agents    # install the tool from this checkout and connect Claude Code + Codex
+make agents    # install the tool from this checkout and connect the coding agents
 ```
 `make agents` and `mnemo install` rewrite real agent configs: verify the installer with temporary homes and a scratch database.
 
@@ -65,4 +65,4 @@ If any is red, a central promise isn't real yet.
 ---
 
 ## Definition of done
-A new user installs the tool and runs `mnemo install`; Claude Code and Codex then share one memory through the seven tools. `make test-db`, `make lint` and `scripts/check-wheel.sh` pass, and the agent eval passes its scenarios.
+A new user installs the tool and runs `mnemo install`; Claude Code, Codex and OpenCode then share one memory through the seven tools. `make test-db`, `make lint` and `scripts/check-wheel.sh` pass, and the agent eval passes its scenarios.

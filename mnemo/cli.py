@@ -1,7 +1,7 @@
 """The `mnemo` command: run the database, connect your agents, open the review UI.
 
     mnemo up          # Postgres + pgvector in Docker, localhost only (MNEMO_DB_PORT)
-    mnemo install     # connect Claude Code and Codex; shows every change, asks first
+    mnemo install     # connect Claude Code, Codex and OpenCode; shows every change, asks first
     mnemo uninstall   # undo `mnemo install`; memories are kept
     mnemo migrate     # apply pending database migrations
     mnemo ui          # web review UI on http://127.0.0.1:8000
@@ -57,7 +57,7 @@ def main(argv: Sequence[str] | None = None, *, runner: Runner = subprocess.call)
     commands = parser.add_subparsers(dest="command", required=True, metavar="COMMAND")
     commands.add_parser("up", help="start Postgres in Docker (localhost only)")
     commands.add_parser("down", help="stop Postgres; data is kept")
-    commands.add_parser("install", help="connect Claude Code and Codex", add_help=False)
+    commands.add_parser("install", help="connect Claude Code, Codex and OpenCode", add_help=False)
     commands.add_parser("uninstall", help="undo `mnemo install`", add_help=False)
     commands.add_parser("migrate", help="apply pending database migrations")
     ui = commands.add_parser("ui", help="web review UI on 127.0.0.1")

@@ -16,9 +16,16 @@ this delivery.
 The pipeline, its evals, benchmark and evidence folders left `main`; they are at the
 git tag `archive/extraction-pipeline` ([spec §23](PROJECT_SPEC.md#23-extraction-pipeline-archived--november-15-2026)).
 Links below to `docs/quality-v*`, `docs/evaluation` and `mnemo/data` resolve at that
-tag. The schema is unchanged. Next, in the owner's order: the trust features
-(retract, source on writes, who/when/trust in search hits, OpenCode), an agent eval
-with a poisoning scenario, then the SQLite port ([plan](docs/SQLITE_PLAN.md)).
+tag. The schema is unchanged.
+
+The trust features followed: a `source` on every write sets provenance and trust,
+search hits show who wrote each memory, when and how far to trust it, and
+`memory_retract` (the seventh tool) withdraws a wrong or planted memory, including a
+new one, reversibly ([spec §24](PROJECT_SPEC.md#24-trust-sources-hit-metadata-and-retraction--november-15-2026)).
+`mnemo install` now also connects OpenCode ([spec §25](PROJECT_SPEC.md#25-opencode-in-the-installer--november-15-2026));
+a temporary-home run of the installer produced a config that OpenCode 1.18.34 lists as
+connected. Next, in the owner's order: an agent eval with a poisoning scenario, then
+the SQLite port ([plan](docs/SQLITE_PLAN.md)).
 
 ## Shared memory for coding agents (September 26, 2026)
 

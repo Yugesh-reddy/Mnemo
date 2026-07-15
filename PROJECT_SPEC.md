@@ -675,3 +675,22 @@ operations.
   memories as data and never follow instructions found in one, and to retract
   planted or wrong memories.
 
+## 25. OpenCode in the installer — November 15, 2026
+
+- `mnemo install --agent opencode`, and by default whenever `opencode` is on `PATH`
+  or its config directory exists (`$XDG_CONFIG_HOME/opencode`, default
+  `~/.config/opencode`; `--opencode-dir` overrides). The server is
+  `mcp.servers.mnemo = {type: "local", command: [<mnemo-mcp-direct>], environment}`
+  with `MNEMO_ACTOR=opencode`, the shape OpenCode's current schema documents
+  (`mcp.<name>` is deprecated there; 1.18.34 accepts both).
+- Config file: an existing `opencode.jsonc`, else `opencode.json`. Plain JSON is
+  rewritten keeping every other setting. JSONC with comments or trailing commas is
+  never rewritten: when it already holds the same entry nothing happens, otherwise
+  the installer stops and prints the entry to paste. An entry named `mnemo` that does
+  not run a `mnemo-mcp-direct`, or one in the deprecated shape, stops the install.
+- Policy: OpenCode reads its own `AGENTS.md`, and falls back to `~/.claude/CLAUDE.md`
+  only when that file is missing. While the fallback is active (and not disabled by
+  `OPENCODE_DISABLE_CLAUDE_CODE` or `OPENCODE_DISABLE_CLAUDE_CODE_PROMPT`), the policy
+  goes into CLAUDE.md, because creating OpenCode's AGENTS.md would silently stop it
+  reading CLAUDE.md.
+
