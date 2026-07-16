@@ -13,16 +13,24 @@ contracts under `AGENTS.md` rule 6. Checkout: `446e4b7`.
 ## 1. Goal
 
 A new user runs `uv tool install …` and `mnemo install`, and memory works. No Docker,
-no Postgres server, no Ollama, no port and no database password. The six MCP tools,
-the scopes, history, guarded revert and retry receipts behave as they do today, and
-retrieval is no worse.
+no Postgres server, no Ollama, no port and no database password. The seven MCP
+tools, the scopes, history, guarded revert, retraction, sources and retry receipts
+behave as they do today (spec §15, §19–§20, §24–§25), and retrieval is no worse.
+
+**Parity includes the trust contract (spec §24), added after this plan was written:**
+`source` maps to provenance and trust; hits carry `provenance`, `trust_level`,
+`actor` and `recorded_at`; `memory_retract` appends an `INVALIDATE` copy of HEAD and
+sets `memory_fact.status` to `invalidated`; update and revert on a retracted HEAD
+write a new revision and set the status back to `active`; `memory_get` returns
+`status: "retracted"`; `ALREADY_EXISTS` carries `details.retracted`. These status
+transitions are part of the contract and must be ported exactly.
 
 **In scope:** replace Postgres with one SQLite file, replace Ollama with an embedding
 model loaded inside the server, and carry the coding-agent path across.
 
-**Out of scope:** any new behaviour. The review's other findings (a retract tool,
-source on writes, ranking, OpenCode) are listed in §9 and stay separate, so the port
-can be judged on parity alone. The extraction pipeline is not ported (§2, D2).
+**Out of scope:** any new behaviour, so the port can be judged on parity alone. The
+review's remaining findings are listed in §9. The extraction pipeline is not ported
+(§2, D2; archived November 15).
 
 ## 2. Decisions for the owner
 
@@ -157,7 +165,7 @@ Removed: `MNEMO_DSN`, `MNEMO_TEST_DSN`, `MNEMO_DB_PORT`, and every pipeline sett
 
 ### 4.3 Schema
 
-Columns match the Postgres schema at migration 0011 one for one, so imported history
+Columns match the Postgres schema at migration 0012 one for one, so imported history
 keeps every field. The only structural change is that `embedding` leaves
 `memory_event` (D4). Tables `fast_cache`, `extraction_job` and `quality_decision` are
 not created.
@@ -196,7 +204,8 @@ CREATE VIRTUAL TABLE memory_search_text       -- derived; one row per fact's HEA
 ```
 
 `memory_commit`, `memory_mutation_receipt` and `schema_migrations` carry over with the
-same columns. Triggers reject any `UPDATE` of an event's payload columns, any `DELETE`
+same columns; the receipt `operation` CHECK allows `create`, `update`, `revert` and
+`retract` (migration 0012). Triggers reject any `UPDATE` of an event's payload columns, any `DELETE`
 of an event, and any `UPDATE` or `DELETE` of a receipt. One trigger on
 `memory_fact.current_event_id` refreshes `memory_search_text`, so every HEAD move
 (create, update, revert, invalidate) is covered in one place. `memory_current` stays a
@@ -373,15 +382,17 @@ Files: `mnemo/direct.py`, `mnemo/mcp_direct.py`, `mnemo/services.py`,
       cannot load extensions, and a missing model. Each names its fix.
 - [ ] `Mnemo(dsn, …)` becomes `Mnemo(path, …)`.
 
-**Exit:** `test_direct_mutations`, the five direct stdio test files,
-`test_sdk`, `test_agent_undo` and `test_azure_pilot` pass.
+**Exit:** `test_direct_mutations`, `test_trust_features`, the five direct stdio test
+files, `test_sdk`, `test_agent_undo` and `test_azure_pilot` pass.
 
 ### Phase 6 — Export, import and upgrade (medium)
 
 - [ ] `transfer.py` per §4.8.
 - [ ] Check in a small version 1 export produced at `v0.0.1-postgres` as a fixture.
 - [ ] Tests: a version 2 round trip is exact; the version 1 fixture imports with the
-      same IDs, `seq`, values and HEADs; a pre-upgrade request ID replays its receipt.
+      same IDs, `seq`, values and HEADs; a pre-upgrade request ID replays its receipt;
+      a retracted memory and its `retract` receipt round-trip (add this test on
+      Postgres first: nothing covers it today).
 
 **Exit:** `test_transfer` passes and the upgrade steps are written into the README.
 
@@ -403,23 +414,29 @@ works. Never run it against the owner's real agent configuration.
 
 ### Phase 8 — Gate and cut-over (small, plus eval cost)
 
-- [ ] Three agent-eval runs against the installed SQLite build. Pass: across the 30
-      scenario runs, no fewer passes than the Phase 0 baseline and no new tool errors.
-      Read the transcript of every failure.
+- [ ] Three agent-eval runs against the installed SQLite build. Pass: across the 36
+      scenario runs, no fewer passes than the Postgres baseline and no new tool errors.
+      The baseline is the 12-scenario `runs/trust` run (12 of 12, one tool error) plus
+      the Phase 0 runs still to be made. Read the transcript of every failure.
 - [ ] Record install time, first-search latency, memory per server and file size.
 - [ ] Make `local` the default backend (decide `bge-small` against `bge-base` on the
       eval and on memory use), set the version to 0.1.0, fast-forward
       `sqlite` into `main`, delete the branch.
 
-## 6. Tests (55 files today)
+## 6. Tests (33 files after Phase 2)
+
+Phase 2 removed the 24 pipeline files and `test_mcp_direct_stdio` (it drove the legacy
+server), and split `test_temporal_cache`, `test_demo` and `test_web`. Since then
+`test_trust_features` and `test_mcp_trust_stdio` were added.
 
 | Action | Count | Files |
 |---|---|---|
-| Remove with the pipeline | 24 | `test_audit`, `test_azure_extractor`, `test_azure_judge`, `test_decay`, `test_eval`, `test_eval_audit`, `test_eval_equivalence`, `test_eval_failures`, `test_eval_traceability`, `test_extraction_evidence`, `test_extraction_fidelity`, `test_extraction_partial`, `test_extraction_report_rejections`, `test_identity_routing`, `test_identity_suite`, `test_lasting_policy`, `test_mcp`, `test_mcp_stdio`, `test_measurement`, `test_quality`, `test_runtime_config`, `test_twotier`, `test_verifier_assertions`, `test_worker_reliability` |
 | Remove in Phase 4 (HNSW plans) | 1 | `test_retrieval_plan` |
-| Split | 3 | `test_temporal_cache` (keep validity and history, drop cache and decay), `test_demo` (keep the direct demo), `test_web` (drop the operations page) |
 | Rewrite | 3 | `test_schema`, `test_services`, `test_transfer` |
-| Port (fixtures and SQL only) | 24 | `test_agent_eval`, `test_agent_undo`, `test_azure_pilot`, `test_cli`, `test_config`, `test_core`, `test_council`, `test_diff`, `test_direct_mutations`, `test_embeddings`, `test_foundation_integrity`, `test_identity`, `test_install`, `test_lifecycle`, `test_mcp_direct_profile`, `test_mcp_direct_profile_stdio`, `test_mcp_direct_stdio`, `test_mcp_request_ids_stdio`, `test_mcp_service_errors_stdio`, `test_mcp_shared_scope_stdio`, `test_packaging`, `test_project`, `test_sdk`, `test_search` |
+| Port (fixtures and SQL only) | 28 | `test_agent_eval`, `test_agent_undo`, `test_azure_pilot`, `test_cli`, `test_config`, `test_core`, `test_council`, `test_demo`, `test_diff`, `test_direct_mutations`, `test_embeddings`, `test_foundation_integrity`, `test_identity`, `test_install`, `test_lifecycle`, `test_mcp_direct_profile`, `test_mcp_direct_profile_stdio`, `test_mcp_request_ids_stdio`, `test_mcp_service_errors_stdio`, `test_mcp_shared_scope_stdio`, `test_mcp_trust_stdio`, `test_packaging`, `test_project`, `test_sdk`, `test_search`, `test_temporal_cache`, `test_trust_features`, `test_web` |
+
+`tests/conftest.py::legacy_archive` writes an archived HEAD with Postgres SQL (casts,
+`RETURNING`); port it with the fixtures. `test_retrieval_quality` runs unchanged.
 
 ## 7. Contract and document changes to approve
 
@@ -452,11 +469,11 @@ works. Never run it against the owner's real agent configuration.
 
 ## 9. Follow-ups, deliberately not in this plan
 
-From the November 14 review: a retract tool for a newly created memory; a source on
-every write mapped to provenance and trust; actor, time and trust in search hits;
-recency in ranking; near-duplicate detection on create; OpenCode in the installer;
-the unauthenticated manual-correction form; UI searches changing recall counters; a
-hash chain for tamper evidence.
+From the November 14 review, still open: recency in ranking; near-duplicate detection
+on create; the unauthenticated manual-correction form; UI searches changing recall
+counters; a hash chain for tamper evidence; an archived HEAD left by the old decay job
+cannot be revived through the direct API. Done since (spec §24–§25): retract, source
+on writes, actor/time/trust in hits, OpenCode in the installer.
 
 The port settles three findings on its own: the superuser password and open port
 disappear, `%` and `_` in a query become literal, and with decay archived Mnemo can no
