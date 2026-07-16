@@ -24,8 +24,9 @@ search hits show who wrote each memory, when and how far to trust it, and
 new one, reversibly ([spec §24](PROJECT_SPEC.md#24-trust-sources-hit-metadata-and-retraction--november-15-2026)).
 `mnemo install` now also connects OpenCode ([spec §25](PROJECT_SPEC.md#25-opencode-in-the-installer--november-15-2026));
 a temporary-home run of the installer produced a config that OpenCode 1.18.34 lists as
-connected. Next, in the owner's order: an agent eval with a poisoning scenario, then
-the SQLite port ([plan](docs/SQLITE_PLAN.md)).
+connected. The agent eval, with two poisoning scenarios added, passed 12 of 12
+([results](docs/agent-eval/README.md#trust-features-and-poisoning-november-15-2026)).
+Next: the SQLite port ([plan](docs/SQLITE_PLAN.md)).
 
 ## Shared memory for coding agents (September 26, 2026)
 

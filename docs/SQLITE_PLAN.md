@@ -3,7 +3,7 @@
 **Status: the owner asked for it to be implemented (November 14, 2026). Verified and
 corrected (§3.1); Phase 0's test, Phase 1 and Phase 2 are done (D2 and D5 approved).
 The owner put the trust features (§9) and an agent eval with a poisoning scenario
-before Phase 3.** It changes the pinned stack, the schema and several spec
+before Phase 3; both are done (spec §24–§25, eval 12 of 12). Phase 3 is next.** It changes the pinned stack, the schema and several spec
 contracts under `AGENTS.md` rule 6. Checkout: `446e4b7`.
 
 > **For the executing agent:** read `PROJECT_SPEC.md`, `AGENTS.md`, then this file.
