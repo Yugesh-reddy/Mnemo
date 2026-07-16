@@ -214,7 +214,6 @@ def opencode_config(text: str, path: Path, entry: dict | None) -> str:
         if not mcp:
             data.pop("mcp")
     else:
-        data.setdefault("$schema", "https://opencode.ai/config.json")
         data.setdefault("mcp", {}).setdefault("servers", {})["mnemo"] = entry
     return json.dumps(data, indent=2) + "\n"
 
@@ -345,7 +344,11 @@ def plan(
     runner: Runner,
     claude_auto_memory: str | None = None,
     opencode_dir: Path | None = None,
+    opencode_optional: bool = False,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
+    """Commands, file changes and notes for the agents. ``opencode_optional``: OpenCode
+    was detected rather than requested, so a config mnemo-install must not rewrite
+    skips OpenCode with a note instead of stopping the other agents."""
     commands: list[Command] = []
     notes: list[str] = []
     policy = policy_text()
@@ -418,10 +421,17 @@ def plan(
             if uninstall
             else opencode_entry(command, server_env(settings, "opencode", backend))
         )
-        edit(config_path, lambda text: opencode_config(text, config_path, entry))
-        rules = opencode_rules_path(opencode_dir, claude_dir)
-        if rules == claude_dir / "CLAUDE.md":
-            if not uninstall:
+        try:
+            edit(config_path, lambda text: opencode_config(text, config_path, entry))
+        except InstallError as exc:
+            if not opencode_optional:
+                raise
+            notes.append(f"Skipped OpenCode: {exc}")
+        else:
+            rules = opencode_rules_path(opencode_dir, claude_dir)
+            if rules != claude_dir / "CLAUDE.md":
+                edit(rules, policy_block)
+            elif not uninstall:
                 notes.append(
                     f"OpenCode reads {rules} (it has no AGENTS.md of its own), so the policy "
                     "for OpenCode goes there."
@@ -429,8 +439,6 @@ def plan(
                 edit(rules, policy_block)
             elif "claude" not in agents:
                 notes.append(f"The policy stays in {rules}, which Claude Code also reads.")
-        else:
-            edit(rules, policy_block)
     changes = [FileChange(path, before, after) for path, (before, after) in texts.items()]
     return commands, [c for c in changes if c.before != c.after], notes
 
@@ -592,6 +600,7 @@ def main(
             runner=run,
             claude_auto_memory=args.claude_auto_memory,
             opencode_dir=opencode_dir,
+            opencode_optional=not (args.agent and "opencode" in args.agent),
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)

@@ -683,6 +683,10 @@ operations.
   `mcp.servers.mnemo = {type: "local", command: [<mnemo-mcp-direct>], environment}`
   with `MNEMO_ACTOR=opencode`, the shape OpenCode's current schema documents
   (`mcp.<name>` is deprecated there; 1.18.34 accepts both).
+- When OpenCode was detected rather than named with `--agent opencode`, a config the
+  installer must not rewrite (below) skips OpenCode with a note, and Claude Code and
+  Codex are still set up; with `--agent opencode` it stops the install (exit 2).
+  Uninstall follows the same rule.
 - Config file: an existing `opencode.jsonc`, else `opencode.json`. Plain JSON is
   rewritten keeping every other setting. JSONC with comments or trailing commas is
   never rewritten: when it already holds the same entry nothing happens, otherwise

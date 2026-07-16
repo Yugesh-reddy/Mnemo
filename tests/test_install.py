@@ -393,7 +393,7 @@ async def test_migrate_checks_the_dimension_it_is_given_not_the_global_one(_disp
 
 # ---- OpenCode ---------------------------------------------------------------
 
-OPENCODE = {"$schema": "https://opencode.ai/config.json", "model": "anthropic/claude-x"}
+OPENCODE = {"model": "anthropic/claude-x"}
 
 
 def opencode_server(opencode: Path) -> dict:
@@ -504,3 +504,30 @@ def test_an_unmanaged_opencode_server_stops_the_install(homes, tmp_path, capsys,
 def test_strip_jsonc_keeps_strings_intact():
     text = '{ // c\n "a": "x,}//y /* z */", /* b */ "l": [1, 2,],\n}'
     assert json.loads(inst.strip_jsonc(text)) == {"a": "x,}//y /* z */", "l": [1, 2]}
+
+
+def test_a_detected_opencode_config_it_cannot_rewrite_skips_only_opencode(homes, tmp_path, capsys):
+    """Commented JSONC is common; it must not stop Claude Code and Codex being set up."""
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    jsonc = '{\n  // my theme\n  "theme": "dark",\n}\n'
+    (opencode / "opencode.jsonc").write_text(jsonc)
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    out = capsys.readouterr().out
+    assert "Skipped OpenCode" in out and '"mnemo"' in out
+    assert (opencode / "opencode.jsonc").read_text() == jsonc
+    assert not (opencode / "AGENTS.md").exists()
+    assert inst.policy_text().strip() in (claude / "CLAUDE.md").read_text()
+    assert "mnemo" in tomllib.loads((codex / "config.toml").read_text())["mcp_servers"]
+
+    # The same applies to uninstalling: the pasted entry is left with a note.
+    entry = inst.opencode_entry(
+        inst.server_command(), inst.server_env(inst.get_settings(), "opencode", "ollama")
+    )
+    pasted = '{\n  // my theme\n  "mcp": ' + json.dumps({"servers": {"mnemo": entry}}) + ",\n}\n"
+    (opencode / "opencode.jsonc").write_text(pasted)
+    assert inst.main(args(claude, codex, "--uninstall", "--yes"), runner=FakeCli()) == 0
+    assert "Skipped OpenCode" in capsys.readouterr().out
+    assert (opencode / "opencode.jsonc").read_text() == pasted
+    assert (codex / "config.toml").read_text() == EXISTING_TOML

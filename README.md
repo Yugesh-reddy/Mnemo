@@ -83,7 +83,7 @@ Seven MCP tools, served by `mnemo-mcp-direct`:
 
 | Tool | Contract |
 |---|---|
-| `memory_create` | Save a new memory in the project (default) or global scope, with its `source`: `user` (high trust), `tool` (medium) or `agent` (low, the default). An existing subject/predicate in that scope returns `ALREADY_EXISTS` with its ID. |
+| `memory_create` | Save a new memory in the project (default) or global scope, with its `source`: `user` (high trust), `tool` (medium) or `agent` (low, the default). Trust is what the writing agent claims; the recorded actor, the history and retract are the defence when an agent is wrong or misled. An existing subject/predicate in that scope returns `ALREADY_EXISTS` with its ID. |
 | `memory_get` | Read the current value and event ID, or a full historical value and whether it can be restored. |
 | `memory_search` | Search the project and global scopes; hits carry fact ID, event ID, scope, who wrote the value (`actor`), when (`recorded_at`) and its `provenance` and `trust_level`. |
 | `memory_update` | Change a memory by fact ID, passing the event ID you read as `expected_event_id`, with its `source`. |
