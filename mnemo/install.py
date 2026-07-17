@@ -7,8 +7,8 @@
 Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``) and the
 policy in ``~/.claude/CLAUDE.md``. Codex gets an ``[mcp_servers.mnemo]`` table with its
 tools pre-approved in ``$CODEX_HOME/config.toml`` and the policy in
-``$CODEX_HOME/AGENTS.md``. OpenCode (when installed) gets ``mcp.servers.mnemo`` in its
-global ``opencode.json`` and the policy in its global ``AGENTS.md``, or in
+``$CODEX_HOME/AGENTS.md``. OpenCode (when installed) gets a ``mnemo`` server under ``mcp``
+in its global ``opencode.json`` and the policy in its global ``AGENTS.md``, or in
 ``~/.claude/CLAUDE.md`` while OpenCode is reading that file instead. Text written into a
 file sits between mnemo markers, so it can be updated or removed without touching the
 rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one database,
@@ -163,11 +163,13 @@ def _ours(entry: object) -> bool:
 
 
 def opencode_config(text: str, path: Path, entry: dict | None) -> str:
-    """The config with mcp.servers.mnemo set to ``entry`` (None removes it).
+    """The config with the mnemo MCP server set to ``entry`` (None removes it).
 
-    Plain JSON is rewritten with its other settings kept. A JSONC file with comments
-    or trailing commas would lose them, so it is only left alone when it already says
-    the same; otherwise the error shows the entry to paste.
+    The entry goes directly under "mcp", the layout every OpenCode version reads,
+    unless the file already groups its servers under "mcp.servers" (the newer layout),
+    in which case it goes there. Plain JSON is rewritten with its other settings kept.
+    A JSONC file with comments or trailing commas would lose them, so it is only left
+    alone when it already says the same; otherwise the error shows the entry to paste.
     """
     plain = True
     try:
@@ -181,40 +183,42 @@ def opencode_config(text: str, path: Path, entry: dict | None) -> str:
     if not isinstance(data, dict):
         raise InstallError(f"{path} is not a JSON object")
     mcp = data.get("mcp", {})
-    servers = mcp.get("servers", {}) if isinstance(mcp, dict) else {}
-    legacy = mcp.get("mnemo") if isinstance(mcp, dict) else None
-    current = servers.get("mnemo") if isinstance(servers, dict) else None
-    for found in (current, legacy):
-        if found is not None and not _ours(found):
-            raise InstallError(
-                f"{path} already defines an MCP server named mnemo that mnemo-install did "
-                "not write; remove or rename it first"
-            )
-    if legacy is not None:
+    if not isinstance(mcp, dict):
+        raise InstallError(f'"mcp" in {path} is not an object; fix it first')
+    grouped = mcp.get("servers")
+    # An object without "type" is the newer grouping, not a server named "servers".
+    nested = isinstance(grouped, dict) and "type" not in grouped
+    places = [mcp, grouped] if nested else [mcp]
+    found = [place["mnemo"] for place in places if "mnemo" in place]
+    if not all(_ours(existing) for existing in found):
         raise InstallError(
-            f'{path} defines mnemo in the deprecated "mcp" shape; delete "mcp.mnemo" and '
-            "run mnemo-install again"
+            f"{path} already defines an MCP server named mnemo that mnemo-install did "
+            "not write; remove or rename it first"
         )
-    if current == entry:
+    home = grouped if nested else mcp
+    if found == ([] if entry is None else [entry]) and (entry is None or "mnemo" in home):
         return text
     if not plain:
-        snippet = json.dumps({"mcp": {"servers": {"mnemo": entry}}}, indent=2)
+        where = '"mcp" > "servers"' if nested else '"mcp"'
+        snippet = {"mcp": {"servers": {"mnemo": entry}} if nested else {"mnemo": entry}}
         action = (
-            f"add this to it:\n{snippet}"
+            f"add this to it:\n{json.dumps(snippet, indent=2)}"
             if entry is not None
-            else 'delete "mnemo" under "mcp" > "servers"'
+            else f'delete "mnemo" under {where}'
         )
         raise InstallError(
             f"{path} has comments or trailing commas, which rewriting would lose; {action}"
         )
-    if entry is None:
-        del servers["mnemo"]
-        if not servers:
+    for place in places:
+        place.pop("mnemo", None)
+    if entry is not None:
+        home["mnemo"] = entry
+        data["mcp"] = mcp
+    else:
+        if nested and not grouped:
             mcp.pop("servers")
         if not mcp:
-            data.pop("mcp")
-    else:
-        data.setdefault("mcp", {}).setdefault("servers", {})["mnemo"] = entry
+            data.pop("mcp", None)
     return json.dumps(data, indent=2) + "\n"
 
 
@@ -286,6 +290,15 @@ class FileChange:
     path: Path
     before: str
     after: str
+    remove_if_empty: bool = False
+    """Delete the file rather than leave it empty (its mere existence means something)."""
+
+    def apply(self) -> None:
+        if self.after == "" and self.remove_if_empty:
+            self.path.unlink(missing_ok=True)
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.path.write_text(self.after)
 
     def diff(self) -> str:
         return "".join(
@@ -353,6 +366,7 @@ def plan(
     notes: list[str] = []
     policy = policy_text()
     texts: dict[Path, tuple[str, str]] = {}  # path -> (on disk, planned)
+    remove_if_empty: set[Path] = set()
 
     def edit(path: Path, change: Callable[[str], str]) -> None:
         before, current = texts.get(path, (_read(path), _read(path)))
@@ -431,6 +445,8 @@ def plan(
             rules = opencode_rules_path(opencode_dir, claude_dir)
             if rules != claude_dir / "CLAUDE.md":
                 edit(rules, policy_block)
+                # An empty AGENTS.md would still stop OpenCode reading ~/.claude/CLAUDE.md.
+                remove_if_empty.add(rules)
             elif not uninstall:
                 notes.append(
                     f"OpenCode reads {rules} (it has no AGENTS.md of its own), so the policy "
@@ -439,7 +455,10 @@ def plan(
                 edit(rules, policy_block)
             elif "claude" not in agents:
                 notes.append(f"The policy stays in {rules}, which Claude Code also reads.")
-    changes = [FileChange(path, before, after) for path, (before, after) in texts.items()]
+    changes = [
+        FileChange(path, before, after, path in remove_if_empty)
+        for path, (before, after) in texts.items()
+    ]
     return commands, [c for c in changes if c.before != c.after], notes
 
 
@@ -678,8 +697,7 @@ def main(
             print(f"mnemo-install: failed: {step.description}\n{result.stderr}", file=sys.stderr)
             return 1
     for change in changes:
-        change.path.parent.mkdir(parents=True, exist_ok=True)
-        change.path.write_text(change.after)
+        change.apply()
     print("Done. Start new agent sessions to pick up the changes.")
     return 0
 

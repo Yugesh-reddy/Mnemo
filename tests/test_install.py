@@ -397,7 +397,7 @@ OPENCODE = {"model": "anthropic/claude-x"}
 
 
 def opencode_server(opencode: Path) -> dict:
-    return json.loads((opencode / "opencode.json").read_text())["mcp"]["servers"]["mnemo"]
+    return json.loads((opencode / "opencode.json").read_text())["mcp"]["mnemo"]
 
 
 def test_opencode_gets_a_server_and_its_own_policy_file(homes, tmp_path):
@@ -531,3 +531,56 @@ def test_a_detected_opencode_config_it_cannot_rewrite_skips_only_opencode(homes,
     assert "Skipped OpenCode" in capsys.readouterr().out
     assert (opencode / "opencode.jsonc").read_text() == pasted
     assert (codex / "config.toml").read_text() == EXISTING_TOML
+
+
+def test_opencode_entry_follows_the_layout_the_file_already_uses(homes, tmp_path):
+    """Directly under "mcp" works on every OpenCode; "mcp.servers" only on newer ones."""
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    other = {"type": "local", "command": ["other-server"]}
+    run = lambda *extra: inst.main(  # noqa: E731
+        args(claude, codex, "--agent", "opencode", "--yes", *extra), runner=FakeCli()
+    )
+
+    flat = {"mcp": {"other": other, "servers": {"type": "local", "command": ["named-servers"]}}}
+    (opencode / "opencode.json").write_text(json.dumps(flat))
+    assert run() == 0
+    written = json.loads((opencode / "opencode.json").read_text())["mcp"]
+    assert written["mnemo"]["type"] == "local" and written["servers"] == flat["mcp"]["servers"]
+    assert run("--uninstall") == 0
+    assert json.loads((opencode / "opencode.json").read_text()) == flat
+
+    nested = {"mcp": {"servers": {"other": other}, "timeout": {"startup": 1000}}}
+    (opencode / "opencode.json").write_text(json.dumps(nested))
+    assert run() == 0
+    written = json.loads((opencode / "opencode.json").read_text())["mcp"]
+    assert set(written["servers"]) == {"other", "mnemo"} and "mnemo" not in written
+    assert run("--uninstall") == 0
+    assert json.loads((opencode / "opencode.json").read_text()) == nested
+
+
+def test_a_malformed_opencode_mcp_setting_stops_cleanly(homes, tmp_path, capsys):
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    (opencode / "opencode.json").write_text('{"mcp": []}')
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 2
+    assert "is not an object" in capsys.readouterr().err
+    assert (opencode / "opencode.json").read_text() == '{"mcp": []}'
+
+
+def test_uninstall_removes_the_opencode_rules_file_it_would_leave_empty(homes, tmp_path):
+    """An empty AGENTS.md would keep OpenCode from falling back to ~/.claude/CLAUDE.md."""
+    claude, codex = homes
+    opencode = tmp_path / "opencode"
+    assert inst.main(args(claude, codex, "--agent", "opencode", "--yes"), runner=FakeCli()) == 0
+    assert inst.policy_text().strip() in (opencode / "AGENTS.md").read_text()
+    assert (
+        inst.main(
+            args(claude, codex, "--agent", "opencode", "--uninstall", "--yes"), runner=FakeCli()
+        )
+        == 0
+    )
+    assert not (opencode / "AGENTS.md").exists()
+    assert json.loads((opencode / "opencode.json").read_text()) == {}
