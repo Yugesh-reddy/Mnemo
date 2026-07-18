@@ -1,6 +1,6 @@
 """Scripted direct-write SDK demo; defaults to non-semantic hash embeddings.
 
-Run ``make demo-direct`` without a model server, or ``python -m
+Run ``make demo`` without a model server, or ``python -m
 examples.direct_memory`` to honor a backend explicitly configured in the
 environment or .env. Exercises guarded revisions and durable retries via Mnemo.direct.
 """

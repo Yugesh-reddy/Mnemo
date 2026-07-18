@@ -101,19 +101,28 @@ async def _fact_response(
     ):
         fact = await store.get(fact_id)
         history = await store.blame(fact_id=fact_id)
-    head = next((e for e in history if fact and e.event_id == fact.event_id), None)
+        retracted = None
+        if fact is None and history:
+            try:  # a retracted memory is hidden from store.get but can be restored
+                retracted = await DirectMemory(store).get(fact_id)
+            except MnemoError:
+                pass
+    head_id = fact.event_id if fact else retracted.current_event_id if retracted else None
+    head = next((e for e in history if e.event_id == head_id), None)
     request_ids = {
         event.event_id: uuid4()
         for event in history
-        if DirectMemory._eligible(head)
+        if (DirectMemory._eligible(head) or retracted is not None)
         and DirectMemory._eligible(event)
-        and event.event_id != head.event_id
+        and event.event_id != head_id
     }
     return TEMPLATES.TemplateResponse(
         request,
         "fact.html",
         {
             "fact": fact,
+            "retracted": retracted,
+            "head_id": head_id,
             "history": list(reversed(history)),
             "fact_id": fact_id,
             "request_ids": request_ids,

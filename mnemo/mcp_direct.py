@@ -406,7 +406,7 @@ async def memory_retract(
             expected_event_id=_id(expected_event_id, "expected_event_id"),
             request_id=_request_id(request_id),
             actor=_actor(_settings()),
-            reason=reason,
+            reason=reason if reason and reason.strip() else None,  # "" means no reason
         ),
         fact_id=fact_id,
     )

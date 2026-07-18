@@ -18,7 +18,6 @@ jobs:
       MNEMO_REQUIRE_DB: '1'
       MNEMO_DSN: postgresql://mnemo:mnemo@localhost:5432/mnemo
       MNEMO_TEST_DSN: postgresql://mnemo:mnemo@localhost:5432/mnemo_test
-      MNEMO_VERIFIER_BACKEND: heuristic
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -28,7 +27,7 @@ jobs:
       - run: make lint
       - run: make test-db
       - run: make migrate
-      - run: make eval
+      - run: make demo
       - run: uv build
       - run: bash scripts/check-wheel.sh
       - uses: actions/upload-artifact@v4

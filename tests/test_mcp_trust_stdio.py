@@ -47,6 +47,27 @@ async def test_another_agent_retracts_a_planted_memory_and_can_restore_it(
                 )
             )
             assert retracted["status"] == "applied" and retracted["scope"] == "project"
+            # An empty reason is "no reason", not an error.
+            unneeded = payload(
+                await codex.call_tool(
+                    "memory_retract",
+                    {
+                        "fact_id": told["fact_id"],
+                        "expected_event_id": told["event_id"],
+                        "reason": "",
+                    },
+                )
+            )
+            payload(
+                await codex.call_tool(
+                    "memory_revert",
+                    {
+                        "fact_id": told["fact_id"],
+                        "to_event_id": told["event_id"],
+                        "expected_event_id": unneeded["event_id"],
+                    },
+                )
+            )
             hits = payload(await claude.call_tool("memory_search", {"query": "command"}))["hits"]
             assert [hit["fact_id"] for hit in hits] == [told["fact_id"]]
             current = payload(await claude.call_tool("memory_get", {"fact_id": planted["fact_id"]}))

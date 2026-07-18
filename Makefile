@@ -34,7 +34,7 @@ fmt:  ## ruff --fix + black
 	$(RUN) ruff check --fix .
 	$(RUN) black .
 
-mcp:  ## Run the six guarded memory tools over MCP (stdio)
+mcp:  ## Run the seven guarded memory tools over MCP (stdio)
 	$(RUN) python -m mnemo.mcp_direct
 
 agents:  ## Install the mnemo tool from this checkout, then connect the coding agents

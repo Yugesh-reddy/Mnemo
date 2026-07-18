@@ -16,6 +16,7 @@ import pytest
 from httpx import ASGITransport
 
 from mnemo.core import MnemoStore
+from mnemo.direct import DirectMemory
 from web.app import app, get_store
 
 
@@ -193,6 +194,26 @@ async def test_unrestorable_revisions_have_no_form_and_cannot_be_posted(store, w
     assert response.status_code == 409
     assert (await store.get(target.fact_id)).event_id == latest.event_id
     assert len(await store.blame(fact_id=target.fact_id)) == before
+
+
+async def test_a_retracted_memory_can_be_restored_from_its_page(store, web_client):
+    """An agent can be misled into retracting a good memory; a human must be able to undo it."""
+    d = DirectMemory(store)
+    first = await d.create("tests", "command", "make test-db", request_id=uuid4())
+    gone = await d.retract(
+        first.fact_id, expected_event_id=first.event_id, request_id=uuid4(), reason="oops"
+    )
+    url = f"/fact/{first.fact_id}"
+    page = (await web_client.get(url)).text
+    assert "was retracted" in page and "retracted: oops" in page
+    forms = Forms(page).forms
+    assert set(forms) == {f"{url}/revert/{first.event_id}"}  # not the retraction itself
+    form = forms[f"{url}/revert/{first.event_id}"]
+    assert form["expected_event_id"] == str(gone.event_id)
+    response = await web_client.post(f"{url}/revert/{first.event_id}", data=form)
+    assert response.status_code == 303
+    current = await d.get(first.fact_id)
+    assert (current.status, current.value) == ("active", "make test-db")
 
 
 async def test_unknown_revert_fact_returns_not_found(web_client):

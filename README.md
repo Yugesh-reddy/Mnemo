@@ -129,9 +129,11 @@ at another Codex home (a `codex` wrapper that pins one is detected), `--opencode
 at another OpenCode config directory, `--backend local` or `--backend hash` avoids
 Ollama, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
 
-OpenCode gets `mcp.servers.mnemo` in `~/.config/opencode/opencode.json`. A
-`opencode.jsonc` with comments is never rewritten: the installer prints the entry to
-paste instead. The policy goes into `~/.config/opencode/AGENTS.md`, or into
+OpenCode gets a `mnemo` server under `mcp` in `~/.config/opencode/opencode.json`
+(under `mcp.servers` when the file already groups its servers there, the newer
+layout). An `opencode.jsonc` with comments is never rewritten: the installer prints
+the entry to paste instead, and when OpenCode was only detected, not named with
+`--agent`, it sets up the other agents and skips OpenCode. The policy goes into `~/.config/opencode/AGENTS.md`, or into
 `~/.claude/CLAUDE.md` when OpenCode is reading that file because it has no
 `AGENTS.md` of its own (creating one would stop it reading CLAUDE.md).
 
@@ -175,12 +177,10 @@ OpenCode, in `~/.config/opencode/opencode.json`:
 ```json
 {
   "mcp": {
-    "servers": {
-      "mnemo": {
-        "type": "local",
-        "command": ["/Users/you/.local/bin/mnemo-mcp-direct"],
-        "environment": {"MNEMO_BACKEND": "ollama", "MNEMO_EMBED_DIM": "768", "MNEMO_ACTOR": "opencode"}
-      }
+    "mnemo": {
+      "type": "local",
+      "command": ["/Users/you/.local/bin/mnemo-mcp-direct"],
+      "environment": {"MNEMO_BACKEND": "ollama", "MNEMO_EMBED_DIM": "768", "MNEMO_ACTOR": "opencode"}
     }
   }
 }

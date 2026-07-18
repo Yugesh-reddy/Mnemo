@@ -35,10 +35,10 @@ from mnemo.mcp_direct import mcp
 
 JSON = dict[str, Any]
 Host = Callable[[list[JSON], list[JSON]], Awaitable[JSON]]
-MUTATIONS = {"memory_create", "memory_update", "memory_revert"}
+MUTATIONS = {"memory_create", "memory_update", "memory_revert", "memory_retract"}
 OPTIONS = {"temperature": 0, "seed": 7, "num_predict": 512, "num_ctx": 8192}
 SYSTEM = (
-    "You are a memory assistant using the six supplied tools. "
+    "You are a memory assistant using the supplied tools. "
     + (mcp.instructions or "")
     + " Only report a change as completed after a successful tool result. "
     "Use subject=user for the user's preferences, predicate=preferred_database for their "

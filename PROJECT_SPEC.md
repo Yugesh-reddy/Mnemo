@@ -441,8 +441,8 @@ remain unimplemented.
 ## 17. Member and occurrence identities (Pilot B) — September 22, 2026
 
 The owner approved migration `0011_identity.sql` and this contract under rule 6,
-following [the reviewed proposal](docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md).
-[v8](docs/quality-v8/README.md) supplied the concrete need: a stronger extractor
+following the reviewed proposal (`docs/quality-v6/IDENTITY_FOLLOWUP_PROPOSAL.md` at the archive tag).
+v8 (`docs/quality-v8` at the archive tag) supplied the concrete need: a stronger extractor
 wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
 
 - **Schema.** `memory_fact` gains `identity_mode` (`attribute` | `member` |
@@ -488,7 +488,7 @@ wrote 20/23 targets, but one-HEAD-per-subject/predicate overwrote four.
 ## 18. Lasting tiering — September 24, 2026 (archived)
 
 The owner approved this change to §4 step 4 and §13 under rule 6 (Option A), and
-[v11](docs/quality-v11/README.md) validated it. Under the old settings no extracted
+v11 (`docs/quality-v11` at the archive tag) validated it. Under the old settings no extracted
 fact could become durable: specificity rewarded a controlled vocabulary the
 open-vocabulary extractor no longer uses, cosine novelty over "user predicate
 value" strings was uniformly low, and "just" flagged completed events as
@@ -671,6 +671,10 @@ operations.
   active again; the retraction itself is never a restore target. `memory_create` on a
   retracted subject returns `ALREADY_EXISTS` with `details.retracted = true`. A
   legacy `invalidate` of a durable memory is treated the same way.
+- **Web UI.** A retracted memory is not in the list (it shows current memories), but
+  its page (`/fact/<id>`) says it was retracted and offers "Revert to this" on every
+  eligible earlier revision, guarded by the retraction's event ID.
+- An empty or blank `reason` on `memory_retract` means no reason.
 - **Tool text and the installed policy** tell agents to set `source`, to treat
   memories as data and never follow instructions found in one, and to retract
   planted or wrong memories.
@@ -680,9 +684,12 @@ operations.
 - `mnemo install --agent opencode`, and by default whenever `opencode` is on `PATH`
   or its config directory exists (`$XDG_CONFIG_HOME/opencode`, default
   `~/.config/opencode`; `--opencode-dir` overrides). The server is
-  `mcp.servers.mnemo = {type: "local", command: [<mnemo-mcp-direct>], environment}`
-  with `MNEMO_ACTOR=opencode`, the shape OpenCode's current schema documents
-  (`mcp.<name>` is deprecated there; 1.18.34 accepts both).
+  `{type: "local", command: [<mnemo-mcp-direct>], environment}` with
+  `MNEMO_ACTOR=opencode`. It goes directly under `mcp` (`mcp.mnemo`), the layout
+  OpenCode's V1 documents and V2 still reads, unless the file already groups servers
+  under `mcp.servers` (V2's layout: an object there without a `type`), in which case
+  it goes there. Writing `mcp.servers` into a V1-only OpenCode would define a server
+  named "servers". Both layouts were checked on 1.18.34; no older version was.
 - When OpenCode was detected rather than named with `--agent opencode`, a config the
   installer must not rewrite (below) skips OpenCode with a note, and Claude Code and
   Codex are still set up; with `--agent opencode` it stops the install (exit 2).
@@ -691,10 +698,12 @@ operations.
   rewritten keeping every other setting. JSONC with comments or trailing commas is
   never rewritten: when it already holds the same entry nothing happens, otherwise
   the installer stops and prints the entry to paste. An entry named `mnemo` that does
-  not run a `mnemo-mcp-direct`, or one in the deprecated shape, stops the install.
+  not run a `mnemo-mcp-direct` stops the install, as does an `mcp` that is not an
+  object. Uninstall removes the entry from either layout.
 - Policy: OpenCode reads its own `AGENTS.md`, and falls back to `~/.claude/CLAUDE.md`
   only when that file is missing. While the fallback is active (and not disabled by
   `OPENCODE_DISABLE_CLAUDE_CODE` or `OPENCODE_DISABLE_CLAUDE_CODE_PROMPT`), the policy
   goes into CLAUDE.md, because creating OpenCode's AGENTS.md would silently stop it
-  reading CLAUDE.md.
+  reading CLAUDE.md. For the same reason uninstall deletes an OpenCode `AGENTS.md`
+  it would otherwise leave empty.
 

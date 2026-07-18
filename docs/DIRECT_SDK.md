@@ -38,8 +38,7 @@ page = memory.direct.history(created.fact_id, limit=20)
 hits = memory.direct.search_direct("PostgreSQL", limit=5)
 ```
 
-For a model-free local check, set `MNEMO_BACKEND=hash` and
-`MNEMO_WORKER_ENABLED=false` before running the example. Hash embeddings are
+For a model-free local check, set `MNEMO_BACKEND=hash` before running the example. Hash embeddings are
 deterministic test vectors; their similarity is not semantic relevance. Existing
 Ollama/OpenAI backends remain available.
 Close an Ollama/OpenAI embedder with `embedder.close()` when its owner shuts down.
