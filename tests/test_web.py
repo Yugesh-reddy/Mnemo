@@ -10,13 +10,13 @@ import re
 from html.parser import HTMLParser
 from uuid import UUID, uuid4
 
-import asyncpg
 import httpx
 import pytest
 from httpx import ASGITransport
 
 from mnemo.core import MnemoStore
 from mnemo.direct import DirectMemory
+from mnemo.sqlite import Connection
 from web.app import app, get_store
 
 
@@ -55,7 +55,7 @@ async def web_client(store):
         app.dependency_overrides.clear()
 
 
-async def test_list_shows_tier_and_importance(db: asyncpg.Connection, fake_embedder) -> None:
+async def test_list_shows_tier_and_importance(db: Connection, fake_embedder) -> None:
     store = MnemoStore(db, fake_embedder)
     await store.add(
         "user",
@@ -80,7 +80,7 @@ async def test_list_shows_tier_and_importance(db: asyncpg.Connection, fake_embed
         app.dependency_overrides.clear()
 
 
-async def test_list_blame_revert_flow(db: asyncpg.Connection, fake_embedder) -> None:
+async def test_list_blame_revert_flow(db: Connection, fake_embedder) -> None:
     store = MnemoStore(db, fake_embedder)
     e1 = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"

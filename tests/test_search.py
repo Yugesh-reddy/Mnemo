@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import asyncpg
+from mnemo.sqlite import Connection
 
 
 async def test_fts_stemming_matches_inflected_query(store) -> None:
@@ -33,8 +33,8 @@ async def test_importance_boosts_rank_between_equal_matches(store) -> None:
     assert results[0].score is not None
 
 
-async def test_search_reinforces_returned_facts(store, db: asyncpg.Connection) -> None:
+async def test_search_reinforces_returned_facts(store, db: Connection) -> None:
     ev = await store.add("user", "name", "Sai", provenance="direct_user_statement")
     await store.search("name")
-    row = await db.fetchrow("SELECT recall_count FROM memory_event WHERE event_id=$1", ev.event_id)
+    row = await db.fetchrow("SELECT recall_count FROM memory_event WHERE event_id=?1", ev.event_id)
     assert row["recall_count"] == 1

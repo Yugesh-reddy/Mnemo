@@ -7,10 +7,10 @@ target's tier/importance.
 
 from __future__ import annotations
 
-import asyncpg
+from mnemo.sqlite import Connection
 
 
-async def test_add_defaults_to_durable_tier(store, db: asyncpg.Connection) -> None:
+async def test_add_defaults_to_durable_tier(store, db: Connection) -> None:
     ev = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"
     )
@@ -22,7 +22,7 @@ async def test_add_defaults_to_durable_tier(store, db: asyncpg.Connection) -> No
 
     row = await db.fetchrow(
         "SELECT tier, importance, write_score, strength, recall_count, last_used "
-        "FROM memory_event WHERE event_id=$1",
+        "FROM memory_event WHERE event_id=?1",
         ev.event_id,
     )
     assert row["tier"] == "durable"
@@ -30,7 +30,7 @@ async def test_add_defaults_to_durable_tier(store, db: asyncpg.Connection) -> No
     assert row["last_used"] is not None
 
 
-async def test_ephemeral_is_hidden_from_head_but_not_deleted(store, db: asyncpg.Connection) -> None:
+async def test_ephemeral_is_hidden_from_head_but_not_deleted(store, db: Connection) -> None:
     ev = await store.add(
         "user",
         "weather",
@@ -53,7 +53,7 @@ async def test_ephemeral_is_hidden_from_head_but_not_deleted(store, db: asyncpg.
     assert history[0].tier == "ephemeral"
 
 
-async def test_invalidate_hides_fact_reversibly(store, db: asyncpg.Connection) -> None:
+async def test_invalidate_hides_fact_reversibly(store, db: Connection) -> None:
     e1 = await store.add("user", "location", "Austin", provenance="direct_user_statement")
     inv = await store.invalidate(e1.fact_id, reason="user moved away")
     assert inv.op == "INVALIDATE"

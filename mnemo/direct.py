@@ -16,9 +16,7 @@ import binascii
 import json
 from collections.abc import Awaitable, Callable
 from typing import Any
-from uuid import UUID
-
-import asyncpg
+from uuid import UUID, uuid4
 
 from mnemo.core import _EVENT_COLS, MnemoStore, canonicalize, derive_trust
 from mnemo.errors import ErrorCode, MnemoError
@@ -31,6 +29,7 @@ from mnemo.models import (
     MutationResult,
     SearchHit,
 )
+from mnemo.sqlite import Record
 
 SOURCES = {
     "agent": "agent_inference",  # the agent concluded it (low trust)
@@ -117,10 +116,10 @@ class DirectMemory:
             and event.expires_at is None
         )
 
-    async def _fact(self, fact_id: UUID) -> asyncpg.Record:
+    async def _fact(self, fact_id: UUID) -> Record:
         row = await self.store.conn.fetchrow(
             "SELECT fact_id, subject, predicate, current_event_id, status FROM memory_fact "
-            "WHERE fact_id=$1 AND namespace=$2 AND user_id=$3 AND agent_id=$4",
+            "WHERE fact_id=?1 AND namespace=?2 AND user_id=?3 AND agent_id=?4",
             fact_id,
             *self._scope,
         )
@@ -150,13 +149,13 @@ class DirectMemory:
 
     async def _reactivate(self, fact_id: UUID) -> None:
         await self.store.conn.execute(
-            "UPDATE memory_fact SET status='active' WHERE fact_id=$1", fact_id
+            "UPDATE memory_fact SET status='active' WHERE fact_id=?1", fact_id
         )
 
     async def _existing_key(self, fact_key: str) -> None:
         row = await self.store.conn.fetchrow(
             "SELECT fact_id, current_event_id, status FROM memory_fact "
-            "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND fact_key=$4 "
+            "WHERE namespace=?1 AND user_id=?2 AND agent_id=?3 AND fact_key=?4 "
             "AND identity_mode='attribute'",
             *self._scope,
             fact_key,
@@ -184,17 +183,17 @@ class DirectMemory:
         apply: Callable[[], Awaitable[MutationResult]],
     ) -> MutationResult:
         async with self.store.conn.transaction():
-            await self.store._lock_scope()
             receipt = await self.store.conn.fetchrow(
-                "SELECT operation, request_payload=$5::jsonb AS matches, result "
-                "FROM memory_mutation_receipt "
-                "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 AND request_id=$4",
+                "SELECT operation, request_payload, result FROM memory_mutation_receipt "
+                "WHERE namespace=?1 AND user_id=?2 AND agent_id=?3 AND request_id=?4",
                 *self._scope,
                 request_id,
-                json.dumps(payload, sort_keys=True),
             )
             if receipt is not None:
-                if receipt["operation"] != operation or not receipt["matches"]:
+                # Compared as JSON values, so a receipt imported from Postgres
+                # (formatted differently) still matches its retry.
+                matches = json.loads(receipt["request_payload"]) == payload
+                if receipt["operation"] != operation or not matches:
                     raise MnemoError(
                         ErrorCode.REQUEST_ID_REUSED,
                         "request_id was used for a different mutation",
@@ -219,8 +218,9 @@ class DirectMemory:
         await self.store.conn.execute(
             """INSERT INTO memory_mutation_receipt
                (namespace, user_id, agent_id, request_id, operation, request_payload, status,
-                fact_id, event_id, previous_event_id, restored_from_event_id, actor, result)
-               VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7,$8,$9,$10,$11,$12,$13::jsonb)""",
+                fact_id, event_id, previous_event_id, restored_from_event_id, actor, result,
+                receipt_id)
+               VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)""",
             *self._scope,
             request_id,
             operation,
@@ -232,6 +232,7 @@ class DirectMemory:
             result.restored_from_event_id,
             actor,
             result.model_dump_json(),
+            uuid4(),
         )
 
     async def create(
@@ -391,7 +392,7 @@ class DirectMemory:
         async def apply() -> MutationResult:
             head, retracted = await self._checked_head(fact_id, expected_event_id)
             row = await self.store.conn.fetchrow(
-                f"SELECT {_EVENT_COLS} FROM memory_event WHERE event_id=$1 AND fact_id=$2",
+                f"SELECT {_EVENT_COLS} FROM memory_event WHERE event_id=?1 AND fact_id=?2",
                 to_event_id,
                 fact_id,
             )
@@ -502,12 +503,10 @@ class DirectMemory:
                 recorded_at=fact.recorded_at,
             )
         self._uuid(event_id, "event_id")
-        async with self.store.conn.transaction(
-            isolation=None if self.store.conn.is_in_transaction() else "repeatable_read"
-        ):
+        async with self.store.conn.transaction(readonly=not self.store.conn.is_in_transaction()):
             fact = await self._fact(fact_id)
             row = await self.store.conn.fetchrow(
-                f"SELECT {_EVENT_COLS} FROM memory_event WHERE event_id=$1 AND fact_id=$2",
+                f"SELECT {_EVENT_COLS} FROM memory_event WHERE event_id=?1 AND fact_id=?2",
                 event_id,
                 fact_id,
             )
@@ -580,17 +579,15 @@ class DirectMemory:
             raise MnemoError(ErrorCode.INVALID_INPUT, "limit must be an integer")
         limit = max(1, min(limit, 100))
         bounds = self._decode_cursor(cursor, fact_id) if cursor is not None else None
-        async with self.store.conn.transaction(
-            isolation=None if self.store.conn.is_in_transaction() else "repeatable_read"
-        ):
+        async with self.store.conn.transaction(readonly=not self.store.conn.is_in_transaction()):
             # HEAD and the initial high-water mark share one statement snapshot,
             # including when the caller owns an outer transaction's isolation.
             fact = await self.store.conn.fetchrow(
                 "SELECT fact_id, current_event_id, "
                 "(SELECT COALESCE(max(seq),0) FROM memory_event e "
                 "WHERE e.fact_id=f.fact_id) AS max_seq "
-                "FROM memory_fact f WHERE fact_id=$1 "
-                "AND namespace=$2 AND user_id=$3 AND agent_id=$4",
+                "FROM memory_fact f WHERE fact_id=?1 "
+                "AND namespace=?2 AND user_id=?3 AND agent_id=?4",
                 fact_id,
                 *self._scope,
             )
@@ -599,7 +596,7 @@ class DirectMemory:
             maximum, before = bounds or (fact["max_seq"], fact["max_seq"] + 1)
             rows = await self.store.conn.fetch(
                 f"SELECT {_EVENT_COLS} FROM memory_event "
-                "WHERE fact_id=$1 AND seq <= $2 AND seq < $3 ORDER BY seq DESC LIMIT $4",
+                "WHERE fact_id=?1 AND seq <= ?2 AND seq < ?3 ORDER BY seq DESC LIMIT ?4",
                 fact_id,
                 maximum,
                 before,

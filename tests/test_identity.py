@@ -2,14 +2,14 @@
 
 import asyncio
 import json
+import sqlite3
 from uuid import UUID, uuid4
 
-import asyncpg
 import pytest
 
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector
+from mnemo.sqlite import clock, connect
 from tests.conftest import legacy_archive
 
 ZERO = UUID(int=0)
@@ -22,8 +22,7 @@ async def heads(store, predicate):
 @pytest.fixture
 async def committed(_disposable_test_db, fake_embedder):
     """Autocommit connection in a fresh namespace: now() advances between writes."""
-    conn = await asyncpg.connect(_disposable_test_db)
-    await register_vector(conn)
+    conn = await connect(_disposable_test_db)
     try:
         yield conn, "identity-" + uuid4().hex
     finally:
@@ -35,17 +34,18 @@ async def test_existing_facts_stay_attributes_and_the_schema_enforces_modes(stor
     fact = await store.get(event.fact_id)
     assert (fact.identity_mode, fact.identity_ref) == ("attribute", None)
     assert (
-        await db.fetchval("SELECT identity_ref FROM memory_fact WHERE fact_id=$1", event.fact_id)
+        await db.fetchval("SELECT identity_ref FROM memory_fact WHERE fact_id=?1", event.fact_id)
         == ZERO
     )
     for mode, ref in (("attribute", uuid4()), ("member", ZERO), ("bogus", uuid4())):
-        with pytest.raises(asyncpg.CheckViolationError):
+        with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint failed"):
             async with db.transaction():
                 await db.execute(
-                    "INSERT INTO memory_fact (subject, predicate, fact_key, identity_mode, "
-                    "identity_ref) VALUES ('user', 'x', 'user|x', $1, $2)",
+                    "INSERT INTO memory_fact (fact_id, subject, predicate, fact_key, "
+                    "identity_mode, identity_ref) VALUES (?3, 'user', 'x', 'user|x', ?1, ?2)",
                     mode,
                     ref,
+                    uuid4(),
                 )
 
 
@@ -157,7 +157,7 @@ async def test_historical_search_reads_members_as_of_their_time(committed, fake_
     first = await store.add(
         "user", "learned_to_make", "kimchi", identity_mode="member", identity_ref=uuid4()
     )
-    cut = await db.fetchval("SELECT clock_timestamp()")
+    cut = clock()
     await store.add(
         "user", "learned_to_make", "lasagna", identity_mode="member", identity_ref=uuid4()
     )
@@ -202,10 +202,8 @@ async def test_member_refs_are_scoped(db, fake_embedder):
 
 async def test_concurrent_retries_of_one_member_write_once(_disposable_test_db, fake_embedder):
     namespace, ref = "identity-race-" + uuid4().hex, uuid4()
-    conns = [await asyncpg.connect(_disposable_test_db) for _ in range(2)]
+    conns = [await connect(_disposable_test_db) for _ in range(2)]
     try:
-        for conn in conns:
-            await register_vector(conn)
         stores = [MnemoStore(c, fake_embedder, namespace=namespace) for c in conns]
         events = await asyncio.gather(
             *(
@@ -219,8 +217,8 @@ async def test_concurrent_retries_of_one_member_write_once(_disposable_test_db, 
         assert events[0].event_id == events[1].event_id
         assert (
             await conns[0].fetchval(
-                "SELECT count(*) FROM memory_event e JOIN memory_fact f USING (fact_id) "
-                "WHERE f.namespace=$1",
+                "SELECT count(*) FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id "
+                "WHERE f.namespace=?1",
                 namespace,
             )
             == 1
@@ -243,13 +241,17 @@ async def test_direct_create_is_create_only_for_the_attribute_identity(store):
     assert exc.value.code == ErrorCode.ALREADY_EXISTS
 
 
-async def test_export_round_trip_keeps_member_identity(_disposable_test_db, fake_embedder):
-    from mnemo.db import drop_isolated_schema, prepare_isolated_schema
+@pytest.mark.skip(reason="export and import are ported in Phase 6")
+async def test_export_round_trip_keeps_member_identity(_migrated_template, tmp_path, fake_embedder):
+    import shutil
+
     from mnemo.transfer import export_store, import_store
 
     settings = Settings(backend="hash")
-    schemas = ["mnemo_worker_" + uuid4().hex for _ in range(2)]
-    source, destination = [await prepare_isolated_schema(_disposable_test_db, s) for s in schemas]
+    paths = [tmp_path / "source.db", tmp_path / "destination.db"]
+    for path in paths:
+        shutil.copyfile(_migrated_template, path)
+    source, destination = [await connect(path) for path in paths]
     try:
         ref = uuid4()
         await MnemoStore(source, fake_embedder).add(
@@ -262,6 +264,5 @@ async def test_export_round_trip_keeps_member_identity(_disposable_test_db, fake
         [fact] = await MnemoStore(destination, fake_embedder).list_current()
         assert (fact.identity_mode, fact.identity_ref) == ("member", ref)
     finally:
-        for conn, schema in zip((source, destination), schemas, strict=True):
-            await drop_isolated_schema(conn, schema)
-            await conn.close()
+        await source.close()
+        await destination.close()

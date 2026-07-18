@@ -383,8 +383,8 @@ async def test_cancelled_pilot_saves_audit_before_dropping_only_its_database(
     admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
     try:
         assert not await admin.fetchval(
-            "SELECT 1 FROM pg_database WHERE datname=$1", report["database_name"]
+            "SELECT 1 FROM pg_database WHERE datname=?1", report["database_name"]
         )
-        assert await admin.fetchval("SELECT 1 FROM pg_database WHERE datname=$1", parts.path[1:])
+        assert await admin.fetchval("SELECT 1 FROM pg_database WHERE datname=?1", parts.path[1:])
     finally:
         await admin.close()

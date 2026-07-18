@@ -1,19 +1,18 @@
-"""Database helpers + a tiny forward-only migration runner.
+"""Open the store file and apply its schema.
 
 Migrations are plain ``.sql`` files in ``migrations/`` applied in filename order.
 Applied files are recorded in ``schema_migrations`` so re-runs are no-ops. The SQL
-is the product (CLAUDE.md golden rule #6) — this runner stays deliberately thin.
+is the product: this runner stays deliberately thin.
 """
 
 from __future__ import annotations
 
 import asyncio
-import re
 from pathlib import Path
 
-import asyncpg
-
 from mnemo.config import get_settings
+from mnemo.sqlite import Connection, StoreUnavailable
+from mnemo.sqlite import connect as open_store
 
 _PACKAGE_DIR = Path(__file__).resolve().parent
 MIGRATIONS_DIR = (
@@ -23,175 +22,95 @@ MIGRATIONS_DIR = (
 )
 
 
-def to_vector_literal(vec: list[float] | str | None) -> str | None:
-    """Format a vector as a pgvector text literal.
-
-    Idempotent: a string is assumed already-formatted and passed through. This also
-    serves as the asyncpg encoder, which may receive either form.
-    """
-    if vec is None:
-        return None
-    if isinstance(vec, str):
-        return vec
-    return "[" + ",".join(repr(float(x)) for x in vec) + "]"
+_HAS_TABLE = "SELECT 1 FROM sqlite_master WHERE type='table' AND name='schema_migrations'"
 
 
-def _decode_vector(text: str) -> list[float]:
-    text = text.strip()
-    if text in ("", "[]"):
-        return []
-    return [float(x) for x in text[1:-1].split(",")]
-
-
-async def register_vector(conn: asyncpg.Connection) -> None:
-    """Teach a connection to read pgvector columns as ``list[float]``.
-
-    Tolerant of the type not existing yet (e.g. before migrations run). Writes use
-    ``$n::vector`` literals, so this is only needed for reading embeddings back.
-    """
-    try:
-        await conn.set_type_codec(
-            "vector",
-            schema="public",
-            encoder=to_vector_literal,
-            decoder=_decode_vector,
-            format="text",
-        )
-    except asyncpg.exceptions.UndefinedObjectError:
-        pass
-    except ValueError as exc:
-        # asyncpg 0.31 reports a missing type this way before migrations install
-        # pgvector. Other codec errors still need to reach the caller.
-        if str(exc) != "unknown type: public.vector":
-            raise
-
-
-async def connect(dsn: str | None = None) -> asyncpg.Connection:
-    """Open a single asyncpg connection (caller owns closing it)."""
-    conn = await asyncpg.connect(dsn or get_settings().dsn)
-    try:
-        await register_vector(conn)
-        await validate_embedding_dimension(conn)
-    except Exception:
-        await conn.close()
-        raise
-    return conn
-
-
-async def validate_embedding_dimension(
-    conn: asyncpg.Connection, expected: int | None = None
-) -> None:
-    """Fail before writing if the configured model dimension disagrees with storage."""
-    expected = expected or get_settings().embed_dim
-    version = await conn.fetchval("SELECT extversion FROM pg_extension WHERE extname='vector'")
-    if version and tuple(map(int, version.split(".")[:2])) < (0, 8):
-        raise ValueError("pgvector >= 0.8 is required for filtered iterative HNSW retrieval")
-    for table in ("memory_event", "fast_cache"):
-        dimension = await conn.fetchval(
-            "SELECT atttypmod FROM pg_attribute "
-            "WHERE attrelid=to_regclass($1) AND attname='embedding' AND NOT attisdropped",
-            table,
-        )
-        if dimension is not None and dimension != expected:
-            raise ValueError(
-                f"{table}.embedding uses {dimension} dimensions; "
-                f"configured embed_dim is {expected}. "
-                "Use the matching embedding model or explicitly migrate and re-embed the data."
-            )
-
-
-async def apply_migrations(
-    conn: asyncpg.Connection, migrations_dir: Path = MIGRATIONS_DIR, *, embed_dim: int | None = None
-) -> list[str]:
-    """Apply any un-applied ``*.sql`` files in order. Returns the names applied."""
-    await conn.execute("""
-        CREATE TABLE IF NOT EXISTS schema_migrations (
-            filename   text PRIMARY KEY,
-            applied_at timestamptz NOT NULL DEFAULT now()
-        );
-        """)
-
-    dimension = get_settings().embed_dim if embed_dim is None else embed_dim
-    if not 1 <= dimension <= 2000:
-        raise ValueError("embedding dimension must be 1..2000 for vector HNSW")
-    if not migrations_dir.is_dir() or not list(migrations_dir.glob("*.sql")):
+def migration_names(migrations_dir: Path = MIGRATIONS_DIR) -> list[str]:
+    names = sorted(path.name for path in migrations_dir.glob("*.sql"))
+    if not names:
         raise RuntimeError(f"Packaged migrations are missing: {migrations_dir}")
+    return names
+
+
+async def connect(path: str | Path | None = None, *, create: bool = True) -> Connection:
+    """Open the configured store file (caller owns closing it)."""
+    return await open_store(path or get_settings().db, create=create)
+
+
+async def applied_migrations(conn: Connection) -> list[str]:
+    if not await conn.fetchval(_HAS_TABLE):
+        return []
+    rows = await conn.fetch("SELECT filename FROM schema_migrations ORDER BY filename")
+    return [row["filename"] for row in rows]
+
+
+async def check_schema(conn: Connection, migrations_dir: Path = MIGRATIONS_DIR) -> None:
+    """Refuse a store this code cannot use: never migrated, or migrated by newer code."""
+    applied = await applied_migrations(conn)
+    known = migration_names(migrations_dir)
+    if not applied:
+        raise StoreUnavailable(f"{conn.path} has no Mnemo schema; run `mnemo install`")
+    if applied != known:
+        newer = sorted(set(applied) - set(known))
+        if newer:
+            raise StoreUnavailable(
+                f"{conn.path} was migrated by a newer Mnemo ({', '.join(newer)}); "
+                "upgrade Mnemo, then restart your agents"
+            )
+        raise StoreUnavailable(f"{conn.path} needs migrating; run `mnemo migrate`")
+
+
+async def apply_migrations(conn: Connection, migrations_dir: Path = MIGRATIONS_DIR) -> list[str]:
+    """Apply any un-applied ``*.sql`` files in order. Returns the names applied."""
     applied: list[str] = []
-    for path in sorted(migrations_dir.glob("*.sql")):
-        async with conn.transaction():
-            # The lock also works for isolated evaluation schemas on a shared DB.
-            await conn.execute(
-                "SELECT pg_advisory_xact_lock(hashtextextended("
-                "'mnemo:migrations:' || current_schema(), 0))"
-            )
-            already = await conn.fetchval(
-                "SELECT 1 FROM schema_migrations WHERE filename = $1", path.name
-            )
-            if already:
-                continue
-            sql = path.read_text()
-            # Render only the initial dimension for a fresh database. Applied SQL
-            # is never rewritten, and existing embeddings are never silently recast.
-            if path.name == "0001_init.sql":
-                sql = re.sub(r"vector\(768\)", f"vector({dimension})", sql)
-            await conn.execute(sql)
-            await conn.execute("INSERT INTO schema_migrations (filename) VALUES ($1)", path.name)
-        applied.append(path.name)
-    await validate_embedding_dimension(conn, dimension)
+    for name in migration_names(migrations_dir):
+        sql = (migrations_dir / name).read_text()
+
+        def run(sql: str = sql, name: str = name) -> bool:
+            raw = conn.raw
+            raw.execute("BEGIN IMMEDIATE")
+            try:
+                done = (
+                    raw.execute(_HAS_TABLE).fetchone()
+                    and raw.execute(
+                        "SELECT 1 FROM schema_migrations WHERE filename=?", (name,)
+                    ).fetchone()
+                )
+                if done:
+                    raw.execute("ROLLBACK")
+                    return False
+                # executescript would commit first; run each statement in this transaction.
+                for statement in _statements(sql):
+                    raw.execute(statement)
+                raw.execute("INSERT INTO schema_migrations (filename) VALUES (?)", (name,))
+                raw.execute("COMMIT")
+                return True
+            except BaseException:
+                raw.execute("ROLLBACK")
+                raise
+
+        if await conn._call(run):
+            applied.append(name)
     return applied
 
 
-def _validate_isolated_schema(schema: str) -> None:
-    if not re.fullmatch(r"mnemo_(eval|worker)_[0-9a-f]{32}", schema):
-        raise ValueError("isolated schemas require a generated Mnemo eval/worker UUID name")
+def _statements(sql: str) -> list[str]:
+    """Split a schema file into complete statements (triggers contain semicolons)."""
+    import sqlite3
 
-
-async def prepare_isolated_schema(
-    dsn: str, schema: str, *, embed_dim: int | None = None
-) -> asyncpg.Connection:
-    """Create and migrate a disposable namespace without reusing application tables."""
-    _validate_isolated_schema(schema)
-    conn = await asyncpg.connect(dsn)
-    created = False
-    try:
-        await conn.execute("SET search_path TO public")
-        await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
-        await conn.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto")
-        await conn.execute(f'CREATE SCHEMA "{schema}"')
-        created = True
-        # Create this first with only the private schema visible. Once public is
-        # added for extension types, it cannot shadow migration bookkeeping.
-        await conn.execute(f'SET search_path TO "{schema}"')
-        await conn.execute(
-            "CREATE TABLE schema_migrations ("
-            "filename text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())"
-        )
-        await conn.execute(f'SET search_path TO "{schema}", public')
-        await apply_migrations(conn, embed_dim=embed_dim)
-        await register_vector(conn)
-        return conn
-    except Exception:
-        try:
-            if created:
-                await drop_isolated_schema(conn, schema)
-        finally:
-            await conn.close()
-        raise
-
-
-async def drop_isolated_schema(conn: asyncpg.Connection, schema: str) -> None:
-    """Remove only a generated test/evaluation namespace; bound lock retries."""
-    _validate_isolated_schema(schema)
-    await conn.execute("SET search_path TO public")
-    await conn.execute("SET lock_timeout TO '5s'")
-    for attempt in range(3):
-        try:
-            await conn.execute(f'DROP SCHEMA IF EXISTS "{schema}" CASCADE')
-            return
-        except (asyncpg.DeadlockDetectedError, asyncpg.LockNotAvailableError):
-            if attempt == 2:
-                raise
-            await asyncio.sleep(0.1)
+    statements: list[str] = []
+    current = ""
+    for line in sql.splitlines(keepends=True):
+        current += line
+        if sqlite3.complete_statement(current):
+            if current.strip():
+                statements.append(current.strip())
+            current = ""
+    if current.strip() and not all(
+        part.strip().startswith("--") or not part.strip() for part in current.splitlines()
+    ):
+        raise ValueError(f"incomplete SQL statement at the end of the file: {current[:80]!r}")
+    return statements
 
 
 async def _main() -> None:

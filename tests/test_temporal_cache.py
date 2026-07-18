@@ -81,7 +81,7 @@ async def test_legacy_session_expiry_is_a_read_overlay(store, db):
     old = datetime.now(UTC) - timedelta(days=2)
     event = await db.fetchrow(
         "INSERT INTO memory_event(fact_id,op,object_text,provenance,tier,valid_from,recorded_at) "
-        "VALUES($1,'ADD','legacy task','agent_inference','session',$2,$2) RETURNING event_id,seq",
+        "VALUES(?1,'ADD','legacy task','agent_inference','session',?2,?2) RETURNING event_id,seq",
         fact_id,
         old,
     )
@@ -93,14 +93,14 @@ async def test_legacy_session_expiry_is_a_read_overlay(store, db):
     )
     assert len(historical) == 1
     snapshot = await db.fetchrow(
-        "SELECT * FROM fact_snapshot_as_of('default','default','default',$1)", event["seq"]
+        "SELECT * FROM fact_snapshot_as_of('default','default','default',?1)", event["seq"]
     )
     assert snapshot["expires_at"] == old + timedelta(hours=24)
     assert snapshot["session_id"] == "legacy"
     # The compatibility rule does not backfill or mutate the original event.
     assert (
         await db.fetchval(
-            "SELECT expires_at FROM memory_event WHERE event_id=$1", event["event_id"]
+            "SELECT expires_at FROM memory_event WHERE event_id=?1", event["event_id"]
         )
         is None
     )

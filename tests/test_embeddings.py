@@ -10,12 +10,12 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
-import asyncpg
 import httpx
 import pytest
 
 from mnemo.config import Settings
 from mnemo.core import MnemoStore
+from mnemo.sqlite import Connection
 
 DIM = 768
 
@@ -76,7 +76,7 @@ class PlantedEmbedder:
         return v
 
 
-def _store(db: asyncpg.Connection, mapping: dict[str, list[float]]) -> MnemoStore:
+def _store(db: Connection, mapping: dict[str, list[float]]) -> MnemoStore:
     # _env_file=None => deterministic default thresholds regardless of any local .env
     return MnemoStore(db, PlantedEmbedder(mapping), settings=Settings(_env_file=None))
 
@@ -84,7 +84,7 @@ def _store(db: asyncpg.Connection, mapping: dict[str, list[float]]) -> MnemoStor
 # ---- same identity, aliases versus changed values ----------------------
 
 
-async def test_same_key_high_cosine_restatement_is_noop(db: asyncpg.Connection) -> None:
+async def test_same_key_high_cosine_restatement_is_noop(db: Connection) -> None:
     base = _planted(1.0, 0.0)
     mapping = {
         "user preferred_database PostgreSQL": base,
@@ -101,7 +101,7 @@ async def test_same_key_high_cosine_restatement_is_noop(db: asyncpg.Connection) 
         "user", "preferred_database", "Postgres", provenance="direct_user_statement"
     )
     assert e2.event_id == e1.event_id
-    assert await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=$1", e1.fact_id) == 1
+    assert await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=?1", e1.fact_id) == 1
 
     # "MongoDB" is a genuinely different value -> UPDATE.
     e3 = await store.add("user", "preferred_database", "MongoDB", provenance="agent_inference")
@@ -113,7 +113,7 @@ async def test_same_key_high_cosine_restatement_is_noop(db: asyncpg.Connection) 
 
 
 async def test_known_predicate_and_object_aliases_resolve_to_existing_fact(
-    db: asyncpg.Connection,
+    db: Connection,
 ) -> None:
     mapping = {
         "user db_engine PostgreSQL": _at_cosine(1.0, axis=2),
@@ -131,7 +131,7 @@ async def test_known_predicate_and_object_aliases_resolve_to_existing_fact(
     assert await db.fetchval("SELECT count(*) FROM memory_fact") == 1
 
 
-async def test_new_key_low_cosine_creates_separate_fact(db: asyncpg.Connection) -> None:
+async def test_new_key_low_cosine_creates_separate_fact(db: Connection) -> None:
     mapping = {
         "user db_engine PostgreSQL": _at_cosine(1.0, axis=2),
         "user favorite_color blue": _at_cosine(0.10, axis=2),
@@ -144,7 +144,7 @@ async def test_new_key_low_cosine_creates_separate_fact(db: asyncpg.Connection) 
     assert await db.fetchval("SELECT count(*) FROM memory_fact") == 2
 
 
-async def test_search_ranks_by_vector_similarity(db: asyncpg.Connection) -> None:
+async def test_search_ranks_by_vector_similarity(db: Connection) -> None:
     # Two unrelated facts; a query vector close to one of them returns it first.
     mapping = {
         "user db_engine PostgreSQL": _at_cosine(1.0, axis=2),

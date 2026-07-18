@@ -119,7 +119,7 @@ async def test_round_trip_is_exact_and_restored_store_keeps_working(
     max_seq = await destination.fetchval("SELECT max(seq) FROM memory_event")
     fresh = await direct.update(timezone_fact, "PST", expected_event_id=head, request_id=uuid4())
     assert (
-        await destination.fetchval("SELECT seq FROM memory_event WHERE event_id=$1", fresh.event_id)
+        await destination.fetchval("SELECT seq FROM memory_event WHERE event_id=?1", fresh.event_id)
         > max_seq
     )
     hits = await direct.search("PostgreSQL")

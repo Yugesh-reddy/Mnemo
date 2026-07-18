@@ -14,7 +14,7 @@ from mcp.types import TextContent
 from mnemo.config import get_settings
 
 # The server's global namespace and, inside a git checkout, its project scope.
-IN_SCOPES = "(namespace=$1 OR starts_with(namespace, $1 || '@'))"
+IN_SCOPES = "(namespace=?1 OR starts_with(namespace, ?1 || '@'))"
 
 
 def payload(result, *, code=None):
@@ -206,7 +206,7 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
     try:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memory_event WHERE fact_id=$1", UUID(first["fact_id"])
+                "SELECT count(*) FROM memory_event WHERE fact_id=?1", UUID(first["fact_id"])
             )
             == 3
         )

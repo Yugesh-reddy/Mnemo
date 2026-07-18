@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import asyncpg
+from mnemo.sqlite import Connection
 
 
-async def test_commit_captures_high_water_seq(store, db: asyncpg.Connection) -> None:
+async def test_commit_captures_high_water_seq(store, db: Connection) -> None:
     await store.add("user", "preferred_database", "PostgreSQL", provenance="direct_user_statement")
     c = await store.commit("after-pg")
     max_seq = await db.fetchval("SELECT max(seq) FROM memory_event")

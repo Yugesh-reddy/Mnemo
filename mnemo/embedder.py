@@ -198,3 +198,17 @@ def build_embedder(settings: Settings | None = None) -> Embedder:
             dim=s.embed_dim,
         )
     return OllamaEmbedder(model=s.embed_model, host=s.ollama_host, dim=s.embed_dim)
+
+
+def model_id(embedder: Any) -> str:
+    """Which model made a vector. Search compares only vectors from the same model."""
+    kind = type(embedder).__name__.removesuffix("Embedder").lower() or "custom"
+    model = getattr(embedder, "model", None)
+    return f"{kind}:{model}" if isinstance(model, str) and model else kind
+
+
+def vector_blob(vector: list[float]) -> bytes:
+    """float32 bytes, the form sqlite-vec reads."""
+    from array import array
+
+    return array("f", vector).tobytes()

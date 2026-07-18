@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import asyncpg
 import pytest
 
 from mnemo.core import canonicalize, derive_trust
+from mnemo.sqlite import Connection
 
 # ---- pure helpers -------------------------------------------------------
 
@@ -41,7 +41,7 @@ def test_derive_trust(provenance: str, confidence: float, expected: str) -> None
 # ---- add ----------------------------------------------------------------
 
 
-async def test_add_creates_fact_and_add_event(store, db: asyncpg.Connection) -> None:
+async def test_add_creates_fact_and_add_event(store, db: Connection) -> None:
     ev = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"
     )
@@ -57,7 +57,7 @@ async def test_add_creates_fact_and_add_event(store, db: asyncpg.Connection) -> 
     assert row["object_text"] == "PostgreSQL"
 
 
-async def test_add_same_key_different_value_updates(store, db: asyncpg.Connection) -> None:
+async def test_add_same_key_different_value_updates(store, db: Connection) -> None:
     e1 = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"
     )
@@ -70,26 +70,26 @@ async def test_add_same_key_different_value_updates(store, db: asyncpg.Connectio
     assert e2.trust_level == "low"
 
     cur = await db.fetchrow(
-        "SELECT object_text, event_id FROM memory_current WHERE fact_id=$1", e1.fact_id
+        "SELECT object_text, event_id FROM memory_current WHERE fact_id=?1", e1.fact_id
     )
     assert cur["object_text"] == "MongoDB"
     assert cur["event_id"] == e2.event_id
 
     e1row = await db.fetchrow(
-        "SELECT superseded_at, superseded_by FROM memory_event WHERE event_id=$1", e1.event_id
+        "SELECT superseded_at, superseded_by FROM memory_event WHERE event_id=?1", e1.event_id
     )
     assert e1row["superseded_at"] is not None
     assert e1row["superseded_by"] == e2.event_id
 
 
-async def test_add_same_value_is_noop(store, db: asyncpg.Connection) -> None:
+async def test_add_same_value_is_noop(store, db: Connection) -> None:
     e1 = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"
     )
     e2 = await store.add(
         "user", "preferred_database", "PostgreSQL", provenance="direct_user_statement"
     )
-    n = await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=$1", e1.fact_id)
+    n = await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=?1", e1.fact_id)
     assert n == 1
     assert e2.event_id == e1.event_id
 
@@ -103,7 +103,7 @@ async def test_alias_predicate_updates_same_fact(store) -> None:
     assert e2.fact_id == e1.fact_id
 
 
-async def test_add_recovers_from_concurrent_insert_race(store, db: asyncpg.Connection) -> None:
+async def test_add_recovers_from_concurrent_insert_race(store, db: Connection) -> None:
     # The UNIQUE fact_key race: two parallel adds for a brand-new key both miss the
     # existence check, then the loser's INSERT hits the constraint. _insert_fact must
     # catch the UniqueViolationError *outside* its savepoint (asyncpg only rolls a
@@ -125,13 +125,13 @@ async def test_add_recovers_from_concurrent_insert_race(store, db: asyncpg.Conne
 
     # Proof the transaction stayed usable: a normal query still runs, and add() now
     # sees the existing fact and routes to a write rather than erroring.
-    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=$1", fact_key) == 1
+    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=?1", fact_key) == 1
     upd = await store.add("user", "favorite_color", "red", provenance="direct_user_statement")
     assert upd.fact_id == first
     assert upd.op in ("ADD", "UPDATE")  # ADD: no prior event seeded; UPDATE otherwise
 
     # Exactly one fact row survived.
-    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=$1", fact_key) == 1
+    assert await db.fetchval("SELECT count(*) FROM memory_fact WHERE fact_key=?1", fact_key) == 1
 
 
 # ---- blame / search -----------------------------------------------------

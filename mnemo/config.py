@@ -1,7 +1,7 @@
 """Centralized configuration for Mnemo.
 
-Every tunable lives here: DSN, backend selection, embedding dimension and the
-search settings. No magic numbers scattered in code.
+Every tunable lives here: the store file, backend selection, embedding dimension
+and the search settings. No magic numbers scattered in code.
 """
 
 from __future__ import annotations
@@ -34,12 +34,9 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # --- Database ---
-    db_port: int = Field(5432, ge=1, le=65535)
-    """Host port of the Compose Postgres (docker-compose.yml reads MNEMO_DB_PORT too).
-    Unless dsn/test_dsn are set explicitly, they point at localhost on this port."""
-    dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo"
-    test_dsn: str = "postgresql://mnemo:mnemo@localhost:5432/mnemo_test"
+    # --- Store ---
+    db: Path = Path.home() / ".mnemo" / "mnemo.db"
+    """The SQLite file every agent shares. Keep it on a local disk, not a synced folder."""
 
     # --- Backend selection ---
     backend: Literal["ollama", "openai", "hash", "local"] = "ollama"
@@ -73,7 +70,7 @@ class Settings(BaseSettings):
     )
 
     # --- Embedding model ---
-    # Dimension MUST match the vector(N) used in migrations (see CLAUDE.md "Embedding dimension").
+    # Each vector is stored with the model that made it; search uses only this model's.
     embed_model: str = "nomic-embed-text"
     embed_dim: int = 768
 
@@ -81,8 +78,6 @@ class Settings(BaseSettings):
     search_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
 
-    search_candidate_multiplier: int = Field(8, ge=1, le=100)
-    search_hnsw_max_scan_tuples: int = Field(20000, ge=1, le=1_000_000)
     search_reinforce: bool = True
     session_ttl_seconds: float = Field(86400.0, gt=0.0)
 
@@ -110,10 +105,7 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_configuration(self) -> Settings:
-        for field, database in (("dsn", "mnemo"), ("test_dsn", "mnemo_test")):
-            if field not in self.model_fields_set:
-                url = f"postgresql://mnemo:mnemo@localhost:{self.db_port}/{database}"
-                setattr(self, field, url)
+        self.db = self.db.expanduser()
         self.model_dir = self.model_dir.expanduser()
         if self.backend == "local":
             if "embed_model" not in self.model_fields_set:
@@ -135,8 +127,8 @@ class Settings(BaseSettings):
                 self.embed_model = "text-embedding-3-small"
             if "embed_dim" not in self.model_fields_set:
                 self.embed_dim = 1536
-        if not 1 <= self.embed_dim <= 2000:
-            raise ValueError("embed_dim must be 1..2000 for the vector HNSW index")
+        if not 1 <= self.embed_dim <= 8192:
+            raise ValueError("embed_dim must be 1..8192")
         if not 0 < self.recency_gamma <= 1:
             raise ValueError("recency_gamma must be in (0, 1]")
         return self

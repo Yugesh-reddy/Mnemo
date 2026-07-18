@@ -9,7 +9,7 @@ ADD(Postgres) -> UPDATE(Mongo) -> BLAME -> REVERT(Postgres):
 
 from __future__ import annotations
 
-import asyncpg
+from mnemo.sqlite import Connection
 
 # Columns that record *what was believed* — these must never change once written.
 PAYLOAD_COLS = [
@@ -31,7 +31,7 @@ PAYLOAD_COLS = [
 ]
 
 
-async def test_fact_lifecycle_add_update_blame_revert(store, db: asyncpg.Connection) -> None:
+async def test_fact_lifecycle_add_update_blame_revert(store, db: Connection) -> None:
     # --- ADD(Postgres): a direct, high-trust user statement ---
     e1 = await store.add(
         "user",
@@ -63,8 +63,8 @@ async def test_fact_lifecycle_add_update_blame_revert(store, db: asyncpg.Connect
     assert history[1].provenance == "agent_inference"
 
     # Snapshot the two historical events right before the revert.
-    snap_e1 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=$1", e1.event_id))
-    snap_e2 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=$1", e2.event_id))
+    snap_e1 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=?1", e1.event_id))
+    snap_e2 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=?1", e2.event_id))
 
     # --- REVERT to the original Postgres belief ---
     e3 = await store.revert(e1.fact_id, e1.event_id)
@@ -76,7 +76,7 @@ async def test_fact_lifecycle_add_update_blame_revert(store, db: asyncpg.Connect
 
     # memory_current == Postgres, pointing at the revert event
     cur = await db.fetchrow(
-        "SELECT object_text, event_id FROM memory_current WHERE fact_id=$1", e1.fact_id
+        "SELECT object_text, event_id FROM memory_current WHERE fact_id=?1", e1.fact_id
     )
     assert cur["object_text"] == "PostgreSQL"
     assert cur["event_id"] == e3.event_id
@@ -88,15 +88,15 @@ async def test_fact_lifecycle_add_update_blame_revert(store, db: asyncpg.Connect
 
     # --- history is immutable ---
     # e1 is entirely untouched by the revert.
-    after_e1 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=$1", e1.event_id))
+    after_e1 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=?1", e1.event_id))
     assert after_e1 == snap_e1
 
     # e2's *payload* is unchanged; only its supersession flags moved.
-    after_e2 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=$1", e2.event_id))
+    after_e2 = dict(await db.fetchrow("SELECT * FROM memory_event WHERE event_id=?1", e2.event_id))
     assert {k: after_e2[k] for k in PAYLOAD_COLS} == {k: snap_e2[k] for k in PAYLOAD_COLS}
     assert after_e2["superseded_by"] == e3.event_id
     assert after_e2["superseded_at"] is not None
 
     # nothing was deleted — still exactly 3 rows for the fact.
-    total = await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=$1", e1.fact_id)
+    total = await db.fetchval("SELECT count(*) FROM memory_event WHERE fact_id=?1", e1.fact_id)
     assert total == 3

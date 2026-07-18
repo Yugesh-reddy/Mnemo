@@ -92,7 +92,7 @@ async def test_revert_copy_preserves_payload_trust_and_confidence(store) -> None
         "host-llm",
     )
     vectors = await store.conn.fetch(
-        "SELECT embedding::text FROM memory_event WHERE event_id=ANY($1::uuid[])",
+        "SELECT embedding::text FROM memory_event WHERE event_id=ANY(?1::uuid[])",
         [first.event_id, copied.event_id],
     )
     assert len(vectors) == 2 and vectors[0] == vectors[1]
@@ -112,7 +112,7 @@ async def test_01_lifecycle_exact_strings_and_immutable_history(store):
         first.fact_id, "MySQL\n", expected_event_id=first.event_id, request_id=uuid4()
     )
     payloads = """SELECT (to_jsonb(e) - ARRAY['superseded_at', 'superseded_by'])::text
-                  FROM memory_event e WHERE fact_id=$1 ORDER BY seq"""
+                  FROM memory_event e WHERE fact_id=?1 ORDER BY seq"""
     before = await store.conn.fetch(payloads, first.fact_id)
     restored = await d.revert(
         first.fact_id, first.event_id, expected_event_id=changed.event_id, request_id=uuid4()
@@ -304,7 +304,7 @@ async def test_10_failure_before_receipt_rolls_back_event_and_head(store, monkey
     d = direct(store)
     first = await create(d)
     before = await store.conn.fetchrow(
-        "SELECT * FROM memory_event WHERE event_id=$1", first.event_id
+        "SELECT * FROM memory_event WHERE event_id=?1", first.event_id
     )
 
     async def boom(*args, **kwargs):
@@ -316,7 +316,7 @@ async def test_10_failure_before_receipt_rolls_back_event_and_head(store, monkey
     assert await counts(store) == (1, 1)
     assert (await d.get(first.fact_id)).current_event_id == first.event_id
     assert (
-        await store.conn.fetchrow("SELECT * FROM memory_event WHERE event_id=$1", first.event_id)
+        await store.conn.fetchrow("SELECT * FROM memory_event WHERE event_id=?1", first.event_id)
         == before
     )
 

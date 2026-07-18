@@ -59,7 +59,7 @@ async def test_default_source_keeps_the_receipt_payload_of_earlier_versions(stor
     d = DirectMemory(store)
     first = await create(d)
     payload = await store.conn.fetchval(
-        "SELECT request_payload FROM memory_mutation_receipt WHERE event_id=$1", first.event_id
+        "SELECT request_payload FROM memory_mutation_receipt WHERE event_id=?1", first.event_id
     )
     assert "source" not in json.loads(payload)
 

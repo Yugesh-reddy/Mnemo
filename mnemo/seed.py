@@ -9,10 +9,10 @@ on any connection).
 from __future__ import annotations
 
 import asyncio
-
-import asyncpg
+from uuid import uuid4
 
 from mnemo.db import connect
+from mnemo.sqlite import Connection
 
 # (subject, predicate, object_text, provenance, trust_level, confidence)
 SEED_FACTS: list[tuple[str, str, str, str, str, float]] = [
@@ -28,7 +28,7 @@ def _fact_key(subject: str, predicate: str) -> str:
 
 
 async def add_seed_fact(
-    conn: asyncpg.Connection,
+    conn: Connection,
     *,
     subject: str,
     predicate: str,
@@ -44,8 +44,8 @@ async def add_seed_fact(
     async with conn.transaction():
         fact_id = await conn.fetchval(
             """
-            INSERT INTO memory_fact (subject, predicate, fact_key, kind)
-            VALUES ($1, $2, $3, 'triple')
+            INSERT INTO memory_fact (fact_id, subject, predicate, fact_key, kind)
+            VALUES (?4, ?1, ?2, ?3, 'triple')
             ON CONFLICT (namespace, user_id, agent_id, fact_key, identity_mode, identity_ref)
             DO NOTHING
             RETURNING fact_id
@@ -53,6 +53,7 @@ async def add_seed_fact(
             subject,
             predicate,
             _fact_key(subject, predicate),
+            uuid4(),
         )
         if fact_id is None:
             return None  # already seeded
@@ -60,8 +61,8 @@ async def add_seed_fact(
         event_id = await conn.fetchval(
             """
             INSERT INTO memory_event
-                (fact_id, op, object_text, provenance, actor, confidence, trust_level)
-            VALUES ($1, 'ADD', $2, $3::mem_provenance, 'seed', $4, $5::mem_trust)
+                (event_id, fact_id, op, object_text, provenance, actor, confidence, trust_level)
+            VALUES (?6, ?1, 'ADD', ?2, ?3, 'seed', ?4, ?5)
             RETURNING event_id
             """,
             fact_id,
@@ -69,16 +70,17 @@ async def add_seed_fact(
             provenance,
             confidence,
             trust_level,
+            uuid4(),
         )
         await conn.execute(
-            "UPDATE memory_fact SET current_event_id = $1 WHERE fact_id = $2",
+            "UPDATE memory_fact SET current_event_id = ?1 WHERE fact_id = ?2",
             event_id,
             fact_id,
         )
         return event_id
 
 
-async def seed(conn: asyncpg.Connection) -> int:
+async def seed(conn: Connection) -> int:
     """Seed all demo facts. Returns the number newly inserted."""
     inserted = 0
     for subject, predicate, obj, provenance, trust, confidence in SEED_FACTS:

@@ -1,82 +1,104 @@
-"""M1 schema tests (against the live disposable DB).
-
-Acceptance (spec §12 M1): migrations apply cleanly; the view returns seeded facts.
-"""
+"""Schema tests against a real store file: migration, the HEAD view, and the guards
+that make events and receipts append-only."""
 
 from __future__ import annotations
 
-import json
-import shutil
-from urllib.parse import urlsplit, urlunsplit
+import re
+import sqlite3
+import stat
 from uuid import uuid4
 
-import asyncpg
 import pytest
 
 from mnemo import db as mdb
 from mnemo.seed import seed
+from mnemo.sqlite import Connection, StoreUnavailable, connect
 
-CORE_TABLES = [
+TABLES = {
     "memory_fact",
     "memory_event",
     "memory_commit",
-    "fast_cache",
-    "extraction_job",
+    "memory_mutation_receipt",
+    "memory_embedding",
+    "memory_search_text",
     "schema_migrations",
-]
+}
+
+# Every column of memory_event except the bookkeeping that may change.
+PAYLOAD_COLUMNS = {
+    "seq": 99999,
+    "event_id": str(uuid4()),
+    "op": "DELETE",
+    "object_text": "changed",
+    "object_number": "7",
+    "object_json": '{"x": 1}',
+    "provenance": "document",
+    "actor": "someone-else",
+    "confidence": 0.5,
+    "trust_level": "low",
+    "source_span": '{"doc": "x"}',
+    "valid_from": "2000-01-01T00:00:00.000000Z",
+    "valid_to": "2000-01-01T00:00:00.000000Z",
+    "recorded_at": "2000-01-01T00:00:00.000000Z",
+    "parent_event_id": None,  # set per test to another real event
+    "commit_id": None,  # set per test to a real commit
+    "importance": 9,
+    "write_score": 0.1,
+    "tier": "ephemeral",
+    "reason": "rewritten",
+    "session_id": "s",
+    "expires_at": "2000-01-01T00:00:00.000000Z",
+    "fact_id": None,  # set per test to another real fact
+}
+BOOKKEEPING = {"superseded_at", "superseded_by", "strength", "recall_count", "last_used"}
 
 
-async def test_connect_and_migrate_on_database_without_vector_extension(
-    _disposable_test_db: str,
-) -> None:
-    """The public connection path must work before migrations install pgvector."""
-    parts = urlsplit(_disposable_test_db)
-    name = "mnemo_fresh_" + uuid4().hex[:12]
-    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
+async def test_a_new_file_is_private_migrated_once_and_in_wal_mode(tmp_path) -> None:
+    path = tmp_path / "home" / ".mnemo" / "mnemo.db"
+    conn = await connect(path)
     try:
-        await admin.execute(f'CREATE DATABASE "{name}"')
-        dsn = urlunsplit(parts._replace(path="/" + name))
-        conn = await mdb.connect(dsn)
-        try:
-            assert not await conn.fetchval(
-                "SELECT EXISTS (SELECT 1 FROM pg_extension WHERE extname='vector')"
-            )
-            applied = await mdb.apply_migrations(conn)
-            assert applied[0] == "0001_init.sql"
-            assert await conn.fetchval("SELECT count(*) FROM memory_fact") == 0
-            assert await mdb.apply_migrations(conn) == []
-        finally:
-            await conn.close()
-
-        # Normal connections still decode vectors after the extension is installed.
-        conn = await mdb.connect(dsn)
-        try:
-            assert await conn.fetchval("SELECT '[1,2,3]'::vector") == [1.0, 2.0, 3.0]
-        finally:
-            await conn.close()
+        assert await mdb.apply_migrations(conn) == ["0001_sqlite_init.sql"]
+        assert await mdb.apply_migrations(conn) == []
+        await mdb.check_schema(conn)
+        assert await conn.fetchval("PRAGMA journal_mode") == "wal"
+        assert await conn.fetchval("PRAGMA foreign_keys") == 1
+        assert await conn.fetchval("SELECT vec_version()")
     finally:
-        try:
-            await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-        finally:
-            await admin.close()
+        await conn.close()
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
 
 
-async def test_core_tables_exist(db: asyncpg.Connection) -> None:
-    for table in CORE_TABLES:
-        reg = await db.fetchval("SELECT to_regclass($1)", f"public.{table}")
-        assert reg is not None, f"table {table} missing"
+async def test_check_schema_names_the_fix(tmp_path) -> None:
+    conn = await connect(tmp_path / "empty.db")
+    try:
+        with pytest.raises(StoreUnavailable, match="mnemo install"):
+            await mdb.check_schema(conn)
+        await mdb.apply_migrations(conn)
+        await conn.execute("INSERT INTO schema_migrations (filename) VALUES ('9999_future.sql')")
+        with pytest.raises(StoreUnavailable, match="newer Mnemo"):
+            await mdb.check_schema(conn)
+    finally:
+        await conn.close()
+    with pytest.raises(StoreUnavailable, match="no Mnemo store"):
+        await connect(tmp_path / "missing.db", create=False)
 
 
-async def test_extensions_installed(db: asyncpg.Connection) -> None:
-    names = {r["extname"] for r in await db.fetch("SELECT extname FROM pg_extension")}
-    assert "vector" in names
-    assert "pgcrypto" in names
+async def test_a_file_that_is_not_a_database_is_refused(tmp_path) -> None:
+    path = tmp_path / "notes.db"
+    path.write_text("not a database " * 100)
+    with pytest.raises(StoreUnavailable, match="not a readable Mnemo store"):
+        await connect(path)
 
 
-async def test_memory_current_returns_seeded_facts(db: asyncpg.Connection) -> None:
-    inserted = await seed(db)
-    assert inserted == 3  # fresh transaction: all seed facts are new
+async def test_tables_exist_and_no_pipeline_tables(db: Connection) -> None:
+    names = {r["name"] for r in await db.fetch("SELECT name FROM sqlite_master")}
+    assert TABLES <= names
+    assert not names & {"fast_cache", "extraction_job", "quality_decision"}
 
+
+async def test_memory_current_returns_seeded_facts(db: Connection) -> None:
+    assert await seed(db) == 3
     rows = await db.fetch(
         "SELECT subject, predicate, object_text, provenance, trust_level "
         "FROM memory_current ORDER BY predicate"
@@ -84,177 +106,169 @@ async def test_memory_current_returns_seeded_facts(db: asyncpg.Connection) -> No
     values = {(r["subject"], r["predicate"]): r["object_text"] for r in rows}
     assert values[("user", "preferred_database")] == "PostgreSQL"
     assert values[("user", "name")] == "Yugesh"
-
-    # provenance/trust survive the round-trip through the view
     pg = next(r for r in rows if r["predicate"] == "preferred_database")
-    assert pg["provenance"] == "direct_user_statement"
-    assert pg["trust_level"] == "high"
+    assert (pg["provenance"], pg["trust_level"]) == ("direct_user_statement", "high")
 
 
-async def test_seed_is_idempotent(db: asyncpg.Connection) -> None:
+async def test_seed_is_idempotent(db: Connection) -> None:
     assert await seed(db) == 3
-    assert await seed(db) == 0  # second run inserts nothing
-    count = await db.fetchval("SELECT count(*) FROM memory_current")
-    assert count == 3
+    assert await seed(db) == 0
+    assert await db.fetchval("SELECT count(*) FROM memory_current") == 3
 
 
-async def test_fact_state_as_of_reflects_seq(db: asyncpg.Connection) -> None:
+async def test_snapshot_as_of_reflects_seq(store, db: Connection) -> None:
     await seed(db)
     max_seq = await db.fetchval("SELECT max(seq) FROM memory_event")
-
-    # As of the latest seq, all three facts are present.
-    rows_now = await db.fetch("SELECT * FROM fact_state_as_of('default', 'default', $1)", max_seq)
-    assert len(rows_now) == 3
-
-    # As of seq 0 (before anything), no facts exist.
-    rows_before = await db.fetch("SELECT * FROM fact_state_as_of('default', 'default', $1)", 0)
-    assert len(rows_before) == 0
+    assert len(await store._snapshot_as_of(max_seq)) == 3
+    assert await store._snapshot_as_of(0) == []
 
 
-async def test_memory_entity_dropped_and_view_has_decay_columns(
-    db: asyncpg.Connection,
-) -> None:
-    assert await db.fetchval("SELECT to_regclass('public.memory_entity')") is None
-    cols = {
-        r["column_name"]
-        for r in await db.fetch(
-            "SELECT column_name FROM information_schema.columns "
-            "WHERE table_name='memory_current'"
-        )
-    }
-    assert {"last_used", "valid_to", "reason"} <= cols
+async def test_view_has_the_decay_and_identity_columns(db: Connection) -> None:
+    cols = {r["name"] for r in await db.fetch("PRAGMA table_info(memory_current)")}
+    assert {"last_used", "valid_to", "reason", "seq", "identity_mode", "identity_ref"} <= cols
 
 
-async def test_expired_valid_to_hides_fact_from_head(store, db: asyncpg.Connection) -> None:
+async def test_expired_valid_to_hides_fact_from_head(store, db: Connection) -> None:
     ev = await store.add("user", "location", "Austin", provenance="direct_user_statement")
-    # World-validity ends through a new event; payload rows cannot be rewritten.
     await store.invalidate(ev.fact_id)
     assert (
-        await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=$1", ev.fact_id) == 0
+        await db.fetchval("SELECT count(*) FROM memory_current WHERE fact_id=?1", ev.fact_id) == 0
     )
 
 
 @pytest.mark.parametrize("predicate", ["preferred_database", "name", "preferred_language"])
-async def test_each_seed_fact_has_exactly_one_live_event(
-    db: asyncpg.Connection, predicate: str
-) -> None:
+async def test_each_seed_fact_has_exactly_one_live_event(db: Connection, predicate: str) -> None:
     await seed(db)
-    # The HEAD invariant: exactly one non-superseded event per active fact.
     live = await db.fetchval(
         """
         SELECT count(*) FROM memory_event e
         JOIN memory_fact f ON f.fact_id = e.fact_id
-        WHERE f.predicate = $1 AND e.superseded_at IS NULL
+        WHERE f.predicate = ?1 AND e.superseded_at IS NULL
         """,
         predicate,
     )
     assert live == 1
 
 
+async def test_timestamps_are_stored_in_one_fixed_width_form(store, db: Connection) -> None:
+    first = await store.add("user", "editor", "vim")
+    await store.add("user", "editor", "neovim")
+    await store.commit("checkpoint")
+    form = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}Z")
+    rows = await db.fetch(
+        "SELECT valid_from AS a, recorded_at AS b, last_used AS c, superseded_at AS d "
+        "FROM memory_event"
+    )
+    raw = [v for row in rows for v in row.values() if v is not None]
+    raw += [r["t"] for r in await db.fetch("SELECT created_at AS t FROM memory_fact")]
+    raw += [r["t"] for r in await db.fetch("SELECT created_at AS t FROM memory_commit")]
+    assert len(raw) >= 8 and all(form.fullmatch(v) for v in raw), raw
+    # One transaction, one clock reading: superseding the first happened when its
+    # replacement was recorded.
+    old = await db.fetchval(
+        "SELECT superseded_at AS t FROM memory_event WHERE event_id=?1", first.event_id
+    )
+    assert old == await db.fetchval("SELECT max(recorded_at) AS t FROM memory_event")
+
+
+async def test_a_memory_is_visible_the_moment_it_is_written(store) -> None:
+    for i in range(50):
+        event = await store.add("user", f"fact {i}", f"value {i}")
+        assert (await store.get(event.fact_id)).event_id == event.event_id
+
+
+# ---- append-only guards ---------------------------------------------------------
+
+
+@pytest.mark.parametrize("column", sorted(PAYLOAD_COLUMNS))
+async def test_every_payload_column_is_immutable(store, db: Connection, column: str) -> None:
+    event = await store.add("user", "name", "Sai", provenance="direct_user_statement")
+    other = await store.add("user", "city", "Austin")
+    commit = await store.commit("c")
+    value = {
+        "parent_event_id": str(other.event_id),
+        "commit_id": str(commit.commit_id),
+        "fact_id": str(other.fact_id),
+    }.get(column, PAYLOAD_COLUMNS[column])
+    with pytest.raises(sqlite3.IntegrityError, match="payload is immutable"):
+        async with db.transaction():
+            await db.execute(
+                f"UPDATE memory_event SET {column}=?1 WHERE event_id=?2", value, event.event_id
+            )
+
+
+async def test_bookkeeping_columns_may_change(store, db: Connection) -> None:
+    first = await store.add("user", "name", "Sai")
+    second = await store.add("user", "name", "Ari")
+    columns = {r["name"] for r in await db.fetch("PRAGMA table_info(memory_event)")}
+    assert columns == set(PAYLOAD_COLUMNS) | BOOKKEEPING
+    await db.execute(
+        "UPDATE memory_event SET strength=strength+1, recall_count=recall_count+1, "
+        "last_used=now(), superseded_at=now(), superseded_by=?2 WHERE event_id=?1",
+        first.event_id,
+        second.event_id,
+    )
+
+
+async def test_events_cannot_be_deleted_or_replaced(store, db: Connection) -> None:
+    event = await store.add("user", "name", "Sai")
+    with pytest.raises(sqlite3.IntegrityError, match="cannot be deleted"):
+        async with db.transaction():
+            await db.execute("DELETE FROM memory_event WHERE event_id=?1", event.event_id)
+    for conflict in ("seq", "event_id"):
+        with pytest.raises(sqlite3.IntegrityError, match="payload is immutable"):
+            async with db.transaction():
+                await db.execute(
+                    "INSERT OR REPLACE INTO memory_event "
+                    "(seq, event_id, fact_id, op, object_text, provenance) "
+                    "VALUES (?1, ?2, ?3, 'ADD', 'planted', 'agent_inference')",
+                    event.seq if conflict == "seq" else None,
+                    event.event_id if conflict == "event_id" else uuid4(),
+                    event.fact_id,
+                )
+    assert (await store.get(event.fact_id)).value == "Sai"
+
+
 async def test_mutation_receipts_are_scoped_unique_and_immutable(store, db) -> None:
     event = await store.add("user", "preferred_database", "PostgreSQL")
     request_id = uuid4()
     insert = """
-        INSERT INTO memory_mutation_receipt
-            (namespace, user_id, agent_id, request_id, operation, request_payload,
-             status, fact_id, event_id, result)
-        VALUES ($1, 'default', 'default', $2, 'create', '{}', 'applied', $3, $4, '{}')
+        INSERT {mode} INTO memory_mutation_receipt
+            (receipt_id, namespace, user_id, agent_id, request_id, operation,
+             request_payload, status, fact_id, event_id, result)
+        VALUES (?5, ?1, 'default', 'default', ?2, 'create', '{{}}', 'applied', ?3, ?4, '{{}}')
     """
-    await db.execute(insert, "default", request_id, event.fact_id, event.event_id)
-    with pytest.raises(asyncpg.UniqueViolationError):
-        async with db.transaction():
-            await db.execute(insert, "default", request_id, event.fact_id, event.event_id)
-    await db.execute(insert, "other", request_id, event.fact_id, event.event_id)
+    await db.execute(
+        insert.format(mode=""), "default", request_id, event.fact_id, event.event_id, uuid4()
+    )
+    for mode in ("", "OR REPLACE"):
+        with pytest.raises(sqlite3.IntegrityError, match="append-only"):
+            async with db.transaction():
+                await db.execute(
+                    insert.format(mode=mode),
+                    "default",
+                    request_id,
+                    event.fact_id,
+                    event.event_id,
+                    uuid4(),
+                )
+    await db.execute(
+        insert.format(mode=""), "other", request_id, event.fact_id, event.event_id, uuid4()
+    )
     for statement in (
         "UPDATE memory_mutation_receipt SET result='{}'",
         "DELETE FROM memory_mutation_receipt",
     ):
-        with pytest.raises(asyncpg.CheckViolationError, match="append-only") as error:
+        with pytest.raises(sqlite3.IntegrityError, match="append-only"):
             async with db.transaction():
                 await db.execute(statement)
-        assert error.value.sqlstate == "23514"
     assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 2
 
 
-async def _schema_at(db, tmp_path, through: int) -> None:
-    """Migrate a private schema only through ``through`` (the older binary's view)."""
-    for migration in sorted(mdb.MIGRATIONS_DIR.glob("*.sql")):
-        if int(migration.name.split("_")[0]) <= through:
-            shutil.copy(migration, tmp_path / migration.name)
-    schema = "mnemo_upgrade_" + uuid4().hex
-    await db.execute(f'CREATE SCHEMA "{schema}"')
-    await db.execute(f'SET LOCAL search_path TO "{schema}", public')
-    # Prevent the public schema's migration bookkeeping from shadowing this one.
-    await db.execute(
-        "CREATE TABLE schema_migrations (filename text PRIMARY KEY, "
-        "applied_at timestamptz NOT NULL DEFAULT now())"
+async def test_every_event_is_indexed_for_words(store, db: Connection) -> None:
+    first = await store.add("deploy", "command", "make release")
+    await store.add("deploy", "command", "make ship")
+    rows = await db.fetch(
+        "SELECT rowid FROM memory_search_text WHERE memory_search_text MATCH 'release'"
     )
-    assert len(await mdb.apply_migrations(db, tmp_path)) == through
-
-
-async def _legacy_fact(db, predicate: str, value: str) -> None:
-    """Write a fact with SQL an older binary would issue (no identity columns)."""
-    fact_id = await db.fetchval(
-        "INSERT INTO memory_fact (subject, predicate, fact_key) VALUES ('user', $1, $2) "
-        "RETURNING fact_id",
-        predicate,
-        "user|" + predicate,
-    )
-    event_id = await db.fetchval(
-        "INSERT INTO memory_event (fact_id, op, object_text, provenance) "
-        "VALUES ($1, 'ADD', $2, 'direct_user_statement') RETURNING event_id",
-        fact_id,
-        value,
-    )
-    await db.execute(
-        "UPDATE memory_fact SET current_event_id=$1 WHERE fact_id=$2", event_id, fact_id
-    )
-
-
-async def test_0010_applies_over_populated_0009(db, tmp_path) -> None:
-    await _schema_at(db, tmp_path, 9)
-    await _legacy_fact(db, "preferred_database", "PostgreSQL")
-    await _legacy_fact(db, "preferred_language", "Python")
-    snapshot = "SELECT row_to_json(f)::text FROM memory_fact f ORDER BY fact_id"
-    before = await db.fetch(snapshot)
-    assert await mdb.apply_migrations(db) == [
-        "0010_mutation_receipts.sql",
-        "0011_identity.sql",
-        "0012_retract_receipts.sql",
-    ]
-    assert await db.fetchval("SELECT count(*) FROM memory_current") == 2
-    assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0
-    # 0011 then appends identity columns; everything that existed is unchanged.
-    after = await db.fetch(
-        "SELECT (to_jsonb(f) - 'identity_mode' - 'identity_ref')::text "
-        "FROM memory_fact f ORDER BY fact_id"
-    )
-    assert [json.loads(r[0]) for r in after] == [json.loads(r[0]) for r in before]
-
-
-async def test_0011_turns_existing_facts_into_attribute_identities(db, tmp_path) -> None:
-    await _schema_at(db, tmp_path, 10)
-    await _legacy_fact(db, "preferred_database", "PostgreSQL")
-    await _legacy_fact(db, "learned_to_make", "kimchi")
-    facts = "SELECT to_jsonb(f)::text FROM memory_fact f ORDER BY fact_id"
-    events = "SELECT to_jsonb(e)::text FROM memory_event e ORDER BY seq"
-    view = "SELECT fact_id, event_id, object_text FROM memory_current ORDER BY fact_id"
-    before = (await db.fetch(facts), await db.fetch(events), await db.fetch(view))
-    assert await mdb.apply_migrations(db) == ["0011_identity.sql", "0012_retract_receipts.sql"]
-    migrated = [json.loads(r[0]) for r in await db.fetch(facts)]
-    assert [
-        {k: v for k, v in f.items() if k not in ("identity_mode", "identity_ref")} for f in migrated
-    ] == [json.loads(r[0]) for r in before[0]]
-    assert {(f["identity_mode"], f["identity_ref"]) for f in migrated} == {
-        ("attribute", "00000000-0000-0000-0000-000000000000")
-    }
-    assert await db.fetch(events) == before[1]
-    assert await db.fetch(view) == before[2]
-    # An old binary's key-only conflict target no longer matches any constraint.
-    with pytest.raises(asyncpg.InvalidColumnReferenceError):
-        async with db.transaction():
-            await db.execute(
-                "INSERT INTO memory_fact (subject, predicate, fact_key) "
-                "VALUES ('user', 'x', 'user|x') "
-                "ON CONFLICT (namespace, user_id, agent_id, fact_key) DO NOTHING"
-            )
+    assert [r["rowid"] for r in rows] == [first.seq]

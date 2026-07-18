@@ -40,14 +40,14 @@ def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory)
         try:
             assert (
                 await conn.fetchval(
-                    "SELECT count(*) FROM memory_mutation_receipt WHERE namespace=$1", namespace
+                    "SELECT count(*) FROM memory_mutation_receipt WHERE namespace=?1", namespace
                 )
                 == 3
             )
             for table in ("fast_cache", "extraction_job", "quality_decision"):
                 assert (
                     await conn.fetchval(
-                        f"SELECT count(*) FROM {table} WHERE namespace=$1", namespace
+                        f"SELECT count(*) FROM {table} WHERE namespace=?1", namespace
                     )
                     == 0
                 )

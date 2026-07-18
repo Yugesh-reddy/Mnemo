@@ -1,16 +1,16 @@
-"""Foundation integrity regressions that require PostgreSQL transactions."""
+"""Foundation integrity regressions that need real transactions on the store file."""
 
 from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 from uuid import uuid4
 
-import asyncpg
 import pytest
 
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector
+from mnemo.sqlite import connect
 from tests.conftest import legacy_archive
 
 
@@ -45,13 +45,19 @@ async def test_revert_preserves_payload_lineage_and_embedding_from_archive(store
     restored = await store.revert(event.fact_id, event.event_id)
 
     rows = await db.fetch(
-        """SELECT object_json, embedding::text, source_span, importance, write_score
-           FROM memory_event WHERE event_id = ANY($1::uuid[]) ORDER BY seq""",
-        [event.event_id, archived.event_id, restored.event_id],
+        """SELECT e.object_json, m.vector AS embedding, e.source_span, e.importance,
+                  e.write_score
+           FROM memory_event e LEFT JOIN memory_embedding m ON m.seq = e.seq
+           WHERE e.event_id IN (?1, ?2, ?3) ORDER BY e.seq""",
+        event.event_id,
+        archived.event_id,
+        restored.event_id,
     )
     assert len(rows) == 3
     assert all(row["object_json"] == rows[0]["object_json"] for row in rows)
-    assert all(row["embedding"] == rows[0]["embedding"] for row in rows)
+    # The archive was written without a vector; the revert copies the original's.
+    assert rows[0]["embedding"] is not None
+    assert rows[2]["embedding"] == rows[0]["embedding"]
     assert all(json.loads(row["source_span"]) == source for row in rows)
     assert all(row["importance"] == 8 for row in rows)
     assert all(row["write_score"] == pytest.approx(0.83) for row in rows)
@@ -69,16 +75,16 @@ async def test_identical_embeddings_do_not_suppress_corrections(store, before, a
 
 async def test_event_payload_guard_allows_only_bookkeeping(store, db) -> None:
     event = await store.add("user", "name", "Sai", provenance="direct_user_statement")
-    with pytest.raises(asyncpg.CheckViolationError, match="payload is immutable"):
+    with pytest.raises(sqlite3.IntegrityError, match="payload is immutable"):
         async with db.transaction():
             await db.execute(
-                "UPDATE memory_event SET object_text='changed' WHERE event_id=$1", event.event_id
+                "UPDATE memory_event SET object_text='changed' WHERE event_id=?1", event.event_id
             )
-    with pytest.raises(asyncpg.CheckViolationError, match="cannot be deleted"):
+    with pytest.raises(sqlite3.IntegrityError, match="cannot be deleted"):
         async with db.transaction():
-            await db.execute("DELETE FROM memory_event WHERE event_id=$1", event.event_id)
+            await db.execute("DELETE FROM memory_event WHERE event_id=?1", event.event_id)
     await db.execute(
-        "UPDATE memory_event SET recall_count=recall_count+1 WHERE event_id=$1", event.event_id
+        "UPDATE memory_event SET recall_count=recall_count+1 WHERE event_id=?1", event.event_id
     )
 
 
@@ -87,9 +93,8 @@ async def test_two_connection_updates_form_one_head_chain(
 ) -> None:
     namespace = f"race-{uuid4()}"
     conn_a, conn_b = await asyncio.gather(
-        asyncpg.connect(_disposable_test_db), asyncpg.connect(_disposable_test_db)
+        connect(_disposable_test_db), connect(_disposable_test_db)
     )
-    await asyncio.gather(register_vector(conn_a), register_vector(conn_b))
     try:
         store_a = MnemoStore(conn_a, fake_embedder, namespace=namespace)
         store_b = MnemoStore(conn_b, fake_embedder, namespace=namespace)
@@ -121,11 +126,11 @@ async def test_two_connection_updates_form_one_head_chain(
         )
         rows = await conn_a.fetch(
             "SELECT event_id, parent_event_id, superseded_by FROM memory_event "
-            "WHERE fact_id=$1 ORDER BY seq",
+            "WHERE fact_id=?1 ORDER BY seq",
             first.fact_id,
         )
         head = await conn_a.fetchval(
-            "SELECT current_event_id FROM memory_fact WHERE fact_id=$1", first.fact_id
+            "SELECT current_event_id FROM memory_fact WHERE fact_id=?1", first.fact_id
         )
         assert len(rows) == 3
         assert rows[1]["parent_event_id"] == rows[0]["event_id"]

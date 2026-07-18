@@ -1,24 +1,23 @@
 """Mnemo — Git for agent memory.
 
 An append-only, inspectable, reversible memory layer for LLM agents:
-``add`` / ``search`` / ``blame`` / ``revert`` / ``diff`` / ``log`` on plain Postgres.
+``add`` / ``search`` / ``blame`` / ``revert`` / ``diff`` / ``log`` in one SQLite file.
 
 ``Mnemo`` is the sync public surface (thin wrappers over the async ``MnemoStore``
 core, spec §9) — convenient for the CLI/demo. Each call opens a short-lived
-connection; for high throughput, use ``MnemoStore`` against your own pool.
+connection; for many calls, use ``MnemoStore`` on a connection you keep open.
 """
 
 from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable
+from pathlib import Path
 from typing import Any, TypeVar
 from uuid import UUID
 
-import asyncpg
-
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector
+from mnemo.db import connect
 from mnemo.direct import DirectMemory
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import (
@@ -54,14 +53,14 @@ class Mnemo:
 
     def __init__(
         self,
-        dsn: str,
+        path: str | Path,
         embedder: Any,
         *,
         namespace: str = "default",
         user_id: str = "default",
         agent_id: str = "default",
     ) -> None:
-        self._dsn = dsn
+        self._path = path
         self._embedder = embedder
         self._namespace = namespace
         self._user_id = user_id
@@ -74,8 +73,7 @@ class Mnemo:
 
     def _run(self, fn: Callable[[MnemoStore], Awaitable[T]]) -> T:
         async def _wrapped() -> T:
-            conn = await asyncpg.connect(self._dsn)
-            await register_vector(conn)
+            conn = await connect(self._path, create=False)
             try:
                 store = MnemoStore(
                     conn,
