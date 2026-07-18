@@ -278,7 +278,7 @@ branch `sqlite`; `main` must stay installable because users install it directly.
 
 ### Phase 0 — Baseline and safety net (small)
 
-- [ ] Tag `main` as `v0.0.1-postgres` and push the tag (needs the owner: the repo is public).
+- [x] Tag `main` as `v0.0.1-postgres` and push the tag (pushed with the owner's approval).
 - [ ] Run `scripts/agent_eval.py` three times on the current stack and keep the runs.
       Each run cost $0.74 to $0.91 of Claude usage plus Codex tokens in September
       (needs the owner: it spends their usage, and Codex returned 401 in September).
@@ -388,7 +388,9 @@ files, `test_sdk`, `test_agent_undo` and `test_azure_pilot` pass.
 ### Phase 6 — Export, import and upgrade (medium)
 
 - [ ] `transfer.py` per §4.8.
-- [ ] Check in a small version 1 export produced at `v0.0.1-postgres` as a fixture.
+- [x] Check in a small version 1 export produced at `v0.0.1-postgres` as a fixture
+      (`tests/data/export_v1_postgres.json`: two scopes, an update, a revert, a
+      retraction with its receipt, sources, a number, a JSON value and a commit).
 - [ ] Tests: a version 2 round trip is exact; the version 1 fixture imports with the
       same IDs, `seq`, values and HEADs; a pre-upgrade request ID replays its receipt;
       a retracted memory and its `retract` receipt round-trip (add this test on
