@@ -26,7 +26,7 @@ from uuid import UUID, uuid4
 
 from mnemo.config import Settings, get_settings
 from mnemo.embedder import model_id, vector_blob
-from mnemo.models import Commit, Diff, DiffEntry, Event, Fact
+from mnemo.models import Commit, Diff, DiffEntry, Event, Fact, _value_of
 from mnemo.sqlite import Connection, Record
 
 # Predicate synonyms collapsed to a canonical key (spec §5 step 1). Small + in-code.
@@ -987,3 +987,56 @@ def _entry(row: Any, change: str, *, old: Any, new: Any) -> DiffEntry:
         old=old,
         new=new,
     )
+
+
+async def reindex(conn: Connection, embedder: Any, *, batch: int = 64) -> dict[str, int]:
+    """Rebuild the derived data: the word index, and a vector from ``embedder`` for
+    every event that lacks one from this model (after an import or a model change).
+
+    Events are never touched. Embedding runs outside the write lock, a batch at a
+    time, so agents keep working while a large store is re-embedded.
+    """
+    async with conn.transaction():
+        await conn.execute("DELETE FROM memory_search_text")
+        await conn.execute("""
+            INSERT INTO memory_search_text (rowid, body)
+            SELECT e.seq, f.subject || ' ' || f.predicate || ' ' || coalesce(e.object_text, '')
+            FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id
+            """)
+    model, dim = model_id(embedder), embedder.dim
+    rows = await conn.fetch(
+        """
+        SELECT e.seq, f.subject, f.predicate, e.object_text, e.object_number, e.object_json
+        FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id
+        WHERE NOT EXISTS (SELECT 1 FROM memory_embedding m
+                          WHERE m.seq = e.seq AND m.model = ?1 AND m.dim = ?2)
+        ORDER BY e.seq
+        """,
+        model,
+        dim,
+    )
+    vectors: dict[str, list[float]] = {}
+    for start in range(0, len(rows), batch):
+        chunk = rows[start : start + batch]
+        written = []
+        for row in chunk:
+            stored = row["object_json"]
+            value = _value_of(
+                row["object_text"],
+                row["object_number"],
+                json.loads(stored) if stored is not None else None,
+            )
+            text = f"{row['subject']} {row['predicate']} {value}"
+            if text not in vectors:
+                vectors[text] = await asyncio.to_thread(embedder.embed, text)
+            written.append((row["seq"], model, dim, vector_blob(vectors[text])))
+        async with conn.transaction():
+            await conn.executemany(
+                "INSERT OR REPLACE INTO memory_embedding (seq, model, dim, vector) "
+                "VALUES (?1, ?2, ?3, ?4)",
+                written,
+            )
+    return {
+        "events": await conn.fetchval("SELECT count(*) FROM memory_event"),
+        "embedded": len(rows),
+    }

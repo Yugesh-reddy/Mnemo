@@ -30,9 +30,9 @@ import pytest
 
 from mnemo.config import Settings
 from mnemo.core import MnemoStore
-from mnemo.db import drop_isolated_schema, prepare_isolated_schema
 from mnemo.direct import DirectMemory
 from mnemo.embedder import build_embedder, local_model_ready
+from mnemo.sqlite import connect
 
 SET = json.loads((Path(__file__).parent / "data" / "retrieval_set.json").read_text())
 FIRST, TOP3, OFF_TOPIC_HITS = 19, 24, 3
@@ -49,10 +49,9 @@ def _available(backend: str) -> bool:
     return any(m["name"].split(":")[0] == settings.embed_model for m in tags.get("models", []))
 
 
-async def _measure(dsn: str, backend: str) -> dict:
+async def _measure(path: str, backend: str) -> dict:
     settings = Settings(backend=backend, search_reinforce=False)
-    schema = "mnemo_eval_" + uuid4().hex  # its own schema, at this model's dimension
-    db = await prepare_isolated_schema(dsn, schema, embed_dim=settings.embed_dim)
+    db = await connect(path, create=False)
     embedder = build_embedder(settings)
     try:
         memory = DirectMemory(MnemoStore(db, embedder, settings=settings, namespace="parity"))
@@ -77,7 +76,6 @@ async def _measure(dsn: str, backend: str) -> dict:
         close = getattr(embedder, "close", None)
         if close:
             close()
-        await drop_isolated_schema(db, schema)
         await db.close()
 
 

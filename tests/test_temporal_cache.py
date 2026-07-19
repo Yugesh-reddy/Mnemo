@@ -1,11 +1,13 @@
 """Temporal visibility: session tier, validity windows, history and archived heads."""
 
 from datetime import UTC, datetime, timedelta
+from uuid import uuid4
 
 import pytest
 
 from mnemo.config import Settings
 from mnemo.core import MnemoStore
+from mnemo.sqlite import clock
 from tests.conftest import legacy_archive
 
 
@@ -41,15 +43,13 @@ async def test_reasserting_a_future_value_now_creates_a_visible_revision(store):
     assert (await store.get(first.fact_id)).value == "Juniper"
 
 
-async def test_historical_revision_after_correction_and_invalidation(
-    worker_connections, fake_embedder
-):
-    conn, _ = worker_connections
+async def test_historical_revision_after_correction_and_invalidation(db, fake_embedder):
+    conn = db
     store = MnemoStore(conn, fake_embedder)
     first = await store.add("user", "location", "Austin")
-    before = await conn.fetchval("SELECT clock_timestamp()")
+    before = clock()
     await store.add("user", "location", "Portland")
-    after = await conn.fetchval("SELECT clock_timestamp()")
+    after = clock()
     await store.invalidate(first.fact_id)
     assert not await store.search("location")
     assert [f.value for f in await store.search("location", as_of=before)] == ["Austin"]
@@ -80,10 +80,12 @@ async def test_legacy_session_expiry_is_a_read_overlay(store, db):
     fact_id = await store._insert_fact("user", "task", "user|task", "triple", "legacy")
     old = datetime.now(UTC) - timedelta(days=2)
     event = await db.fetchrow(
-        "INSERT INTO memory_event(fact_id,op,object_text,provenance,tier,valid_from,recorded_at) "
-        "VALUES(?1,'ADD','legacy task','agent_inference','session',?2,?2) RETURNING event_id,seq",
+        "INSERT INTO memory_event(event_id,fact_id,op,object_text,provenance,tier,valid_from,"
+        "recorded_at) VALUES(?3,?1,'ADD','legacy task','agent_inference','session',?2,?2) "
+        "RETURNING event_id,seq",
         fact_id,
         old,
+        uuid4(),
     )
     await store._set_head(fact_id, event["event_id"])
     assert await store.get(fact_id) is None
@@ -92,9 +94,7 @@ async def test_legacy_session_expiry_is_a_read_overlay(store, db):
         "legacy task", session_id="legacy", as_of=old + timedelta(hours=1)
     )
     assert len(historical) == 1
-    snapshot = await db.fetchrow(
-        "SELECT * FROM fact_snapshot_as_of('default','default','default',?1)", event["seq"]
-    )
+    [snapshot] = await store._snapshot_as_of(event["seq"])
     assert snapshot["expires_at"] == old + timedelta(hours=24)
     assert snapshot["session_id"] == "legacy"
     # The compatibility rule does not backfill or mutate the original event.
