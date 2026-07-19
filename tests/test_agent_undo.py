@@ -338,9 +338,8 @@ async def test_cancelled_pilot_saves_audit_before_dropping_only_its_database(
     _disposable_test_db, monkeypatch, tmp_path
 ):
     import asyncio
-    from urllib.parse import urlsplit, urlunsplit
-
-    import asyncpg
+    import tempfile
+    from pathlib import Path
 
     from examples import agent_undo
     from mnemo.config import Settings
@@ -369,7 +368,7 @@ async def test_cancelled_pilot_saves_audit_before_dropping_only_its_database(
 
     monkeypatch.setattr(agent_undo, "OllamaHost", InterruptedHost)
     monkeypatch.setattr(
-        agent_undo, "get_settings", lambda: Settings(_env_file=None, test_dsn=_disposable_test_db)
+        agent_undo, "get_settings", lambda: Settings(_env_file=None, db=_disposable_test_db)
     )
     directory = tmp_path / "evidence"
     with pytest.raises(asyncio.CancelledError):
@@ -379,12 +378,5 @@ async def test_cancelled_pilot_saves_audit_before_dropping_only_its_database(
     assert report["cases"][0]["turn"]["status"] == "cancelled"
     assert report["cases"][0]["after"]["events"][0]["value"] == "PostgreSQL"
     assert len(report["cases"]) == 6 and report["cases"][1]["status"] == "not_run"
-    parts = urlsplit(_disposable_test_db)
-    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
-    try:
-        assert not await admin.fetchval(
-            "SELECT 1 FROM pg_database WHERE datname=?1", report["database_name"]
-        )
-        assert await admin.fetchval("SELECT 1 FROM pg_database WHERE datname=?1", parts.path[1:])
-    finally:
-        await admin.close()
+    assert not (Path(tempfile.gettempdir()) / report["database_name"]).exists()
+    assert Path(_disposable_test_db).is_file()

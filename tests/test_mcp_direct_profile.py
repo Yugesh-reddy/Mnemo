@@ -44,14 +44,14 @@ async def test_tool_text_tells_agents_when_to_use_memory():
 
 
 @pytest.mark.parametrize("backend", ["hash", "ollama"])
-async def test_direct_profile_lifespan_opens_and_closes_the_pool(
+async def test_direct_profile_lifespan_holds_the_embedder_for_its_lifetime(
     _disposable_test_db, fake_embedder, monkeypatch, backend
 ):
     import mnemo.mcp_direct as srv
 
     settings = Settings(
         _env_file=None,
-        dsn=_disposable_test_db,
+        db=_disposable_test_db,
         backend=backend,
         embed_dim=fake_embedder.dim,
     )
@@ -59,6 +59,6 @@ async def test_direct_profile_lifespan_opens_and_closes_the_pool(
     monkeypatch.setattr(srv, "build_embedder", lambda settings: fake_embedder)
 
     async with srv.lifespan(srv.mcp):
-        assert srv._pool is not None
+        assert srv._embedder is fake_embedder
         assert not srv._settings().search_reinforce
-    assert srv._pool is None and srv._embedder is None
+    assert srv._embedder is None

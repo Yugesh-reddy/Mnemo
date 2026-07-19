@@ -6,15 +6,15 @@ import os
 import sys
 from uuid import UUID, uuid4
 
-import asyncpg
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from mcp.types import TextContent
 
 from mnemo.config import get_settings
+from mnemo.sqlite import connect
 
 # The server's global namespace and, inside a git checkout, its project scope.
-IN_SCOPES = "(namespace=?1 OR starts_with(namespace, ?1 || '@'))"
+IN_SCOPES = "(namespace=?1 OR substr(namespace, 1, length(?1) + 1) = ?1 || '@')"
 
 
 def payload(result, *, code=None):
@@ -30,7 +30,7 @@ def payload(result, *, code=None):
 async def test_direct_profile_ollama_starts_without_background_models(_disposable_test_db):
     env = {
         **os.environ,
-        "MNEMO_DSN": _disposable_test_db,
+        "MNEMO_DB": _disposable_test_db,
         "MNEMO_BACKEND": "ollama",
         "MNEMO_OLLAMA_HOST": "http://127.0.0.1:1",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
@@ -51,7 +51,7 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
     namespace = "direct-profile-" + uuid4().hex
     env = {
         **os.environ,
-        "MNEMO_DSN": _disposable_test_db,
+        "MNEMO_DB": _disposable_test_db,
         "MNEMO_BACKEND": "hash",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
         "MNEMO_NAMESPACE": namespace,
@@ -202,7 +202,7 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
                     "ADD",
                 ]
 
-    conn = await asyncpg.connect(_disposable_test_db)
+    conn = await connect(_disposable_test_db)
     try:
         assert (
             await conn.fetchval(
@@ -219,16 +219,6 @@ async def test_direct_profile_lifecycle_and_errors(_disposable_test_db, clean_me
         assert (
             await conn.fetchval("SELECT count(*) FROM memory_event WHERE actor='profile-agent'")
             == 4
-        )
-        assert (
-            await conn.fetchval("SELECT count(*) FROM extraction_job WHERE " + IN_SCOPES, namespace)
-            == 0
-        )
-        assert (
-            await conn.fetchval(
-                "SELECT count(*) FROM quality_decision WHERE " + IN_SCOPES, namespace
-            )
-            == 0
         )
         assert await conn.fetchval("SELECT sum(recall_count) FROM memory_event") == 0
     finally:

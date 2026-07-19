@@ -1,61 +1,57 @@
 """What Mnemo depends on at runtime, and what to tell the user when one is missing.
 
-The direct MCP server and ``mnemo-install`` share these diagnoses: Postgres (reachable,
-existing, migrated) and the embedding backend (the local model, Ollama with its model,
-or OpenAI), and whether a store's memories were embedded by the configured model.
+The direct MCP server and ``mnemo install`` share these diagnoses: the store file
+(present, readable, migrated by this version) and the embedding backend (the local
+model, Ollama with its model, or OpenAI), and whether the stored memories have
+vectors from the configured model.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import sqlite3
+from pathlib import Path
 
-import asyncpg
 import httpx
 
 from mnemo.config import Settings
-from mnemo.embedder import LocalModelUnavailable
+from mnemo.embedder import LocalModelUnavailable, model_id
 from mnemo.errors import ErrorCode, MnemoError
 
 
-def where(dsn: str) -> str:
-    """host:port/database of a DSN, without credentials."""
-    return dsn.rsplit("@", 1)[-1]
+def where(path: Path | str) -> str:
+    """The store file as the user would type it (home shown as ~)."""
+    text = str(path)
+    home = str(Path.home())
+    return "~" + text[len(home) :] if text.startswith(home + "/") else text
 
 
 def service_error(exc: BaseException, settings: Settings) -> MnemoError | None:
-    """An actionable SERVICE_UNAVAILABLE for a Postgres or embedding failure, else None."""
+    """An actionable SERVICE_UNAVAILABLE for a store or embedding failure, else None."""
+    from mnemo.sqlite import StoreUnavailable
 
     def unavailable(service: str, message: str) -> MnemoError:
         return MnemoError(ErrorCode.SERVICE_UNAVAILABLE, message, service=service)
 
-    location = where(settings.dsn)
-    if isinstance(exc, asyncpg.UndefinedTableError | asyncpg.UndefinedColumnError):
-        return unavailable(
-            "postgres",
-            f"The database at {location} is missing Mnemo tables or columns (not set up, "
-            "or older than this version). Run `make migrate` (or `mnemo-install`) in the "
-            "Mnemo checkout.",
-        )
-    if isinstance(exc, asyncpg.InvalidCatalogNameError):
-        return unavailable(
-            "postgres", f"The database at {location} does not exist. Check MNEMO_DSN."
-        )
-    if isinstance(exc, asyncpg.InvalidAuthorizationSpecificationError):
-        return unavailable(
-            "postgres", f"Postgres at {location} rejected the MNEMO_DSN credentials."
-        )
-    if isinstance(
-        exc,
-        OSError
-        | TimeoutError
-        | asyncpg.PostgresConnectionError
-        | asyncpg.OperatorInterventionError,
-    ):
-        return unavailable(
-            "postgres",
-            f"Can't reach Postgres at {location}. Start Docker, then run `make up` in the "
-            "Mnemo checkout.",
-        )
+    location = where(settings.db)
+    if isinstance(exc, StoreUnavailable):
+        return unavailable("store", str(exc))
+    if isinstance(exc, sqlite3.OperationalError):
+        text = str(exc)
+        if "locked" in text or "busy" in text:
+            return unavailable(
+                "store",
+                f"The store at {location} stayed locked by another process for 30 s. "
+                "Try again; if it persists, look for a stuck Mnemo process.",
+            )
+        if "no such table" in text or "no such column" in text:
+            return unavailable(
+                "store",
+                f"The store at {location} is missing Mnemo tables (not set up, or from "
+                "another version). Run `mnemo install`.",
+            )
+        return unavailable("store", f"The store at {location} failed: {text}")
+    if isinstance(exc, sqlite3.DatabaseError):
+        return unavailable("store", f"{location} is not a readable Mnemo store: {exc}")
     if isinstance(exc, LocalModelUnavailable):
         if "not supported" in exc.reason:
             return unavailable(
@@ -89,61 +85,48 @@ def service_error(exc: BaseException, settings: Settings) -> MnemoError | None:
     return unavailable(settings.backend, f"The {settings.backend} embedding call failed: {exc}")
 
 
-SAME_MODEL = 0.99
-"""Re-embedding a stored memory's text with its own model gives cosine 1.0; Ollama's
-nomic-embed-text against the local quantized nomic model gives 0.96 (measured)."""
+async def missing_vectors(settings: Settings, embedder: object) -> int:
+    """Events in the store without a vector from ``embedder``'s model (0 if no store).
 
-
-async def embedding_mismatch(
-    settings: Settings, backend: str, embed: Callable[[str], list[float]]
-) -> str | None:
-    """What to do when the store's newest memories were embedded by another model.
-
-    None for an empty or not-yet-migrated store, or when re-embedding a stored
-    memory's text reproduces its vector. Search compares query vectors with stored
-    ones, so a different model would silently stop finding existing memories.
+    Search compares a question only with vectors from the same model, so these
+    memories are found by their words alone until `mnemo reindex` embeds them.
     """
+    from mnemo.sqlite import connect
+
+    if not settings.db.is_file():
+        return 0
+    conn = await connect(settings.db, create=False)
     try:
-        conn = await asyncpg.connect(settings.dsn, timeout=5)
-    except Exception:
-        return None  # postgres_problem reports an unreachable database
-    try:
-        rows = await conn.fetch(
-            "SELECT f.subject, f.predicate, e.object_text, e.embedding::text AS vector "
-            "FROM memory_event e JOIN memory_fact f USING (fact_id) "
-            "WHERE e.embedding IS NOT NULL AND e.object_text IS NOT NULL "
-            "ORDER BY e.seq DESC LIMIT 5"
+        return await conn.fetchval(
+            "SELECT count(*) FROM memory_event e WHERE NOT EXISTS ("
+            "SELECT 1 FROM memory_embedding m WHERE m.seq = e.seq AND m.model = ?1)",
+            model_id(embedder),
         )
-    except asyncpg.PostgresError:
-        return None  # not migrated yet, so nothing is stored
+    except sqlite3.OperationalError:
+        return 0  # not migrated yet, so nothing is stored
     finally:
         await conn.close()
-    best = 0.0
-    for row in rows:
-        stored = [float(x) for x in row["vector"].strip("[]").split(",")]
-        fresh = embed(f"{row['subject']} {row['predicate']} {row['object_text']}")
-        if len(fresh) == len(stored):
-            dot = sum(a * b for a, b in zip(fresh, stored, strict=True))
-            norms = sum(a * a for a in fresh) ** 0.5 * sum(b * b for b in stored) ** 0.5
-            best = max(best, dot / norms if norms else 0.0)
-    if not rows or best >= SAME_MODEL:
-        return None
-    model = "hash vectors" if backend == "hash" else f"{backend} {settings.embed_model}"
-    return (
-        f"The memories in {where(settings.dsn)} were embedded by a different model than "
-        f"{model}, so search would stop finding them. Install with the backend and model "
-        "used before (--backend, MNEMO_EMBED_MODEL), or point MNEMO_DSN at a new database."
-    )
 
 
-async def postgres_problem(settings: Settings) -> str | None:
-    """None when Postgres accepts a connection with settings.dsn; else what to do."""
+async def store_problem(settings: Settings) -> str | None:
+    """None when the store file opens with this Python; else what to do.
+
+    A missing file is fine: `mnemo install` creates it.
+    """
+    from mnemo.sqlite import StoreUnavailable, connect
+
     try:
-        conn = await asyncpg.connect(settings.dsn, timeout=5)
-    except Exception as exc:
-        error = service_error(exc, settings)
-        return error.message if error else f"Postgres at {where(settings.dsn)} failed: {exc}"
-    await conn.close()
+        conn = await connect(settings.db, create=False)
+    except StoreUnavailable as exc:
+        if not settings.db.exists():
+            return None
+        return str(exc)
+    try:
+        await conn.fetchval("SELECT count(*) FROM sqlite_master")
+    except sqlite3.DatabaseError as exc:
+        return f"{where(settings.db)} is not a readable Mnemo store: {exc}"
+    finally:
+        await conn.close()
     return None
 
 

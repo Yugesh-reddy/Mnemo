@@ -24,7 +24,7 @@ import json
 import os
 import sqlite3
 import threading
-from collections.abc import AsyncIterator, Callable, Iterable
+from collections.abc import AsyncIterator, Callable, Iterable, Iterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -135,12 +135,18 @@ def _from_column(name: str, value: Any) -> Any:
 
 
 class Record(dict):
-    """A row: a dict of converted values that also answers ``row[0]``."""
+    """A row as asyncpg gave one: ``row["name"]``, ``row[0]``, and iteration over values.
+
+    ``dict(row)`` and ``row.items()`` still give names and values.
+    """
 
     def __getitem__(self, key: Any) -> Any:
         if isinstance(key, int):
             return list(self.values())[key]
         return super().__getitem__(key)
+
+    def __iter__(self) -> Iterator[Any]:  # type: ignore[override]
+        return iter(self.values())
 
 
 def _records(cursor: sqlite3.Cursor, rows: Iterable[tuple]) -> list[Record]:

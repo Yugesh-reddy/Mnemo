@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-import asyncpg
+import sqlite3
+
 import httpx
 import pytest
 
@@ -24,15 +25,16 @@ def test_model_names_match_with_or_without_a_tag(installed, model, found):
     assert services.has_model(installed, model) is found
 
 
-async def test_postgres_problem_is_none_when_reachable_and_actionable_when_not(
-    _disposable_test_db,
+async def test_store_problem_is_none_for_a_store_or_no_file_and_actionable_otherwise(
+    _disposable_test_db, tmp_path
 ):
-    assert (
-        await services.postgres_problem(Settings(_env_file=None, dsn=_disposable_test_db)) is None
-    )
-    down = Settings(_env_file=None, dsn="postgresql://mnemo:secret@127.0.0.1:1/mnemo")
-    problem = await services.postgres_problem(down)
-    assert "make up" in problem and "127.0.0.1:1/mnemo" in problem and "secret" not in problem
+    assert await services.store_problem(Settings(_env_file=None, db=_disposable_test_db)) is None
+    missing = Settings(_env_file=None, db=tmp_path / "new" / "mnemo.db")
+    assert await services.store_problem(missing) is None  # mnemo install creates it
+    junk = tmp_path / "junk.db"
+    junk.write_text("not a database " * 100)
+    problem = await services.store_problem(Settings(_env_file=None, db=junk))
+    assert "not a readable Mnemo store" in problem and str(junk) in problem
 
 
 def test_embedding_errors_name_the_fix():
@@ -48,15 +50,24 @@ def test_embedding_errors_name_the_fix():
 
 
 @pytest.mark.parametrize(
-    "exc",
+    ("exc", "fix"),
     [
-        asyncpg.UndefinedTableError('relation "memory_mutation_receipt" does not exist'),
-        asyncpg.UndefinedColumnError('column "identity_mode" does not exist'),
+        (sqlite3.OperationalError("no such table: memory_mutation_receipt"), "mnemo install"),
+        (sqlite3.OperationalError("no such column: identity_mode"), "mnemo install"),
+        (sqlite3.OperationalError("database is locked"), "Try again"),
+        (sqlite3.DatabaseError("file is not a database"), "not a readable Mnemo store"),
     ],
 )
-def test_a_database_behind_on_migrations_says_to_migrate(exc):
+def test_store_errors_name_the_fix(exc, fix):
     error = services.service_error(exc, Settings(_env_file=None))
-    assert error.details == {"service": "postgres"} and "make migrate" in error.message
+    assert error.details == {"service": "store"} and fix in error.message
+
+
+def test_store_paths_are_shown_from_home():
+    from pathlib import Path
+
+    assert services.where(Path.home() / ".mnemo" / "mnemo.db") == "~/.mnemo/mnemo.db"
+    assert services.where("/srv/mnemo.db") == "/srv/mnemo.db"
 
 
 def test_a_missing_local_model_says_to_run_the_installer(tmp_path):
@@ -70,40 +81,29 @@ def test_a_missing_local_model_says_to_run_the_installer(tmp_path):
     assert "MNEMO_EMBED_MODEL" in services.service_error(unknown, settings).message
 
 
-async def test_stored_memories_from_another_model_are_detected(_disposable_test_db):
-    from urllib.parse import urlsplit, urlunsplit
+async def test_memories_without_a_vector_from_this_model_are_counted(_disposable_test_db, tmp_path):
     from uuid import uuid4
 
-    from mnemo.core import MnemoStore
-    from mnemo.db import apply_migrations, register_vector
+    from mnemo.core import MnemoStore, reindex
     from mnemo.direct import DirectMemory
     from mnemo.embedder import HashEmbedder
+    from mnemo.sqlite import connect
 
-    parts = urlsplit(_disposable_test_db)
-    admin_dsn = urlunsplit(parts._replace(path="/postgres"))
-    name = "mnemo_mismatch_" + uuid4().hex[:12]
-    dsn = urlunsplit(parts._replace(path="/" + name))
-    admin = await asyncpg.connect(admin_dsn)
-    await admin.execute(f'CREATE DATABASE "{name}"')
+    class OtherEmbedder(HashEmbedder):
+        """Another model: its vectors are stored under a different model name."""
+
+    settings = Settings(_env_file=None, db=_disposable_test_db, backend="hash")
+    same, other = HashEmbedder(settings.embed_dim), OtherEmbedder(settings.embed_dim)
+    nothing = Settings(_env_file=None, db=tmp_path / "none.db")
+    assert await services.missing_vectors(nothing, same) == 0
+    assert await services.missing_vectors(settings, same) == 0
+    conn = await connect(_disposable_test_db)
     try:
-        settings = Settings(_env_file=None, dsn=dsn, backend="hash")
-        same = HashEmbedder(settings.embed_dim)
-        other = HashEmbedder(settings.embed_dim)
-        other_model = lambda text: other.embed(text + " ")  # noqa: E731 - a different "model"
-        assert await services.embedding_mismatch(settings, "hash", same.embed) is None  # bare
-        conn = await asyncpg.connect(dsn)
-        try:
-            await apply_migrations(conn, embed_dim=settings.embed_dim)
-            await register_vector(conn)
-            assert await services.embedding_mismatch(settings, "hash", other_model) is None
-            memory = DirectMemory(MnemoStore(conn, same, settings=settings))
-            await memory.create("tests", "run command", "make test-db", request_id=uuid4())
-        finally:
-            await conn.close()
-        assert await services.embedding_mismatch(settings, "hash", same.embed) is None
-        problem = await services.embedding_mismatch(settings, "hash", other_model)
-        assert problem and "different model" in problem and name in problem
-        assert "mnemo:mnemo" not in problem  # no credentials
+        memory = DirectMemory(MnemoStore(conn, same, settings=settings))
+        await memory.create("tests", "run command", "make test-db", request_id=uuid4())
+        assert await services.missing_vectors(settings, same) == 0
+        assert await services.missing_vectors(settings, other) == 1
+        await reindex(conn, other)
+        assert await services.missing_vectors(settings, other) == 0
     finally:
-        await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-        await admin.close()
+        await conn.close()

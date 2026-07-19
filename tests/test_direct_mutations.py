@@ -7,13 +7,12 @@ from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
-import asyncpg
 import pytest
 
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import MutationResult
+from mnemo.sqlite import connect
 from tests.conftest import legacy_archive
 
 
@@ -37,13 +36,11 @@ async def counts(store):
 
 
 @asynccontextmanager
-async def two_stores(dsn, embedder):
-    a = await asyncpg.connect(dsn)
+async def two_stores(path, embedder):
+    a = await connect(path)
     try:
-        b = await asyncpg.connect(dsn)
+        b = await connect(path)
         try:
-            await register_vector(a)
-            await register_vector(b)
             namespace = "direct-test-" + uuid4().hex
             yield (
                 MnemoStore(a, embedder, namespace=namespace),
@@ -92,8 +89,10 @@ async def test_revert_copy_preserves_payload_trust_and_confidence(store) -> None
         "host-llm",
     )
     vectors = await store.conn.fetch(
-        "SELECT embedding::text FROM memory_event WHERE event_id=ANY(?1::uuid[])",
-        [first.event_id, copied.event_id],
+        "SELECT m.vector FROM memory_event e JOIN memory_embedding m ON m.seq = e.seq "
+        "WHERE e.event_id IN (?1, ?2)",
+        first.event_id,
+        copied.event_id,
     )
     assert len(vectors) == 2 and vectors[0] == vectors[1]
     legacy = await store.revert(first.fact_id, first.event_id)
@@ -111,7 +110,9 @@ async def test_01_lifecycle_exact_strings_and_immutable_history(store):
     changed = await d.update(
         first.fact_id, "MySQL\n", expected_event_id=first.event_id, request_id=uuid4()
     )
-    payloads = """SELECT (to_jsonb(e) - ARRAY['superseded_at', 'superseded_by'])::text
+    payloads = """SELECT seq, event_id, op, object_text, provenance, actor, confidence,
+                         trust_level, source_span, valid_from, recorded_at, parent_event_id,
+                         tier, reason, session_id, expires_at
                   FROM memory_event e WHERE fact_id=?1 ORDER BY seq"""
     before = await store.conn.fetch(payloads, first.fact_id)
     restored = await d.revert(

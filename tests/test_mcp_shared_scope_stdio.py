@@ -36,10 +36,10 @@ def payload(result, *, code=None):
     return value
 
 
-def server_env(dsn: str, namespace: str, actor: str, project: str | None) -> dict[str, str]:
+def server_env(db: str, namespace: str, actor: str, project: str | None) -> dict[str, str]:
     env = {
         **os.environ,
-        "MNEMO_DSN": dsn,
+        "MNEMO_DB": db,
         "MNEMO_BACKEND": "hash",
         "MNEMO_EMBED_DIM": str(get_settings().embed_dim),
         "MNEMO_NAMESPACE": namespace,

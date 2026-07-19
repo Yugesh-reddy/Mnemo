@@ -26,25 +26,13 @@ from mnemo.sqlite import Connection, connect
 # Each phase removes the files it ports; the list is empty when the port is done.
 collect_ignore = [
     "test_agent_eval.py",
-    "test_agent_undo.py",
-    "test_azure_pilot.py",
     "test_cli.py",
     "test_config.py",
     "test_demo.py",
-    "test_direct_mutations.py",
     "test_install.py",
-    "test_mcp_direct_profile.py",
-    "test_mcp_direct_profile_stdio.py",
-    "test_mcp_request_ids_stdio.py",
-    "test_mcp_service_errors_stdio.py",
-    "test_mcp_shared_scope_stdio.py",
-    "test_mcp_trust_stdio.py",
     "test_packaging.py",
     "test_project.py",
-    "test_sdk.py",
-    "test_services.py",
     "test_transfer.py",
-    "test_trust_features.py",
     "test_web.py",
 ]
 

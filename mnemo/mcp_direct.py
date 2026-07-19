@@ -5,9 +5,10 @@ with its own MNEMO_ACTOR; they share memory through two scopes. The project scop
 belongs to the repository the server was started in (or MNEMO_PROJECT) and is shared
 by every agent working there; the global scope is shared everywhere. Reads never
 filter by actor. Domain errors and invalid tool arguments return JSON
-{code, message, details} with MCP's isError flag set. When Postgres or the embedding
-service is unusable, tools return SERVICE_UNAVAILABLE saying how to fix it; the server
-starts without Postgres and connects on the first call after it comes up.
+{code, message, details} with MCP's isError flag set. When the store file or the
+embedding model is unusable, tools return SERVICE_UNAVAILABLE saying how to fix it.
+Each tool call opens the store file, runs in its own transaction, and closes it, so
+several agents' servers share one file safely.
 """
 
 from __future__ import annotations
@@ -21,7 +22,6 @@ from pathlib import Path
 from typing import Any, Literal
 from uuid import UUID, uuid4, uuid5
 
-import asyncpg
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.exceptions import ToolError
 from mcp.types import CallToolResult, TextContent
@@ -29,12 +29,13 @@ from pydantic import ValidationError
 
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector, validate_embedding_dimension
+from mnemo.db import check_schema, connect
 from mnemo.direct import DirectMemory
 from mnemo.embedder import Embedder, build_embedder
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.project import detect_project
 from mnemo.services import service_error
+from mnemo.sqlite import Connection
 
 SCOPES = ("project", "global")
 Source = Literal["user", "tool", "agent"]
@@ -42,8 +43,6 @@ REQUEST_ID_NAMESPACE = UUID("6d0e2f3a-4c1b-5e8a-9f7d-2b3c4d5e6f70")
 """Readable request IDs map to uuid5(REQUEST_ID_NAMESPACE, text), a stable retry key."""
 MAX_REQUEST_ID = 200
 
-_pool: asyncpg.Pool | None = None
-_pool_lock: asyncio.Lock | None = None
 _embedder: Embedder | None = None
 _lanes: dict[str, str] = {}  # scope -> namespace, resolved once per server process
 
@@ -64,54 +63,20 @@ def _actor(settings: Settings) -> str:
     return settings.actor or settings.agent_id
 
 
-async def _open_pool(settings: Settings) -> asyncpg.Pool:
-    async def init(conn: asyncpg.Connection) -> None:
-        await register_vector(conn)
-        await validate_embedding_dimension(conn, settings.embed_dim)
-
-    return await asyncpg.create_pool(settings.dsn, init=init, min_size=1, max_size=5, timeout=5)
-
-
-async def _get_pool(settings: Settings) -> asyncpg.Pool:
-    """The shared pool, opened on first use if Postgres was down at startup."""
-    global _pool
-    if _pool is None:
-        assert _pool_lock is not None
-        async with _pool_lock:
-            if _pool is None:
-                try:
-                    _pool = await _open_pool(settings)
-                except Exception as exc:
-                    error = service_error(exc, settings) or MnemoError(
-                        ErrorCode.SERVICE_UNAVAILABLE, str(exc), service="postgres"
-                    )
-                    raise error from exc
-    return _pool
-
-
 @asynccontextmanager
 async def lifespan(server: FastMCP) -> AsyncIterator[dict[str, Any]]:
-    global _pool, _pool_lock, _embedder, _lanes
+    global _embedder, _lanes
     settings = _settings()
     _lanes = _resolve_lanes(settings)
     embedder = build_embedder(settings)
-    _pool_lock = asyncio.Lock()
     try:
-        try:
-            _pool = await _open_pool(settings)
-        except Exception:
-            _pool = None  # tools report the problem and retry until Postgres is back
         _embedder = embedder
         yield {"embedder": embedder}
     finally:
-        pool, _pool, _embedder = _pool, None, None
-        try:
-            if pool is not None:
-                await pool.close()
-        finally:
-            close = getattr(embedder, "close", None)
-            if close:
-                await asyncio.to_thread(close)
+        _embedder = None
+        close = getattr(embedder, "close", None)
+        if close:
+            await asyncio.to_thread(close)
 
 
 class _DirectMCP(FastMCP):
@@ -204,11 +169,11 @@ def _scope(requested: str | None) -> str:
     return requested
 
 
-async def _scope_of(conn: asyncpg.Connection, settings: Settings, fact_id: UUID) -> str:
+async def _scope_of(conn: Connection, settings: Settings, fact_id: UUID) -> str:
     """The scope holding fact_id. Unknown IDs use the first scope, which reports NOT_FOUND."""
     namespace = await conn.fetchval(
-        "SELECT namespace FROM memory_fact WHERE fact_id=$1 AND namespace=ANY($2::text[]) "
-        "AND user_id=$3 AND agent_id=$4",
+        "SELECT namespace FROM memory_fact WHERE fact_id=?1 "
+        "AND namespace IN (SELECT value FROM json_each(?2)) AND user_id=?3 AND agent_id=?4",
         fact_id,
         list(_lanes.values()),
         settings.user_id,
@@ -228,8 +193,9 @@ async def _run[T](
         raise RuntimeError("Direct MCP lifespan is not running")
     settings = _settings()
     try:
-        pool = await _get_pool(settings)
-        async with pool.acquire() as conn:
+        conn = await connect(settings.db, create=False)
+        try:
+            await check_schema(conn)
             if fact_id is not None:
                 scope = await _scope_of(conn, settings, _id(fact_id, "fact_id"))
             scope = _scope(scope)
@@ -242,6 +208,8 @@ async def _run[T](
                 agent_id=settings.agent_id,
             )
             return await fn(DirectMemory(store)), scope
+        finally:
+            await conn.close()
     except ValueError as exc:
         raise MnemoError(ErrorCode.INVALID_INPUT, str(exc)) from exc
     except MnemoError:

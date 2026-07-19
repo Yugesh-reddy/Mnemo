@@ -1,5 +1,5 @@
-"""When Postgres or the embedding service is missing, agents get an error that says how to
-fix it, and the server keeps running so memory works once the service is back."""
+"""When the store or the embedding service is missing, agents get an error that says how
+to fix it, and the server keeps running so memory works once the problem is fixed."""
 
 from __future__ import annotations
 
@@ -7,20 +7,17 @@ import asyncio
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlsplit, urlunsplit
 from uuid import uuid4
 
-import asyncpg
-import pytest
-
-from mnemo.errors import ErrorCode, MnemoError
+from mnemo.db import apply_migrations
+from mnemo.sqlite import connect
 from tests.test_mcp_shared_scope_stdio import WIDGET, agent, payload, server_env
 
 CREATE = {"subject": "project", "predicate": "linter", "value": "ruff"}
 
 
-def ollama_env(dsn: str, host: str) -> dict[str, str]:
-    env = server_env(dsn, "service-errors-" + uuid4().hex, "codex", WIDGET)
+def ollama_env(db: str, host: str) -> dict[str, str]:
+    env = server_env(db, "service-errors-" + uuid4().hex, "codex", WIDGET)
     return env | {"MNEMO_BACKEND": "ollama", "MNEMO_OLLAMA_HOST": host}
 
 
@@ -66,8 +63,9 @@ async def test_missing_embedding_model_says_to_pull_it(_disposable_test_db, clea
         server.shutdown()
 
 
-async def test_postgres_down_still_starts_the_server_and_says_make_up(clean_memory):
-    env = server_env("postgresql://mnemo:mnemo@127.0.0.1:1/mnemo", "x", "codex", WIDGET)
+async def test_a_missing_store_says_to_install_and_works_once_it_exists(tmp_path):
+    path = tmp_path / "home" / ".mnemo" / "mnemo.db"
+    env = server_env(str(path), "x", "codex", WIDGET)
     async with asyncio.timeout(30):
         async with agent(env) as client:
             assert len((await client.list_tools()).tools) == 7
@@ -75,45 +73,39 @@ async def test_postgres_down_still_starts_the_server_and_says_make_up(clean_memo
                 await client.call_tool("memory_search", {"query": "linter"}),
                 code="SERVICE_UNAVAILABLE",
             )
-            assert error["details"]["service"] == "postgres"
-            assert "make up" in error["message"] and "127.0.0.1:1" in error["message"]
+            assert error["details"]["service"] == "store"
+            assert "mnemo install" in error["message"] and str(path) in error["message"]
+            assert not path.exists()  # a tool call never creates the store
+
+            conn = await connect(path)
+            try:
+                await apply_migrations(conn)
+            finally:
+                await conn.close()
+            created = payload(await client.call_tool("memory_create", CREATE))
+            assert created["status"] == "applied"
 
 
-async def test_unmigrated_database_says_to_migrate(_disposable_test_db):
-    name = "mnemo_unmigrated_" + uuid4().hex[:8]
-    parts = urlsplit(_disposable_test_db)
-    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
-    await admin.execute(f'CREATE DATABASE "{name}"')
+async def test_an_unmigrated_store_says_to_install(tmp_path):
+    path = tmp_path / "mnemo.db"
+    (await connect(path)).raw.close()
+    async with asyncio.timeout(30):
+        async with agent(server_env(str(path), "x", "codex", WIDGET)) as client:
+            error = payload(
+                await client.call_tool("memory_create", CREATE), code="SERVICE_UNAVAILABLE"
+            )
+            assert "mnemo install" in error["message"]
+
+
+async def test_a_store_from_a_newer_mnemo_says_to_upgrade(_disposable_test_db):
+    conn = await connect(_disposable_test_db)
     try:
-        dsn = urlunsplit(parts._replace(path="/" + name))
-        async with asyncio.timeout(30):
-            async with agent(server_env(dsn, "x", "codex", WIDGET)) as client:
-                error = payload(
-                    await client.call_tool("memory_create", CREATE), code="SERVICE_UNAVAILABLE"
-                )
-                assert "make migrate" in error["message"]
+        await conn.execute("INSERT INTO schema_migrations (filename) VALUES ('9999_next.sql')")
     finally:
-        await admin.execute(f'DROP DATABASE "{name}" WITH (FORCE)')
-        await admin.close()
-
-
-async def test_the_pool_opens_once_postgres_is_reachable(monkeypatch):
-    import mnemo.mcp_direct as srv
-
-    attempts: list[int] = []
-    pool = object()
-
-    async def open_pool(settings):
-        attempts.append(1)
-        if len(attempts) == 1:
-            raise ConnectionRefusedError(61, "Connect call failed")
-        return pool
-
-    monkeypatch.setattr(srv, "_open_pool", open_pool)
-    monkeypatch.setattr(srv, "_pool", None)
-    monkeypatch.setattr(srv, "_pool_lock", asyncio.Lock())
-    with pytest.raises(MnemoError) as failed:
-        await srv._get_pool(srv._settings())
-    assert failed.value.code == ErrorCode.SERVICE_UNAVAILABLE
-    assert await srv._get_pool(srv._settings()) is pool
-    assert await srv._get_pool(srv._settings()) is pool and len(attempts) == 2
+        await conn.close()
+    async with asyncio.timeout(30):
+        async with agent(server_env(_disposable_test_db, "x", "codex", WIDGET)) as client:
+            error = payload(
+                await client.call_tool("memory_create", CREATE), code="SERVICE_UNAVAILABLE"
+            )
+            assert "newer Mnemo" in error["message"]

@@ -15,7 +15,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-# asyncpg Record is mapping-like; dict(row) gives us .get for optional columns.
+# A row (mnemo.sqlite.Record) is mapping-like; dict(row) gives .get for optional columns.
 Row = Any
 
 

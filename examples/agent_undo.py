@@ -2,7 +2,7 @@
 
 Uses the published MCP schemas and in-process DirectMemory, not MCP transport.
 Only the host model is real: embeddings are non-semantic hash vectors. All writes
-land in an invocation-owned database; snapshots and transcripts survive cleanup.
+land in an invocation-owned store file; snapshots and transcripts survive cleanup.
 """
 
 from __future__ import annotations
@@ -12,22 +12,23 @@ import asyncio
 import hashlib
 import json
 import re
+import shutil
+import tempfile
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 from uuid import UUID, uuid4
 
-import asyncpg
 import httpx
 
 from examples.azure_host import AzureChatHost
 from mnemo.config import Settings, get_settings
 from mnemo.core import MnemoStore
-from mnemo.db import apply_migrations, register_vector
+from mnemo.db import apply_migrations, connect
 from mnemo.direct import DirectMemory
 from mnemo.embedder import HashEmbedder
 from mnemo.errors import ErrorCode, MnemoError
@@ -338,15 +339,15 @@ async def snapshot(direct: DirectMemory) -> JSON:
     store = direct.store
     scope = (store.namespace, store.user_id, store.agent_id)
     events = await store.conn.fetch(
-        "SELECT e.event_id,e.fact_id,e.seq,e.op::text,e.object_text AS value,e.actor,"
-        "e.provenance::text,e.trust_level::text,e.parent_event_id,f.subject,f.predicate "
-        "FROM memory_event e JOIN memory_fact f USING(fact_id) "
-        "WHERE f.namespace=$1 AND f.user_id=$2 AND f.agent_id=$3 ORDER BY e.seq",
+        "SELECT e.event_id,e.fact_id,e.seq,e.op,e.object_text AS value,e.actor,"
+        "e.provenance,e.trust_level,e.parent_event_id,f.subject,f.predicate "
+        "FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id "
+        "WHERE f.namespace=?1 AND f.user_id=?2 AND f.agent_id=?3 ORDER BY e.seq",
         *scope,
     )
     receipts = await store.conn.fetch(
         "SELECT request_id,operation,status,event_id,fact_id,result FROM memory_mutation_receipt "
-        "WHERE namespace=$1 AND user_id=$2 AND agent_id=$3 ORDER BY created_at,request_id",
+        "WHERE namespace=?1 AND user_id=?2 AND agent_id=?3 ORDER BY created_at,request_id",
         *scope,
     )
     return json.loads(
@@ -548,24 +549,14 @@ async def pilot(model: str | None, output: Path, *, provider: str = "ollama") ->
     def save() -> None:
         report_file.write_text(json.dumps(report, indent=2) + "\n")
 
-    db_name = "mnemo_pilot_" + uuid4().hex[:12]
-    report["database_name"] = db_name
-    parts = urlsplit(settings.test_dsn)
-    admin_dsn = urlunsplit(parts._replace(path="/postgres"))
-    created = False
+    scratch = Path(tempfile.mkdtemp(prefix="mnemo_pilot_"))
+    report["database_name"] = scratch.name
     conn = None
     started = time.monotonic()
     try:
         report["host"] = await host.metadata()
-        admin = await asyncpg.connect(admin_dsn, timeout=5)
-        try:
-            await admin.execute(f'CREATE DATABASE "{db_name}"')
-            created = True
-        finally:
-            await admin.close()
-        conn = await asyncpg.connect(urlunsplit(parts._replace(path="/" + db_name)))
+        conn = await connect(scratch / "mnemo.db")
         await apply_migrations(conn)
-        await register_vector(conn)
         for number, scenario in enumerate(SCENARIOS, 1):
             print(f"[{number}/6] {scenario.name}", flush=True)
             direct = DirectMemory(
@@ -614,10 +605,6 @@ async def pilot(model: str | None, output: Path, *, provider: str = "ollama") ->
                 f"{turn['wall_seconds']:.2f}s; {score['reasons']}",
                 flush=True,
             )
-        report["background_rows"] = {
-            table: await conn.fetchval(f"SELECT count(*) FROM {table}")
-            for table in ("extraction_job", "quality_decision", "fast_cache")
-        }
         report["passed"] = sum(case["passed"] for case in report["cases"])
         report["unintended_mutations"] = sum(
             case["unintended_mutations"] for case in report["cases"]
@@ -629,19 +616,15 @@ async def pilot(model: str | None, output: Path, *, provider: str = "ollama") ->
         try:
             try:
                 if conn is not None:
-                    await conn.close(timeout=5)
+                    await conn.close()
             except Exception as exc:
                 report["connection_close_error"] = f"{type(exc).__name__}: {exc}"
-            if created:
-                admin = await asyncpg.connect(admin_dsn, timeout=5)
-                try:
-                    await admin.execute(f'DROP DATABASE "{db_name}" WITH (FORCE)')
-                    report["database_removed"] = True
-                except Exception as exc:
-                    report["cleanup_error"] = f"{type(exc).__name__}: {exc}"
-                    raise
-                finally:
-                    await admin.close()
+            try:
+                shutil.rmtree(scratch)
+                report["database_removed"] = True
+            except OSError as exc:
+                report["cleanup_error"] = f"{type(exc).__name__}: {exc}"
+                raise
         finally:
             await host.close()
             report["wall_seconds"] = time.monotonic() - started

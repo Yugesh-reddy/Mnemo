@@ -39,6 +39,10 @@ SOURCES = {
 DEFAULT_SOURCE = "agent"
 
 
+def _canonical(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False)
+
+
 class DirectMemory:
     MAX_VALUE_BYTES = 8192
     PREVIEW_CHARS = 256
@@ -190,9 +194,9 @@ class DirectMemory:
                 request_id,
             )
             if receipt is not None:
-                # Compared as JSON values, so a receipt imported from Postgres
-                # (formatted differently) still matches its retry.
-                matches = json.loads(receipt["request_payload"]) == payload
+                # Compared as canonical JSON text, so formatting (a receipt imported from
+                # Postgres) doesn't matter but 1 and true still differ.
+                matches = _canonical(json.loads(receipt["request_payload"])) == _canonical(payload)
                 if receipt["operation"] != operation or not matches:
                     raise MnemoError(
                         ErrorCode.REQUEST_ID_REUSED,
