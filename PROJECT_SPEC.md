@@ -726,8 +726,10 @@ receipts (§15, §19–§20, §24–§25) behave as before.
 
 - **Store.** One SQLite file, `MNEMO_DB` (default `~/.mnemo/mnemo.db`), created with
   its directory `0700` and the file `0600`, in WAL mode with foreign keys on and a 30 s
-  busy timeout. Opening it loads `sqlite-vec`; a Python that cannot load SQLite
-  extensions is refused with the fix (`uv tool install --python 3.12 …`).
+  busy timeout, and `synchronous = FULL` so a commit survives power loss as on
+  Postgres. Opening it loads `sqlite-vec`; a Python that cannot load SQLite
+  extensions (or lacks FTS5) is refused with the fix (`uv tool install --python 3.12 …`),
+  and the installer checks this before creating anything.
   `MNEMO_DSN`, `MNEMO_TEST_DSN` and `MNEMO_DB_PORT` are ignored. Keep the file on a
   local disk, not in a synced or network folder.
 - **Schema.** `migrations/0001_sqlite_init.sql`. Columns match the Postgres schema at
@@ -776,7 +778,8 @@ receipts (§15, §19–§20, §24–§25) behave as before.
   `mnemo import` are added.
 - **Export and import.** `format_version` 2 carries every stored column value exactly
   and no vectors; import into an empty store rebuilds vectors with the destination's
-  model. Import also reads version 1 (Postgres) documents whose migrations include
+  model (the `mnemo import` command leaves that to `mnemo install`, which knows the
+  agents' backend). Import also reads version 1 (Postgres) documents whose migrations include
   `0012_retract_receipts.sql`: timestamps take the fixed form, JSON becomes text,
   numbers stay exact, vectors are dropped, and receipts compare request payloads as
   canonical JSON, so a pre-upgrade request ID still replays. Older Postgres exports are

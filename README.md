@@ -48,12 +48,11 @@ the Postgres database, so carry your memories over with an export.
 ```bash
 mnemo-transfer export --all-scopes --out mnemo-postgres.json  # old version, Postgres up
 uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo
-mnemo install                                  # creates ~/.mnemo/mnemo.db
-mnemo import mnemo-postgres.json               # same IDs, history and receipts
+mnemo import mnemo-postgres.json   # creates ~/.mnemo/mnemo.db; same IDs, history, receipts
+mnemo install                      # embeds the imported memories with the chosen model
 ```
 
-Import embeds the memories again with the model you
-installed. Your Postgres data is not changed, and `mnemo up`/`mnemo down` are gone:
+Import leaves the vectors to `mnemo install`. Your Postgres data is not changed, and `mnemo up`/`mnemo down` are gone:
 stop the old container with Docker when you no longer need it. To go back, install
 the tag: `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo@v0.0.1-postgres`.
 
@@ -157,8 +156,9 @@ session's server then uses about 300 MB of memory. On a 28-question check it fou
 memories about as well as Ollama (see `tests/test_retrieval_quality.py`); the model is
 English-only. Each vector is stored with the model that made it, and search compares
 a question only with vectors from the same model, so switching models keeps your
-memories: `mnemo install` embeds them again with the new model (`mnemo reindex` does
-it by hand). Until then they are still found by their words.
+memories: `mnemo install` embeds them again with the new model. `mnemo reindex` does
+it by hand with the backend in your shell's `MNEMO_BACKEND`, so set the one the agents
+use. Until then memories are still found by their words.
 
 ### Configure by hand
 

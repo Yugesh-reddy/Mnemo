@@ -310,6 +310,21 @@ def _load_vector_extension(raw: sqlite3.Connection) -> None:
         raw.enable_load_extension(False)
 
 
+def capability_problem() -> str | None:
+    """None when this Python's SQLite can load sqlite-vec and has FTS5; else the fix."""
+    raw = sqlite3.connect(":memory:")
+    try:
+        _load_vector_extension(raw)
+        raw.execute("CREATE VIRTUAL TABLE t USING fts5(x, tokenize = 'porter unicode61')")
+    except StoreUnavailable as exc:
+        return str(exc)
+    except sqlite3.OperationalError as exc:
+        return f"this Python's SQLite lacks FTS5 ({exc}); install Mnemo with uv's Python 3.12"
+    finally:
+        raw.close()
+    return None
+
+
 def _ensure_file(path: Path) -> None:
     """Create the store private to this user: directory 0700, file 0600."""
     if path.exists():
@@ -331,7 +346,9 @@ def open_sync(path: str | Path, *, create: bool = True) -> Connection:
         raw.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
         if raw.execute("PRAGMA journal_mode").fetchone()[0] != "wal":
             raw.execute("PRAGMA journal_mode = WAL")
-        raw.execute("PRAGMA synchronous = NORMAL")
+        # FULL: a commit survives power loss, as it did on Postgres. Agents write
+        # rarely, so the extra sync per commit costs little.
+        raw.execute("PRAGMA synchronous = FULL")
         raw.execute("PRAGMA foreign_keys = ON")
         raw.execute("PRAGMA recursive_triggers = ON")
     except sqlite3.DatabaseError as exc:

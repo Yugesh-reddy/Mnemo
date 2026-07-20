@@ -109,12 +109,15 @@ async def missing_vectors(settings: Settings, embedder: object) -> int:
 
 
 async def store_problem(settings: Settings) -> str | None:
-    """None when the store file opens with this Python; else what to do.
+    """None when this Python can run the store and the file opens; else what to do.
 
     A missing file is fine: `mnemo install` creates it.
     """
-    from mnemo.sqlite import StoreUnavailable, connect
+    from mnemo.sqlite import StoreUnavailable, capability_problem, connect
 
+    problem = capability_problem()
+    if problem:
+        return problem
     try:
         conn = await connect(settings.db, create=False)
     except StoreUnavailable as exc:

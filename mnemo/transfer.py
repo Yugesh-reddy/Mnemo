@@ -297,7 +297,6 @@ async def _insert(conn: Connection, section: str, columns: list[str], rows: list
 
 async def _run(args: argparse.Namespace) -> None:
     from mnemo.db import check_schema, connect
-    from mnemo.embedder import build_embedder
 
     settings = get_settings()
     conn = await connect(create=args.command == "import")
@@ -326,12 +325,15 @@ async def _run(args: argparse.Namespace) -> None:
 
             await apply_migrations(conn)
             counts = await import_store(
-                conn,
-                Path(args.path).read_text(encoding="utf-8"),
-                settings=settings,
-                embedder=build_embedder(settings),
+                conn, Path(args.path).read_text(encoding="utf-8"), settings=settings
             )
             print("Imported " + ", ".join(f"{n} {section}" for section, n in counts.items()))
+            # Vectors are left to `mnemo install`, which embeds with the backend the
+            # agents use; this shell's MNEMO_BACKEND may differ.
+            print(
+                "Run `mnemo install` (or `mnemo reindex` with the agents' MNEMO_BACKEND) to "
+                "embed them for search; until then they are found by their words."
+            )
     finally:
         await conn.close()
 

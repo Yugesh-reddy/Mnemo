@@ -107,3 +107,20 @@ async def test_memories_without_a_vector_from_this_model_are_counted(_disposable
         assert await services.missing_vectors(settings, other) == 0
     finally:
         await conn.close()
+
+
+async def test_a_python_that_cannot_load_the_extension_is_caught_before_any_file(
+    tmp_path, monkeypatch
+):
+    import mnemo.sqlite as sq
+
+    assert sq.capability_problem() is None
+
+    def refuse(raw):
+        raise sq.StoreUnavailable("this Python cannot load SQLite extensions. Install …")
+
+    monkeypatch.setattr(sq, "_load_vector_extension", refuse)
+    fresh = Settings(_env_file=None, db=tmp_path / "new" / "mnemo.db")
+    problem = await services.store_problem(fresh)
+    assert "cannot load SQLite extensions" in problem
+    assert not (tmp_path / "new").exists()

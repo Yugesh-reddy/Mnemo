@@ -155,8 +155,10 @@ async def test_search_over_5000_memories_in_a_scope_stays_fast(db: Connection) -
                 "UPDATE memory_fact SET current_event_id=?1 WHERE fact_id=?2", event_id, fact_id
             )
     store = MnemoStore(db, embedder)
+    await store.search("warm up", reinforce=False)  # first query pays for loading pages
     timings = []
-    for query in ("which database do we use", "value 42", "deploy target", "topic", "x"):
+    queries = ("which database", "value 42", "deploy target", "topic", "x", "tests", "a b")
+    for query in queries:
         started = time.perf_counter()
         await store.search(query, reinforce=False)
         timings.append(time.perf_counter() - started)

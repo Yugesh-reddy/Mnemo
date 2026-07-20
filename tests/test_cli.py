@@ -37,7 +37,8 @@ def test_migrate_reindex_export_and_import_work_on_the_configured_file(
         monkeypatch.setenv("MNEMO_DB", str(tmp_path / "restored.db"))
         get_settings.cache_clear()
         assert cli.main(["import", str(backup)]) == 0
-        assert "Imported 0 facts" in capsys.readouterr().out
+        out = capsys.readouterr().out
+        assert "Imported 0 facts" in out and "mnemo install" in out
     finally:
         get_settings.cache_clear()
 
