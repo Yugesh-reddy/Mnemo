@@ -32,7 +32,6 @@ collect_ignore = [
     "test_install.py",
     "test_packaging.py",
     "test_project.py",
-    "test_transfer.py",
     "test_web.py",
 ]
 

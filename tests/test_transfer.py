@@ -1,16 +1,21 @@
-"""Phase 6 export/import: exact round trip into an empty store, all-or-nothing refusals."""
+"""Export/import: exact round trip into an empty store, all-or-nothing refusals, and
+the upgrade from a Postgres (version 1) export."""
 
 import json
+import shutil
 from decimal import Decimal
-from uuid import uuid4
+from pathlib import Path
+from uuid import UUID, uuid4
 
 import pytest
 
 from mnemo.config import Settings
 from mnemo.core import MnemoStore
-from mnemo.db import drop_isolated_schema, prepare_isolated_schema
 from mnemo.direct import DirectMemory
+from mnemo.sqlite import connect
 from mnemo.transfer import TransferError, export_store, import_store
+
+V1 = Path(__file__).parent / "data" / "export_v1_postgres.json"
 
 SETTINGS = Settings(backend="hash")
 BIG = Decimal("12345678901234567890.123456789")
@@ -21,14 +26,15 @@ def scope(namespace):
 
 
 @pytest.fixture
-async def source_and_destination(_disposable_test_db):
-    schemas = ["mnemo_worker_" + uuid4().hex for _ in range(2)]
-    conns = [await prepare_isolated_schema(_disposable_test_db, s) for s in schemas]
+async def source_and_destination(_migrated_template, tmp_path):
+    paths = [tmp_path / "source.db", tmp_path / "destination.db"]
+    for path in paths:
+        shutil.copyfile(_migrated_template, path)
+    conns = [await connect(path) for path in paths]
     try:
         yield conns
     finally:
-        for conn, schema in zip(conns, schemas, strict=True):
-            await drop_isolated_schema(conn, schema)
+        for conn in conns:
             await conn.close()
 
 
@@ -88,8 +94,9 @@ async def test_round_trip_is_exact_and_restored_store_keeps_working(
     await seed(source, fake_embedder, "transfer-b")
 
     document = await export_store(source, scope=scope("transfer-a"), settings=SETTINGS)
-    counts = await import_store(destination, document, settings=SETTINGS)
+    counts = await import_store(destination, document, settings=SETTINGS, embedder=fake_embedder)
     assert counts == {"facts": 6, "events": 11, "commits": 2, "receipts": 3}
+    assert "embedding" not in document and "vector" not in document
     assert await row_counts(destination) == (6, 11, 2, 3)
 
     again = await export_store(destination, scope=scope("transfer-a"), settings=SETTINGS)
@@ -159,9 +166,8 @@ async def test_import_refuses_a_non_empty_destination(source_and_destination, fa
 @pytest.mark.parametrize(
     ("old", "new", "settings", "message"),
     [
-        ('"format_version": 1', '"format_version": 2', SETTINGS, "format_version"),
-        ('"0010_mutation_receipts.sql"', '"0011_future.sql"', SETTINGS, "schema mismatch"),
-        ("", "", Settings(backend="ollama"), "embedding mismatch"),
+        ('"format_version": 2', '"format_version": 3', SETTINGS, "format_version"),
+        ('"0001_sqlite_init.sql"', '"0002_future.sql"', SETTINGS, "schema mismatch"),
         ('"facts": 6', '"facts": 5', SETTINGS, "counts"),
     ],
 )
@@ -198,7 +204,7 @@ async def test_import_rolls_back_when_restored_rows_differ(source_and_destinatio
     source, destination = source_and_destination
     await seed(source, fake_embedder, "transfer-a")
     doc = json.loads(await export_store(source, scope=scope("transfer-a"), settings=SETTINGS))
-    # Postgres silently drops unknown keys; verification must notice the loss.
+    # A column this store doesn't have would otherwise be lost silently.
     doc["events"][-1]["unexpected"] = "field"
     with pytest.raises(TransferError, match="differ from the document in events"):
         await import_store(destination, json.dumps(doc), settings=SETTINGS)
@@ -238,3 +244,81 @@ async def test_a_retracted_memory_and_its_receipt_round_trip(source_and_destinat
         planted.fact_id, planted.event_id, expected_event_id=gone.event_id, request_id=uuid4()
     )
     assert back.status == "applied" and (await restored.get(planted.fact_id)).status == "active"
+
+
+async def test_a_postgres_export_imports_with_the_same_history(db, fake_embedder):
+    doc = json.loads(V1.read_text(), parse_float=Decimal)
+    counts = await import_store(db, V1.read_text(), settings=SETTINGS, embedder=fake_embedder)
+    assert counts == {"facts": 6, "events": 9, "commits": 1, "receipts": 7}
+
+    events = await db.fetch(
+        "SELECT seq, event_id, fact_id, op, object_text, object_number, object_json, "
+        "provenance, trust_level, actor, superseded_by, parent_event_id FROM memory_event "
+        "ORDER BY seq"
+    )
+    assert [e["seq"] for e in events] == [e["seq"] for e in doc["events"]]
+    for stored, original in zip(events, doc["events"], strict=True):
+        assert str(stored["event_id"]) == original["event_id"]
+        assert str(stored["fact_id"]) == original["fact_id"]
+        assert stored["op"] == original["op"] and stored["actor"] == original["actor"]
+        assert stored["object_text"] == original["object_text"]
+        assert (stored["provenance"], stored["trust_level"]) == (
+            original["provenance"],
+            original["trust_level"],
+        )
+        for column in ("superseded_by", "parent_event_id"):
+            assert (str(stored[column]) if stored[column] else None) == original[column]
+    numbers = [e["object_number"] for e in events if e["object_number"] is not None]
+    assert numbers == [Decimal("90")]
+    [matrix] = [json.loads(e["object_json"]) for e in events if e["object_json"]]
+    assert matrix == {"python": ["3.12", "3.13"]}
+    # Timestamps keep their instant and take the store's fixed form.
+    first = await db.fetchval(
+        "SELECT recorded_at FROM memory_event WHERE seq=?1", doc["events"][0]["seq"]
+    )
+    assert first.isoformat() == doc["events"][0]["recorded_at"]
+    raw = await db.fetchval("SELECT recorded_at || '' FROM memory_event ORDER BY seq LIMIT 1")
+    assert raw.endswith("Z") and len(raw) == 27
+
+    heads = {
+        str(r["fact_id"]): str(r["current_event_id"])
+        for r in await db.fetch("SELECT fact_id, current_event_id FROM memory_fact")
+    }
+    assert heads == {f["fact_id"]: f["current_event_id"] for f in doc["facts"]}
+    assert await db.fetchval("SELECT count(*) FROM memory_embedding") == 9
+
+    # The restored store reads, searches and retries as it did on Postgres.
+    project = {"namespace": "project:github.com/example/widget", "user_id": "owner"}
+    direct = DirectMemory(MnemoStore(db, fake_embedder, agent_id="mnemo", **project))
+    tests = next(f for f in doc["facts"] if f["subject"] == "tests")
+    planted = next(f for f in doc["facts"] if f["subject"] == "deploy")
+    assert (await direct.get(UUID(tests["fact_id"]))).value == "make test-db"
+    assert (await direct.get(UUID(planted["fact_id"]))).status == "retracted"
+    assert [h.value for h in await direct.search("deploy command")] == []
+    hits = await direct.search("tests command")
+    assert [(h.value, h.trust_level, h.actor) for h in hits][0] == (
+        "make test-db",
+        "high",
+        "claude-code",
+    )
+    # Request 2 (an update from source "tool") replays its Postgres receipt.
+    added = next(e for e in doc["events"] if e["fact_id"] == tests["fact_id"])
+    replay = await direct.update(
+        UUID(tests["fact_id"]),
+        "make test",
+        expected_event_id=UUID(added["event_id"]),
+        request_id=UUID(int=2),
+        actor="codex",
+        source="tool",
+    )
+    assert replay.replayed and replay.value == "make test"
+    again = await export_store(db, scope=None, settings=SETTINGS)
+    assert json.loads(again)["format_version"] == 2
+
+
+async def test_a_postgres_export_from_before_retract_is_refused(db):
+    doc = json.loads(V1.read_text())
+    doc["schema_migrations"].remove("0012_retract_receipts.sql")
+    with pytest.raises(TransferError, match="v0.0.1-postgres"):
+        await import_store(db, json.dumps(doc), settings=SETTINGS)
+    assert await row_counts(db) == (0, 0, 0, 0)

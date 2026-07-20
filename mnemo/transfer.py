@@ -1,16 +1,19 @@
-"""Versioned JSON export/import of the versioned store (master plan Phase 6).
+"""Versioned JSON export/import of the versioned store.
 
 An export carries facts (with their HEAD pointers), every event, commits and
 mutation receipts for one scope or for the whole store, plus the applied
-migrations and the embedding backend/model/dimension that produced the vectors.
-Rows are serialized by Postgres with ``to_jsonb`` and restored with
-``jsonb_populate_recordset``, so values, IDs, sequence numbers and timestamps
-round-trip exactly; the Python side only validates and moves text.
+migrations. Rows are the stored column values exactly as the file holds them
+(format version 2), so IDs, sequence numbers, timestamps and values round-trip
+byte for byte. Vectors and the word index are derived data and are left out:
+import rebuilds them (``reindex``) with the destination's embedding model.
 
-Import restores into an **empty** store only, in one transaction. Before commit
-it re-exports what it wrote and rolls back unless that equals the document.
-Pipeline working tables (fast cache, extraction jobs, quality decisions) are not
-exported.
+Import restores into an **empty** store only, in one transaction. Before commit it
+reads back what it wrote and rolls back unless that equals the document.
+
+Import also reads version 1 documents, written by the Postgres releases (tag
+``v0.0.1-postgres``): timestamps are put in the store's fixed form, JSON values
+become text, numbers stay exact, and the vectors are dropped. A request recorded
+before the upgrade still replays its receipt.
 """
 
 from __future__ import annotations
@@ -23,164 +26,122 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-import asyncpg
-
 from mnemo.config import Settings, get_settings
+from mnemo.db import applied_migrations
+from mnemo.sqlite import Connection, format_ts, parse_ts
 
 FORMAT = "mnemo.export"
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
+POSTGRES_VERSION = 1
+POSTGRES_LAST_MIGRATION = "0012_retract_receipts.sql"
 SECTIONS = ("facts", "events", "commits", "receipts")
-EXCLUDED_TABLES = ("fast_cache", "extraction_job", "quality_decision")
+TABLES = {
+    "facts": "memory_fact",
+    "events": "memory_event",
+    "commits": "memory_commit",
+    "receipts": "memory_mutation_receipt",
+}
+ORDER = {
+    "facts": "f.created_at, f.fact_id",
+    "events": "e.seq",
+    "commits": "c.at_seq, c.created_at, c.commit_id",
+    "receipts": "r.created_at, r.receipt_id",
+}
+ALIAS = {"facts": "f", "events": "e", "commits": "c", "receipts": "r"}
 _SCOPE_KEYS = ("namespace", "user_id", "agent_id")
-_STORE_TABLES = ("memory_fact", "memory_event", "memory_commit", "memory_mutation_receipt")
 
-# $1..$3 = namespace/user/agent, or all NULL for the whole store.
-_SECTIONS_SQL = """
-SELECT jsonb_build_object(
-  'facts', COALESCE((
-    SELECT jsonb_agg(to_jsonb(f) ORDER BY f.created_at, f.fact_id)
-    FROM memory_fact f
-    WHERE $1::text IS NULL OR (f.namespace, f.user_id, f.agent_id) = ($1, $2, $3)
-  ), '[]'::jsonb),
-  'events', COALESCE((
-    SELECT jsonb_agg(to_jsonb(e) ORDER BY e.seq)
-    FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id
-    WHERE $1::text IS NULL OR (f.namespace, f.user_id, f.agent_id) = ($1, $2, $3)
-  ), '[]'::jsonb),
-  'commits', COALESCE((
-    SELECT jsonb_agg(to_jsonb(c) ORDER BY c.at_seq, c.created_at, c.commit_id)
-    FROM memory_commit c
-    WHERE $1::text IS NULL OR (c.namespace, c.user_id, c.agent_id) = ($1, $2, $3)
-  ), '[]'::jsonb),
-  'receipts', COALESCE((
-    SELECT jsonb_agg(to_jsonb(r) ORDER BY r.created_at, r.receipt_id)
-    FROM memory_mutation_receipt r
-    WHERE $1::text IS NULL OR (r.namespace, r.user_id, r.agent_id) = ($1, $2, $3)
-  ), '[]'::jsonb)
-) AS sections
-"""
-
-# Facts go in without HEAD pointers (events don't exist yet); events keep their
-# original seq; self-references inside one INSERT are checked at statement end.
-_RESTORE_SQL = (
-    """
-    INSERT INTO memory_commit
-    SELECT r.* FROM mnemo_import_doc d,
-         jsonb_populate_recordset(NULL::memory_commit, d.doc->'commits') r
-    """,
-    """
-    INSERT INTO memory_fact
-    SELECT r.* FROM mnemo_import_doc d,
-         jsonb_populate_recordset(NULL::memory_fact, (
-           SELECT COALESCE(jsonb_agg(x - 'current_event_id'), '[]'::jsonb)
-           FROM jsonb_array_elements(d.doc->'facts') x)) r
-    """,
-    """
-    INSERT INTO memory_event OVERRIDING SYSTEM VALUE
-    SELECT r.* FROM mnemo_import_doc d,
-         jsonb_populate_recordset(NULL::memory_event, d.doc->'events') r
-    """,
-    """
-    UPDATE memory_fact f SET current_event_id = r.current_event_id
-    FROM mnemo_import_doc d,
-         jsonb_populate_recordset(NULL::memory_fact, d.doc->'facts') r
-    WHERE f.fact_id = r.fact_id AND r.current_event_id IS NOT NULL
-    """,
-    """
-    INSERT INTO memory_mutation_receipt
-    SELECT r.* FROM mnemo_import_doc d,
-         jsonb_populate_recordset(NULL::memory_mutation_receipt, d.doc->'receipts') r
-    """,
-    """
-    SELECT setval(pg_get_serial_sequence('memory_event', 'seq'), max(seq))
-    FROM memory_event HAVING count(*) > 0
-    """,
-)
+# How version 1 (Postgres) columns become stored values.
+_TIME = {
+    "created_at",
+    "valid_from",
+    "valid_to",
+    "recorded_at",
+    "superseded_at",
+    "last_used",
+    "expires_at",
+}
+_JSON_TEXT = {"object_json", "source_span", "request_payload", "result"}
+_REAL = {"confidence", "write_score", "strength"}
+_DROPPED = {"embedding"}
 
 
 class TransferError(Exception):
     """An export document cannot be restored into this destination."""
 
 
-def _embedding_identity(settings: Settings, dim: int | None) -> dict[str, Any]:
-    # The hash backend ignores embed_model; don't let an unused setting block a restore.
-    model = None if settings.backend == "hash" else settings.embed_model
-    return {"backend": settings.backend, "model": model, "dim": dim}
+async def _columns(conn: Connection, table: str) -> list[str]:
+    return [row["name"] for row in await conn.fetch(f"PRAGMA table_info({table})")]
 
 
-async def _store_identity(conn: asyncpg.Connection) -> tuple[list[str], int | None]:
-    migrations = await conn.fetchval(
-        "SELECT COALESCE(array_agg(filename ORDER BY filename), '{}') FROM schema_migrations"
-    )
-    dim = await conn.fetchval(
-        "SELECT atttypmod FROM pg_attribute "
-        "WHERE attrelid=to_regclass('memory_event') AND attname='embedding' AND NOT attisdropped"
-    )
-    return list(migrations), dim
+async def _raw_rows(conn: Connection, sql: str, *args: Any) -> list[dict[str, Any]]:
+    """Rows exactly as stored (no conversion to UUID, datetime or Decimal)."""
+
+    def run() -> list[dict[str, Any]]:
+        cursor = conn.raw.execute(sql, args)
+        names = [column[0] for column in cursor.description]
+        return [dict(zip(names, row, strict=True)) for row in cursor.fetchall()]
+
+    return await conn._call(run)
 
 
-def _scope_args(scope: dict[str, str] | None) -> tuple[str | None, str | None, str | None]:
-    if scope is None:
-        return (None, None, None)
-    return (scope["namespace"], scope["user_id"], scope["agent_id"])
+async def _sections(conn: Connection, scope: dict[str, str] | None) -> dict[str, list[dict]]:
+    sections: dict[str, list[dict]] = {}
+    for section in SECTIONS:
+        table, alias = TABLES[section], ALIAS[section]
+        columns = ", ".join(f"{alias}.{c}" for c in await _columns(conn, table))
+        source = f"{table} {alias}"
+        owner = alias
+        if section == "events":
+            source += " JOIN memory_fact f ON f.fact_id = e.fact_id"
+            owner = "f"
+        where = (
+            ""
+            if scope is None
+            else f"WHERE {owner}.namespace=?1 AND {owner}.user_id=?2 AND {owner}.agent_id=?3"
+        )
+        args = () if scope is None else tuple(scope[k] for k in _SCOPE_KEYS)
+        sections[section] = await _raw_rows(
+            conn, f"SELECT {columns} FROM {source} {where} ORDER BY {ORDER[section]}", *args
+        )
+    return sections
 
 
 async def export_store(
-    conn: asyncpg.Connection,
+    conn: Connection,
     *,
     scope: dict[str, str] | None,
     settings: Settings | None = None,
 ) -> str:
     """Return a pretty-printed export document for ``scope`` (``None`` = whole store).
 
-    Reads one repeatable-read snapshot when this call owns the transaction.
-    Timestamps are rendered in UTC so documents compare byte-for-byte across hosts.
+    Reads one snapshot when this call owns the transaction.
     """
-    settings = settings or get_settings()
     if scope is not None and set(scope) != set(_SCOPE_KEYS):
         raise ValueError(f"scope must have exactly the keys {_SCOPE_KEYS}")
-    transaction = (
-        conn.transaction()
-        if conn.is_in_transaction()
-        else conn.transaction(isolation="repeatable_read", readonly=True)
-    )
-    async with transaction:
-        await conn.execute("SET LOCAL TimeZone = 'UTC'")
-        migrations, dim = await _store_identity(conn)
-        header = {
-            "format": FORMAT,
-            "format_version": FORMAT_VERSION,
-            "scope": scope,
-            "schema_migrations": migrations,
-            "embedding": _embedding_identity(settings, dim),
-            "excluded_tables": list(EXCLUDED_TABLES),
-        }
-        return await conn.fetchval(
-            f"""
-            WITH s AS ({_SECTIONS_SQL})
-            SELECT jsonb_pretty(
-              $4::jsonb || s.sections || jsonb_build_object(
-                'exported_at', now(),
-                'counts', jsonb_build_object(
-                  'facts', jsonb_array_length(s.sections->'facts'),
-                  'events', jsonb_array_length(s.sections->'events'),
-                  'commits', jsonb_array_length(s.sections->'commits'),
-                  'receipts', jsonb_array_length(s.sections->'receipts'))))
-            FROM s
-            """,
-            *_scope_args(scope),
-            json.dumps(header),
-        )
+    async with conn.transaction(readonly=not conn.is_in_transaction()):
+        migrations = await applied_migrations(conn)
+        sections = await _sections(conn, scope)
+        exported_at = format_ts(conn.now())
+    document = {
+        "format": FORMAT,
+        "format_version": FORMAT_VERSION,
+        "scope": scope,
+        "schema_migrations": migrations,
+        **sections,
+        "exported_at": exported_at,
+        "counts": {section: len(sections[section]) for section in SECTIONS},
+    }
+    return json.dumps(document, indent=2, ensure_ascii=False)
 
 
 def _validate_document(doc: Any) -> None:
     """Checks that need no database: format, shape, counts and row scope."""
     if not isinstance(doc, dict) or doc.get("format") != FORMAT:
         raise TransferError(f"not a {FORMAT} document")
-    if doc.get("format_version") != FORMAT_VERSION:
+    if doc.get("format_version") not in (FORMAT_VERSION, POSTGRES_VERSION):
         raise TransferError(
             f"unsupported format_version {doc.get('format_version')!r}; "
-            f"this Mnemo reads version {FORMAT_VERSION}"
+            f"this Mnemo reads versions {POSTGRES_VERSION} and {FORMAT_VERSION}"
         )
     counts = doc.get("counts") or {}
     for section in SECTIONS:
@@ -205,43 +166,82 @@ def _validate_document(doc: Any) -> None:
             raise TransferError(f"a {section} row references a fact missing from the document")
 
 
+def _plain(value: Any) -> Any:
+    """JSON from a Decimal-parsed document, with numbers as JSON numbers again."""
+    if isinstance(value, Decimal):
+        return int(value) if value == value.to_integral_value() else float(value)
+    if isinstance(value, dict):
+        return {k: _plain(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_plain(v) for v in value]
+    return value
+
+
+def _from_postgres(section: str, row: dict[str, Any]) -> dict[str, Any]:
+    """One version 1 row as this store keeps it."""
+    out: dict[str, Any] = {}
+    for column, value in row.items():
+        if column in _DROPPED:
+            continue
+        if value is None:
+            out[column] = None
+        elif column in _TIME:
+            out[column] = format_ts(parse_ts(value))
+        elif column in _JSON_TEXT:
+            plain = _plain(value)
+            sort = column in ("object_json", "request_payload")
+            out[column] = json.dumps(plain, sort_keys=sort)
+        elif column == "object_number":
+            out[column] = str(value)
+        elif column in _REAL:
+            out[column] = float(value)
+        elif isinstance(value, Decimal):
+            out[column] = int(value)
+        else:
+            out[column] = value
+    return out
+
+
 async def import_store(
-    conn: asyncpg.Connection, document: str, *, settings: Settings | None = None
+    conn: Connection,
+    document: str,
+    *,
+    settings: Settings | None = None,
+    embedder: Any | None = None,
 ) -> dict[str, int]:
     """Restore an export into an empty store; return the restored row counts.
 
-    All-or-nothing: any refusal or verification mismatch writes nothing.
+    All-or-nothing: any refusal or verification mismatch writes nothing. With an
+    ``embedder``, vectors are rebuilt afterwards (otherwise run ``mnemo reindex``).
     """
-    settings = settings or get_settings()
     try:
-        # Decimal keeps numeric payloads exact during validation; the rows sent
-        # to Postgres are the original text, never a Python re-serialization.
+        # Decimal keeps version 1 numbers exact until they are converted.
         doc = json.loads(document, parse_float=Decimal)
     except json.JSONDecodeError as exc:
         raise TransferError(f"document is not valid JSON: {exc}") from exc
     _validate_document(doc)
+    postgres = doc["format_version"] == POSTGRES_VERSION
+    if postgres:
+        if POSTGRES_LAST_MIGRATION not in (doc.get("schema_migrations") or []):
+            raise TransferError(
+                "schema mismatch: this Postgres export predates "
+                f"{POSTGRES_LAST_MIGRATION}. Export it again with Mnemo v0.0.1-postgres."
+            )
+        rows = {s: [_from_postgres(s, row) for row in doc[s]] for s in SECTIONS}
+    else:
+        rows = {s: [_plain(row) for row in doc[s]] for s in SECTIONS}
 
     async with conn.transaction():
-        await conn.execute("SET LOCAL TimeZone = 'UTC'")
-        # EXCLUSIVE blocks concurrent writers but not readers until commit.
-        await conn.execute(f"LOCK TABLE {', '.join(_STORE_TABLES)} IN EXCLUSIVE MODE")
-
-        migrations, dim = await _store_identity(conn)
-        if doc.get("schema_migrations") != migrations:
+        migrations = await applied_migrations(conn)
+        if not postgres and doc.get("schema_migrations") != migrations:
             raise TransferError(
                 "schema mismatch: the export was taken at migrations "
                 f"{doc.get('schema_migrations')!r}; this store has {migrations!r}. "
                 "Migrate both sides to the same version first."
             )
-        expected = _embedding_identity(settings, dim)
-        if doc.get("embedding") != expected:
-            raise TransferError(
-                f"embedding mismatch: export {doc.get('embedding')!r}, destination {expected!r}. "
-                "Restore into a store configured for the same backend, model and dimension."
-            )
         occupied = [
             table
-            for table in _STORE_TABLES
+            for table in TABLES.values()
             if await conn.fetchval(f"SELECT EXISTS (SELECT 1 FROM {table})")
         ]
         if occupied:
@@ -249,40 +249,61 @@ async def import_store(
                 f"destination is not empty ({', '.join(occupied)}); "
                 "import restores into an empty store only"
             )
+        # Events point at later events (superseded_by) and facts at events: check
+        # every reference once, at commit.
+        await conn.execute("PRAGMA defer_foreign_keys = ON")
+        columns = {s: await _columns(conn, TABLES[s]) for s in SECTIONS}
+        for section in ("commits", "facts", "events", "receipts"):
+            await _insert(conn, section, columns[section], rows[section])
+        heads = [
+            (row["current_event_id"], row["fact_id"])
+            for row in rows["facts"]
+            if row.get("current_event_id") is not None
+        ]
+        await conn.executemany("UPDATE memory_fact SET current_event_id=?1 WHERE fact_id=?2", heads)
 
-        await conn.execute(
-            "CREATE TEMP TABLE mnemo_import_doc ON COMMIT DROP AS SELECT $1::jsonb AS doc",
-            document,
-        )
-        for statement in _RESTORE_SQL:
-            await conn.execute(statement)
-
-        mismatched = await conn.fetch(
-            f"""
-            WITH s AS ({_SECTIONS_SQL})
-            SELECT key FROM s, mnemo_import_doc d,
-                 jsonb_each(s.sections)
-            WHERE value IS DISTINCT FROM d.doc->key
-            ORDER BY key
-            """,
-            *_scope_args(doc["scope"]),
-        )
+        restored = await _sections(conn, doc["scope"])
+        mismatched = [s for s in SECTIONS if restored[s] != rows[s]]
         if mismatched:
             raise TransferError(
-                "restored rows differ from the document in "
-                f"{', '.join(r['key'] for r in mismatched)}; nothing was written"
+                f"restored rows differ from the document in {', '.join(mismatched)}; "
+                "nothing was written"
             )
-        await conn.execute("DROP TABLE mnemo_import_doc")
+    if embedder is not None:
+        from mnemo.core import reindex
+
+        await reindex(conn, embedder)
     return {section: len(doc[section]) for section in SECTIONS}
 
 
+async def _insert(conn: Connection, section: str, columns: list[str], rows: list[dict]) -> None:
+    if not rows:
+        return
+    unknown = set().union(*rows) - set(columns)
+    if unknown:
+        raise TransferError(
+            f"restored rows differ from the document in {section}: "
+            f"unknown columns {', '.join(sorted(unknown))}"
+        )
+    present = [c for c in columns if any(c in row for row in rows)]
+    if section == "facts":
+        present = [c for c in present if c != "current_event_id"]  # set once events exist
+    marks = ", ".join(f"?{i}" for i in range(1, len(present) + 1))
+    await conn.executemany(
+        f"INSERT INTO {TABLES[section]} ({', '.join(present)}) VALUES ({marks})",
+        [[row.get(c) for c in present] for row in rows],
+    )
+
+
 async def _run(args: argparse.Namespace) -> None:
-    from mnemo.db import connect
+    from mnemo.db import check_schema, connect
+    from mnemo.embedder import build_embedder
 
     settings = get_settings()
-    conn = await connect()
+    conn = await connect(create=args.command == "import")
     try:
         if args.command == "export":
+            await check_schema(conn)
             scope = (
                 None
                 if args.all_scopes
@@ -301,8 +322,14 @@ async def _run(args: argparse.Namespace) -> None:
                     handle.write(document + "\n")
                 print(f"Exported to {args.out}", file=sys.stderr)
         else:
+            from mnemo.db import apply_migrations
+
+            await apply_migrations(conn)
             counts = await import_store(
-                conn, Path(args.path).read_text(encoding="utf-8"), settings=settings
+                conn,
+                Path(args.path).read_text(encoding="utf-8"),
+                settings=settings,
+                embedder=build_embedder(settings),
             )
             print("Imported " + ", ".join(f"{n} {section}" for section, n in counts.items()))
     finally:

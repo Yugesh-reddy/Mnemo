@@ -241,7 +241,6 @@ async def test_direct_create_is_create_only_for_the_attribute_identity(store):
     assert exc.value.code == ErrorCode.ALREADY_EXISTS
 
 
-@pytest.mark.skip(reason="export and import are ported in Phase 6")
 async def test_export_round_trip_keeps_member_identity(_migrated_template, tmp_path, fake_embedder):
     import shutil
 
