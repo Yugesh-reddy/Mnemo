@@ -1,7 +1,7 @@
 """M7: the web UI's critical path — search → blame → revert through HTTP.
 
 Drives the ASGI app with the get_store dependency overridden to the disposable test
-connection (rolled back per test), so the whole flow runs without a live pool.
+store (a fresh file per test), so the whole flow runs without starting a server.
 """
 
 from __future__ import annotations

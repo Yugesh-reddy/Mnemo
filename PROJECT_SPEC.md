@@ -42,12 +42,12 @@ is built only after that.
 
 ## 1. Tech stack (pinned)
 - Python 3.12, full type hints. ruff + black. Pydantic v2 (+ `pydantic-settings`, `.env`).
-- **Postgres 16 + pgvector (≥0.7, HNSW).** Access via **asyncpg**; core SQL (events, as-of, diff, HEAD) stays as readable `.sql` migrations — the legible data model is part of the value.
+- **One SQLite file** (`~/.mnemo/mnemo.db`, WAL) with **sqlite-vec** for cosine and FTS5 for words (§26; Postgres 16 + pgvector until v0.0.1-postgres). Access through `mnemo/sqlite.py`; core SQL (events, as-of, diff, HEAD) stays readable `.sql` — the legible data model is part of the value.
 - **Embeddings/LLM via abstractions** with two backends each: OpenAI (`text-embedding-3-small`, `gpt-4o-mini`) and local Ollama (`nomic-embed-text` 768-d, a small instruct model). Default OpenAI; local path must work.
 - **MCP-first** integration (official `mcp` SDK, stdio) + a thin Python SDK. The OpenAI-compatible proxy is **optional Phase-1.5**, not MVP.
 - Web UI: FastAPI + HTMX + Tailwind (server-rendered, minimal). CLI: Typer.
-- Tests: pytest + pytest-asyncio against a disposable Postgres (docker-compose). `docker compose up` + one command runs the demo.
-- **Embedding dimension** is centralized in config + migrations. Default `vector(1536)`; for Ollama use 768. Never mix dims.
+- Tests: pytest + pytest-asyncio; every test gets its own migrated store file. No service is needed except for the live-model tests, which skip.
+- **Embeddings** are stored per event with the model that made them (§26); search compares a query only with vectors from the configured model.
 
 ---
 
@@ -74,7 +74,8 @@ turn ─▶ observe() ─▶ [fast cache | enqueue]
 ---
 
 ## 3. Database schema (design baseline)
-The executable schema is the numbered migrations (`migrations/0001_init.sql` …).
+The executable schema is the numbered migrations: `migrations/0001_sqlite_init.sql`
+since §26 (the Postgres migrations `0001`–`0012` remain at tag `v0.0.1-postgres`).
 The design sketch below predates the §14 queue, decision and temporal additions.
 Its `agent_reflection` enum member describes a future consolidation requirement;
 the current `mem_provenance` enum intentionally has no reflection writer/member.
@@ -303,7 +304,7 @@ original thresholds remain unvalidated priors.
   `valid_at=V` (default T) and retention at T. Require aware datetimes. History
   excludes cache and reinforcement. Session search is restricted to that session;
   administrative get/list/history remain scoped to namespace/user/agent.
-- **Retrieval.** Bound vector and lexical candidates independently before
+- **Retrieval** *(Postgres; §26 replaces it with an exact scan of the scope)*. Bound vector and lexical candidates independently before
   reranking. The live vector query orders raw distance with a limit on the indexed
   event table and checks scoped HEAD membership; verify the actual plan. Historical
   candidate selection is exact. Approximate filtered HNSW can underfill k. Search
@@ -324,8 +325,9 @@ original thresholds remain unvalidated priors.
 - **Installation and CI.** Package migrations, templates, evaluation data and demo
   modules. Declare UI runtime dependencies and optional NLI; use the supported MCP
   1.x API. A fresh database renders the configured vector dimension; existing
-  dimensions must match and require explicit re-embedding when changed. Required
-  Postgres CI fails when its database is unavailable. Validate a built wheel from
+  dimensions must match and require explicit re-embedding when changed (§26: vectors
+  are tagged by model and `reindex` rebuilds them). Required
+  Postgres CI fails when its database is unavailable (§26: CI needs no service). Validate a built wheel from
   a clean environment outside the source checkout.
 
 Consolidation stays disabled until evaluation demonstrates a benefit. Adding the
@@ -384,7 +386,7 @@ Errors are `MnemoError` with a stable code, message and details dictionary:
 | `UNSUPPORTED_STATE` | Current or target state is ineligible for guarded mutation |
 | `REQUEST_ID_REUSED` | Request ID already belongs to another mutation payload |
 | `UNSUPPORTED_OPERATION` | Revert without a restore target; retract undoes a creation (§24) |
-| `SERVICE_UNAVAILABLE` | Postgres or the embedding backend is unusable (§21); `details.service` names it |
+| `SERVICE_UNAVAILABLE` | The store or the embedding backend is unusable (§21, §26); `details.service` names it |
 
 See [the direct SDK guide](docs/DIRECT_SDK.md) for a lifecycle example. This
 additive API does not change extraction quality or authorize gate tuning.
@@ -409,6 +411,9 @@ the target's trust and provenance. The separate **Manual correction** form uses
 legacy `add` with `human_review` provenance and high trust; it remains unguarded.
 
 ## 16. Export/import — September 22, 2026
+
+*§26 changes the document to `format_version` 2 (stored values, no vectors) and adds
+the import of version 1 documents; the rules below otherwise hold.*
 
 The user selected export/import from the deferred master-plan Phase 6 list. It
 adds `mnemo.transfer` (`export_store`, `import_store`), the `mnemo-transfer` CLI
@@ -565,6 +570,10 @@ first failed on a readable `request_id`, and Codex never saved a memory it was t
 
 ## 21. Local services: exposure, diagnosis and pre-flight — September 27, 2026
 
+*§26 removes Postgres, Compose, `MNEMO_DB_PORT`, `mnemo up` and `mnemo down`: the
+Postgres items below describe v0.0.1-postgres. The diagnosis, pre-flight, auto-memory
+and offline-UI rules hold, with the store file in place of Postgres.*
+
 The owner approved these changes to make Mnemo installable by others.
 
 - **Localhost only.** Compose publishes Postgres on `127.0.0.1`, never on other
@@ -617,7 +626,8 @@ implemented; this is its Phase 1, still on Postgres.
   (default `~/.mnemo/models`) after confirmation and pins `MNEMO_EMBED_MODEL` and
   `MNEMO_MODEL_DIR` in each agent's configuration. A missing model is
   `SERVICE_UNAVAILABLE` with `details.service = "local"`, naming `mnemo install`.
-- **Model switches.** Before changing anything, the installer re-embeds the text of up
+- **Model switches** *(replaced by §26: vectors carry their model and the installer
+  embeds stored memories again instead of refusing)*. Before changing anything, the installer re-embeds the text of up
   to five of the newest stored memories with the configured backend; if none reproduces
   its stored vector (cosine below 0.99), it refuses, because search would stop finding
   existing memories. The same model gives 1.0; Ollama's nomic-embed-text against the
@@ -706,4 +716,71 @@ operations.
   goes into CLAUDE.md, because creating OpenCode's AGENTS.md would silently stop it
   reading CLAUDE.md. For the same reason uninstall deletes an OpenCode `AGENTS.md`
   it would otherwise leave empty.
+
+## 26. One SQLite file — November 19, 2026
+
+The owner asked for [the single-file plan](docs/SQLITE_PLAN.md) (D1 to D5). Postgres,
+pgvector, asyncpg, Docker and Compose are gone; the tag `v0.0.1-postgres` keeps the old
+stack. The seven tools, scopes, history, guarded revert, retraction, sources and
+receipts (§15, §19–§20, §24–§25) behave as before.
+
+- **Store.** One SQLite file, `MNEMO_DB` (default `~/.mnemo/mnemo.db`), created with
+  its directory `0700` and the file `0600`, in WAL mode with foreign keys on and a 30 s
+  busy timeout. Opening it loads `sqlite-vec`; a Python that cannot load SQLite
+  extensions is refused with the fix (`uv tool install --python 3.12 …`).
+  `MNEMO_DSN`, `MNEMO_TEST_DSN` and `MNEMO_DB_PORT` are ignored. Keep the file on a
+  local disk, not in a synced or network folder.
+- **Schema.** `migrations/0001_sqlite_init.sql`. Columns match the Postgres schema at
+  migration 0012 one for one. IDs are lowercase UUID text, `object_number` is decimal
+  text, JSON is text, and timestamps are text in the fixed form
+  `YYYY-MM-DDTHH:MM:SS.ffffffZ` (UTC), so text order is time order. Mnemo registers
+  `now()` on every connection: the start of the current transaction, as in Postgres;
+  the view and column defaults use it, so the file is opened through Mnemo. The
+  pipeline tables (`fast_cache`, `extraction_job`, `quality_decision`) do not exist.
+- **Append-only.** Triggers reject an `UPDATE` of any event payload column (all but
+  `superseded_at`, `superseded_by`, `strength`, `recall_count`, `last_used`), any
+  `DELETE` of an event, any `UPDATE` or `DELETE` of a receipt, and an `INSERT` (including
+  `INSERT OR REPLACE`) that reuses an event's `event_id` or `seq`, or a receipt's ID or
+  request key.
+- **Transactions.** Every write transaction is `BEGIN IMMEDIATE`: one writer for the
+  whole file, so the lock covers the store, not one scope (it was a per-scope advisory
+  lock). Nested transactions are savepoints. Reads use a `BEGIN` snapshot. Embedding
+  calls stay outside the write lock. Eight processes racing one guarded update give one
+  `applied` and seven `REVISION_CONFLICT`; eight creating one subject store one fact.
+- **Vectors.** `memory_embedding(seq, model, dim, vector)` holds a float32 vector per
+  event, outside the append-only payload, tagged with the model that made it (for
+  example `ollama:nomic-embed-text`, `local:BAAI/bge-small-en-v1.5`). Create and update
+  write one; revert and retract copy the source's. `mnemo reindex` embeds every event
+  without a vector from the configured model and rebuilds the word index; events are
+  never touched.
+- **Search.** Every current memory in the scope is scored (no candidate limit, no
+  approximate index). Signals: cosine to the query vector from the same model and
+  dimension; a word match in `memory_search_text` (FTS5 `porter unicode61`, every
+  event's subject, predicate and text; the query's non-stop words ANDed and quoted);
+  and a substring match where `%` and `_` are literal. The score formula, weights and
+  floor are unchanged (§14). A memory without a vector from the model is still found by
+  its words. `LIKE` ignores case for ASCII letters only (`ILIKE` covered all of
+  Unicode). Historical search (`as_of`, `valid_at`, `include_superseded`) uses the same
+  scoring over the latest event per fact recorded by then.
+- **Services.** Each MCP tool call opens the file, checks its schema, runs in one
+  transaction and closes it; there is no pool. `SERVICE_UNAVAILABLE` with
+  `details.service = "store"` names the fix for a missing file or schema
+  (`mnemo install`), a file migrated by a newer Mnemo (upgrade, restart the agents), a
+  file that is not a database, or a lock held past the busy timeout. A tool call never
+  creates the file; the same server works once it exists.
+- **Installer.** `mnemo install` checks the file opens, creates and migrates it,
+  writes `MNEMO_DB` into each agent's configuration, and, when stored events lack
+  vectors from the chosen model, lists "Embed N stored memories" and runs `reindex`
+  after confirmation (it no longer refuses a model switch). `mnemo up` and `mnemo down`
+  print that they are no longer needed; `mnemo reindex`, `mnemo export` and
+  `mnemo import` are added.
+- **Export and import.** `format_version` 2 carries every stored column value exactly
+  and no vectors; import into an empty store rebuilds vectors with the destination's
+  model. Import also reads version 1 (Postgres) documents whose migrations include
+  `0012_retract_receipts.sql`: timestamps take the fixed form, JSON becomes text,
+  numbers stay exact, vectors are dropped, and receipts compare request payloads as
+  canonical JSON, so a pre-upgrade request ID still replays. Older Postgres exports are
+  refused with the instruction to export again with v0.0.1-postgres.
+- **Demo and tests.** `make demo` uses a temporary store. Tests copy a migrated
+  template file per test; `make test` needs no service.
 

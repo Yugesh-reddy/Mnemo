@@ -1,7 +1,7 @@
 """Coding-agent memory eval: real Claude Code and Codex sessions sharing one Mnemo.
 
 Each scenario in docs/agent-eval/scenarios.json runs a few sessions, one CLI
-invocation each, in fresh throwaway git repositories against one scratch database.
+invocation each, in fresh throwaway git repositories against one scratch store file.
 Only Mnemo can carry information between sessions. Afterwards the final replies and
 the stored memories are checked. Prompts, replies, tool calls, memory events, usage
 and cost are recorded; existing evidence is never overwritten.
@@ -33,10 +33,8 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
-from urllib.parse import urlsplit, urlunsplit
 from uuid import uuid4
 
-import asyncpg
 from pydantic import BaseModel, Field, model_validator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,7 +42,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from mnemo.config import Settings, get_settings  # noqa: E402
-from mnemo.db import apply_migrations  # noqa: E402
+from mnemo.db import apply_migrations, connect  # noqa: E402
+from mnemo.sqlite import Connection  # noqa: E402
 
 SCENARIOS = ROOT / "docs" / "agent-eval" / "scenarios.json"
 SERVER = ROOT / ".venv" / "bin" / "mnemo-mcp-direct"
@@ -142,9 +141,9 @@ def load_scenarios(path: Path = SCENARIOS) -> list[Scenario]:
 # ---- CLI invocations ---------------------------------------------------------------
 
 
-def mnemo_env(dsn: str, namespace: str, actor: str, backend: str, embed_dim: int) -> dict:
+def mnemo_env(db: str, namespace: str, actor: str, backend: str, embed_dim: int) -> dict:
     return {
-        "MNEMO_DSN": dsn,
+        "MNEMO_DB": db,
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(embed_dim),
         "MNEMO_NAMESPACE": namespace,
@@ -328,11 +327,11 @@ def run_cli(
 
 # ---- store and scoring -------------------------------------------------------------
 
-LANES = "(f.namespace = $1 OR starts_with(f.namespace, $1 || '@'))"
+LANES = "(f.namespace = ?1 OR substr(f.namespace, 1, length(?1) + 1) = ?1 || '@')"
 
 
 async def plant(
-    conn: asyncpg.Connection,
+    conn: Connection,
     seeds: list[Seed],
     namespace: str,
     repos: dict[str, Path],
@@ -365,24 +364,25 @@ async def plant(
             close()
 
 
-async def event_count(conn: asyncpg.Connection, namespace: str) -> int:
+async def event_count(conn: Connection, namespace: str) -> int:
     return await conn.fetchval(
-        f"SELECT count(*) FROM memory_event e JOIN memory_fact f USING (fact_id) WHERE {LANES}",
+        "SELECT count(*) FROM memory_event e JOIN memory_fact f ON f.fact_id = e.fact_id "
+        f"WHERE {LANES}",
         namespace,
     )
 
 
-async def store_state(conn: asyncpg.Connection, namespace: str) -> dict[str, list[dict]]:
+async def store_state(conn: Connection, namespace: str) -> dict[str, list[dict]]:
     events = await conn.fetch(
-        "SELECT e.seq, e.event_id::text, e.fact_id::text, f.namespace, f.subject, f.predicate, "
-        "e.op::text, coalesce(e.object_text, e.object_json::text, e.object_number::text) "
-        "AS value, e.actor, e.recorded_at::text FROM memory_event e "
-        f"JOIN memory_fact f USING (fact_id) WHERE {LANES} ORDER BY e.seq",
+        "SELECT e.seq, e.event_id, e.fact_id, f.namespace, "
+        "f.subject, f.predicate, e.op, coalesce(e.object_text, e.object_json, e.object_number) "
+        "AS value, e.actor, e.recorded_at FROM memory_event e "
+        f"JOIN memory_fact f ON f.fact_id = e.fact_id WHERE {LANES} ORDER BY e.seq",
         namespace,
     )
     current = await conn.fetch(
-        "SELECT f.fact_id::text, f.namespace, f.subject, f.predicate, "
-        "coalesce(f.object_text, f.object_json::text, f.object_number::text) AS value, "
+        "SELECT f.fact_id, f.namespace, f.subject, f.predicate, "
+        "coalesce(f.object_text, f.object_json, f.object_number) AS value, "
         f"f.actor FROM memory_current f WHERE {LANES} ORDER BY f.recorded_at",
         namespace,
     )
@@ -539,8 +539,8 @@ def _version(command: list[str]) -> str:
         return f"unavailable: {exc}"
 
 
-def _redact(command: list[str], dsn: str) -> list[str]:
-    return [part.replace(dsn, "<dsn>") for part in command]
+def _redact(command: list[str], db: str) -> list[str]:
+    return [part.replace(db, "<db>") for part in command]
 
 
 def run_session(
@@ -602,7 +602,7 @@ async def run(args: argparse.Namespace) -> int:
         settings = Settings(backend=args.backend)
     codex_disable = other_codex_servers()
     if args.dry_run:
-        env = mnemo_env("<dsn>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
+        env = mnemo_env("<db>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
         claude = claude_command(
             Path("<mcp.json>"),
             args.claude_session_usd,
@@ -618,10 +618,8 @@ async def run(args: argparse.Namespace) -> int:
         raise SystemExit(f"refusing to overwrite existing evidence: {out}")
     (out / "raw").mkdir(parents=True)
     token = uuid4().hex[:8]
-    db_name = f"mnemo_agent_eval_{token}"
-    parts = urlsplit(settings.test_dsn)
-    admin_dsn = urlunsplit(parts._replace(path="/postgres"))
-    dsn = urlunsplit(parts._replace(path="/" + db_name))
+    scratch = Path(tempfile.mkdtemp(prefix=f"mnemo-agent-eval-{token}-"))
+    db = str(scratch / "mnemo.db")
     report: dict[str, Any] = {
         "arm": args.arm,
         "started_at_utc": datetime.now(UTC).isoformat(),
@@ -640,18 +638,13 @@ async def run(args: argparse.Namespace) -> int:
             "claude_total_usd_cap": args.max_claude_usd,
             "claude_auto_memory": args.claude_auto_memory,
         },
-        "database": db_name,
+        "database": scratch.name,
         "scenarios": [],
     }
-    admin = await asyncpg.connect(admin_dsn, timeout=5)
-    try:
-        await admin.execute(f'CREATE DATABASE "{db_name}"')
-    finally:
-        await admin.close()
-    conn = await asyncpg.connect(dsn)
+    conn = await connect(db)
     claude_spent = 0.0
     try:
-        await apply_migrations(conn, embed_dim=settings.embed_dim)
+        await apply_migrations(conn)
         for number, scenario in enumerate(scenarios, 1):
             namespace = f"eval-{scenario.id}-{token}"
             work = Path(tempfile.mkdtemp(prefix=f"mnemo-eval-{scenario.id}-"))
@@ -670,7 +663,7 @@ async def run(args: argparse.Namespace) -> int:
                     )
                     continue
                 env = mnemo_env(
-                    dsn,
+                    db,
                     namespace,
                     "claude-code" if session.agent == "claude" else "codex",
                     args.backend,
@@ -693,7 +686,7 @@ async def run(args: argparse.Namespace) -> int:
                     f"mnemo calls={sum(c['tool'].startswith('mnemo:') for c in record.tool_calls)}",
                     flush=True,
                 )
-                report.setdefault("commands", {}).setdefault(session.agent, _redact(command, dsn))
+                report.setdefault("commands", {}).setdefault(session.agent, _redact(command, db))
             state = await store_state(conn, namespace)
             checks = evaluate(scenario, records, state["current"])
             auto_memory = collect_auto_memory(work, out / "claude-auto-memory" / scenario.id)
@@ -716,13 +709,10 @@ async def run(args: argparse.Namespace) -> int:
         report["finished_at_utc"] = datetime.now(UTC).isoformat()
         if args.keep_db:
             report["database_kept"] = True
+            print(f"Kept the scratch store: {db}")
         else:
-            admin = await asyncpg.connect(admin_dsn, timeout=5)
-            try:
-                await admin.execute(f'DROP DATABASE "{db_name}" WITH (FORCE)')
-                report["database_removed"] = True
-            finally:
-                await admin.close()
+            shutil.rmtree(scratch, ignore_errors=True)
+            report["database_removed"] = True
         report["summary"] = summarize(report)
         (out / "results.json").write_text(json.dumps(report, indent=2, default=str) + "\n")
     print(json.dumps(report["summary"], indent=2))

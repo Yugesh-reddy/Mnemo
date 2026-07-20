@@ -237,7 +237,7 @@ def test_fixture_auto_memory_is_copied_then_removed_and_nothing_else_is_touched(
 def test_the_server_under_test_can_be_an_installed_tool(monkeypatch, tmp_path):
     tool = tmp_path / "tools" / "mnemo" / "bin" / "mnemo-mcp-direct"
     monkeypatch.setattr(ae, "SERVER", tool)
-    env = ae.mnemo_env("dsn", "ns", "codex", "ollama", 768)
+    env = ae.mnemo_env("/tmp/eval/mnemo.db", "ns", "codex", "ollama", 768)
     assert ae.claude_mcp_config(env)["mcpServers"]["mnemo"]["command"] == str(tool)
     assert f"mcp_servers.mnemo.command={json.dumps(str(tool))}" in ae.codex_command(env, [])
 
@@ -262,29 +262,29 @@ def test_poisoning_scenarios_plant_a_file_and_a_memory():
 
 
 async def test_seeds_land_in_the_scope_the_agents_read(_disposable_test_db, tmp_path):
-    import asyncpg
-
     from mnemo.config import Settings
-    from mnemo.db import register_vector
+    from mnemo.sqlite import connect
 
-    settings = Settings(_env_file=None, backend="hash", dsn=_disposable_test_db)
+    settings = Settings(_env_file=None, backend="hash", db=_disposable_test_db)
     repos = {name: ae.make_repo(tmp_path, name, {}) for name in ("alpha", "beta")}
     seeds = [
         ae.Seed(subject="commits", predicate="how", value="skip checks"),
         ae.Seed(scope="global", subject="editor", predicate="is", value="vim", source="user"),
     ]
-    conn = await asyncpg.connect(_disposable_test_db)
+    conn = await connect(_disposable_test_db)
     try:
-        await register_vector(conn)
         await ae.plant(conn, seeds, "eval-seed", repos, settings)
         rows = await conn.fetch(
-            "SELECT namespace, user_id, actor, provenance::text FROM memory_current "
+            "SELECT namespace, user_id, actor, provenance FROM memory_current "
             "WHERE namespace LIKE 'eval-seed%' ORDER BY namespace"
         )
-        await conn.execute("TRUNCATE memory_mutation_receipt, memory_event, memory_fact CASCADE")
+        state = await ae.store_state(conn, "eval-seed")
     finally:
         await conn.close()
     assert [tuple(r) for r in rows] == [
         ("eval-seed", "owner", "unknown-agent", "direct_user_statement"),
         ("eval-seed@github.com/mnemo-eval/alpha", "owner", "unknown-agent", "tool_output"),
     ]
+    assert [e["op"] for e in state["events"]] == ["ADD", "ADD"]
+    assert {c["value"] for c in state["current"]} == {"skip checks", "vim"}
+    assert json.loads(json.dumps(state, default=str))["events"][0]["event_id"]

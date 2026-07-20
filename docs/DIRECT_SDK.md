@@ -1,6 +1,7 @@
 # Guarded direct memory in Python
 
-Apply all migrations with `make migrate`. `Mnemo.direct` provides create-only
+Create the store file with `mnemo install` or `make migrate` (it is `MNEMO_DB`,
+default `~/.mnemo/mnemo.db`). `Mnemo.direct` provides create-only
 writes, updates by fact ID, guarded revert, current/historical reads, paginated
 history and search. The async equivalent is `DirectMemory(store)` from
 `mnemo.direct`.
@@ -14,7 +15,7 @@ from mnemo.embedder import build_embedder
 
 settings = get_settings()
 embedder = build_embedder(settings)
-memory = Mnemo(settings.dsn, embedder, namespace="example-" + uuid4().hex)
+memory = Mnemo(settings.db, embedder, namespace="example-" + uuid4().hex)
 
 created = memory.direct.create(
     "user", "preferred_database", "PostgreSQL", request_id=uuid4()

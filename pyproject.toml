@@ -1,12 +1,11 @@
 [project]
 name = "mnemo"
 version = "0.0.1"
-description = "One shared, versioned memory for your coding agents (Claude Code, Codex) over MCP."
+description = "One shared, versioned memory for your coding agents (Claude Code, Codex, OpenCode) over MCP, in one local file."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 dependencies = [
-    "asyncpg>=0.29",
     "pydantic>=2.6",
     "pydantic-settings>=2.2",
     "typer>=0.12",
@@ -37,10 +36,9 @@ packages = ["mnemo", "web", "examples"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "migrations" = "mnemo/migrations"
-"docker-compose.yml" = "mnemo/docker-compose.yml"
 
 [tool.hatch.build.targets.sdist]
-include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "docker-compose.yml", "pyproject.toml", "uv.lock"]
+include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "pyproject.toml", "uv.lock"]
 
 [project.scripts]
 mnemo = "mnemo.cli:main"

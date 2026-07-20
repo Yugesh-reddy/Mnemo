@@ -4,8 +4,8 @@ Three views: memory list/search, fact detail (blame + revert + inline edit), and
 Server-rendered Jinja2 with bundled htmx and a prebuilt Tailwind stylesheet in
 ``web/static`` (``make css`` rebuilds it), so the UI works offline. Run: ``make ui``.
 
-The ``get_store`` dependency hands each request a MnemoStore on a pooled connection;
-tests override it to point at a disposable DB.
+The ``get_store`` dependency opens the store file for each request and closes it
+after; tests override it to point at a disposable store.
 """
 
 from __future__ import annotations
@@ -15,7 +15,6 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import UUID, uuid4
 
-import asyncpg
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +22,7 @@ from fastapi.templating import Jinja2Templates
 
 from mnemo.config import get_settings
 from mnemo.core import MnemoStore
-from mnemo.db import register_vector, validate_embedding_dimension
+from mnemo.db import check_schema, connect
 from mnemo.direct import DirectMemory
 from mnemo.embedder import build_embedder
 from mnemo.errors import ErrorCode, MnemoError
@@ -37,18 +36,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     app.state.settings = settings
     app.state.embedder = build_embedder(settings)
-    pool = None
-
-    async def init(conn: asyncpg.Connection) -> None:
-        await register_vector(conn)
-        await validate_embedding_dimension(conn, settings.embed_dim)
-
     try:
-        pool = app.state.pool = await asyncpg.create_pool(settings.dsn, init=init)
         yield
     finally:
-        if pool is not None:
-            await pool.close()
         close = getattr(app.state.embedder, "close", None)
         if close:
             close()
@@ -59,8 +49,10 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
 async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
-    async with request.app.state.pool.acquire() as conn:
-        settings = request.app.state.settings
+    settings = request.app.state.settings
+    conn = await connect(settings.db, create=False)
+    try:
+        await check_schema(conn)
         yield MnemoStore(
             conn,
             request.app.state.embedder,
@@ -69,6 +61,8 @@ async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
             user_id=settings.user_id,
             agent_id=settings.agent_id,
         )
+    finally:
+        await conn.close()
 
 
 async def _facts(store: MnemoStore, q: str):
@@ -96,9 +90,7 @@ async def _fact_response(
     status_code: int = 200,
 ) -> HTMLResponse:
     # Render the value, history and expected revision from the same snapshot.
-    async with store.conn.transaction(
-        isolation=None if store.conn.is_in_transaction() else "repeatable_read"
-    ):
+    async with store.conn.transaction(readonly=not store.conn.is_in_transaction()):
         fact = await store.get(fact_id)
         history = await store.blame(fact_id=fact_id)
         retracted = None

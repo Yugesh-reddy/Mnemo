@@ -9,20 +9,20 @@ be undone. Everything runs locally.
 
 ## Quick start
 
-You need a Mac with [uv](https://docs.astral.sh/uv/), and with
-[Docker](https://www.docker.com/) and [Ollama](https://ollama.com/) running. Linux
-should work too but hasn't been tested yet.
+You need a Mac with [uv](https://docs.astral.sh/uv/) and [Ollama](https://ollama.com/)
+running, or no Ollama at all with `--backend local`. There is no database server and
+no Docker: memory is one file, `~/.mnemo/mnemo.db`. Linux should work too but hasn't
+been tested yet.
 
 ```bash
 uv tool install git+https://github.com/Yugesh-reddy/Mnemo
-mnemo up        # Postgres + pgvector in Docker, reachable from this machine only
 mnemo install   # connect Claude Code, Codex and OpenCode (shows every change, asks first)
 ```
 
-`mnemo install` checks that Postgres and Ollama are running, downloads the
-`nomic-embed-text` embedding model if it is missing, sets up the database, registers
-Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and adds a
-short [memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
+`mnemo install` checks that Ollama is running, downloads the `nomic-embed-text`
+embedding model if it is missing, creates the memory file (readable only by you),
+registers Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and
+adds a short [memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
 example, tell Claude Code:
 
@@ -35,18 +35,30 @@ Later, ask Codex in the same repository:
 Codex finds the note in the shared memory and answers `make test-db`.
 
 `mnemo uninstall` removes exactly what `mnemo install` added; your memories stay in
-the database, and `mnemo down` stops it. If port 5432 is taken on your machine, run
-both commands with another port, for example `MNEMO_DB_PORT=5433 mnemo up` and
-`MNEMO_DB_PORT=5433 mnemo install` (or put `MNEMO_DB_PORT=5433` in a `.env` in the
-directory you run them from).
+the file.
 
 To update, run `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo`
-and then `mnemo install`, which applies any new database migrations and refreshes
-both agents' configuration. Until the database is migrated, the tools answer with an
-error that says to run `make migrate` (`mnemo migrate` when installed as a tool).
+and then `mnemo install`, which applies any new schema migrations and refreshes the
+agents' configuration. Until then, the tools answer with an error that says what to
+run.
 
-**From a checkout** (to change Mnemo itself): `git clone` it, then `make install`,
-`make up` and `make agents`. `make agents` installs the tool from your checkout first,
+**Upgrading from the Postgres version** (before 0.1.0): the new version does not read
+the Postgres database, so carry your memories over with an export.
+
+```bash
+mnemo-transfer export --all-scopes --out mnemo-postgres.json  # old version, Postgres up
+uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo
+mnemo install                                  # creates ~/.mnemo/mnemo.db
+mnemo import mnemo-postgres.json               # same IDs, history and receipts
+```
+
+Import embeds the memories again with the model you
+installed. Your Postgres data is not changed, and `mnemo up`/`mnemo down` are gone:
+stop the old container with Docker when you no longer need it. To go back, install
+the tag: `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo@v0.0.1-postgres`.
+
+**From a checkout** (to change Mnemo itself): `git clone` it, then `make install`
+and `make agents`. `make agents` installs the tool from your checkout first,
 so the agents keep working if you move or delete it; rerun it after changing code.
 
 ## What you get
@@ -59,22 +71,24 @@ so the agents keep working if you move or delete it; rerun it after changing cod
 - **History and undo.** A change never overwrites the past: every revision is kept,
   `memory_history` shows it, and `memory_revert` restores an earlier value as a new
   revision. Stale writes are rejected, and retrying a change doesn't apply it twice.
-- **Clear failures.** If Postgres, Ollama or the embedding model is missing, the
-  agent gets an error that names the command that fixes it. The server keeps
-  running and reconnects when Postgres comes back.
-- **Local and private.** Memories stay in your Postgres, embeddings come from your
-  Ollama, and nothing is sent anywhere else. There is no telemetry.
+- **Clear failures.** If the memory file, Ollama or the embedding model is missing,
+  the agent gets an error that names the command that fixes it, and the server keeps
+  running.
+- **Local and private.** Memories stay in one file on your disk, embeddings come from
+  your Ollama (or a model inside Mnemo), and nothing is sent anywhere else. There is
+  no telemetry.
 
 ## Does it work?
 
-The [coding-agent eval](docs/agent-eval/README.md) runs ten scenarios with the real
+The [coding-agent eval](docs/agent-eval/README.md) runs twelve scenarios with the real
 Claude Code and Codex CLIs in throwaway repositories: a convention told to one agent
 and used by the other, an end-of-day handoff, a correction, several values of one
 kind, isolation between projects, a preference for all projects, a restated rule, a
-retracted memory, small talk, and a question nothing answers. Without instructions,
-Codex never saved what it was told, and the setup passed **4 of 10**. With the memory
-policy that `mnemo install` installs, it passed **10 of 10**, including with Claude
-Code's own auto-memory left on. Each scenario ran once on tiny planted repositories,
+retracted memory, small talk, a question nothing answers, and two poisoning attempts
+(an instruction planted in a repository file, and a planted memory). Without
+instructions, Codex never saved what it was told, and the first ten scenarios passed
+**4 of 10**. With the memory policy that `mnemo install` installs, all twelve passed
+(**12 of 12**), including with Claude Code's own auto-memory left on. Each scenario ran once on tiny planted repositories,
 so this shows the approach works, not how often it works in long, real sessions.
 
 ## How agents use it
@@ -107,7 +121,7 @@ applying the change twice. Errors are JSON `{code, message, details}` with MCP's
 | `UNSUPPORTED_STATE` | This current state or historical revision cannot be restored here. |
 | `REQUEST_ID_REUSED` | A request ID was reused with different parameters; retry the original or leave it out. |
 | `UNSUPPORTED_OPERATION` | Undoing a creation is not supported. |
-| `SERVICE_UNAVAILABLE` | Postgres or the embedding service is down, missing a model, or not set up; the message names the fix. |
+| `SERVICE_UNAVAILABLE` | The memory file or the embedding service is missing, not set up, or busy; the message names the fix. |
 
 ## Configuration
 
@@ -116,8 +130,7 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `MNEMO_DB_PORT` | `5432` | Host port of the Compose Postgres; the default DSNs follow it. |
-| `MNEMO_DSN` | `postgresql://mnemo:mnemo@localhost:<port>/mnemo` | Database for memories. |
+| `MNEMO_DB` | `~/.mnemo/mnemo.db` | The memory file every agent shares. Keep it on a local disk, not in a synced folder. |
 | `MNEMO_BACKEND` | `ollama` | Embeddings: `ollama` (local server), `local` (a model inside Mnemo, no server; see below), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
 | `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `mnemo install`. |
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
@@ -142,9 +155,10 @@ instead of in Ollama. `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 
 from Hugging Face) into `~/.mnemo/models`; nothing is downloaded later. Each agent
 session's server then uses about 300 MB of memory. On a 28-question check it found
 memories about as well as Ollama (see `tests/test_retrieval_quality.py`); the model is
-English-only. It uses 384-dimensional vectors, so it needs a new database, and the
-installer refuses to switch a database whose memories another model embedded.
-Postgres is still required; [the plan](docs/SQLITE_PLAN.md) replaces it with one file.
+English-only. Each vector is stored with the model that made it, and search compares
+a question only with vectors from the same model, so switching models keeps your
+memories: `mnemo install` embeds them again with the new model (`mnemo reindex` does
+it by hand). Until then they are still found by their words.
 
 ### Configure by hand
 
@@ -199,7 +213,7 @@ the server from source.
 
 | Service | Used for | If it is down |
 |---|---|---|
-| Postgres 16 + pgvector (`make up`, Docker) | All memories, history and receipts | Tools return `SERVICE_UNAVAILABLE` until it is back |
+| One SQLite file (`~/.mnemo/mnemo.db`) with [sqlite-vec](https://github.com/asg017/sqlite-vec) | All memories, history and receipts | Tools return `SERVICE_UNAVAILABLE` naming the fix (`mnemo install`) |
 | Ollama with `nomic-embed-text` | Embeddings for search and writes | Search and writes fail; reading by ID, history and revert still work |
 | git | Detecting the project | Only the global scope is available |
 
@@ -210,9 +224,9 @@ The optional web UI loads Tailwind and htmx from public CDNs.
 
 | Mechanism | Where it lives |
 |---|---|
-| Database triggers reject changes to event payloads; supersession and recall bookkeeping remain mutable. | [Integrity migration](migrations/0005_integrity.sql) |
-| Scope and fact locks serialize writes; expected-event guards reject stale updates/reverts, including A→B→A. | [Direct API](mnemo/direct.py) |
-| Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Receipt migration](migrations/0010_mutation_receipts.sql) |
+| Triggers reject changes to event payloads and receipts, deletes, and `INSERT OR REPLACE`; supersession and recall bookkeeping remain mutable. | [Schema](migrations/0001_sqlite_init.sql) |
+| Every write takes the file's single write lock; expected-event guards reject stale updates/reverts, including A→B→A. Eight processes racing one update give one winner. | [Direct API](mnemo/direct.py), [race tests](tests/test_concurrency.py) |
+| Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Schema](migrations/0001_sqlite_init.sql) |
 | Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
 | Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |
 
@@ -226,8 +240,8 @@ ADD(PostgreSQL) -> UPDATE(MySQL) -> REVERT(PostgreSQL)
 Source trust preserved: agent_inference / low
 ```
 
-The demo uses the `hash` backend in a fresh namespace. Use a separate database when
-switching between hash and semantic embeddings for the same scope.
+The demo uses the `hash` backend in a temporary file, so it never touches your
+memories.
 
 The [Python guide](docs/DIRECT_SDK.md) shows `Mnemo.direct` and the async
 `DirectMemory(store)` interface. Existing `add`, `search`, `blame`, `revert`,
@@ -238,17 +252,18 @@ exact spelling changes. Legacy human-review revert is not revision-guarded.
 ### Back up or move a store
 
 ```bash
-make export OUT=mnemo-export.json      # configured scope; stdout without OUT
-uv run mnemo-transfer export --all-scopes --out all.json
-make import FILE=mnemo-export.json     # into an empty, migrated store only
+mnemo export --out mnemo-export.json          # the configured scope; stdout without --out
+mnemo export --all-scopes --out all.json      # every scope
+mnemo import mnemo-export.json                # into an empty store only
 ```
 
-The export is one versioned JSON document: facts with their HEADs, every event,
-commits, receipts, the applied migrations and the embedding backend/model/dim.
-Import checks the schema and embedding configuration, then restores the rows in
-one transaction. It re-exports what it wrote and rolls back if anything differs,
-so IDs, sequence numbers, history and receipt replays come through unchanged.
-The archived extraction pipeline's working tables are not exported ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
+Copying `~/.mnemo/mnemo.db` while no agent is running also works. The export is one
+versioned JSON document: facts with their HEADs, every event, commits, receipts and
+the applied migrations, exactly as stored. Vectors are left out and rebuilt on
+import with the destination's model. Import restores the rows in one transaction,
+reads back what it wrote and rolls back if anything differs, so IDs, sequence
+numbers, history and receipt replays come through unchanged. It also reads exports
+from the Postgres version ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
 
 ## Review memory in the browser
 
@@ -272,7 +287,7 @@ not have a revision guard.
 ## Checks, layout and limits
 
 ```bash
-make test-db   # requires Postgres; prints test and skip counts
+make test     # every test gets its own temporary memory file
 make lint
 uv build
 bash scripts/check-wheel.sh
@@ -285,7 +300,7 @@ tested on macOS only. Optional live-Ollama tests skip when their models are
 unavailable.
 
 `mnemo/` contains the async store, direct API, SDK, MCP server and installer;
-`migrations/` holds the SQL; `web/`, `examples/`, `scripts/` and `tests/` hold the
+`migrations/` holds the schema; `web/`, `examples/`, `scripts/` and `tests/` hold the
 UI, demos, the agent eval and checks.
 [The spec](PROJECT_SPEC.md) defines contracts; [the plan](docs/MASTER_PLAN.md) and
 [status](PROJECT_STATUS.md) track delivery.
@@ -319,8 +334,7 @@ extracted facts, checked them against their source, deduplicated, scored and tie
 them. Coding agents save what matters themselves, and small local models did not
 reach the quality target, so the pipeline, its evals and its evidence were removed
 from `main`. They remain at the git tag `archive/extraction-pipeline`
-(`git checkout archive/extraction-pipeline`). Its tables stay in the schema so
-existing stores keep working.
+(`git checkout archive/extraction-pipeline`), on the Postgres version of the store.
 
 An earlier [host-agent pilot](docs/direct-pilot/README.md) let Qwen or Azure Luna
 drive the direct tools, one attempt per scenario: both reached the intended end state

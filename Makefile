@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 RUN := uv run
 
-.PHONY: help install up down migrate seed test lint fmt mcp agents css demo ui export import test-db
+.PHONY: help install migrate seed test lint fmt mcp agents css demo ui export import reindex test-db
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -11,13 +11,7 @@ help:  ## Show available targets
 install:  ## Create the venv and install (editable, with dev deps)
 	uv sync --locked --extra dev
 
-up:  ## Start Postgres + pgvector and wait for database health
-	docker compose up -d --wait
-
-down:  ## Stop services
-	docker compose down
-
-migrate:  ## Apply migrations/*.sql in order
+migrate:  ## Create the store file if needed and apply migrations/*.sql (MNEMO_DB)
 	$(RUN) python -m mnemo.db
 
 seed:  ## Load demo seed data
@@ -47,8 +41,11 @@ demo:  ## Direct write -> history -> revert through the SDK, no models
 export:  ## Export the configured scope as versioned JSON (OUT=file, default stdout)
 	$(RUN) python -m mnemo.transfer export --out $(or $(OUT),-)
 
-import:  ## Restore an export into an empty, migrated store (FILE=export.json)
+import:  ## Restore an export (or a Postgres-era one) into an empty store (FILE=export.json)
 	$(RUN) python -m mnemo.transfer import $(FILE)
+
+reindex:  ## Rebuild vectors (for the configured model) and the word index
+	$(RUN) mnemo reindex
 
 ui:  ## Run the FastAPI + HTMX web UI
 	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
@@ -56,5 +53,5 @@ ui:  ## Run the FastAPI + HTMX web UI
 css:  ## Rebuild web/static/app.css from the templates (needs Node for npx)
 	npx -y tailwindcss@3.4.19 -c web/tailwind.config.js -i web/tailwind.css -o web/static/app.css --minify
 
-test-db:  ## Required Postgres correctness checks
-	MNEMO_REQUIRE_DB=1 $(RUN) pytest -q
+test-db:  ## The full suite; every test gets its own temporary store file
+	$(RUN) pytest -q

@@ -16,8 +16,11 @@ import mnemo.install as inst
 
 @pytest.fixture(autouse=True)
 def _no_real_opencode(tmp_path, monkeypatch):
-    """Every test detects "opencode" on PATH; keep its default config dir in tmp."""
+    """Every test detects "opencode" on PATH; keep its default config dir, and the
+    store file, in tmp."""
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    monkeypatch.setenv("MNEMO_DB", str(tmp_path / "store" / "mnemo.db"))
+    inst.get_settings.cache_clear()
     for name in ("OPENCODE_DISABLE_CLAUDE_CODE", "OPENCODE_DISABLE_CLAUDE_CODE_PROMPT"):
         monkeypatch.delenv(name, raising=False)
 
@@ -52,7 +55,7 @@ def test_blocks_append_replace_in_place_and_remove_cleanly():
     )
 
 
-ENV = {"MNEMO_DSN": "postgresql://u:p@localhost/mnemo", "MNEMO_ACTOR": "codex"}
+ENV = {"MNEMO_DB": "/home/me/.mnemo/mnemo.db", "MNEMO_ACTOR": "codex"}
 
 
 def test_codex_config_keeps_other_settings_and_is_idempotent():
@@ -182,23 +185,30 @@ def test_an_unmanaged_codex_server_stops_the_install(homes, capsys):
     assert not (claude / "CLAUDE.md").exists()
 
 
-async def test_migrate_is_idempotent_on_a_migrated_database(_disposable_test_db):
-    assert await inst.migrate(_disposable_test_db, inst.get_settings().embed_dim) == []
+async def test_migrate_creates_a_private_store_once(tmp_path, _disposable_test_db):
+    import stat
+
+    path = tmp_path / "home" / ".mnemo" / "mnemo.db"
+    assert await inst.migrate(path) == ["0001_sqlite_init.sql"]
+    assert await inst.migrate(path) == []
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
+    assert await inst.migrate(Path(_disposable_test_db)) == []
 
 
 class FakeServices:
     def __init__(
         self,
-        postgres=None,
+        store=None,
         models=("nomic-embed-text:latest",),
         ollama_up=True,
         local_ready=True,
-        mismatch=None,
+        missing=0,
     ):
-        self.problem, self.models, self.up, self.pulled = postgres, list(models), ollama_up, []
-        self.local_ready, self.mismatch, self.compared = local_ready, mismatch, []
+        self.problem, self.models, self.up, self.pulled = store, list(models), ollama_up, []
+        self.local_ready, self.missing, self.compared, self.reindexed = local_ready, missing, [], []
 
-    def postgres_problem(self, settings):
+    def store_problem(self, settings):
         return self.problem
 
     def ollama_models(self, host):
@@ -216,9 +226,13 @@ class FakeServices:
         self.pulled.append(("local", settings.embed_model))
         self.local_ready = True
 
-    def embedding_mismatch(self, settings, backend):
-        self.compared.append((backend, settings.embed_model))
-        return self.mismatch
+    def missing_vectors(self, settings):
+        self.compared.append((settings.backend, settings.embed_model))
+        return self.missing
+
+    def reindex(self, settings):
+        self.reindexed.append((settings.backend, settings.embed_model))
+        return {"events": self.missing, "embedded": self.missing}
 
 
 @pytest.fixture
@@ -230,13 +244,13 @@ def ollama_settings(monkeypatch):
     inst.get_settings.cache_clear()
 
 
-def test_postgres_down_stops_before_any_change(homes, ollama_settings, capsys):
+def test_an_unusable_store_stops_before_any_change(homes, ollama_settings, capsys):
     claude, codex = homes
     cli = FakeCli()
-    probe = FakeServices(postgres="Can't reach Postgres at localhost:5432/mnemo. Run `make up`.")
+    probe = FakeServices(store="~/.mnemo/mnemo.db is not a readable Mnemo store")
     assert inst.main(args(claude, codex, "--yes", checks=True), runner=cli, probe=probe) == 2
     out = capsys.readouterr().out
-    assert "FIX  Can't reach Postgres" in out and "run mnemo-install again" in out
+    assert "FIX  ~/.mnemo/mnemo.db is not a readable" in out and "run mnemo-install again" in out
     assert cli.calls == [] and not (claude / "CLAUDE.md").exists()
 
 
@@ -272,7 +286,7 @@ def test_a_missing_model_is_downloaded_only_after_confirmation(homes, ollama_set
     assert "Download the embedding model nomic-embed-text" in capsys.readouterr().out
     assert inst.main(args(claude, codex, "--yes", checks=True), runner=FakeCli(), probe=probe) == 0
     assert probe.pulled == [("http://localhost:11434", "nomic-embed-text")]
-    assert "ok   Postgres at" in capsys.readouterr().out
+    assert "ok   store at" in capsys.readouterr().out
 
 
 def test_an_installed_model_is_not_downloaded_again(homes, ollama_settings):
@@ -302,23 +316,25 @@ def test_local_backend_downloads_its_model_and_pins_it_for_the_agents(
     )
     assert code == 0
     assert probe.pulled == [("local", "BAAI/bge-small-en-v1.5")]
-    assert probe.compared == [("local", "BAAI/bge-small-en-v1.5")]
+    assert set(probe.compared) == {("local", "BAAI/bge-small-en-v1.5")}
     env = tomllib.loads((codex / "config.toml").read_text())["mcp_servers"]["mnemo"]["env"]
     assert env["MNEMO_BACKEND"] == "local" and env["MNEMO_EMBED_DIM"] == "384"
     assert env["MNEMO_EMBED_MODEL"] == "BAAI/bge-small-en-v1.5" and env["MNEMO_MODEL_DIR"]
 
 
-def test_memories_from_another_model_stop_the_install(homes, ollama_settings, capsys):
+def test_memories_without_vectors_from_the_model_are_embedded_after_confirmation(
+    homes, ollama_settings, capsys
+):
     claude, codex = homes
-    problem = "The memories in localhost:5432/mnemo were embedded by a different model"
-    probe = FakeServices(mismatch=problem)
-    cli = FakeCli()
-    code = inst.main(args(claude, codex, "--yes", checks=True), runner=cli, probe=probe)
-    assert code == 2 and f"FIX  {problem}" in capsys.readouterr().out
-    assert [c[:3] for c in cli.calls] == [["claude", "mcp", "get"]]  # nothing registered
-    assert not (claude / "CLAUDE.md").exists()
-    assert (codex / "config.toml").read_text() == EXISTING_TOML
-    assert inst.main(args(claude, codex, "--dry-run", checks=True), runner=cli, probe=probe) == 2
+    probe = FakeServices(missing=12)
+    assert (
+        inst.main(args(claude, codex, "--dry-run", checks=True), runner=FakeCli(), probe=probe) == 0
+    )
+    assert "Embed 12 stored memories with ollama nomic-embed-text" in capsys.readouterr().out
+    assert probe.reindexed == []
+    assert inst.main(args(claude, codex, "--yes", checks=True), runner=FakeCli(), probe=probe) == 0
+    assert probe.reindexed == [("ollama", "nomic-embed-text")]
+    assert "Embedded 12 memories" in capsys.readouterr().out
 
 
 def test_claude_auto_memory_can_be_turned_off_and_back_on(homes, capsys):
@@ -365,30 +381,6 @@ def test_running_from_a_checkout_is_flagged(homes, monkeypatch, capsys, checkout
 
 def test_this_test_run_is_from_the_checkout():
     assert inst.running_from_checkout()
-
-
-async def test_migrate_checks_the_dimension_it_is_given_not_the_global_one(_disposable_test_db):
-    # Reinstalling with --backend local (384 dimensions) while the process-wide settings
-    # say 768 must migrate the 384-dimensional store, not reject it.
-    from urllib.parse import urlsplit, urlunsplit
-    from uuid import uuid4
-
-    import asyncpg
-
-    assert inst.get_settings().embed_dim == 768
-    parts = urlsplit(_disposable_test_db)
-    name = "mnemo_dim_" + uuid4().hex[:12]
-    admin = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
-    await admin.execute(f'CREATE DATABASE "{name}"')
-    try:
-        dsn = urlunsplit(parts._replace(path="/" + name))
-        assert await inst.migrate(dsn, 384)  # fresh store, created at 384
-        assert await inst.migrate(dsn, 384) == []
-        with pytest.raises(ValueError, match="uses 384 dimensions; configured embed_dim is 768"):
-            await inst.migrate(dsn, 768)
-    finally:
-        await admin.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-        await admin.close()
 
 
 # ---- OpenCode ---------------------------------------------------------------

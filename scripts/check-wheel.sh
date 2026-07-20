@@ -1,67 +1,32 @@
 #!/usr/bin/env bash
 # Installs the built wheel into a fresh environment and exercises it against a
-# throwaway database on the MNEMO_TEST_DSN server, which is dropped on exit; it never
-# touches the configured (real) database.
+# throwaway store file inside that environment, removed on exit; it never touches the
+# configured (real) store.
 set -euo pipefail
 mnemo_checkout="$(pwd)"
 mnemo_wheel_env="$(mktemp -d)"
-mnemo_wheel_db="mnemo_wheel_$(od -An -N4 -tx4 /dev/urandom | tr -d ' ')"
-
-scratch_database() {  # create|drop; prints the scratch DSN
-  "$mnemo_wheel_env/venv/bin/python" - "$mnemo_wheel_db" "$1" <<'PY'
-import asyncio
-import sys
-from urllib.parse import urlsplit, urlunsplit
-
-import asyncpg
-
-from mnemo.config import get_settings
-
-name, action = sys.argv[1], sys.argv[2]
-parts = urlsplit(get_settings().test_dsn)
-
-
-async def main() -> None:
-    conn = await asyncpg.connect(urlunsplit(parts._replace(path="/postgres")))
-    try:
-        if action == "create":
-            await conn.execute(f'CREATE DATABASE "{name}"')
-        else:
-            await conn.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
-    finally:
-        await conn.close()
-
-
-asyncio.run(main())
-print(urlunsplit(parts._replace(path="/" + name)))
-PY
-}
 
 cleanup() {
-  if [ -x "$mnemo_wheel_env/venv/bin/python" ]; then
-    (cd "$mnemo_wheel_env" && scratch_database drop >/dev/null) || true
-  fi
   rm -rf "$mnemo_wheel_env"
 }
 trap cleanup EXIT
 uv venv "$mnemo_wheel_env/venv" --python 3.12
 uv pip install --python "$mnemo_wheel_env/venv/bin/python" "$mnemo_checkout"/dist/*.whl
 cd "$mnemo_wheel_env"
-MNEMO_DSN="$(scratch_database create)"
-export MNEMO_DSN
+MNEMO_DB="$mnemo_wheel_env/store/mnemo.db"
+export MNEMO_DB
 "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 from importlib.resources import files
 import json
 import mnemo.mcp_direct
 from mnemo.db import MIGRATIONS_DIR
 from web.app import TEMPLATES
-assert len(list(MIGRATIONS_DIR.glob('*.sql'))) >= 7
-assert MIGRATIONS_DIR.joinpath('0010_mutation_receipts.sql').is_file()
+assert MIGRATIONS_DIR.joinpath('0001_sqlite_init.sql').is_file()
 assert TEMPLATES.env.get_template('list.html')
 from web.app import STATIC
-from mnemo.cli import COMPOSE_FILE
+import sqlite_vec  # the vector extension loads from the installed wheel
 assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.js').is_file()
-assert COMPOSE_FILE.is_file() and 'site-packages' in COMPOSE_FILE.parts  # packaged copy
+assert 'site-packages' in MIGRATIONS_DIR.parts  # the packaged copy, not the checkout
 assert files('mnemo').joinpath('memory_policy.md').is_file()
 print('Installed wheel: runtime imports, migrations and templates verified')
 PY
@@ -70,6 +35,7 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo" install --help >/dev/null
 "$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
+test "$(stat -f %Lp "$MNEMO_DB" 2>/dev/null || stat -c %a "$MNEMO_DB")" = 600
 MNEMO_BACKEND=hash \
   "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
 MNEMO_BACKEND=hash \
@@ -88,7 +54,7 @@ from mnemo.embedder import HashEmbedder
 
 settings = get_settings()
 namespace = 'wheel-direct-' + uuid4().hex
-client = Mnemo(settings.dsn, HashEmbedder(settings.embed_dim), namespace=namespace)
+client = Mnemo(settings.db, HashEmbedder(settings.embed_dim), namespace=namespace)
 first = client.direct.create('user', 'preferred_database', 'PostgreSQL', request_id=uuid4())
 assert isinstance(first, MutationResult)
 changed = client.direct.update(
@@ -102,7 +68,7 @@ else:
     raise AssertionError('A stale SDK mutation was accepted')
 restored = client.direct.revert(
     first.fact_id, first.event_id, expected_event_id=changed.event_id, request_id=uuid4())
-restarted = Mnemo(settings.dsn, HashEmbedder(settings.embed_dim), namespace=namespace)
+restarted = Mnemo(settings.db, HashEmbedder(settings.embed_dim), namespace=namespace)
 retry = restarted.direct.revert(
     first.fact_id, first.event_id, expected_event_id=changed.event_id,
     request_id=restored.request_id)

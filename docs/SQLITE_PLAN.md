@@ -1,10 +1,12 @@
 # Mnemo — single-file local stack plan
 
-**Status: the owner asked for it to be implemented (November 14, 2026). Verified and
-corrected (§3.1); Phase 0's test, Phase 1 and Phase 2 are done (D2 and D5 approved).
-The owner put the trust features (§9) and an agent eval with a poisoning scenario
-before Phase 3; both are done (spec §24–§25, eval 12 of 12). Phase 3 is next.** It changes the pinned stack, the schema and several spec
-contracts under `AGENTS.md` rule 6. Checkout: `446e4b7`.
+**Status: Phases 0 (tag and fixture), 1 to 7 are done on the local branch `sqlite`
+(November 19, 2026; spec §26). Phase 8 is next: three agent-eval runs against the
+installed SQLite build (needs the owner: it spends Claude usage and Codex tokens),
+then the cut-over to `main`.** The owner put the trust features (§9) and an agent eval
+with a poisoning scenario before Phase 3; both were done first (spec §24–§25, eval 12
+of 12). D1 (sqlite-vec; fastembed was already in), D3 and D4 were taken as approved
+with "port to SQLite"; D2 and D5 were approved explicitly.
 
 > **For the executing agent:** read `PROJECT_SPEC.md`, `AGENTS.md`, then this file.
 > Work phase by phase. Each phase ends with green tests, lint and one commit. Do not
@@ -346,73 +348,91 @@ local model available.
 Files: new `mnemo/sqlite.py`, `migrations/0001_sqlite_init.sql`, `mnemo/db.py`,
 `mnemo/core.py`, `mnemo/models.py`, `mnemo/seed.py`, `tests/conftest.py`.
 
-- [ ] `mnemo/sqlite.py`: open (pragmas, extension, capability check) and a thin async
+- [x] `mnemo/sqlite.py`: open (pragmas, extension, capability check) and a thin async
       wrapper with `fetch`, `fetchrow`, `fetchval`, `execute`, `transaction()`, so call
       sites change their SQL and little else.
-- [ ] Schema, triggers and view from §4.3.
-- [ ] Port `add`, `revert`, `invalidate`, `reinforce`, `commit`, `diff`, `blame`,
+- [x] Schema, triggers and view from §4.3.
+- [x] Port `add`, `revert`, `invalidate`, `reinforce`, `commit`, `diff`, `blame`,
       `log`, `get`, `list_current`, `list_commits`.
-- [ ] `conftest.py`: a fresh temporary file per test; `MNEMO_REQUIRE_DB` goes away.
-- [ ] New tests: the trigger rejects a change to every payload column; timestamps are
+- [x] `conftest.py`: a fresh temporary file per test; `MNEMO_REQUIRE_DB` goes away.
+- [x] New tests: the trigger rejects a change to every payload column; timestamps are
       fixed width; the eight-process races from §3.
 
 **Exit:** `test_core`, `test_lifecycle`, `test_diff`, `test_council`,
 `test_foundation_integrity`, `test_identity`, `test_schema` and the new tests pass.
 
+Done. Deviation: the word index holds every event's text keyed by its `seq` (events
+never change, so no trigger on HEAD moves is needed, and historical search can use
+it too). Text primary keys are `NOT NULL` (SQLite otherwise allows NULL). Insert
+guards stop `INSERT OR REPLACE` from swapping an event or receipt.
+
 ### Phase 4 — Search (medium to large)
 
-- [ ] Rewrite `search` and `_search_semantic` per §4.5, including `as_of`,
+- [x] Rewrite `search` and `_search_semantic` per §4.5, including `as_of`,
       `valid_at` and `include_superseded`.
-- [ ] Write a vector on create and update; copy it on revert; tolerate its absence.
-- [ ] `mnemo reindex` rebuilds `memory_embedding` and `memory_search_text`.
-- [ ] Tests: scores equal hand-computed values for fixed vectors; `%` and `_` are
+- [x] Write a vector on create and update; copy it on revert; tolerate its absence.
+- [x] `mnemo reindex` rebuilds `memory_embedding` and `memory_search_text`.
+- [x] Tests: scores equal hand-computed values for fixed vectors; `%` and `_` are
       literal; scope isolation; a slow-marked test for 5,000 memories.
 
 **Exit:** `test_search`, `test_embeddings` and the retrieval test meet the Phase 0
 bar; search at 5,000 memories in a scope takes under 50 ms.
+
+Done: Ollama 20 first / 24 top 3 / 1 off-topic, bge-small 19 / 25 / 3 (the §3.1
+numbers); 5,000 memories at 384 dimensions, median 32 ms on the owner's Mac.
 
 ### Phase 5 — Direct API and MCP server (medium)
 
 Files: `mnemo/direct.py`, `mnemo/mcp_direct.py`, `mnemo/services.py`,
 `mnemo/__init__.py`.
 
-- [ ] Receipts compare canonical JSON text; reads use snapshot transactions.
-- [ ] `mcp_direct._run` opens a connection per call; the pool and its lock go.
-- [ ] `services.py`: errors for an unreadable or unmigrated file, a Python build that
+- [x] Receipts compare canonical JSON text; reads use snapshot transactions.
+- [x] `mcp_direct._run` opens a connection per call; the pool and its lock go.
+- [x] `services.py`: errors for an unreadable or unmigrated file, a Python build that
       cannot load extensions, and a missing model. Each names its fix.
-- [ ] `Mnemo(dsn, …)` becomes `Mnemo(path, …)`.
+- [x] `Mnemo(dsn, …)` becomes `Mnemo(path, …)`.
 
 **Exit:** `test_direct_mutations`, `test_trust_features`, the five direct stdio test
 files, `test_sdk`, `test_agent_undo` and `test_azure_pilot` pass.
 
 ### Phase 6 — Export, import and upgrade (medium)
 
-- [ ] `transfer.py` per §4.8.
+- [x] `transfer.py` per §4.8.
 - [x] Check in a small version 1 export produced at `v0.0.1-postgres` as a fixture
       (`tests/data/export_v1_postgres.json`: two scopes, an update, a revert, a
       retraction with its receipt, sources, a number, a JSON value and a commit).
-- [ ] Tests: a version 2 round trip is exact; the version 1 fixture imports with the
+- [x] Tests: a version 2 round trip is exact; the version 1 fixture imports with the
       same IDs, `seq`, values and HEADs; a pre-upgrade request ID replays its receipt;
       a retracted memory and its `retract` receipt round-trip (add this test on
       Postgres first: nothing covers it today).
 
 **Exit:** `test_transfer` passes and the upgrade steps are written into the README.
 
+Done. Receipts compare request payloads as canonical JSON text (Python's `1 == True`
+would otherwise match a different request).
+
 ### Phase 7 — Installer, CLI, web, packaging, documents (medium)
 
-- [ ] `install.py`: write `MNEMO_DB`, check SQLite capabilities and the model, create
+- [x] `install.py`: write `MNEMO_DB`, check SQLite capabilities and the model, create
       `~/.mnemo` (0700) and the file (0600), migrate.
-- [ ] `cli.py`: remove `up` and `down` (print a one-line notice for one release); add
+- [x] `cli.py`: remove `up` and `down` (print a one-line notice for one release); add
       `reindex`.
-- [ ] `web/app.py`: a connection per request.
-- [ ] `pyproject.toml`, `Makefile`, `scripts/check-wheel.sh`,
+- [x] `web/app.py`: a connection per request.
+- [x] `pyproject.toml`, `Makefile`, `scripts/check-wheel.sh`,
       `.github/workflows/correctness.yml`; delete `docker-compose.yml`.
-- [ ] `scripts/agent_eval.py`: the scratch store is a temporary file.
-- [ ] Documents per §7.
+- [x] `scripts/agent_eval.py`: the scratch store is a temporary file.
+- [x] Documents per §7.
 
 **Exit:** the full suite, lint and the wheel check pass; installing the branch as a
 tool and running `mnemo install` against temporary `--claude-dir` and `--codex-home`
 works. Never run it against the owner's real agent configuration.
+
+Done: 343 passed, lint and the wheel check pass. The wheel was installed into a
+temporary venv (not `uv tool install`, which would replace the owner's tool) and
+`mnemo install --backend hash` ran with a temporary `HOME`: Claude Code and OpenCode
+reported the server connected, Codex listed it, and `mnemo uninstall` removed all
+three. The installer embeds memories that lack a vector from the chosen model instead
+of refusing a model switch. `make demo` uses a temporary store.
 
 ### Phase 8 — Gate and cut-over (small, plus eval cost)
 

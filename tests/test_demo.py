@@ -5,12 +5,12 @@ from __future__ import annotations
 import asyncio
 from uuid import uuid4
 
-import asyncpg
 import httpx
 import pytest
 from typer.testing import CliRunner
 
 from mnemo import Mnemo
+from mnemo.sqlite import connect
 
 
 def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory) -> None:
@@ -35,8 +35,8 @@ def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory)
         "PostgreSQL"
     ]
 
-    async def assert_no_background_writes() -> None:
-        conn = await asyncpg.connect(_disposable_test_db)
+    async def assert_one_receipt_per_write() -> None:
+        conn = await connect(_disposable_test_db)
         try:
             assert (
                 await conn.fetchval(
@@ -44,17 +44,10 @@ def test_direct_demo_runs(_disposable_test_db: str, fake_embedder, clean_memory)
                 )
                 == 3
             )
-            for table in ("fast_cache", "extraction_job", "quality_decision"):
-                assert (
-                    await conn.fetchval(
-                        f"SELECT count(*) FROM {table} WHERE namespace=?1", namespace
-                    )
-                    == 0
-                )
         finally:
             await conn.close()
 
-    asyncio.run(assert_no_background_writes())
+    asyncio.run(assert_one_receipt_per_write())
 
 
 @pytest.mark.parametrize("backend", [None, "ollama", "openai", "hash"])
@@ -80,14 +73,15 @@ def test_direct_demo_respects_backend_from_dotenv(monkeypatch, tmp_path) -> None
     assert demo_settings().backend == "ollama"
 
 
-def test_direct_demo_cli_defaults_to_hash_and_uses_fresh_namespaces(
-    _disposable_test_db: str, clean_memory, monkeypatch, tmp_path
+def test_direct_demo_cli_defaults_to_hash_and_never_touches_the_store(
+    monkeypatch, tmp_path
 ) -> None:
     from examples.direct_memory import app
 
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("MNEMO_BACKEND", raising=False)
-    monkeypatch.setenv("MNEMO_DSN", _disposable_test_db)
+    store = tmp_path / "real" / "mnemo.db"
+    monkeypatch.setenv("MNEMO_DB", str(store))
 
     def no_http_client(*args, **kwargs):
         raise AssertionError("the default demo must not construct a model client")
@@ -103,3 +97,4 @@ def test_direct_demo_cli_defaults_to_hash_and_uses_fresh_namespaces(
             next(line for line in result.output.splitlines() if line.startswith("namespace: "))
         )
     assert namespaces[0] != namespaces[1]
+    assert not store.exists()

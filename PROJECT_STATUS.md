@@ -1,5 +1,19 @@
 # Mnemo — implementation status
 
+## One SQLite file (November 19, 2026)
+
+The store moved from Postgres to one SQLite file on the `sqlite` branch, Phases 3 to 7
+of [the plan](docs/SQLITE_PLAN.md) ([spec §26](PROJECT_SPEC.md#26-one-sqlite-file--november-19-2026)).
+No Docker, Postgres server or password; `mnemo install` creates `~/.mnemo/mnemo.db`.
+The suite (343 tests) needs no service; eight-process races give one winner per
+guarded change; the retrieval set scores as on Postgres (Ollama 20/24/1, bge-small
+19/25/3); search over 5,000 memories in a scope takes about 32 ms; a Postgres export
+made at `v0.0.1-postgres` imports with the same IDs, history and receipt replays. The
+built wheel passes `scripts/check-wheel.sh`, and a temporary-home `mnemo install`
+connected Claude Code and OpenCode (Codex listed the server) and `mnemo uninstall`
+removed it. Not done: Phase 8, three agent-eval runs against this build before it
+replaces `main`, and making `local` the default backend.
+
 Updated September 26, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are
 implemented and locally verified. Phase 5's bounded pilots are complete:

@@ -11,14 +11,14 @@ tools pre-approved in ``$CODEX_HOME/config.toml`` and the policy in
 in its global ``opencode.json`` and the policy in its global ``AGENTS.md``, or in
 ``~/.claude/CLAUDE.md`` while OpenCode is reading that file instead. Text written into a
 file sits between mnemo markers, so it can be updated or removed without touching the
-rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one database,
-namespace and user.
+rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one store file
+(MNEMO_DB, default ~/.mnemo/mnemo.db), namespace and user.
 
-Before changing anything it checks that Postgres is reachable and, for the default
-Ollama backend, that Ollama is running; a missing embedding model (Ollama's, or the
-local backend's, which runs inside Mnemo) is downloaded after you confirm. It refuses
-a backend or model whose vectors would not match the memories already stored.
-Problems are reported with the command that fixes them.
+Before changing anything it checks that the store file is usable with this Python and,
+for the Ollama backend, that Ollama is running; a missing embedding model (Ollama's,
+or the local backend's, which runs inside Mnemo) is downloaded after you confirm. It
+creates the store readable only by you, and embeds any stored memories that have no
+vector from the chosen model. Problems are reported with the command that fixes them.
 """
 
 from __future__ import annotations
@@ -244,7 +244,7 @@ def opencode_rules_path(opencode_dir: Path, claude_dir: Path) -> Path:
 
 def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
     env = {
-        "MNEMO_DSN": settings.dsn,
+        "MNEMO_DB": str(settings.db),
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(settings.embed_dim),
         "MNEMO_NAMESPACE": settings.namespace,
@@ -465,8 +465,8 @@ def plan(
 class Services:
     """The pre-flight probes; tests substitute fakes."""
 
-    def postgres_problem(self, settings: Settings) -> str | None:
-        return asyncio.run(services.postgres_problem(settings))
+    def store_problem(self, settings: Settings) -> str | None:
+        return asyncio.run(services.store_problem(settings))
 
     def ollama_models(self, host: str) -> list[str]:
         return services.ollama_models(host)
@@ -480,14 +480,25 @@ class Services:
     def download_local(self, settings: Settings) -> None:
         download_local_model(settings.embed_model, settings.model_dir)
 
-    def embedding_mismatch(self, settings: Settings, backend: str) -> str | None:
-        embedder = build_embedder(settings)
-        try:
-            return asyncio.run(services.embedding_mismatch(settings, backend, embedder.embed))
-        finally:
-            close = getattr(embedder, "close", None)
-            if close:
-                close()
+    def missing_vectors(self, settings: Settings) -> int:
+        return asyncio.run(services.missing_vectors(settings, build_embedder(settings)))
+
+    def reindex(self, settings: Settings) -> dict[str, int]:
+        from mnemo.core import reindex
+        from mnemo.db import connect
+
+        async def run() -> dict[str, int]:
+            embedder = build_embedder(settings)
+            conn = await connect(settings.db, create=False)
+            try:
+                return await reindex(conn, embedder)
+            finally:
+                await conn.close()
+                close = getattr(embedder, "close", None)
+                if close:
+                    close()
+
+        return asyncio.run(run())
 
 
 @dataclass
@@ -499,12 +510,11 @@ class Preflight:
 
 def preflight(settings: Settings, backend: str, probe: Services) -> Preflight:
     result = Preflight(ready=[], problems=[])
-    problem = probe.postgres_problem(settings)
-    location = services.where(settings.dsn)
+    problem = probe.store_problem(settings)
     if problem:
         result.problems.append(problem)
     else:
-        result.ready.append(f"Postgres at {location}")
+        result.ready.append(f"store at {services.where(settings.db)}")
     host, model = settings.ollama_host, settings.embed_model
     if backend == "ollama":
         try:
@@ -527,32 +537,19 @@ def preflight(settings: Settings, backend: str, probe: Services) -> Preflight:
     return result
 
 
-async def migrate(dsn: str, embed_dim: int) -> list[str]:
-    import asyncpg
+async def migrate(path: Path) -> list[str]:
+    """Create the store (directory 0700, file 0600) if needed and apply migrations."""
+    from mnemo.db import apply_migrations, connect
 
-    from mnemo.db import apply_migrations, register_vector
-
-    # Not mnemo.db.connect: it checks the dimension of the process-wide settings,
-    # which differ from embed_dim when --backend selects another model.
-    conn = await asyncpg.connect(dsn)
+    conn = await connect(path)
     try:
-        await register_vector(conn)
-        return await apply_migrations(conn, embed_dim=embed_dim)
+        return await apply_migrations(conn)
     finally:
         await conn.close()
 
 
-def _mismatch(probe: Services, settings: Settings, backend: str) -> bool:
-    """Print and report a stored-vector mismatch; embedding failures are not one."""
-    try:
-        problem = probe.embedding_mismatch(settings, backend)
-    except Exception as exc:  # the server reports embedding failures with their fix
-        print(f"Note: could not compare stored memories with {backend} embeddings ({exc}).")
-        return False
-    if problem:
-        print(f"FIX  {problem}")
-        print("No agent configuration or database was changed.")
-    return bool(problem)
+def probe_or(probe: Services | None) -> Services:
+    return probe or Services()
 
 
 def main(
@@ -625,7 +622,7 @@ def main(
         print(f"mnemo-install: {exc}", file=sys.stderr)
         return 2
     migrating = not (args.uninstall or args.skip_migrate)
-    print(f"Database: {services.where(settings.dsn)} (backend {backend})")
+    print(f"Store: {services.where(settings.db)} (backend {backend})")
     print(f"Codex home: {codex_home}  (pass --codex-home if your codex uses another)")
     if "opencode" in agents:
         print(f"OpenCode config: {opencode_dir}  (pass --opencode-dir for another)")
@@ -646,19 +643,27 @@ def main(
         )
     elif checks.pull_model:
         print(f"- Download the embedding model {settings.embed_model} into Ollama (about 270 MB)")
+    checking = not (args.uninstall or args.skip_checks)
+    missing = probe_or(probe).missing_vectors(settings) if checking else 0
     if migrating:
-        print("- Apply any pending database migrations")
+        print(
+            "- Apply any pending schema migrations"
+            if settings.db.exists()
+            else f"- Create the store {services.where(settings.db)} (readable only by you)"
+        )
+    if missing:
+        print(
+            f"- Embed {missing} stored memories with {backend} {settings.embed_model} "
+            "(search compares a question only with vectors from the same model)"
+        )
     for step in commands:
         print(f"- {step.description}")
     for change in changes:
         print(change.diff(), end="")
-    if not (commands or changes or migrating or checks.pull_model):
+    if not (commands or changes or migrating or checks.pull_model or missing):
         print("Nothing to change.")
         return 0
-    checking = not (args.uninstall or args.skip_checks)
     if args.dry_run:
-        if checking and not checks.pull_model:
-            return 2 if _mismatch(probe or Services(), settings, backend) else 0
         return 0
     if not args.yes and ask("Apply these changes? [y/N] ").strip().lower() not in ("y", "yes"):
         print("Nothing changed.")
@@ -678,11 +683,9 @@ def main(
             )
             print(f"mnemo-install: download failed: {exc}. {retry} and try again.", file=sys.stderr)
             return 1
-    if checking and _mismatch(probe or Services(), settings, backend):
-        return 2
     if migrating:
         try:
-            applied = asyncio.run(migrate(settings.dsn, settings.embed_dim))
+            applied = asyncio.run(migrate(settings.db))
         except Exception as exc:
             error = services.service_error(exc, settings)
             print(
@@ -691,6 +694,19 @@ def main(
             )
             return 1
         print(f"Migrations applied: {', '.join(applied) or 'none pending'}")
+    if missing:
+        print(f"Embedding {missing} memories...", flush=True)
+        try:
+            counts = probe_or(probe).reindex(settings)
+        except Exception as exc:
+            error = services.service_error(exc, settings)
+            print(
+                f"mnemo-install: embedding failed: {error.message if error else exc}. "
+                "Memories are still found by their words; run `mnemo reindex` later.",
+                file=sys.stderr,
+            )
+        else:
+            print(f"Embedded {counts['embedded']} memories.")
     for step in commands:
         result = run(step.argv)
         if result.returncode != 0:

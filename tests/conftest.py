@@ -22,19 +22,6 @@ from mnemo.db import apply_migrations
 from mnemo.embedder import HashEmbedder as FakeEmbedder
 from mnemo.sqlite import Connection, connect
 
-# Test modules still written for Postgres while the port proceeds phase by phase.
-# Each phase removes the files it ports; the list is empty when the port is done.
-collect_ignore = [
-    "test_agent_eval.py",
-    "test_cli.py",
-    "test_config.py",
-    "test_demo.py",
-    "test_install.py",
-    "test_packaging.py",
-    "test_project.py",
-    "test_web.py",
-]
-
 
 @pytest.fixture
 def fake_embedder() -> FakeEmbedder:

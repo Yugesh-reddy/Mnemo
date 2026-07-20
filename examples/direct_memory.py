@@ -3,11 +3,15 @@
 Run ``make demo`` without a model server, or ``python -m
 examples.direct_memory`` to honor a backend explicitly configured in the
 environment or .env. Exercises guarded revisions and durable retries via Mnemo.direct.
+The demo writes to a temporary store file, so your memories are never touched.
 """
 
 from __future__ import annotations
 
+import asyncio
+import tempfile
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
@@ -15,6 +19,7 @@ import typer
 
 from mnemo import ErrorCode, Mnemo, MnemoError
 from mnemo.config import Settings
+from mnemo.db import apply_migrations, connect
 from mnemo.embedder import build_embedder
 
 app = typer.Typer(add_completion=False, help="Direct write, history and rollback with the SDK.")
@@ -106,17 +111,20 @@ def run_scenario(
 
 @app.command()
 def demo() -> None:
-    """Run a direct-memory lifecycle in a fresh namespace (no extraction)."""
+    """Run a direct-memory lifecycle in a temporary store (no extraction)."""
     settings = demo_settings()
     embedder = build_embedder(settings)
+    scratch = tempfile.TemporaryDirectory(prefix="mnemo-demo-")
     try:
+        path = Path(scratch.name) / "demo.db"
+        asyncio.run(_create(path))
         namespace = "demo-direct-" + uuid4().hex
         label = "hash (non-semantic)" if settings.backend == "hash" else settings.backend
         typer.echo("Mnemo direct-memory demo — scripted SDK calls, no host model")
         typer.echo(f"embeddings: {label}")
-        typer.echo(f"namespace: {namespace}")
+        typer.echo(f"namespace: {namespace} (in a temporary store)")
         memory = Mnemo(
-            settings.dsn,
+            path,
             embedder,
             namespace=namespace,
             user_id=settings.user_id,
@@ -124,9 +132,18 @@ def demo() -> None:
         )
         run_scenario(memory, say=typer.echo)
     finally:
+        scratch.cleanup()
         close = getattr(embedder, "close", None)
         if close:
             close()
+
+
+async def _create(path: Path) -> None:
+    conn = await connect(path)
+    try:
+        await apply_migrations(conn)
+    finally:
+        await conn.close()
 
 
 if __name__ == "__main__":
