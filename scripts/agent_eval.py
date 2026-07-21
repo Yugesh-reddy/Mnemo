@@ -141,8 +141,15 @@ def load_scenarios(path: Path = SCENARIOS) -> list[Scenario]:
 # ---- CLI invocations ---------------------------------------------------------------
 
 
-def mnemo_env(db: str, namespace: str, actor: str, backend: str, embed_dim: int) -> dict:
-    return {
+def mnemo_env(
+    db: str,
+    namespace: str,
+    actor: str,
+    backend: str,
+    embed_dim: int,
+    settings: Settings | None = None,
+) -> dict:
+    env = {
         "MNEMO_DB": db,
         "MNEMO_BACKEND": backend,
         "MNEMO_EMBED_DIM": str(embed_dim),
@@ -150,6 +157,11 @@ def mnemo_env(db: str, namespace: str, actor: str, backend: str, embed_dim: int)
         "MNEMO_USER_ID": "owner",
         "MNEMO_ACTOR": actor,
     }
+    if backend == "local" and settings is not None:
+        # Pinned as `mnemo install` does, so the servers load the model already on disk.
+        env["MNEMO_EMBED_MODEL"] = settings.embed_model
+        env["MNEMO_MODEL_DIR"] = str(settings.model_dir)
+    return env
 
 
 def claude_env(auto_memory: bool) -> dict[str, str]:
@@ -668,6 +680,7 @@ async def run(args: argparse.Namespace) -> int:
                     "claude-code" if session.agent == "claude" else "codex",
                     args.backend,
                     settings.embed_dim,
+                    settings,
                 )
                 before = await event_count(conn, namespace)
                 record, command, stdout, stderr = await asyncio.to_thread(

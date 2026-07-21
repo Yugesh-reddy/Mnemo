@@ -165,7 +165,7 @@ def test_cli_commands_isolate_the_agents_and_keep_the_prompt_off_argv(tmp_path):
     assert claude[claude.index("--setting-sources") + 1] == "project"
     assert claude[-2:] == ["--allowedTools", "mcp__mnemo"]
 
-    env = ae.mnemo_env("postgresql://u:p@h/db", "eval-x", "codex", "ollama", 768)
+    env = ae.mnemo_env("/tmp/eval/mnemo.db", "eval-x", "codex", "ollama", 768)
     codex = ae.codex_command(env, ["vercel"])
     assert (
         codex[-1] == "-"
@@ -288,3 +288,13 @@ async def test_seeds_land_in_the_scope_the_agents_read(_disposable_test_db, tmp_
     assert [e["op"] for e in state["events"]] == ["ADD", "ADD"]
     assert {c["value"] for c in state["current"]} == {"skip checks", "vim"}
     assert json.loads(json.dumps(state, default=str))["events"][0]["event_id"]
+
+
+def test_local_runs_pin_the_model_like_the_installer(tmp_path):
+    from mnemo.config import Settings
+
+    settings = Settings(_env_file=None, backend="local", model_dir=tmp_path / "models")
+    env = ae.mnemo_env("/tmp/eval/mnemo.db", "ns", "codex", "local", 384, settings)
+    assert env["MNEMO_EMBED_MODEL"] == "BAAI/bge-small-en-v1.5"
+    assert env["MNEMO_MODEL_DIR"] == str(tmp_path / "models")
+    assert "MNEMO_MODEL_DIR" not in ae.mnemo_env("/x", "ns", "codex", "ollama", 768, settings)
