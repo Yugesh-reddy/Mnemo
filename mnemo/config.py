@@ -39,13 +39,14 @@ class Settings(BaseSettings):
     """The SQLite file every agent shares. Keep it on a local disk, not a synced folder."""
 
     # --- Backend selection ---
-    backend: Literal["ollama", "openai", "hash", "local"] = "ollama"
-    """local: an embedding model running inside Mnemo (no model server)."""
+    backend: Literal["ollama", "openai", "hash", "local"] = "local"
+    """local (default): an embedding model running inside Mnemo, no model server.
+    ollama: a local Ollama server. hash: no model, word matches only. openai: hosted."""
 
     model_dir: Path = Path.home() / ".mnemo" / "models"
     """Where the local backend keeps its model; `mnemo install` downloads it here."""
 
-    # --- Ollama (default backend) ---
+    # --- Ollama ---
     ollama_host: str = "http://localhost:11434"
 
     # --- OpenAI (alternate backend) ---

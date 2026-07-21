@@ -12,15 +12,18 @@ def _clean() -> Settings:
 
 def test_search_settings_have_spec_defaults() -> None:
     s = _clean()
-    assert s.search_floor == 0.5
+    assert s.search_floor == 0.60  # the default local model's floor
     assert (s.search_w_rel, s.search_w_rec, s.search_w_imp) == (0.5, 0.2, 0.3)
+    assert Settings(_env_file=None, backend="ollama").search_floor == 0.5
 
 
-def test_backend_defaults_to_local_ollama() -> None:
+def test_backend_defaults_to_the_model_inside_mnemo(monkeypatch) -> None:
+    for name in ("MNEMO_BACKEND", "MNEMO_EMBED_MODEL", "MNEMO_EMBED_DIM"):
+        monkeypatch.delenv(name, raising=False)
     s = _clean()
-    assert s.backend == "ollama"
-    assert s.embed_model == "nomic-embed-text"
-    assert s.embed_dim == 768
+    assert (s.backend, s.embed_model, s.embed_dim) == ("local", "BAAI/bge-small-en-v1.5", 384)
+    ollama = Settings(_env_file=None, backend="ollama")
+    assert (ollama.embed_model, ollama.embed_dim) == ("nomic-embed-text", 768)
 
 
 def test_get_settings_is_cached() -> None:

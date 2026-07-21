@@ -249,3 +249,25 @@ def test_local_embedder_live_is_deterministic_and_normalized() -> None:
     assert len(vector) == embedder.dim
     assert vector == embedder.embed("the user prefers PostgreSQL")
     assert math.isclose(math.sqrt(sum(x * x for x in vector)), 1.0, abs_tol=1e-3)
+
+
+def test_checking_for_the_local_model_creates_nothing(tmp_path) -> None:
+    from mnemo.embedder import local_model_ready
+
+    cache = tmp_path / ".mnemo" / "models"
+    assert not local_model_ready("BAAI/bge-small-en-v1.5", cache)
+    assert not (tmp_path / ".mnemo").exists()
+
+
+def test_mnemo_directories_are_private_however_they_are_created(tmp_path) -> None:
+    import stat
+
+    from mnemo.embedder import private_dirs
+
+    private_dirs(tmp_path / "home" / ".mnemo" / "models")
+    for path in (
+        tmp_path / "home",
+        tmp_path / "home" / ".mnemo",
+        tmp_path / "home" / ".mnemo" / "models",
+    ):
+        assert stat.S_IMODE(path.stat().st_mode) == 0o700

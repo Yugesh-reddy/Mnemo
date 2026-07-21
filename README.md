@@ -9,18 +9,17 @@ be undone. Everything runs locally.
 
 ## Quick start
 
-You need a Mac with [uv](https://docs.astral.sh/uv/) and [Ollama](https://ollama.com/)
-running, or no Ollama at all with `--backend local`. There is no database server and
-no Docker: memory is one file, `~/.mnemo/mnemo.db`. Linux should work too but hasn't
-been tested yet.
+You need a Mac with [uv](https://docs.astral.sh/uv/). Nothing else runs: memory is one
+file, `~/.mnemo/mnemo.db`, and the embedding model runs inside Mnemo. Linux should work
+too but hasn't been tested yet.
 
 ```bash
 uv tool install git+https://github.com/Yugesh-reddy/Mnemo
 mnemo install   # connect Claude Code, Codex and OpenCode (shows every change, asks first)
 ```
 
-`mnemo install` checks that Ollama is running, downloads the `nomic-embed-text`
-embedding model if it is missing, creates the memory file (readable only by you),
+`mnemo install` downloads the embedding model (`BAAI/bge-small-en-v1.5`, about 67 MB,
+from Hugging Face) after you confirm, creates the memory file (readable only by you),
 registers Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and
 adds a short [memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
@@ -52,7 +51,8 @@ mnemo import mnemo-postgres.json   # creates ~/.mnemo/mnemo.db; same IDs, histor
 mnemo install                      # embeds the imported memories with the chosen model
 ```
 
-Import leaves the vectors to `mnemo install`. Your Postgres data is not changed, and `mnemo up`/`mnemo down` are gone:
+Import leaves the vectors to `mnemo install`, which now uses the model inside Mnemo
+by default; add `--backend ollama` to keep using Ollama. Your Postgres data is not changed, and `mnemo up`/`mnemo down` are gone:
 stop the old container with Docker when you no longer need it. To go back, install
 the tag: `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo@v0.0.1-postgres`.
 
@@ -70,11 +70,11 @@ so the agents keep working if you move or delete it; rerun it after changing cod
 - **History and undo.** A change never overwrites the past: every revision is kept,
   `memory_history` shows it, and `memory_revert` restores an earlier value as a new
   revision. Stale writes are rejected, and retrying a change doesn't apply it twice.
-- **Clear failures.** If the memory file, Ollama or the embedding model is missing,
+- **Clear failures.** If the memory file or the embedding model is missing,
   the agent gets an error that names the command that fixes it, and the server keeps
   running.
-- **Local and private.** Memories stay in one file on your disk, embeddings come from
-  your Ollama (or a model inside Mnemo), and nothing is sent anywhere else. There is
+- **Local and private.** Memories stay in one file on your disk, embeddings come from a
+  model inside Mnemo (or your Ollama), and nothing is sent anywhere else. There is
   no telemetry.
 
 ## Does it work?
@@ -87,8 +87,10 @@ retracted memory, small talk, a question nothing answers, and two poisoning atte
 (an instruction planted in a repository file, and a planted memory). Without
 instructions, Codex never saved what it was told, and the first ten scenarios passed
 **4 of 10**. With the memory policy that `mnemo install` installs, all twelve passed
-(**12 of 12**), including with Claude Code's own auto-memory left on. Each scenario ran once on tiny planted repositories,
-so this shows the approach works, not how often it works in long, real sessions.
+(**12 of 12**), including with Claude Code's own auto-memory left on. On the
+single-file store the same setup passed 12 of 12 in three more runs, one with Ollama
+and two with the model inside Mnemo, with no Mnemo tool errors. Each scenario ran once
+per run on tiny planted repositories, so this shows the approach works, not how often it works in long, real sessions.
 
 ## How agents use it
 
@@ -130,7 +132,7 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 | Setting | Default | Meaning |
 |---|---|---|
 | `MNEMO_DB` | `~/.mnemo/mnemo.db` | The memory file every agent shares. Keep it on a local disk, not in a synced folder. |
-| `MNEMO_BACKEND` | `ollama` | Embeddings: `ollama` (local server), `local` (a model inside Mnemo, no server; see below), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
+| `MNEMO_BACKEND` | `local` | Embeddings: `local` (a model inside Mnemo, no server; see below), `ollama` (a local Ollama server), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
 | `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `mnemo install`. |
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
@@ -138,8 +140,8 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 `mnemo install` options: `--dry-run` shows the changes only,
 `--agent claude|codex|opencode` limits them to the agents named, `--codex-home` points
 at another Codex home (a `codex` wrapper that pins one is detected), `--opencode-dir`
-at another OpenCode config directory, `--backend local` or `--backend hash` avoids
-Ollama, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
+at another OpenCode config directory, `--backend ollama` uses Ollama's
+`nomic-embed-text` instead of the model inside Mnemo, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
 
 OpenCode gets a `mnemo` server under `mcp` in `~/.config/opencode/opencode.json`
 (under `mcp.servers` when the file already groups its servers there, the newer
@@ -149,12 +151,15 @@ the entry to paste instead, and when OpenCode was only detected, not named with
 `~/.claude/CLAUDE.md` when OpenCode is reading that file because it has no
 `AGENTS.md` of its own (creating one would stop it reading CLAUDE.md).
 
-**`--backend local` (experimental)** runs the embedding model inside each Mnemo server
-instead of in Ollama. `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB,
-from Hugging Face) into `~/.mnemo/models`; nothing is downloaded later. Each agent
-session's server then uses about 300 MB of memory. On a 28-question check it found
-memories about as well as Ollama (see `tests/test_retrieval_quality.py`); the model is
-English-only. Each vector is stored with the model that made it, and search compares
+**The default `local` backend** runs the embedding model inside each Mnemo server.
+`mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB, from Hugging Face)
+into `~/.mnemo/models`; nothing is downloaded later. Each agent session's server uses
+about 300 MB of memory once it has searched or written (about 60 MB before), and its
+first search takes about 2 s while the model loads. On a 28-question check it found
+memories about as well as Ollama (see `tests/test_retrieval_quality.py`), but an
+unrelated question returns a memory more often (3 of 8 questions against 1); the
+model is English-only. `--backend ollama` uses Ollama's `nomic-embed-text` instead
+(about 70 MB per server plus Ollama). Each vector is stored with the model that made it, and search compares
 a question only with vectors from the same model, so switching models keeps your
 memories: `mnemo install` embeds them again with the new model. `mnemo reindex` does
 it by hand with the backend in your shell's `MNEMO_BACKEND`, so set the one the agents
@@ -163,12 +168,13 @@ use. Until then memories are still found by their words.
 ### Configure by hand
 
 With the tool installed, the server is `mnemo-mcp-direct` in `uv tool dir --bin`
-(usually `~/.local/bin`); use its absolute path. Claude Code, once for every
-repository:
+(usually `~/.local/bin`); use its absolute path. The server never downloads the
+model: let `mnemo install` fetch it once, or use `MNEMO_BACKEND=ollama` with
+`MNEMO_EMBED_DIM=768`. Claude Code, once for every repository:
 
 ```bash
 claude mcp add mnemo --scope user \
-  -e MNEMO_BACKEND=ollama -e MNEMO_EMBED_DIM=768 \
+  -e MNEMO_BACKEND=local -e MNEMO_MODEL_DIR=/Users/you/.mnemo/models \
   -e MNEMO_ACTOR=claude-code \
   -- /Users/you/.local/bin/mnemo-mcp-direct
 ```
@@ -181,8 +187,8 @@ command = "/Users/you/.local/bin/mnemo-mcp-direct"
 default_tools_approval_mode = "approve"  # lets `codex exec` call the tools unattended
 
 [mcp_servers.mnemo.env]
-MNEMO_BACKEND = "ollama"
-MNEMO_EMBED_DIM = "768"
+MNEMO_BACKEND = "local"
+MNEMO_MODEL_DIR = "/Users/you/.mnemo/models"
 MNEMO_ACTOR = "codex"
 ```
 
@@ -194,7 +200,7 @@ OpenCode, in `~/.config/opencode/opencode.json`:
     "mnemo": {
       "type": "local",
       "command": ["/Users/you/.local/bin/mnemo-mcp-direct"],
-      "environment": {"MNEMO_BACKEND": "ollama", "MNEMO_EMBED_DIM": "768", "MNEMO_ACTOR": "opencode"}
+      "environment": {"MNEMO_BACKEND": "local", "MNEMO_ACTOR": "opencode"}
     }
   }
 }
@@ -214,7 +220,7 @@ the server from source.
 | Service | Used for | If it is down |
 |---|---|---|
 | One SQLite file (`~/.mnemo/mnemo.db`) with [sqlite-vec](https://github.com/asg017/sqlite-vec) | All memories, history and receipts | Tools return `SERVICE_UNAVAILABLE` naming the fix (`mnemo install`) |
-| Ollama with `nomic-embed-text` | Embeddings for search and writes | Search and writes fail; reading by ID, history and revert still work |
+| The embedding model in `~/.mnemo/models` (or Ollama with `nomic-embed-text`) | Embeddings for search and writes | Search and writes fail with the fix; reading by ID, history and revert still work |
 | git | Detecting the project | Only the global scope is available |
 
 No language model runs inside Mnemo for this path: the agent decides what to save.
@@ -277,7 +283,7 @@ MNEMO_NAMESPACE='default@github.com/you/your-repo' make ui      # one project's 
 A project's scope is `<MNEMO_NAMESPACE>@<project>`, where the project is the
 repository's remote in lower case (for example `github.com/you/your-repo`), or
 `path:<repository path>` when it has no remote. The UI needs the same embedding
-backend as the agents (Ollama by default). Search → open history → revert a
+backend as the agents (the model inside Mnemo by default). Search → open history → revert a
 revision. A stale form
 returns HTTP 409, shows the latest state, and writes nothing. Repeated submissions
 replay their receipt. Unrestorable revisions have no restore button. **Manual

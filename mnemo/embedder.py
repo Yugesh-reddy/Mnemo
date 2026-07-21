@@ -1,4 +1,4 @@
-"""Embeddings via Ollama (default), a model inside Mnemo, OpenAI, or non-semantic hashes.
+"""Embeddings from a model inside Mnemo (default), Ollama, OpenAI, or non-semantic hashes.
 
 The core is async; ``embed`` here is sync and the store calls it via
 ``asyncio.to_thread`` so a network round-trip or model run never blocks the event
@@ -168,8 +168,20 @@ class LocalEmbedder:
         return [float(x) for x in vector]
 
 
+def private_dirs(path: Path) -> None:
+    """Create ``path`` and any missing parents readable only by this user (0700)."""
+    missing = []
+    while not path.exists():
+        missing.append(path)
+        path = path.parent
+    for directory in reversed(missing):
+        directory.mkdir(mode=0o700)
+
+
 def local_model_ready(model: str, cache_dir: Path) -> bool:
-    """True when the model loads from the cache without a download."""
+    """True when the model loads from the cache without a download. Writes nothing."""
+    if not cache_dir.is_dir():
+        return False
     try:
         _text_embedding(model, cache_dir, offline=True)
     except ValueError:
@@ -179,7 +191,7 @@ def local_model_ready(model: str, cache_dir: Path) -> bool:
 
 def download_local_model(model: str, cache_dir: Path) -> None:
     """Download the model into cache_dir (from Hugging Face) so the server can load it."""
-    cache_dir.mkdir(parents=True, exist_ok=True)
+    private_dirs(cache_dir)
     _text_embedding(model, cache_dir, offline=False)
 
 

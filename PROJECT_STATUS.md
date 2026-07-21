@@ -11,8 +11,10 @@ guarded change; the retrieval set scores as on Postgres (Ollama 20/24/1, bge-sma
 made at `v0.0.1-postgres` imports with the same IDs, history and receipt replays. The
 built wheel passes `scripts/check-wheel.sh`, and a temporary-home `mnemo install`
 connected Claude Code and OpenCode (Codex listed the server) and `mnemo uninstall`
-removed it. Not done: Phase 8, three agent-eval runs against this build before it
-replaces `main`, and making `local` the default backend.
+removed it. Phase 8: three agent-eval runs against the built wheel passed 12 of 12
+each (Ollama once, the in-process model twice) with no Mnemo tool errors, so the
+in-process model is now the default backend and the version is 0.1.0
+([results](docs/agent-eval/README.md#single-file-store-november-19-2026-3-runs-36-of-36-scenarios-72-of-72-checks)).
 
 Updated September 26, 2026. [Spec v4](PROJECT_SPEC.md) defines the contracts;
 [the master plan](docs/MASTER_PLAN.md) records the backlog. Phases 0–4 are

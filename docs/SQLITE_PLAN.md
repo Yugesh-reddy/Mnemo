@@ -1,9 +1,9 @@
 # Mnemo — single-file local stack plan
 
-**Status: Phases 0 (tag and fixture), 1 to 7 are done on the local branch `sqlite`
-(November 19, 2026; spec §26). Phase 8 is next: three agent-eval runs against the
-installed SQLite build (needs the owner: it spends Claude usage and Codex tokens),
-then the cut-over to `main`.** The owner put the trust features (§9) and an agent eval
+**Status: done (November 19, 2026; spec §26). Phases 1 to 8 ran on the branch
+`sqlite`; the three eval runs passed 12 of 12 each and `local` is the default.** The
+Phase 0 and Phase 1 eval runs on Postgres were not made: `runs/trust` (12 of 12) is
+the baseline. The owner put the trust features (§9) and an agent eval
 with a poisoning scenario before Phase 3; both were done first (spec §24–§25, eval 12
 of 12). D1 (sqlite-vec; fastembed was already in), D3 and D4 were taken as approved
 with "port to SQLite"; D2 and D5 were approved explicitly.
@@ -436,12 +436,12 @@ of refusing a model switch. `make demo` uses a temporary store.
 
 ### Phase 8 — Gate and cut-over (small, plus eval cost)
 
-- [ ] Three agent-eval runs against the installed SQLite build. Pass: across the 36
+- [x] Three agent-eval runs against the installed SQLite build. Pass: across the 36
       scenario runs, no fewer passes than the Postgres baseline and no new tool errors.
       The baseline is the 12-scenario `runs/trust` run (12 of 12, one tool error) plus
       the Phase 0 runs still to be made. Read the transcript of every failure.
-- [ ] Record install time, first-search latency, memory per server and file size.
-- [ ] Make `local` the default backend (decide `bge-small` against `bge-base` on the
+- [x] Record install time, first-search latency, memory per server and file size.
+- [x] Make `local` the default backend (decide `bge-small` against `bge-base` on the
       eval and on memory use), set the version to 0.1.0, fast-forward
       `sqlite` into `main`, delete the branch.
 
@@ -506,3 +506,21 @@ longer put a memory into the stuck archived state.
 Before Phase 8 nothing on `main` changes except the additive Phase 1. After the
 cut-over, a user who needs the old stack installs `@v0.0.1-postgres`; their Postgres
 data is untouched by the upgrade, because import writes a new file.
+
+## 11. Phase 8 results (November 19, 2026)
+
+- **Agent eval** ([write-up](agent-eval/README.md#single-file-store-november-19-2026-3-runs-36-of-36-scenarios-72-of-72-checks)):
+  three runs against the built wheel of `7d360a0`, 12 of 12 scenarios and 24 of 24
+  checks each (Ollama once, `bge-small` twice), no Mnemo tool errors (the Postgres
+  baseline had one). Claude $1.56–$1.62 per run; Codex 0.95–0.99M input tokens.
+- **Install:** the wheel's packages install into a fresh environment in about 1.4 s
+  on the owner's Mac; the local model is a one-time 67 MB download.
+- **Per server:** about 60 MB at start. With `local`, the first search takes about
+  1.9 s (the model loads), later searches about 13 ms, and the process grows to about
+  320 MB. With Ollama, the first search takes about 0.08 s and the process stays near
+  75 MB, plus Ollama itself.
+- **File size:** 1,000 memories updated once each (2,000 events, 384-dimensional
+  vectors, receipts and the word index) take 7.9 MB, about 4 KB per revision.
+- **Default:** `bge-small` over `bge-base`: the same agent-eval result, a third of the
+  memory (about 300 MB against 770 MB per server). Its cost is more off-topic hits on
+  the retrieval set (3 of 8 against Ollama's 1).

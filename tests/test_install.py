@@ -237,8 +237,9 @@ class FakeServices:
 
 @pytest.fixture
 def ollama_settings(monkeypatch):
-    for name in ("MNEMO_BACKEND", "MNEMO_EMBED_MODEL", "MNEMO_EMBED_DIM", "MNEMO_OLLAMA_HOST"):
+    for name in ("MNEMO_EMBED_MODEL", "MNEMO_EMBED_DIM", "MNEMO_OLLAMA_HOST"):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("MNEMO_BACKEND", "ollama")  # local is the default
     inst.get_settings.cache_clear()
     yield
     inst.get_settings.cache_clear()
@@ -459,7 +460,8 @@ def test_opencode_jsonc_with_comments_is_never_rewritten(homes, tmp_path, capsys
 
     # Once the user pastes the entry, a reinstall leaves the file alone.
     entry = inst.opencode_entry(
-        inst.server_command(), inst.server_env(inst.get_settings(), "opencode", "ollama")
+        inst.server_command(),
+        inst.server_env(inst.Settings(backend="ollama"), "opencode", "ollama"),
     )
     pasted = jsonc.replace(
         '"theme": "dark",',

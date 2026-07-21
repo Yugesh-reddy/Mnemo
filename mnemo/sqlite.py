@@ -329,7 +329,9 @@ def _ensure_file(path: Path) -> None:
     """Create the store private to this user: directory 0700, file 0600."""
     if path.exists():
         return
-    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    from mnemo.embedder import private_dirs
+
+    private_dirs(path.parent)
     os.close(os.open(path, os.O_CREAT | os.O_WRONLY, 0o600))
 
 

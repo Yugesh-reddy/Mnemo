@@ -786,4 +786,8 @@ receipts (§15, §19–§20, §24–§25) behave as before.
   refused with the instruction to export again with v0.0.1-postgres.
 - **Demo and tests.** `make demo` uses a temporary store. Tests copy a migrated
   template file per test; `make test` needs no service.
+- **Default backend.** `local` (`BAAI/bge-small-en-v1.5`, 384 dimensions, floor 0.60)
+  replaces `ollama` as the default (§22's "default unchanged" ends here), after three
+  agent-eval runs on this store passed 12 of 12 each (Ollama once, local twice) with no
+  Mnemo tool errors. `ollama` stays available with `--backend ollama`. Version 0.1.0.
 

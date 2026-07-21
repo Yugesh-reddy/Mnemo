@@ -38,7 +38,7 @@ async def test_store_problem_is_none_for_a_store_or_no_file_and_actionable_other
 
 
 def test_embedding_errors_name_the_fix():
-    settings = Settings(_env_file=None, ollama_host="http://localhost:11434")
+    settings = Settings(_env_file=None, backend="ollama", ollama_host="http://localhost:11434")
     request = httpx.Request("POST", "http://localhost:11434/api/embeddings")
     missing = httpx.HTTPStatusError(
         "404", request=request, response=httpx.Response(404, request=request)

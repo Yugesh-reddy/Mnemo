@@ -749,7 +749,7 @@ def main() -> None:
         metavar="SRC[:DEST]",
         help="copy a file into every fixture repository (e.g. AGENTS.md, .claude/settings.json)",
     )
-    parser.add_argument("--backend", default="ollama", choices=["ollama", "local", "hash"])
+    parser.add_argument("--backend", default="local", choices=["ollama", "local", "hash"])
     parser.add_argument(
         "--server",
         help="mnemo-mcp-direct to test (default: this checkout's), e.g. an installed tool",

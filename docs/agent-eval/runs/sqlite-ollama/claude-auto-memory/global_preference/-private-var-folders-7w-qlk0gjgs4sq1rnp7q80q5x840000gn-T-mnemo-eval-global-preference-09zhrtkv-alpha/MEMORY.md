@@ -1,0 +1,1 @@
+- [Python: uv, never pip](python-uv-not-pip.md) — global rule for all projects
