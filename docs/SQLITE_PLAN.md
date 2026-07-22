@@ -521,6 +521,28 @@ data is untouched by the upgrade, because import writes a new file.
   75 MB, plus Ollama itself.
 - **File size:** 1,000 memories updated once each (2,000 events, 384-dimensional
   vectors, receipts and the word index) take 7.9 MB, about 4 KB per revision.
+- **Off-topic hits, measured again (no change made).** A floor sweep for `bge-small`
+  through Mnemo's search on the retrieval set:
+
+  | Floor | Ranked first | In top 3 | Off-topic hits of 8 |
+  |---|---|---|---|
+  | 0.60 (kept) | 19 | 25 | 3 |
+  | 0.62 | 18 | 24 | 2 |
+  | 0.64 | 16 | 21 | 1 |
+  | 0.66 | 14 | 19 | 1 |
+  | 0.70 | 11 | 13 | 1 |
+  | 0.72 | 9 | 10 | 0 |
+
+  Word matches pass at any floor, so a higher floor is the same as "below it, require a
+  word match". No floor removes an off-topic hit without losing more real answers, and
+  0.62 already drops below the test's bar. The worst off-topic question (Kubernetes
+  ingress) scores 0.713 against its nearest memory, above the correct answer to 13 of
+  the 28 real questions. The gap between the first and second score, and how far the
+  first stands above the rest, overlap between the two groups too, so neither is a
+  usable cut-off on this set. The floor stays at 0.60; an agent sees each hit's
+  provenance and trust, and the agent eval's no-invention scenario passed with this
+  model in both runs. A reranker or a larger model (`bge-base`: 2 of 8 off-topic, about
+  770 MB per server) are the remaining options.
 - **Default:** `bge-small` over `bge-base`: the same agent-eval result, a third of the
   memory (about 300 MB against 770 MB per server). Its cost is more off-topic hits on
   the retrieval set (3 of 8 against Ollama's 1).
