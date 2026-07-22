@@ -35,7 +35,11 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo" install --help >/dev/null
 "$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
-test "$(stat -f %Lp "$MNEMO_DB" 2>/dev/null || stat -c %a "$MNEMO_DB")" = 600
+"$mnemo_wheel_env/venv/bin/python" -c "
+import os, stat, sys
+path = os.environ['MNEMO_DB']
+modes = (stat.S_IMODE(os.stat(path).st_mode), stat.S_IMODE(os.stat(os.path.dirname(path)).st_mode))
+sys.exit(0 if modes == (0o600, 0o700) else f'store {path} modes {modes}, expected (0o600, 0o700)')"
 MNEMO_BACKEND=hash \
   "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
 MNEMO_BACKEND=hash \
