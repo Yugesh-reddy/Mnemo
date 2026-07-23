@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 
+import pytest
+
 from mnemo.sqlite import Connection
 
 
@@ -184,6 +186,8 @@ async def test_the_python_cosine_scores_exactly_like_sqlite_vec(
     from mnemo.embedder import vector_blob
     from mnemo.sqlite import _cosine_distance, connect
 
+    if not hasattr(sqlite3.Connection, "enable_load_extension"):
+        pytest.skip("this Python's SQLite cannot load sqlite-vec to compare with")
     rng = random.Random(3)
     pairs = [[rng.uniform(-1, 1) for _ in range(384)] for _ in range(6)]
     raw = sqlite3.connect(":memory:")
