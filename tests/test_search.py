@@ -170,3 +170,52 @@ async def test_search_over_5000_memories_in_a_scope_stays_fast(db: Connection) -
     # noisier, so there the test only catches a gross regression.
     bound = 0.2 if os.environ.get("CI") else 0.05
     assert timings[len(timings) // 2] < bound, timings
+
+
+async def test_the_python_cosine_scores_exactly_like_sqlite_vec(
+    _disposable_test_db, monkeypatch
+) -> None:
+    import random
+    import sqlite3
+
+    import sqlite_vec
+
+    from mnemo.core import MnemoStore
+    from mnemo.embedder import vector_blob
+    from mnemo.sqlite import _cosine_distance, connect
+
+    rng = random.Random(3)
+    pairs = [[rng.uniform(-1, 1) for _ in range(384)] for _ in range(6)]
+    raw = sqlite3.connect(":memory:")
+    raw.enable_load_extension(True)
+    sqlite_vec.load(raw)
+    for a, b in zip(pairs, pairs[1:], strict=False):
+        native = raw.execute(
+            "SELECT vec_distance_cosine(?, ?)", (vector_blob(a), vector_blob(b))
+        ).fetchone()[0]
+        assert abs(native - _cosine_distance(vector_blob(a), vector_blob(b))) < 1e-6
+    raw.close()
+
+    # Through search: the score depends on cosine alone here (no word matches).
+    embedder = FixedEmbedder({"deploy target fly.io": [1.0, 0.0, 0.0], "zzz": [0.6, 0.8, 0.0]})
+
+    async def search() -> tuple[str, list[float]]:
+        conn = await connect(_disposable_test_db)
+        try:
+            store = MnemoStore(conn, embedder)
+            if not await conn.fetchval("SELECT count(*) FROM memory_event"):
+                await store.add("deploy", "target", "fly.io")
+            hits = await store.search("zzz", reinforce=False)
+            return conn.vector_functions, [round(h.score, 6) for h in hits]
+        finally:
+            await conn.close()
+
+    native = await search()
+
+    def refuse(raw):
+        raise sqlite3.OperationalError("not authorized")
+
+    monkeypatch.setattr(sqlite_vec, "load", refuse)
+    fallback = await search()
+    assert (native[0], fallback[0]) == ("sqlite-vec", "python")
+    assert len(native[1]) == 1 and native[1] == fallback[1]

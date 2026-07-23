@@ -727,9 +727,11 @@ receipts (§15, §19–§20, §24–§25) behave as before.
 - **Store.** One SQLite file, `MNEMO_DB` (default `~/.mnemo/mnemo.db`), created with
   its directory `0700` and the file `0600`, in WAL mode with foreign keys on and a 30 s
   busy timeout, and `synchronous = FULL` so a commit survives power loss as on
-  Postgres. Opening it loads `sqlite-vec`; a Python that cannot load SQLite
-  extensions (or lacks FTS5) is refused with the fix (`uv tool install --python 3.12 …`),
-  and the installer checks this before creating anything.
+  Postgres. Opening it loads `sqlite-vec`. A Python whose SQLite cannot load
+  extensions (the python.org builds) gets the same `vec_distance_cosine` registered in
+  Python instead, with identical scores and slower search (about 48 ms against 31 ms at
+  5,000 memories). A SQLite without FTS5 is refused with the fix, and the installer
+  checks this before creating anything.
   `MNEMO_DSN`, `MNEMO_TEST_DSN` and `MNEMO_DB_PORT` are ignored. Keep the file on a
   local disk, not in a synced or network folder.
 - **Schema.** `migrations/0001_sqlite_init.sql`. Columns match the Postgres schema at

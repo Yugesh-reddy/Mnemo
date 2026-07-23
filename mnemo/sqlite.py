@@ -164,6 +164,8 @@ class Connection:
     def __init__(self, raw: sqlite3.Connection, path: Path) -> None:
         self.raw = raw
         self.path = path
+        self.vector_functions = "sqlite-vec"
+        """"python" when this Python's SQLite cannot load sqlite-vec."""
         self._lock = threading.Lock()
         self._depth = 0
         self._tx_now: datetime | None = None
@@ -290,34 +292,52 @@ class Connection:
 # ---- opening the file --------------------------------------------------------------
 
 
-def _load_vector_extension(raw: sqlite3.Connection) -> None:
-    import sqlite_vec
-
-    if not hasattr(raw, "enable_load_extension"):
-        raise StoreUnavailable(
-            "this Python cannot load SQLite extensions. Install Mnemo with uv's Python: "
-            "uv tool install --python 3.12 git+https://github.com/Yugesh-reddy/Mnemo"
-        )
+def _cosine_distance(a: bytes | None, b: bytes | None) -> float | None:
+    """sqlite-vec's ``vec_distance_cosine`` for two float32 blobs, in Python."""
+    if a is None or b is None:
+        return None
+    if len(a) != len(b):
+        raise ValueError("vector dimensions differ")
     try:
+        import numpy as np
+    except ImportError:  # pragma: no cover - numpy comes with fastembed
+        from array import array
+
+        x, y = array("f", a), array("f", b)
+        dot = sum(p * q for p, q in zip(x, y, strict=True))
+        norms = sum(p * p for p in x) ** 0.5 * sum(q * q for q in y) ** 0.5
+    else:
+        x, y = np.frombuffer(a, dtype=np.float32), np.frombuffer(b, dtype=np.float32)
+        dot = float(x @ y)
+        norms = float(np.linalg.norm(x) * np.linalg.norm(y))
+    return 1.0 - dot / norms if norms else 1.0
+
+
+def _vector_functions(raw: sqlite3.Connection) -> str:
+    """Load sqlite-vec, or register the same function in Python when this Python's
+    SQLite cannot load extensions (python.org builds). Returns which one is in use."""
+    try:
+        import sqlite_vec
+
         raw.enable_load_extension(True)
-        sqlite_vec.load(raw)
-    except sqlite3.OperationalError as exc:
-        raise StoreUnavailable(
-            f"could not load sqlite-vec ({exc}). Install Mnemo with uv's Python: "
-            "uv tool install --python 3.12 git+https://github.com/Yugesh-reddy/Mnemo"
-        ) from exc
-    finally:
-        raw.enable_load_extension(False)
+        try:
+            sqlite_vec.load(raw)
+        finally:
+            raw.enable_load_extension(False)
+        return "sqlite-vec"
+    except (AttributeError, sqlite3.OperationalError):
+        raw.create_function("vec_distance_cosine", 2, _cosine_distance, deterministic=True)
+        raw.create_function("vec_version", 0, lambda: "python", deterministic=True)
+        return "python"
 
 
 def capability_problem() -> str | None:
-    """None when this Python's SQLite can load sqlite-vec and has FTS5; else the fix."""
+    """None when this Python's SQLite can run the store (FTS5 is required; vectors fall
+    back to Python without sqlite-vec); else the fix."""
     raw = sqlite3.connect(":memory:")
     try:
-        _load_vector_extension(raw)
+        _vector_functions(raw)
         raw.execute("CREATE VIRTUAL TABLE t USING fts5(x, tokenize = 'porter unicode61')")
-    except StoreUnavailable as exc:
-        return str(exc)
     except sqlite3.OperationalError as exc:
         return f"this Python's SQLite lacks FTS5 ({exc}); install Mnemo with uv's Python 3.12"
     finally:
@@ -344,7 +364,7 @@ def open_sync(path: str | Path, *, create: bool = True) -> Connection:
         raise StoreUnavailable(f"no Mnemo store at {path}; run `mnemo install`")
     raw = sqlite3.connect(path, isolation_level=None, check_same_thread=False, timeout=30)
     try:
-        _load_vector_extension(raw)
+        vectors = _vector_functions(raw)
         raw.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
         if raw.execute("PRAGMA journal_mode").fetchone()[0] != "wal":
             raw.execute("PRAGMA journal_mode = WAL")
@@ -359,7 +379,9 @@ def open_sync(path: str | Path, *, create: bool = True) -> Connection:
     except BaseException:
         raw.close()
         raise
-    return Connection(raw, path)
+    conn = Connection(raw, path)
+    conn.vector_functions = vectors
+    return conn
 
 
 async def connect(path: str | Path, *, create: bool = True) -> Connection:

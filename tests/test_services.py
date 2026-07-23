@@ -109,18 +109,25 @@ async def test_memories_without_a_vector_from_this_model_are_counted(_disposable
         await conn.close()
 
 
-async def test_a_python_that_cannot_load_the_extension_is_caught_before_any_file(
-    tmp_path, monkeypatch
-):
+async def test_a_python_without_extension_loading_still_runs_the_store(tmp_path, monkeypatch):
+    import sqlite3
+
+    import sqlite_vec
+
     import mnemo.sqlite as sq
 
     assert sq.capability_problem() is None
 
     def refuse(raw):
-        raise sq.StoreUnavailable("this Python cannot load SQLite extensions. Install …")
+        raise sqlite3.OperationalError("not authorized")  # python.org builds
 
-    monkeypatch.setattr(sq, "_load_vector_extension", refuse)
+    monkeypatch.setattr(sqlite_vec, "load", refuse)
+    assert sq.capability_problem() is None
     fresh = Settings(_env_file=None, db=tmp_path / "new" / "mnemo.db")
-    problem = await services.store_problem(fresh)
-    assert "cannot load SQLite extensions" in problem
-    assert not (tmp_path / "new").exists()
+    assert await services.store_problem(fresh) is None
+    conn = await sq.connect(tmp_path / "x.db")
+    try:
+        assert conn.vector_functions == "python"
+        assert await conn.fetchval("SELECT vec_version()") == "python"
+    finally:
+        await conn.close()
