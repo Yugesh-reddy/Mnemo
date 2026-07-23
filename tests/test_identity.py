@@ -172,7 +172,7 @@ async def test_historical_search_reads_members_as_of_their_time(committed, fake_
 
 async def test_session_member_expires_without_touching_a_durable_sibling(committed, fake_embedder):
     db, namespace = committed
-    settings = Settings(**{**get_settings().model_dump(), "session_ttl_seconds": 0.05})
+    settings = Settings(**{**get_settings().model_dump(), "session_ttl_seconds": 1.0})
     store = MnemoStore(db, fake_embedder, settings=settings, namespace=namespace)
     await store.add("user", "tried", "tempeh", identity_mode="member", identity_ref=uuid4())
     await store.add(
@@ -185,7 +185,7 @@ async def test_session_member_expires_without_touching_a_durable_sibling(committ
         session_id="s1",
     )
     assert await heads(store, "tried") == ["natto", "tempeh"]
-    await asyncio.sleep(0.1)
+    await asyncio.sleep(1.1)  # past the 1 s session lifetime
     assert await heads(store, "tried") == ["tempeh"]
 
 

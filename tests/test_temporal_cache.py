@@ -12,14 +12,13 @@ from tests.conftest import legacy_archive
 
 
 async def test_session_restriction_and_expiry(db, fake_embedder):
-    store = MnemoStore(
-        db, fake_embedder, settings=Settings(_env_file=None, session_ttl_seconds=0.02)
-    )
+    store = MnemoStore(db, fake_embedder, settings=Settings(_env_file=None, session_ttl_seconds=60))
     first = await store.add("user", "task", "debugging", tier="session", session_id="a")
     assert await store.search("debugging", session_id="a")
     assert not await store.search("debugging", session_id="b")
     assert not await store.search("debugging")
-    # now() is fixed inside this transaction; a separate as-of timestamp exercises TTL.
+    # The TTL is long enough for a slow machine; an as-of time past it exercises expiry.
+    assert abs((first.expires_at - first.recorded_at).total_seconds() - 60) < 1
     later = first.expires_at + timedelta(seconds=1)
     assert not await store.search("debugging", session_id="a", as_of=later)
 
