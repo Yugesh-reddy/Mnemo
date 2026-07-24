@@ -9,8 +9,8 @@ jobs:
     env:
       MNEMO_DB: ${{ github.workspace }}/.ci/mnemo.db
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: '3.12'
       - run: uv sync --locked --extra dev
@@ -20,7 +20,7 @@ jobs:
       - run: make demo
       - run: uv build
       - run: bash scripts/check-wheel.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.os == 'ubuntu-latest'
         with:
           name: wheel
