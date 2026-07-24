@@ -286,7 +286,9 @@ repository's remote in lower case (for example `github.com/you/your-repo`), or
 backend as the agents (the model inside Mnemo by default). Search → open history → revert a
 revision. A stale form
 returns HTTP 409, shows the latest state, and writes nothing. Repeated submissions
-replay their receipt. Unrestorable revisions have no restore button. **Manual
+replay their receipt. Unrestorable revisions have no restore button. **Retracted**
+lists every memory an agent withdrew, with who did it, when and why, so you can
+restore one an agent was misled into retracting. **Manual
 correction** records a human-reviewed value through the legacy write path; it does
 not have a revision guard.
 

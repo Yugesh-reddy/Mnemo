@@ -66,13 +66,20 @@ async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
 
 
 async def _facts(store: MnemoStore, q: str):
-    return await store.search(q) if q.strip() else await store.list_current()
+    # Browsing is not recall: a person's search leaves the recall counters alone.
+    return await store.search(q, reinforce=False) if q.strip() else await store.list_current()
 
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request, q: str = "", store: MnemoStore = Depends(get_store)):
     facts = await _facts(store, q)
     return TEMPLATES.TemplateResponse(request, "list.html", {"facts": facts, "q": q})
+
+
+@app.get("/retracted", response_class=HTMLResponse)
+async def retracted(request: Request, store: MnemoStore = Depends(get_store)):
+    items = await DirectMemory(store).retracted()
+    return TEMPLATES.TemplateResponse(request, "retracted.html", {"items": items})
 
 
 @app.get("/rows", response_class=HTMLResponse)

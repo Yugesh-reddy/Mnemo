@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import trust_badge %}
+{% block content %}
+<div class="flex items-center justify-between mb-2">
+  <h1 class="text-xl font-semibold">Retracted</h1>
+  <span class="text-xs text-slate-400">{{ items|length }} memor{{ 'y' if items|length == 1 else 'ies' }}</span>
+</div>
+<p class="text-sm text-slate-500 mb-5">
+  Memories an agent withdrew with <span class="mono">memory_retract</span>. They are hidden from
+  search; nothing was deleted. Open one to see its history and restore a revision.
+</p>
+
+<div class="bg-white border rounded-lg overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-slate-500 text-left">
+      <tr>
+        <th class="px-4 py-2 font-medium">Subject</th>
+        <th class="py-2 font-medium">Predicate</th>
+        <th class="py-2 font-medium">Value</th>
+        <th class="py-2 font-medium">Trust</th>
+        <th class="py-2 font-medium">Retracted by</th>
+        <th class="py-2 font-medium">Reason</th>
+        <th class="px-4 py-2 font-medium">When</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in items %}
+      <tr class="border-t hover:bg-slate-50 cursor-pointer" onclick="window.location='/fact/{{ r.fact_id }}'">
+        <td class="px-4 py-2.5"><a href="/fact/{{ r.fact_id }}">{{ r.subject }}</a></td>
+        <td class="py-2.5">{{ r.predicate }}</td>
+        <td class="py-2.5 mono text-slate-500 line-through">{{ r.value }}</td>
+        <td class="py-2.5">{{ trust_badge(r.trust_level) }}</td>
+        <td class="py-2.5 text-xs text-slate-600">{{ r.retracted_by or 'unknown' }}</td>
+        <td class="py-2.5 text-xs text-slate-600">{{ r.reason or '' }}</td>
+        <td class="px-4 py-2.5 text-slate-400 text-xs">{{ r.retracted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="px-4 py-10 text-center text-slate-400">Nothing has been retracted.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

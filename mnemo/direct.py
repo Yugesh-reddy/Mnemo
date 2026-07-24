@@ -27,6 +27,7 @@ from mnemo.models import (
     HistoryEntry,
     HistoryPage,
     MutationResult,
+    RetractedMemory,
     SearchHit,
 )
 from mnemo.sqlite import Record
@@ -37,6 +38,10 @@ SOURCES = {
     "user": "direct_user_statement",  # the user said it (high)
 }
 DEFAULT_SOURCE = "agent"
+
+
+# Event columns qualified for a join with memory_fact.
+_HEAD_COLS = ", ".join("e." + column.strip() for column in _EVENT_COLS.split(","))
 
 
 def _canonical(value: Any) -> str:
@@ -660,3 +665,48 @@ class DirectMemory:
             )
             for hit in hits
         ]
+
+    async def retracted(self, *, limit: int = 200) -> list[RetractedMemory]:
+        """Memories in this scope withdrawn by retract, most recent first.
+
+        So a person can see what agents withdrew (including any retraction an agent
+        was tricked into) and restore it from its history.
+        """
+        if type(limit) is not int or not 1 <= limit <= 1000:
+            raise MnemoError(ErrorCode.INVALID_INPUT, "limit must be an integer in 1..1000")
+        rows = await self.store.conn.fetch(
+            f"""
+            SELECT f.subject, f.predicate, f.status, {_HEAD_COLS}
+            FROM memory_fact f JOIN memory_event e ON e.event_id = f.current_event_id
+            WHERE f.namespace=?1 AND f.user_id=?2 AND f.agent_id=?3
+              AND f.status = 'invalidated' AND e.op = 'INVALIDATE'
+            ORDER BY e.seq DESC LIMIT ?4
+            """,
+            *self._scope,
+            limit,
+        )
+        found = []
+        for row in rows:
+            head = Event.from_row(row)
+            if not self._retracted(row["status"], head):
+                continue
+            reason = head.reason
+            if reason in ("retracted", "invalidated"):
+                reason = None
+            elif reason and reason.startswith("retracted: "):
+                reason = reason.removeprefix("retracted: ")
+            found.append(
+                RetractedMemory(
+                    fact_id=head.fact_id,
+                    subject=row["subject"],
+                    predicate=row["predicate"],
+                    value=str(head.value),
+                    provenance=head.provenance,
+                    trust_level=head.trust_level,
+                    retracted_event_id=head.event_id,
+                    retracted_by=head.actor,
+                    retracted_at=head.recorded_at,
+                    reason=reason,
+                )
+            )
+        return found

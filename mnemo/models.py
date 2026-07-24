@@ -256,3 +256,18 @@ class SearchHit(BaseModel):
     trust_level: str
     actor: str | None
     recorded_at: datetime | None
+
+
+class RetractedMemory(BaseModel):
+    """A memory withdrawn by retract: hidden from search, restorable from its history."""
+
+    fact_id: UUID
+    subject: str
+    predicate: str
+    value: str
+    provenance: str
+    trust_level: str
+    retracted_event_id: UUID
+    retracted_by: str | None
+    retracted_at: datetime
+    reason: str | None

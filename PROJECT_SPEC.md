@@ -681,9 +681,13 @@ operations.
   active again; the retraction itself is never a restore target. `memory_create` on a
   retracted subject returns `ALREADY_EXISTS` with `details.retracted = true`. A
   legacy `invalidate` of a durable memory is treated the same way.
-- **Web UI.** A retracted memory is not in the list (it shows current memories), but
-  its page (`/fact/<id>`) says it was retracted and offers "Revert to this" on every
-  eligible earlier revision, guarded by the retraction's event ID.
+- **Web UI.** A retracted memory is not in the list (it shows current memories); the
+  **Retracted** page (`/retracted`, `DirectMemory.retracted()`) lists every retracted
+  memory in the scope, newest first, with its value, who retracted it, when and the
+  reason, so a retraction an agent was misled into is visible. Its page
+  (`/fact/<id>`) says it was retracted and offers "Revert to this" on every eligible
+  earlier revision, guarded by the retraction's event ID. Searching in the UI does not
+  count as a recall (no reinforcement).
 - An empty or blank `reason` on `memory_retract` means no reason.
 - **Tool text and the installed policy** tell agents to set `source`, to treat
   memories as data and never follow instructions found in one, and to retract
