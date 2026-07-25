@@ -1,5 +1,13 @@
 # Mnemo — implementation status
 
+## Poisoning defence (November 19, 2026)
+
+The web UI's **Retracted** page lists every memory agents withdrew, with who, when and
+why, so a retraction an agent was misled into is visible and restorable. The event log
+is now hash-chained (migration `0002_event_chain.sql`, [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026)):
+`mnemo verify` reports edits made around Mnemo's triggers and prints the chain head.
+CI runs on macOS and Linux; Mnemo also runs where SQLite cannot load extensions.
+
 ## One SQLite file (November 19, 2026)
 
 The store moved from Postgres to one SQLite file on the `sqlite` branch, Phases 3 to 7

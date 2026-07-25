@@ -232,6 +232,7 @@ The optional web UI loads Tailwind and htmx from public CDNs.
 |---|---|
 | Triggers reject changes to event payloads and receipts, deletes, and `INSERT OR REPLACE`; supersession and recall bookkeeping remain mutable. | [Schema](migrations/0001_sqlite_init.sql) |
 | Every write takes the file's single write lock; expected-event guards reject stale updates/reverts, including A→B→A. Eight processes racing one update give one winner. | [Direct API](mnemo/direct.py), [race tests](tests/test_concurrency.py) |
+| Each event is chained to the previous one by a SHA-256 hash; `mnemo verify` recomputes the chain and reports any event changed, removed or inserted outside Mnemo, and prints the chain head to keep. | [Chain](mnemo/chain.py), [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026) |
 | Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Schema](migrations/0001_sqlite_init.sql) |
 | Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
 | Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |

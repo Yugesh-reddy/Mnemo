@@ -57,7 +57,7 @@ async def test_a_new_file_is_private_migrated_once_and_in_wal_mode(tmp_path) -> 
     path = tmp_path / "home" / ".mnemo" / "mnemo.db"
     conn = await connect(path)
     try:
-        assert await mdb.apply_migrations(conn) == ["0001_sqlite_init.sql"]
+        assert await mdb.apply_migrations(conn) == ["0001_sqlite_init.sql", "0002_event_chain.sql"]
         assert await mdb.apply_migrations(conn) == []
         await mdb.check_schema(conn)
         assert await conn.fetchval("PRAGMA journal_mode") == "wal"

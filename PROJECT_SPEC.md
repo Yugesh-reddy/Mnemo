@@ -797,3 +797,28 @@ receipts (§15, §19–§20, §24–§25) behave as before.
   agent-eval runs on this store passed 12 of 12 each (Ollama once, local twice) with no
   Mnemo tool errors. `ollama` stays available with `--backend ollama`. Version 0.1.0.
 
+## 27. Tamper evidence — November 19, 2026
+
+The owner approved this schema addition (migration `0002_event_chain.sql`).
+
+- **Chain.** `memory_event_chain(seq, hash)` holds, for every event in `seq` order,
+  `sha256(previous hash || json_array(payload columns))`, where the payload columns
+  are every `memory_event` column except the supersession and recall bookkeeping
+  (`mnemo/chain.py` `CHAIN_COLUMNS`; a test keeps the trigger, the Python list and the
+  immutability trigger in step). An `AFTER INSERT` trigger on `memory_event` writes it,
+  so create, update, revert, retract and import are all covered; Mnemo registers
+  `sha256_hex()` on every connection. The table is append-only like events. Upgrading
+  chains the existing events inside the migration's transaction.
+- **`mnemo verify`** recomputes the chain in one snapshot and checks that every memory's
+  HEAD is its newest event and that `status = 'invalidated'` exactly when HEAD is an
+  `INVALIDATE`. It reports the first events whose hash does not match (changed,
+  removed or inserted outside Mnemo), deleted events, and HEAD or status mismatches;
+  exit code 1 on any problem. On success it prints the chain head.
+- **What it proves.** The triggers already stop changes made through SQL; the chain
+  shows when someone went around them (for example by dropping a trigger with the
+  `sqlite3` CLI and editing a value). It does not stop someone who also recomputes
+  every later hash: keeping a copy of the printed chain head, and checking that later
+  verifications still build on it, catches that too. Export and import do not carry
+  the chain; the destination recomputes it from the same payloads, so an exact
+  round trip has the same head.
+

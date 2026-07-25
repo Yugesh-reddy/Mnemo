@@ -25,6 +25,16 @@ MIGRATIONS_DIR = (
 _HAS_TABLE = "SELECT 1 FROM sqlite_master WHERE type='table' AND name='schema_migrations'"
 
 
+def _chain_existing_events(raw) -> None:
+    from mnemo.chain import backfill
+
+    backfill(raw)
+
+
+# Python steps that finish a migration inside its transaction.
+_AFTER = {"0002_event_chain.sql": _chain_existing_events}
+
+
 def migration_names(migrations_dir: Path = MIGRATIONS_DIR) -> list[str]:
     names = sorted(path.name for path in migrations_dir.glob("*.sql"))
     if not names:
@@ -82,6 +92,8 @@ async def apply_migrations(conn: Connection, migrations_dir: Path = MIGRATIONS_D
                 # executescript would commit first; run each statement in this transaction.
                 for statement in _statements(sql):
                     raw.execute(statement)
+                if name in _AFTER:
+                    _AFTER[name](raw)
                 raw.execute("INSERT INTO schema_migrations (filename) VALUES (?)", (name,))
                 raw.execute("COMMIT")
                 return True

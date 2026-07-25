@@ -189,7 +189,7 @@ async def test_migrate_creates_a_private_store_once(tmp_path, _disposable_test_d
     import stat
 
     path = tmp_path / "home" / ".mnemo" / "mnemo.db"
-    assert await inst.migrate(path) == ["0001_sqlite_init.sql"]
+    assert await inst.migrate(path) == ["0001_sqlite_init.sql", "0002_event_chain.sql"]
     assert await inst.migrate(path) == []
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
     assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700

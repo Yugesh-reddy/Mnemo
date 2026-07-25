@@ -171,6 +171,9 @@ class Connection:
         self._tx_now: datetime | None = None
         self._stmt_now: datetime | None = None
         raw.create_function("now", 0, self._now_text)
+        from mnemo.chain import sha256_hex
+
+        raw.create_function("sha256_hex", 1, sha256_hex, deterministic=True)
 
     # ---- time --------------------------------------------------------------------
 
