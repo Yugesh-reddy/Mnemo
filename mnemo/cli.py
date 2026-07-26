@@ -5,7 +5,7 @@
     mnemo ui          # web review UI on http://127.0.0.1:8000
     mnemo migrate     # apply pending schema migrations to the store file
     mnemo reindex     # rebuild vectors and the word index (after a model change)
-    mnemo verify      # check the history was not changed outside Mnemo
+    mnemo verify      # check the history was not changed outside Mnemo since last time
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
@@ -21,6 +21,7 @@ import argparse
 import asyncio
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from mnemo.install import main as install_main
 
@@ -39,27 +40,39 @@ def serve_ui(port: int) -> int:
     return 0
 
 
-async def _verify() -> int:
-    from mnemo.chain import verify
+async def _verify(witness: Path | None) -> int:
+    from mnemo.chain import Witness, verify, witness_path
     from mnemo.db import check_schema, connect
     from mnemo.services import where
 
     conn = await connect(create=False)
+    store = where(conn.path)
+    witness = witness or witness_path(conn.path)
+    try:
+        since = Witness.read(witness)
+    except ValueError as exc:
+        await conn.close()
+        print(f"FAIL {exc}", file=sys.stderr)
+        return 1
     try:
         await check_schema(conn)
-        result = await verify(conn)
+        result = await verify(conn, since)
     finally:
         await conn.close()
-    store = where(conn.path)
-    if result.ok:
-        print(f"ok   {store}: {result.events} events, history intact, HEADs consistent")
-        print(f"     chain head {result.head or '(empty)'}")
-        print("     keep this value: if a later head is not built on it, history was rewritten")
-        return 0
-    print(f"FAIL {store}: {len(result.problems)} problem(s)", file=sys.stderr)
-    for problem in result.problems:
-        print(f"     {problem}", file=sys.stderr)
-    return 1
+    if not result.ok:
+        print(f"FAIL {store}: {len(result.problems)} problem(s)", file=sys.stderr)
+        for problem in result.problems:
+            print(f"     {problem}", file=sys.stderr)
+        print(f"     {where(witness)} was left unchanged.", file=sys.stderr)
+        return 1
+    print(f"ok   {store}: {result.events} events, history intact, HEADs consistent")
+    if since is not None:
+        print(f"     still builds on the head verified at seq {since.seq}")
+    print(f"     chain head {result.head or '(empty)'}")
+    if result.witness is not None:
+        result.witness.write(witness)
+        print(f"     recorded in {where(witness)}; keep a copy elsewhere to catch a rewrite")
+    return 0
 
 
 async def _reindex() -> dict[str, int]:
@@ -92,7 +105,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     ui.add_argument("--port", type=int, default=8000)
     commands.add_parser("migrate", help="apply pending schema migrations")
     commands.add_parser("reindex", help="rebuild vectors and the word index")
-    commands.add_parser("verify", help="check the history was not changed outside Mnemo")
+    verify = commands.add_parser("verify", help="check the history was not changed outside Mnemo")
+    verify.add_argument(
+        "--witness",
+        type=Path,
+        metavar="FILE",
+        help="the head verified last time (default: beside the store, MNEMO_DB.verified)",
+    )
     commands.add_parser("export", help="write memories and history as JSON", add_help=False)
     commands.add_parser("import", help="restore an export into an empty store", add_help=False)
     for name in GONE:
@@ -116,7 +135,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         migrate()
         return 0
     if args.command == "verify":
-        return asyncio.run(_verify())
+        return asyncio.run(_verify(args.witness))
     if args.command == "reindex":
         counts = asyncio.run(_reindex())
         print(f"Embedded {counts['embedded']} of {counts['events']} events; word index rebuilt.")

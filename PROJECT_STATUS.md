@@ -5,7 +5,9 @@
 The web UI's **Retracted** page lists every memory agents withdrew, with who, when and
 why, so a retraction an agent was misled into is visible and restorable. The event log
 is now hash-chained (migration `0002_event_chain.sql`, [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026)):
-`mnemo verify` reports edits made around Mnemo's triggers and prints the chain head.
+`mnemo verify` reports edits made around Mnemo's triggers, records the head it verified
+and, next time, catches a rewrite of the whole chain after it ([§28](PROJECT_SPEC.md#28-guarded-correction-and-the-verify-witness--november-20-2026)).
+The web UI's manual correction is now guarded like restore.
 CI runs on macOS and Linux; Mnemo also runs where SQLite cannot load extensions.
 
 ## One SQLite file (November 19, 2026)

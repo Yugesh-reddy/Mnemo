@@ -3,16 +3,21 @@
 Each event's hash is SHA-256 over the previous hash and a ``json_array`` of its payload
 columns, in ``seq`` order (migration 0002 writes it on every insert). Verifying
 recomputes the chain from the events and also checks that every memory's HEAD is its
-newest event, so an edit made around Mnemo's triggers shows up. It does not catch
-someone who also rewrites every later hash; compare the printed chain head with one
-you kept for that.
+newest event, so an edit made around Mnemo's triggers shows up.
+
+Someone who rewrites an event and every later hash leaves a self-consistent chain. To
+catch that, ``mnemo verify`` keeps the head it last verified in a witness file outside
+the store and checks that the chain still passes through it; keep a copy elsewhere
+(``--witness``) for a check that does not rely on the same disk.
 """
 
 from __future__ import annotations
 
 import hashlib
+import os
 import sqlite3
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from mnemo.sqlite import Connection
 
@@ -66,20 +71,63 @@ def backfill(raw: sqlite3.Connection) -> int:
     return len(links)
 
 
+@dataclass(frozen=True)
+class Witness:
+    """A chain position verified earlier: the hash of the event at ``seq``."""
+
+    seq: int
+    hash: str
+
+    @classmethod
+    def read(cls, path: Path) -> Witness | None:
+        try:
+            seq, digest = path.read_text().split()
+            witness = cls(int(seq), digest)
+        except FileNotFoundError:
+            return None
+        except ValueError as exc:
+            raise ValueError(f"{path} is not a Mnemo witness file (want 'SEQ HASH')") from exc
+        if len(witness.hash) != 64:
+            raise ValueError(f"{path} is not a Mnemo witness file (want 'SEQ HASH')")
+        return witness
+
+    def write(self, path: Path) -> None:
+        """Replace the file atomically, readable only by its owner."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(path.name + ".tmp")
+        descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(descriptor, "w") as handle:
+            handle.write(f"{self.seq} {self.hash}\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+
+
+def witness_path(db: Path) -> Path:
+    """Where `mnemo verify` keeps the head it verified: beside the store, not in it."""
+    return db.with_name(db.name + ".verified")
+
+
 @dataclass
 class Verification:
     events: int = 0
     head: str | None = None
     """The newest event's hash: keep it to detect a rewrite of the whole chain."""
+    head_seq: int | None = None
     problems: list[str] = field(default_factory=list)
+
+    @property
+    def witness(self) -> Witness | None:
+        return Witness(self.head_seq, self.head) if self.head and self.head_seq else None
 
     @property
     def ok(self) -> bool:
         return not self.problems
 
 
-async def verify(conn: Connection) -> Verification:
-    """Recompute the chain and check HEADs, in one read snapshot."""
+async def verify(conn: Connection, since: Witness | None = None) -> Verification:
+    """Recompute the chain and check HEADs, in one read snapshot. With ``since``, also
+    check that the chain still passes through that earlier verified head."""
     result = Verification()
     async with conn.transaction(readonly=not conn.is_in_transaction()):
 
@@ -88,9 +136,10 @@ async def verify(conn: Connection) -> Verification:
                 f"SELECT e.seq, {payload_sql('e')}, c.hash FROM memory_event e "
                 "LEFT JOIN memory_event_chain c ON c.seq = e.seq ORDER BY e.seq"
             )
-            previous = ""
+            previous, seen = "", None
             for seq, payload, stored in rows:
                 result.events += 1
+                result.head_seq = seq
                 expected = sha256_hex(previous + payload)
                 if stored is None:
                     result.problems.append(f"event seq {seq} has no chain entry")
@@ -100,7 +149,15 @@ async def verify(conn: Connection) -> Verification:
                         "event was changed, removed or inserted outside Mnemo"
                     )
                 previous = stored or expected
+                if since is not None and seq == since.seq:
+                    seen = previous
             result.head = previous or None
+            if since is not None and seen != since.hash:
+                result.problems.append(
+                    f"history was rewritten since it was last verified: the chain no longer "
+                    f"passes through seq {since.seq} with hash {since.hash[:16]}…"
+                    + (" (that event is gone)" if seen is None else "")
+                )
             orphans = conn.raw.execute(
                 "SELECT c.seq FROM memory_event_chain c "
                 "LEFT JOIN memory_event e ON e.seq = c.seq WHERE e.seq IS NULL"

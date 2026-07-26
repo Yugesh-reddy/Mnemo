@@ -409,6 +409,7 @@ restore only when both the current state and historical target are eligible;
 the server enforces the same rules for forged or outdated forms. Restore preserves
 the target's trust and provenance. The separate **Manual correction** form uses
 legacy `add` with `human_review` provenance and high trust; it remains unguarded.
+*(§28 guards it.)*
 
 ## 16. Export/import — September 22, 2026
 
@@ -813,7 +814,8 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
   HEAD is its newest event and that `status = 'invalidated'` exactly when HEAD is an
   `INVALIDATE`. It reports the first events whose hash does not match (changed,
   removed or inserted outside Mnemo), deleted events, and HEAD or status mismatches;
-  exit code 1 on any problem. On success it prints the chain head.
+  exit code 1 on any problem. On success it prints the chain head. *(§28 adds the
+  witness file.)*
 - **What it proves.** The triggers already stop changes made through SQL; the chain
   shows when someone went around them (for example by dropping a trigger with the
   `sqlite3` CLI and editing a value). It does not stop someone who also recomputes
@@ -822,3 +824,19 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
   the chain; the destination recomputes it from the same payloads, so an exact
   round trip has the same head.
 
+## 28. Guarded correction and the verify witness — November 20, 2026
+
+- **Manual correction is guarded.** The web UI's correction form carries the HEAD the
+  reviewer saw and a request UUID, like restore, and goes through
+  `DirectMemory.correct`: the same guarded update agents use, recorded with
+  `human_review` provenance (high trust) and actor `ui`. A stale form returns HTTP 409
+  with the current value and a fresh form, and writes nothing; a resubmitted form
+  replays its receipt. The receipt's source is `review`, which the MCP tools and
+  `update` reject, so an agent cannot claim human review.
+- **Verify witness.** On success `mnemo verify` writes `SEQ HASH` of the newest event
+  to a witness file (default beside the store, `MNEMO_DB` + `.verified`, mode 0600;
+  `--witness FILE` to keep it elsewhere). The next run checks that the chain still
+  has that hash at that `seq`; if not, it reports that history was rewritten since it
+  was last verified and leaves the witness unchanged. This catches the forgery §27
+  could not: changing an event and recomputing every later hash. A witness on the same
+  disk is only as safe as that disk; a copy kept elsewhere is the stronger check.
