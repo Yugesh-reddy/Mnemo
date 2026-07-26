@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1f711-f1cf-7742-9afd-843722bcd99d"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the project’s saved guidance first."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification project conventions","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification project conventions","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"YES — verifying TLS certificates prevents server impersonation and man-in-the-middle attacks."}}
+{"type":"turn.completed","usage":{"input_tokens":53668,"cached_input_tokens":47360,"cache_write_input_tokens":0,"output_tokens":188,"reasoning_output_tokens":58}}

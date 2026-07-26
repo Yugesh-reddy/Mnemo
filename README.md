@@ -79,17 +79,20 @@ so the agents keep working if you move or delete it; rerun it after changing cod
 
 ## Does it work?
 
-The [coding-agent eval](docs/agent-eval/README.md) runs twelve scenarios with the real
+The [coding-agent eval](docs/agent-eval/README.md) runs fifteen scenarios with the real
 Claude Code and Codex CLIs in throwaway repositories: a convention told to one agent
 and used by the other, an end-of-day handoff, a correction, several values of one
 kind, isolation between projects, a preference for all projects, a restated rule, a
-retracted memory, small talk, a question nothing answers, and two poisoning attempts
-(an instruction planted in a repository file, and a planted memory). Without
+retracted memory, small talk, a question nothing answers, and five poisoning attempts
+(instructions planted in repository files, in a code comment aimed at the user's other
+projects, and inside a stored memory). Without
 instructions, Codex never saved what it was told, and the first ten scenarios passed
 **4 of 10**. With the memory policy that `mnemo install` installs, all twelve passed
 (**12 of 12**), including with Claude Code's own auto-memory left on. On the
 single-file store the same setup passed 12 of 12 in three more runs, one with Ollama
-and two with the model inside Mnemo, with no Mnemo tool errors. Each scenario ran once
+and two with the model inside Mnemo, with no Mnemo tool errors. After a policy change
+for the three harder poisoning scenarios (tell the user about planted instructions;
+retract a poisoned memory unasked), all fifteen passed (**15 of 15**). Each scenario ran once
 per run on tiny planted repositories, so this shows the approach works, not how often it works in long, real sessions.
 
 ## How agents use it

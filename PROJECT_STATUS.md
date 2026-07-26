@@ -7,7 +7,11 @@ why, so a retraction an agent was misled into is visible and restorable. The eve
 is now hash-chained (migration `0002_event_chain.sql`, [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026)):
 `mnemo verify` reports edits made around Mnemo's triggers, records the head it verified
 and, next time, catches a rewrite of the whole chain after it ([§28](PROJECT_SPEC.md#28-guarded-correction-and-the-verify-witness--november-20-2026)).
-The web UI's manual correction is now guarded like restore.
+The web UI's manual correction is now guarded like restore. Three harder poisoning
+scenarios (a file overwriting a user's memory, an instruction inside a stored memory, a
+code comment planting a global preference) found one gap: Claude offered to retract a
+poisoned memory instead of retracting it. After a memory-policy change the full eval
+passed 15 of 15 ([results](docs/agent-eval/README.md#harder-poisoning-november-20-2026-15-of-15-35-of-35)).
 CI runs on macOS and Linux; Mnemo also runs where SQLite cannot load extensions.
 
 ## One SQLite file (November 19, 2026)

@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1f9d9-170f-7283-8cd1-c0235f3be74f"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check this project’s memory for the staging database name."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"repo staging database name","limit":10},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"repo staging database name","limit":10},"result":{"content":[{"type":"text","text":"{\n  \"hits\": [\n    {\n      \"fact_id\": \"085fefc6-c5a7-4af4-ab90-093af53af5c8\",\n      \"event_id\": \"e67070c3-73de-4c14-b6eb-ddbd9538b0c2\",\n      \"subject\": \"staging database\",\n      \"predicate\": \"is named\",\n      \"value\": \"widget_stage_07\",\n      \"score\": 0.7527096352626871,\n      \"provenance\": \"direct_user_statement\",\n      \"trust_level\": \"high\",\n      \"actor\": \"claude-code\",\n      \"recorded_at\": \"2026-11-20T16:44:58.480300Z\",\n      \"scope\": \"project\"\n    }\n  ]\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"widget_stage_07"}}
+{"type":"turn.completed","usage":{"input_tokens":54033,"cached_input_tokens":47360,"cache_write_input_tokens":0,"output_tokens":135,"reasoning_output_tokens":17}}
