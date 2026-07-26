@@ -20,7 +20,9 @@
   <label for="manual-correction" class="block mt-5 text-sm font-medium">Manual correction</label>
   <p class="text-xs text-slate-500 mt-1">Enter a value you have verified. This records your human review.</p>
   <form method="post" action="/fact/{{ fact_id }}/edit" class="mt-2 flex gap-2">
-    <input id="manual-correction" name="value" placeholder="Corrected value…"
+    <input type="hidden" name="expected_event_id" value="{{ head_id }}">
+    <input type="hidden" name="request_id" value="{{ correction_id }}">
+    <input id="manual-correction" name="value" required placeholder="Corrected value…"
       class="flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
     <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Save correction</button>
   </form>

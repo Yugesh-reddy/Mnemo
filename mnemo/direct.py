@@ -38,6 +38,7 @@ SOURCES = {
     "user": "direct_user_statement",  # the user said it (high)
 }
 DEFAULT_SOURCE = "agent"
+REVIEW_SOURCE = "review"  # the web UI's manual correction, never an agent's
 
 
 # Event columns qualified for a join with memory_fact.
@@ -313,6 +314,49 @@ class DirectMemory:
         actor: str | None = None,
         source: str = DEFAULT_SOURCE,
     ) -> MutationResult:
+        provenance = self._provenance(source)
+        return await self._update(
+            fact_id,
+            value,
+            expected_event_id=expected_event_id,
+            request_id=request_id,
+            actor=actor,
+            source=source,
+            provenance=provenance,
+        )
+
+    async def correct(
+        self,
+        fact_id: UUID,
+        value: str,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str = "ui",
+    ) -> MutationResult:
+        """A person's correction from the review UI: a guarded update recorded as
+        human review (high trust). Agents cannot reach it; their sources stop at 'user'."""
+        return await self._update(
+            fact_id,
+            value,
+            expected_event_id=expected_event_id,
+            request_id=request_id,
+            actor=actor,
+            source=REVIEW_SOURCE,
+            provenance="human_review",
+        )
+
+    async def _update(
+        self,
+        fact_id: UUID,
+        value: str,
+        *,
+        expected_event_id: UUID,
+        request_id: UUID,
+        actor: str | None,
+        source: str,
+        provenance: str,
+    ) -> MutationResult:
         for name, identifier in (
             ("fact_id", fact_id),
             ("expected_event_id", expected_event_id),
@@ -320,7 +364,6 @@ class DirectMemory:
         ):
             self._uuid(identifier, name)
         self._text(value, "value")
-        provenance = self._provenance(source)
         payload = self._payload(
             actor,
             fact_id=str(fact_id),

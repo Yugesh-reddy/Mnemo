@@ -125,6 +125,7 @@ async def _fact_response(
             "history": list(reversed(history)),
             "fact_id": fact_id,
             "request_ids": request_ids,
+            "correction_id": uuid4(),
             "message": message,
         },
         status_code=status_code,
@@ -154,33 +155,55 @@ async def do_revert(
             actor="ui",
         )
     except MnemoError as exc:
-        status, message = {
-            ErrorCode.REVISION_CONFLICT: (
-                409,
-                "This memory changed since you loaded the page — review and try again",
-            ),
-            ErrorCode.UNSUPPORTED_STATE: (
-                409,
-                "This memory or revision is unavailable for restore.",
-            ),
-            ErrorCode.REQUEST_ID_REUSED: (
-                409,
-                "This restore request was already used. Review the current memory and try again.",
-            ),
-            ErrorCode.NOT_FOUND: (404, "Memory not found."),
-        }.get(exc.code, (400, exc.message))
-        return await _fact_response(request, fact_id, store, message=message, status_code=status)
+        return await _refused(request, fact_id, store, exc, "restore")
     return RedirectResponse(f"/fact/{fact_id}", status_code=303)
 
 
 @app.post("/fact/{fact_id}/edit")
-async def do_edit(fact_id: UUID, value: str = Form(...), store: MnemoStore = Depends(get_store)):
-    fact = await store.get(fact_id)
-    if fact is not None and value.strip():
-        await store.add(
-            fact.subject, fact.predicate, value.strip(), provenance="human_review", actor="ui"
+async def do_edit(
+    request: Request,
+    fact_id: UUID,
+    value: str = Form(...),
+    expected_event_id: UUID = Form(...),
+    request_id: UUID = Form(...),
+    store: MnemoStore = Depends(get_store),
+):
+    """A guarded correction: it applies only to the revision the page showed, so an
+    agent's write made while the page was open is never silently overwritten."""
+    if not value.strip():
+        return await _fact_response(
+            request, fact_id, store, message="Enter a corrected value.", status_code=400
         )
+    try:
+        await DirectMemory(store).correct(
+            fact_id,
+            value.strip(),
+            expected_event_id=expected_event_id,
+            request_id=request_id,
+        )
+    except MnemoError as exc:
+        return await _refused(request, fact_id, store, exc, "correction")
     return RedirectResponse(f"/fact/{fact_id}", status_code=303)
+
+
+async def _refused(
+    request: Request, fact_id: UUID, store: MnemoStore, exc: MnemoError, action: str
+) -> HTMLResponse:
+    """Re-render the memory as it is now, saying why the write was refused."""
+    status, message = {
+        ErrorCode.REVISION_CONFLICT: (
+            409,
+            f"This memory changed since you loaded the page, so your {action} was not "
+            "saved. Review the current value and try again.",
+        ),
+        ErrorCode.UNSUPPORTED_STATE: (409, f"This memory is unavailable for {action}."),
+        ErrorCode.REQUEST_ID_REUSED: (
+            409,
+            f"This {action} request was already used. Review the current memory and try again.",
+        ),
+        ErrorCode.NOT_FOUND: (404, "Memory not found."),
+    }.get(exc.code, (400, exc.message))
+    return await _fact_response(request, fact_id, store, message=message, status_code=status)
 
 
 @app.get("/diff", response_class=HTMLResponse)

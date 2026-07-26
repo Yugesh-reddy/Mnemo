@@ -227,15 +227,75 @@ async def test_unknown_revert_fact_returns_not_found(web_client):
     assert response.status_code == 404
 
 
+async def _correction_form(web_client, fact_id) -> tuple[str, dict[str, str]]:
+    response = await web_client.get(f"/fact/{fact_id}")
+    assert "Manual correction" in response.text
+    action = f"/fact/{fact_id}/edit"
+    return action, Forms(response.text).forms[action]
+
+
 async def test_manual_correction_is_explicit_human_review(store, web_client):
     first = await store.add("user", "database", "PostgreSQL")
-    response = await web_client.get(f"/fact/{first.fact_id}")
-    assert "Manual correction" in response.text
-    response = await web_client.post(f"/fact/{first.fact_id}/edit", data={"value": "SQLite"})
+    action, form = await _correction_form(web_client, first.fact_id)
+    assert form["expected_event_id"] == str(first.event_id)
+    response = await web_client.post(action, data={**form, "value": "SQLite"})
     assert response.status_code == 303
     current = await store.get(first.fact_id)
     assert current.value == "SQLite"
     assert current.provenance == "human_review" and current.trust_level == "high"
+    history = await store.blame(fact_id=first.fact_id)
+    assert [e.op for e in history] == ["ADD", "UPDATE"] and history[-1].actor == "ui"
+
+
+async def test_a_stale_correction_does_not_overwrite_an_agents_write(store, web_client):
+    first = await store.add("deploy", "command", "make release")
+    action, form = await _correction_form(web_client, first.fact_id)
+    agent = await DirectMemory(store).update(
+        first.fact_id, "make ship", expected_event_id=first.event_id, request_id=uuid4()
+    )
+    response = await web_client.post(action, data={**form, "value": "make deploy"})
+    assert response.status_code == 409
+    assert "your correction was not saved" in response.text
+    assert "make ship" in response.text
+    current = await store.get(first.fact_id)
+    assert (current.value, current.event_id) == ("make ship", agent.event_id)
+    # The re-rendered page offers a fresh form built on the agent's revision.
+    again = Forms(response.text).forms[action]
+    assert again["expected_event_id"] == str(agent.event_id)
+    assert again["request_id"] != form["request_id"]
+
+
+async def test_a_resubmitted_correction_writes_once(store, web_client):
+    first = await store.add("user", "editor", "vim")
+    action, form = await _correction_form(web_client, first.fact_id)
+    for _ in range(2):
+        response = await web_client.post(action, data={**form, "value": "neovim"})
+        assert response.status_code == 303
+    assert [e.op for e in await store.blame(fact_id=first.fact_id)] == ["ADD", "UPDATE"]
+
+
+async def test_a_correction_needs_a_value_and_both_guard_fields(store, web_client):
+    first = await store.add("user", "shell", "zsh")
+    action, form = await _correction_form(web_client, first.fact_id)
+    assert (await web_client.post(action, data={**form, "value": "  "})).status_code == 400
+    for missing in ("expected_event_id", "request_id"):
+        data = {k: v for k, v in form.items() if k != missing}
+        assert (await web_client.post(action, data={**data, "value": "fish"})).status_code == 422
+    assert (await store.get(first.fact_id)).value == "zsh"
+
+
+async def test_agents_cannot_claim_human_review(store):
+    from mnemo.errors import MnemoError
+
+    first = await store.add("user", "shell", "zsh")
+    with pytest.raises(MnemoError, match="source must be one of"):
+        await DirectMemory(store).update(
+            first.fact_id,
+            "fish",
+            expected_event_id=first.event_id,
+            request_id=uuid4(),
+            source="review",
+        )
 
 
 def test_templates_load_nothing_from_the_internet():
