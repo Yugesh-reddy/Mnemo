@@ -1,0 +1,4 @@
+/* Source for mnemo/web/static/app.css; rebuild with `make css` after changing templates. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

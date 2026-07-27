@@ -48,10 +48,10 @@ reindex:  ## Rebuild vectors (for the configured model) and the word index
 	$(RUN) mnemo reindex
 
 ui:  ## Run the FastAPI + HTMX web UI
-	$(RUN) uvicorn web.app:app --host 127.0.0.1 --port 8000
+	$(RUN) uvicorn mnemo.web.app:app --host 127.0.0.1 --port 8000
 
-css:  ## Rebuild web/static/app.css from the templates (needs Node for npx)
-	npx -y tailwindcss@3.4.19 -c web/tailwind.config.js -i web/tailwind.css -o web/static/app.css --minify
+css:  ## Rebuild mnemo/web/static/app.css from the templates (needs Node for npx)
+	npx -y tailwindcss@3.4.19 -c mnemo/web/tailwind.config.js -i mnemo/web/tailwind.css -o mnemo/web/static/app.css --minify
 
 test-db:  ## The full suite; every test gets its own temporary store file
 	$(RUN) pytest -q

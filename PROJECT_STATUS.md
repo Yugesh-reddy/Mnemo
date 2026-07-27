@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## On PyPI as `mnemohive` (November 20, 2026)
+
+`uv tool install mnemohive` installs Mnemo; the command is still `mnemo`. The wheel now
+adds only the `mnemo` package (the review UI moved to `mnemo/web/`), and releases
+publish through PyPI trusted publishing ([spec §29](PROJECT_SPEC.md#29-on-pypi-as-mnemohive--november-20-2026)).
+
 ## Poisoning defence (November 19, 2026)
 
 The web UI's **Retracted** page lists every memory agents withdrew, with who, when and

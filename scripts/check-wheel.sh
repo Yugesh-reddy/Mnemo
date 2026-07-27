@@ -20,10 +20,12 @@ from importlib.resources import files
 import json
 import mnemo.mcp_direct
 from mnemo.db import MIGRATIONS_DIR
-from web.app import TEMPLATES
+from mnemo.web.app import TEMPLATES
 assert MIGRATIONS_DIR.joinpath('0001_sqlite_init.sql').is_file()
 assert TEMPLATES.env.get_template('list.html')
-from web.app import STATIC
+from mnemo.web.app import STATIC
+import importlib.util
+assert importlib.util.find_spec('web') is None and importlib.util.find_spec('examples') is None
 import sqlite_vec  # the vector extension loads from the installed wheel
 assert STATIC.joinpath('app.css').is_file() and STATIC.joinpath('htmx.js').is_file()
 assert 'site-packages' in MIGRATIONS_DIR.parts  # the packaged copy, not the checkout
@@ -33,15 +35,16 @@ PY
 "$mnemo_wheel_env/venv/bin/mnemo-mcp-direct" --version
 "$mnemo_wheel_env/venv/bin/mnemo" --help >/dev/null
 "$mnemo_wheel_env/venv/bin/mnemo" install --help >/dev/null
-"$mnemo_wheel_env/venv/bin/python" -m examples.agent_undo --help
 "$mnemo_wheel_env/venv/bin/mnemo-migrate"
 "$mnemo_wheel_env/venv/bin/python" -c "
 import os, stat, sys
 path = os.environ['MNEMO_DB']
 modes = (stat.S_IMODE(os.stat(path).st_mode), stat.S_IMODE(os.stat(os.path.dirname(path)).st_mode))
 sys.exit(0 if modes == (0o600, 0o700) else f'store {path} modes {modes}, expected (0o600, 0o700)')"
+# The demo ships with the checkout, not the wheel; -I keeps the checkout off sys.path,
+# so it runs against the installed package.
 MNEMO_BACKEND=hash \
-  "$mnemo_wheel_env/venv/bin/python" -m examples.direct_memory
+  "$mnemo_wheel_env/venv/bin/python" -I "$mnemo_checkout/examples/direct_memory.py"
 MNEMO_BACKEND=hash \
   "$mnemo_wheel_env/venv/bin/python" - <<'PY'
 import asyncio

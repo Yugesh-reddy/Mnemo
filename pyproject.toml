@@ -1,10 +1,22 @@
 [project]
-name = "mnemo"
-version = "0.1.2"
+name = "mnemohive"
+version = "0.1.3"
 description = "One shared, versioned memory for your coding agents (Claude Code, Codex, OpenCode) over MCP, in one local file."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
+keywords = ["mcp", "memory", "coding-agents", "claude-code", "codex", "opencode", "sqlite"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+]
 dependencies = [
     "pydantic>=2.6",
     "pydantic-settings>=2.2",
@@ -32,13 +44,21 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["mnemo", "web", "examples"]
+packages = ["mnemo"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "migrations" = "mnemo/migrations"
 
 [tool.hatch.build.targets.sdist]
-include = ["mnemo", "web", "examples", "migrations", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "pyproject.toml", "uv.lock"]
+include = ["mnemo", "examples", "migrations", "scripts", "tests", "docs", "README.md", "PROJECT_SPEC.md", "PROJECT_STATUS.md", "Makefile", "pyproject.toml", "uv.lock"]
+# Eval and pilot evidence (raw transcripts) stays in the repository, not the sdist.
+exclude = ["docs/agent-eval/runs", "docs/direct-pilot"]
+
+[project.urls]
+Homepage = "https://github.com/Yugesh-reddy/Mnemo"
+Source = "https://github.com/Yugesh-reddy/Mnemo"
+Issues = "https://github.com/Yugesh-reddy/Mnemo/issues"
+Changelog = "https://github.com/Yugesh-reddy/Mnemo/releases"
 
 [project.scripts]
 mnemo = "mnemo.cli:main"
@@ -58,7 +78,7 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff.lint.per-file-ignores]
 # FastAPI's Depends()/Form() in argument defaults is idiomatic (bugbear false positive).
-"web/app.py" = ["B008"]
+"mnemo/web/app.py" = ["B008"]
 
 [tool.black]
 line-length = 100

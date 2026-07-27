@@ -14,9 +14,11 @@ file, `~/.mnemo/mnemo.db`, and the embedding model runs inside Mnemo. Linux shou
 too but hasn't been tested yet.
 
 ```bash
-uv tool install git+https://github.com/Yugesh-reddy/Mnemo
+uv tool install mnemohive
 mnemo install   # connect Claude Code, Codex and OpenCode (shows every change, asks first)
 ```
+
+The package is `mnemohive` on PyPI; the command it installs is `mnemo`.
 
 `mnemo install` downloads the embedding model (`BAAI/bge-small-en-v1.5`, about 67 MB,
 from Hugging Face) after you confirm, creates the memory file (readable only by you),
@@ -36,17 +38,20 @@ Codex finds the note in the shared memory and answers `make test-db`.
 `mnemo uninstall` removes exactly what `mnemo install` added; your memories stay in
 the file.
 
-To update, run `uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo`
-and then `mnemo install`, which applies any new schema migrations and refreshes the
-agents' configuration. Until then, the tools answer with an error that says what to
-run.
+To update, run `uv tool upgrade mnemohive` and then `mnemo install`, which applies
+any new schema migrations and refreshes the agents' configuration. Until then, the
+tools answer with an error that says what to run.
+
+**Installed from GitHub before 0.1.3** (the tool was called `mnemo` then): run
+`uv tool uninstall mnemo`, then `uv tool install mnemohive` and `mnemo install`.
+Your memories stay in `~/.mnemo/mnemo.db`.
 
 **Upgrading from the Postgres version** (before 0.1.0): the new version does not read
 the Postgres database, so carry your memories over with an export.
 
 ```bash
 mnemo-transfer export --all-scopes --out mnemo-postgres.json  # old version, Postgres up
-uv tool install --force git+https://github.com/Yugesh-reddy/Mnemo
+uv tool uninstall mnemo && uv tool install mnemohive
 mnemo import mnemo-postgres.json   # creates ~/.mnemo/mnemo.db; same IDs, history, receipts
 mnemo install                      # embeds the imported memories with the chosen model
 ```
@@ -313,8 +318,8 @@ tested on macOS only. Optional live-Ollama tests skip when their models are
 unavailable.
 
 `mnemo/` contains the async store, direct API, SDK, MCP server and installer;
-`migrations/` holds the schema; `web/`, `examples/`, `scripts/` and `tests/` hold the
-UI, demos, the agent eval and checks.
+`mnemo/web/` the review UI; `migrations/` holds the schema; `examples/`, `scripts/`
+and `tests/` hold the demos, the agent eval and checks.
 [The spec](PROJECT_SPEC.md) defines contracts; [the plan](docs/MASTER_PLAN.md) and
 [status](PROJECT_STATUS.md) track delivery.
 

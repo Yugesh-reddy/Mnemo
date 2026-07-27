@@ -2,7 +2,7 @@
 
 Three views: memory list/search, fact detail (blame + revert + inline edit), and diff.
 Server-rendered Jinja2 with bundled htmx and a prebuilt Tailwind stylesheet in
-``web/static`` (``make css`` rebuilds it), so the UI works offline. Run: ``make ui``.
+``mnemo/web/static`` (``make css`` rebuilds it), so the UI works offline. Run: ``make ui``.
 
 The ``get_store`` dependency opens the store file for each request and closes it
 after; tests override it to point at a disposable store.

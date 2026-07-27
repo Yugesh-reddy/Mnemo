@@ -10,7 +10,7 @@
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
 Memory lives in one file, ``~/.mnemo/mnemo.db`` by default (MNEMO_DB). Installed as a
-tool (``uv tool install git+https://github.com/Yugesh-reddy/Mnemo``), this is all a
+tool (``uv tool install mnemohive``), this is all a
 user needs, and the agents run the tool's own server rather than a checkout.
 `mnemo install --help` lists the installer's options.
 """
@@ -36,7 +36,7 @@ GONE = {
 def serve_ui(port: int) -> int:
     import uvicorn
 
-    uvicorn.run("web.app:app", host="127.0.0.1", port=port)
+    uvicorn.run("mnemo.web.app:app", host="127.0.0.1", port=port)
     return 0
 
 

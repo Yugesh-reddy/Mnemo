@@ -610,7 +610,7 @@ The owner approved these changes to make Mnemo installable by others.
   default the checkout directory) runs its own container and volume, on its own
   `MNEMO_DB_PORT`.
 - **Offline web UI.** htmx 1.9.12 and a stylesheet prebuilt with Tailwind 3.4.19 are
-  served from `web/static`; templates reference no external assets.
+  served from `mnemo/web/static`; templates reference no external assets.
 
 ## 22. In-process embeddings — November 14, 2026
 
@@ -840,3 +840,17 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
   was last verified and leaves the witness unchanged. This catches the forgery §27
   could not: changing an event and recomputing every later hash. A witness on the same
   disk is only as safe as that disk; a copy kept elsewhere is the stronger check.
+
+## 29. On PyPI as `mnemohive` — November 20, 2026
+
+- **Name.** The distribution is `mnemohive` (`mnemo`, `mnemo-memory` and `mnemo-mcp`
+  are taken on PyPI). Commands (`mnemo`, `mnemo-mcp-direct`, …) and the import package
+  (`mnemo`) are unchanged. `uv tool install mnemohive` replaces the git URL.
+- **One top-level package.** The review UI moved from `web/` to `mnemo/web/`, and the
+  wheel no longer ships `examples/`, so installing Mnemo adds only `mnemo` to
+  site-packages. `scripts/check-wheel.sh` asserts that and runs the demo from the
+  checkout against the installed wheel.
+- **Publishing.** `.github/workflows/publish.yml` runs when a GitHub release is
+  published: it checks the tag is `v` + the project version, runs the tests, builds,
+  runs the wheel check, and uploads with PyPI trusted publishing from the `pypi`
+  environment. No token is stored.

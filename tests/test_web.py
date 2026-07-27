@@ -17,7 +17,7 @@ from httpx import ASGITransport
 from mnemo.core import MnemoStore
 from mnemo.direct import DirectMemory
 from mnemo.sqlite import Connection
-from web.app import app, get_store
+from mnemo.web.app import app, get_store
 
 
 class Forms(HTMLParser):
@@ -301,7 +301,7 @@ async def test_agents_cannot_claim_human_review(store):
 def test_templates_load_nothing_from_the_internet():
     from pathlib import Path
 
-    templates = Path(__file__).resolve().parents[1] / "web" / "templates"
+    templates = Path(__file__).resolve().parents[1] / "mnemo" / "web" / "templates"
     for page in templates.glob("*.html"):
         text = page.read_text()
         assert not re.search(r'(src|href)="(https?:)?//', text), page.name
@@ -321,7 +321,7 @@ def test_bundled_scripts_are_readable_source_not_minified():
     """Minified one-line JS reads as obfuscated to code reviewers and trust scanners."""
     from pathlib import Path
 
-    static = Path(__file__).resolve().parents[1] / "web" / "static"
+    static = Path(__file__).resolve().parents[1] / "mnemo" / "web" / "static"
     scripts = sorted(static.glob("*.js"))
     assert [path.name for path in scripts] == ["htmx.js"]
     for path in scripts:
