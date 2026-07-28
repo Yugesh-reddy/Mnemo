@@ -5,7 +5,7 @@ and other MCP clients on your machine read and write the same memory, for each p
 across projects. Every change is kept, attributed to the agent that made it, and can
 be undone. Everything runs locally.
 
-[![License MIT](https://img.shields.io/badge/license-MIT-blue)](pyproject.toml)
+[![License MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/Yugesh-reddy/Mnemo/blob/main/pyproject.toml)
 
 ## Quick start
 
@@ -23,7 +23,7 @@ The package is `mnemohive` on PyPI; the command it installs is `mnemo`.
 `mnemo install` downloads the embedding model (`BAAI/bge-small-en-v1.5`, about 67 MB,
 from Hugging Face) after you confirm, creates the memory file (readable only by you),
 registers Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and
-adds a short [memory policy](mnemo/memory_policy.md) to their global instructions. The agents run
+adds a short [memory policy](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
 example, tell Claude Code:
 
@@ -84,7 +84,7 @@ so the agents keep working if you move or delete it; rerun it after changing cod
 
 ## Does it work?
 
-The [coding-agent eval](docs/agent-eval/README.md) runs sixteen scenarios with the real
+The [coding-agent eval](https://github.com/Yugesh-reddy/Mnemo/blob/main/docs/agent-eval/README.md) runs sixteen scenarios with the real
 Claude Code and Codex CLIs in throwaway repositories: a convention told to one agent
 and used by the other, an end-of-day handoff, a correction, several values of one
 kind, isolation between projects, a preference for all projects, a restated rule, a
@@ -136,7 +136,7 @@ applying the change twice. Errors are JSON `{code, message, details}` with MCP's
 ## Configuration
 
 Settings come from `MNEMO_*` environment variables or `.env`; see
-[.env.example](.env.example). The ones that matter most:
+[.env.example](https://github.com/Yugesh-reddy/Mnemo/blob/main/.env.example). The ones that matter most:
 
 | Setting | Default | Meaning |
 |---|---|---|
@@ -215,7 +215,7 @@ OpenCode, in `~/.config/opencode/opencode.json`:
 }
 ```
 
-Also paste [the memory policy](mnemo/memory_policy.md) into `~/.claude/CLAUDE.md`,
+Also paste [the memory policy](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/memory_policy.md) into `~/.claude/CLAUDE.md`,
 `$CODEX_HOME/AGENTS.md` and OpenCode's rules file: without it, Codex did not save
 anything in the eval. Other
 clients such as Claude Desktop or [Cursor](https://cursor.com/docs/mcp) take the same
@@ -239,12 +239,12 @@ The optional web UI serves its own copies of Tailwind's CSS and htmx, so it work
 
 | Mechanism | Where it lives |
 |---|---|
-| Triggers reject changes to event payloads and receipts, deletes, and `INSERT OR REPLACE`; supersession and recall bookkeeping remain mutable. | [Schema](migrations/0001_sqlite_init.sql) |
-| Every write takes the file's single write lock; expected-event guards reject stale updates/reverts, including A→B→A. Eight processes racing one update give one winner. | [Direct API](mnemo/direct.py), [race tests](tests/test_concurrency.py) |
-| Each event is chained to the previous one by a SHA-256 hash; `mnemo verify` recomputes the chain and reports any event changed, removed or inserted outside Mnemo. It records the head it verified beside the store (`mnemo.db.verified`, or `--witness FILE`) and next time checks the chain still passes through it, which catches a rewrite of every later hash too. A memory's scope, subject and key cannot be changed or deleted through SQL either, and are sealed the same way, so `mnemo verify` also reports a memory moved or renamed around the triggers. After restoring a backup on purpose, delete that file and verify again. | [Chain](mnemo/chain.py), [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026), [§31](PROJECT_SPEC.md#31-a-memorys-identity-is-permanent--november-20-2026) |
-| Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Schema](migrations/0001_sqlite_init.sql) |
-| Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
-| Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |
+| Triggers reject changes to event payloads and receipts, deletes, and `INSERT OR REPLACE`; supersession and recall bookkeeping remain mutable. | [Schema](https://github.com/Yugesh-reddy/Mnemo/blob/main/migrations/0001_sqlite_init.sql) |
+| Every write takes the file's single write lock; expected-event guards reject stale updates/reverts, including A→B→A. Eight processes racing one update give one winner. | [Direct API](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/direct.py), [race tests](https://github.com/Yugesh-reddy/Mnemo/blob/main/tests/test_concurrency.py) |
+| Each event is chained to the previous one by a SHA-256 hash; `mnemo verify` recomputes the chain and reports any event changed, removed or inserted outside Mnemo. It records the head it verified beside the store (`mnemo.db.verified`, or `--witness FILE`) and next time checks the chain still passes through it, which catches a rewrite of every later hash too. A memory's scope, subject and key cannot be changed or deleted through SQL either, and are sealed the same way, so `mnemo verify` also reports a memory moved or renamed around the triggers. After restoring a backup on purpose, delete that file and verify again. | [Chain](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/chain.py), [spec §27](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#27-tamper-evidence--november-19-2026), [§31](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#31-a-memorys-identity-is-permanent--november-20-2026) |
+| Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Schema](https://github.com/Yugesh-reddy/Mnemo/blob/main/migrations/0001_sqlite_init.sql) |
+| Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/core.py), [direct contract](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
+| Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |
 
 To see the versioning without any agent or model, run `make demo` in a
 checkout. It
@@ -259,7 +259,7 @@ Source trust preserved: agent_inference / low
 The demo uses the `hash` backend in a temporary file, so it never touches your
 memories.
 
-The [Python guide](docs/DIRECT_SDK.md) shows `Mnemo.direct` and the async
+The [Python guide](https://github.com/Yugesh-reddy/Mnemo/blob/main/docs/DIRECT_SDK.md) shows `Mnemo.direct` and the async
 `DirectMemory(store)` interface. Existing `add`, `search`, `blame`, `revert`,
 `diff`, `log` and `commit` APIs remain available with their legacy
 contracts. Legacy `add` performs alias deduplication; direct updates preserve
@@ -279,7 +279,7 @@ the applied migrations, exactly as stored. Vectors are left out and rebuilt on
 import with the destination's model. Import restores the rows in one transaction,
 reads back what it wrote and rolls back if anything differs, so IDs, sequence
 numbers, history and receipt replays come through unchanged. It also reads exports
-from the Postgres version ([spec §16](PROJECT_SPEC.md#16-exportimport--september-22-2026)).
+from the Postgres version ([spec §16](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#16-exportimport--september-22-2026)).
 
 ## Review memory in the browser
 
@@ -313,7 +313,7 @@ bash scripts/check-wheel.sh
 ```
 
 The packaging check uses a fresh environment and exercises installed SDK/MCP
-behavior. The [correctness workflow](.github/workflows/correctness.yml) is retained;
+behavior. The [correctness workflow](https://github.com/Yugesh-reddy/Mnemo/blob/main/.github/workflows/correctness.yml) is retained;
 **GitHub Actions is disabled at the owner's request**, and Mnemo has so far been
 tested on macOS only. Optional live-Ollama tests skip when their models are
 unavailable.
@@ -321,8 +321,8 @@ unavailable.
 `mnemo/` contains the async store, direct API, SDK, MCP server and installer;
 `mnemo/web/` the review UI; `migrations/` holds the schema; `examples/`, `scripts/`
 and `tests/` hold the demos, the agent eval and checks.
-[The spec](PROJECT_SPEC.md) defines contracts; [the plan](docs/MASTER_PLAN.md) and
-[status](PROJECT_STATUS.md) track delivery.
+[The spec](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md) defines contracts; [the plan](https://github.com/Yugesh-reddy/Mnemo/blob/main/docs/MASTER_PLAN.md) and
+[status](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_STATUS.md) track delivery.
 
 This is a local, single-user service. Scope columns do not provide authentication
 or access control, and memories are stored unencrypted, so don't save secrets.
@@ -355,7 +355,7 @@ reach the quality target, so the pipeline, its evals and its evidence were remov
 from `main`. They remain at the git tag `archive/extraction-pipeline`
 (`git checkout archive/extraction-pipeline`), on the Postgres version of the store.
 
-An earlier [host-agent pilot](docs/direct-pilot/README.md) let Qwen or Azure Luna
+An earlier [host-agent pilot](https://github.com/Yugesh-reddy/Mnemo/blob/main/docs/direct-pilot/README.md) let Qwen or Azure Luna
 drive the direct tools, one attempt per scenario: both reached the intended end state
 in 5/6 scenarios, and on an ambiguous "undo that" Luna reverted both memories
 instead of asking. The revision guards block stale and racing writes but cannot know
@@ -364,4 +364,4 @@ visible in history and reversible.
 
 ## License
 
-The project declares the **MIT license** in [pyproject.toml](pyproject.toml).
+The project declares the **MIT license** in [pyproject.toml](https://github.com/Yugesh-reddy/Mnemo/blob/main/pyproject.toml).
