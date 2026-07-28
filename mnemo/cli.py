@@ -64,6 +64,12 @@ async def _verify(witness: Path | None) -> int:
         for problem in result.problems:
             print(f"     {problem}", file=sys.stderr)
         print(f"     {where(witness)} was left unchanged.", file=sys.stderr)
+        if any("since it was last verified" in problem for problem in result.problems):
+            print(
+                "     If you restored a backup or recreated the store yourself, delete "
+                f"{where(witness)} and run mnemo verify again to record the new head.",
+                file=sys.stderr,
+            )
         return 1
     print(f"ok   {store}: {result.events} events, history intact, HEADs consistent")
     if since is not None:

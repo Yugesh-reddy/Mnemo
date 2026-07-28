@@ -7,7 +7,6 @@ from uuid import uuid4
 
 import httpx
 import pytest
-from typer.testing import CliRunner
 
 from mnemo import Mnemo
 from mnemo.sqlite import connect
@@ -74,9 +73,9 @@ def test_direct_demo_respects_backend_from_dotenv(monkeypatch, tmp_path) -> None
 
 
 def test_direct_demo_cli_defaults_to_hash_and_never_touches_the_store(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, capsys
 ) -> None:
-    from examples.direct_memory import app
+    from examples.direct_memory import main
 
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("MNEMO_BACKEND", raising=False)
@@ -89,12 +88,12 @@ def test_direct_demo_cli_defaults_to_hash_and_never_touches_the_store(
     monkeypatch.setattr(httpx, "Client", no_http_client)
     namespaces = []
     for _ in range(2):
-        result = CliRunner().invoke(app, [])
-        assert result.exit_code == 0, result.output
-        assert "embeddings: hash (non-semantic)" in result.output
-        assert "[5] Read back: PostgreSQL" in result.output
+        main([])
+        output = capsys.readouterr().out
+        assert "embeddings: hash (non-semantic)" in output
+        assert "[5] Read back: PostgreSQL" in output
         namespaces.append(
-            next(line for line in result.output.splitlines() if line.startswith("namespace: "))
+            next(line for line in output.splitlines() if line.startswith("namespace: "))
         )
     assert namespaces[0] != namespaces[1]
     assert not store.exists()

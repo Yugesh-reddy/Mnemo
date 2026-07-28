@@ -249,6 +249,36 @@ async def test_07_duplicate_request_replays_receipt(store):
     assert await counts(store) == (1, 1)
 
 
+async def test_07b_a_retry_replays_without_the_embedding_model(store):
+    d = direct(store)
+    first = await create(d)
+    changed = await d.update(
+        first.fact_id, "MySQL", expected_event_id=first.event_id, request_id=uuid4()
+    )
+
+    def down(text):
+        raise ConnectionError("embedding model unavailable")
+
+    store.embedder.embed = down
+    again = await d.create("user", "preferred_database", first.value, request_id=first.request_id)
+    assert again.replayed and again.event_id == first.event_id
+    retried = await d.update(
+        first.fact_id,
+        "MySQL",
+        expected_event_id=first.event_id,
+        request_id=changed.request_id,
+    )
+    assert retried.replayed and retried.event_id == changed.event_id
+    with pytest.raises(MnemoError) as reused:
+        await d.create("user", "preferred_database", "SQLite", request_id=first.request_id)
+    assert reused.value.code == ErrorCode.REQUEST_ID_REUSED
+    with pytest.raises(ConnectionError):  # a new request still needs the model
+        await d.update(
+            first.fact_id, "SQLite", expected_event_id=changed.event_id, request_id=uuid4()
+        )
+    assert await counts(store) == (2, 2)  # events, receipts: nothing written by the retries
+
+
 async def test_08_replay_after_later_update_leaves_head_intact(store):
     d = direct(store)
     first = await create(d)

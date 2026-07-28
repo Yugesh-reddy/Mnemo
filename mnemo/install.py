@@ -255,6 +255,10 @@ def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
         # Pinned so a later default can't silently change the vectors of new writes.
         env["MNEMO_EMBED_MODEL"] = settings.embed_model
         env["MNEMO_MODEL_DIR"] = str(settings.model_dir)
+    elif backend == "ollama":
+        # Pinned so a non-default model or host follows the agents into every repo.
+        env["MNEMO_EMBED_MODEL"] = settings.embed_model
+        env["MNEMO_OLLAMA_HOST"] = settings.ollama_host
     return env
 
 

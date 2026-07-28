@@ -8,6 +8,7 @@ The demo writes to a temporary store file, so your memories are never touched.
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import tempfile
 from collections.abc import Callable
@@ -15,14 +16,10 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-import typer
-
 from mnemo import ErrorCode, Mnemo, MnemoError
 from mnemo.config import Settings
 from mnemo.db import apply_migrations, connect
 from mnemo.embedder import build_embedder
-
-app = typer.Typer(add_completion=False, help="Direct write, history and rollback with the SDK.")
 
 
 def demo_settings() -> Settings:
@@ -109,9 +106,11 @@ def run_scenario(
     }
 
 
-@app.command()
-def demo() -> None:
+def main(argv: list[str] | None = None) -> None:
     """Run a direct-memory lifecycle in a temporary store (no extraction)."""
+    argparse.ArgumentParser(
+        description="Direct write, history and rollback with the SDK."
+    ).parse_args(argv)
     settings = demo_settings()
     embedder = build_embedder(settings)
     scratch = tempfile.TemporaryDirectory(prefix="mnemo-demo-")
@@ -120,9 +119,9 @@ def demo() -> None:
         asyncio.run(_create(path))
         namespace = "demo-direct-" + uuid4().hex
         label = "hash (non-semantic)" if settings.backend == "hash" else settings.backend
-        typer.echo("Mnemo direct-memory demo — scripted SDK calls, no host model")
-        typer.echo(f"embeddings: {label}")
-        typer.echo(f"namespace: {namespace} (in a temporary store)")
+        print("Mnemo direct-memory demo — scripted SDK calls, no host model")
+        print(f"embeddings: {label}")
+        print(f"namespace: {namespace} (in a temporary store)")
         memory = Mnemo(
             path,
             embedder,
@@ -130,7 +129,7 @@ def demo() -> None:
             user_id=settings.user_id,
             agent_id=settings.agent_id,
         )
-        run_scenario(memory, say=typer.echo)
+        run_scenario(memory, say=print)
     finally:
         scratch.cleanup()
         close = getattr(embedder, "close", None)
@@ -147,4 +146,4 @@ async def _create(path: Path) -> None:
 
 
 if __name__ == "__main__":
-    app()
+    main()

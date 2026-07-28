@@ -578,3 +578,17 @@ def test_uninstall_removes_the_opencode_rules_file_it_would_leave_empty(homes, t
     )
     assert not (opencode / "AGENTS.md").exists()
     assert json.loads((opencode / "opencode.json").read_text()) == {}
+
+
+def test_the_ollama_model_and_host_follow_the_agents():
+    settings = inst.Settings(
+        _env_file=None,
+        backend="ollama",
+        embed_model="mxbai-embed-large",
+        embed_dim=1024,
+        ollama_host="http://gpu-box:11434",
+    )
+    env = inst.server_env(settings, "codex", "ollama")
+    assert env["MNEMO_EMBED_MODEL"] == "mxbai-embed-large"
+    assert env["MNEMO_OLLAMA_HOST"] == "http://gpu-box:11434"
+    assert env["MNEMO_EMBED_DIM"] == "1024" and "MNEMO_MODEL_DIR" not in env

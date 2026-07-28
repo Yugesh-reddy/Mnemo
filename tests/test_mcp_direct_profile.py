@@ -62,3 +62,35 @@ async def test_direct_profile_lifespan_holds_the_embedder_for_its_lifetime(
         assert srv._embedder is fake_embedder
         assert not srv._settings().search_reinforce
     assert srv._embedder is None
+
+
+async def test_a_search_embeds_its_query_once_for_both_scopes(
+    _disposable_test_db, fake_embedder, monkeypatch
+):
+    import mnemo.mcp_direct as srv
+
+    settings = Settings(
+        _env_file=None,
+        db=_disposable_test_db,
+        backend="hash",
+        embed_dim=fake_embedder.dim,
+        project="github.com/acme/alpha",
+    )
+    seen: list[str] = []
+
+    class Counting:
+        dim = fake_embedder.dim
+
+        def embed(self, text: str) -> list[float]:
+            seen.append(text)
+            return fake_embedder.embed(text)
+
+    monkeypatch.setattr(srv, "get_settings", lambda: settings)
+    monkeypatch.setattr(srv, "build_embedder", lambda settings: Counting())
+    async with srv.lifespan(srv.mcp):
+        assert list(srv._lanes) == ["project", "global"]
+        await srv.memory_create("tests", "command", "make test", source="user")
+        seen.clear()
+        result = await srv.memory_search("tests command")
+    assert seen == ["tests command"]
+    assert [hit["value"] for hit in result["hits"]] == ["make test"]

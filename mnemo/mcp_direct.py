@@ -182,11 +182,29 @@ async def _scope_of(conn: Connection, settings: Settings, fact_id: UUID) -> str:
     return next((scope for scope, ns in _lanes.items() if ns == namespace), next(iter(_lanes)))
 
 
+class _EmbedOnce:
+    """Wraps the server's embedder for one tool call, so a query searched in both
+    scopes is embedded once."""
+
+    def __init__(self, embedder: Embedder) -> None:
+        self._embedder = embedder
+        self._vectors: dict[str, list[float]] = {}
+
+    def embed(self, text: str) -> list[float]:
+        if text not in self._vectors:
+            self._vectors[text] = self._embedder.embed(text)
+        return self._vectors[text]
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._embedder, name)
+
+
 async def _run[T](
     fn: Callable[[DirectMemory], Awaitable[T]],
     *,
     scope: str | None = None,
     fact_id: str | None = None,
+    embedder: Embedder | None = None,
 ) -> tuple[T, str]:
     """Run fn in one scope: the one holding fact_id, else the requested/default scope."""
     if _embedder is None:
@@ -201,7 +219,7 @@ async def _run[T](
             scope = _scope(scope)
             store = MnemoStore(
                 conn,
-                _embedder,
+                embedder or _embedder,
                 settings=settings,
                 namespace=_lanes[scope],
                 user_id=settings.user_id,
@@ -283,8 +301,9 @@ async def memory_search(query: str, limit: int = 5) -> dict:
     trust_level). Similar text never authorizes an overwrite; read with memory_get first.
     """
     hits: list[dict] = []
+    once = _EmbedOnce(_embedder) if _embedder is not None else None
     for lane in list(_lanes):
-        found, scope = await _run(lambda d: d.search(query, limit=limit), scope=lane)
+        found, scope = await _run(lambda d: d.search(query, limit=limit), scope=lane, embedder=once)
         hits += [_scoped(hit, scope) for hit in found]
     hits.sort(key=lambda hit: hit["score"], reverse=True)  # stable: project first on ties
     return {"hits": hits[:limit]}

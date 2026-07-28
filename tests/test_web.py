@@ -356,3 +356,38 @@ async def test_searching_in_the_browser_is_not_a_recall(store, web_client, db):
         "SELECT recall_count FROM memory_event WHERE event_id=?1", event.event_id
     )
     assert count == 0
+
+
+async def test_only_durable_memories_offer_a_correction(store, web_client):
+    temporary = await store.add("user", "branch", "wip", tier="session", session_id="s")
+    page = (await web_client.get(f"/fact/{temporary.fact_id}")).text
+    assert "cannot be corrected here" in page
+    assert f"/fact/{temporary.fact_id}/edit" not in Forms(page).forms
+    forged = {"expected_event_id": str(temporary.event_id), "request_id": str(uuid4())}
+    response = await web_client.post(
+        f"/fact/{temporary.fact_id}/edit", data={**forged, "value": "main"}
+    )
+    assert response.status_code == 409 and "unavailable for correction" in response.text
+    assert (await store.get(temporary.fact_id)).value == "wip"
+
+
+@pytest.mark.parametrize("a", ["not-a-uuid", "00000000-0000-0000-0000-000000000000"])
+async def test_a_bad_diff_link_is_a_400_not_a_crash(store, web_client, a):
+    await store.commit("one")
+    two = await store.commit("two")
+    response = await web_client.get("/diff", params={"a": a, "b": str(two.commit_id)})
+    assert response.status_code == 400 and "Pick two snapshots" in response.text
+
+
+async def test_writes_from_another_site_are_refused(store, web_client):
+    first = await store.add("user", "editor", "vim")
+    action, form = await _correction_form(web_client, first.fact_id)
+    data = {**form, "value": "emacs"}
+    evil = await web_client.post(action, data=data, headers={"origin": "https://evil.example"})
+    assert evil.status_code == 403
+    assert (
+        await web_client.post("/commit", headers={"origin": "https://evil.example"})
+    ).status_code == 403
+    assert (await store.get(first.fact_id)).value == "vim"
+    own = await web_client.post(action, data=data, headers={"origin": "http://t"})
+    assert own.status_code == 303 and (await store.get(first.fact_id)).value == "emacs"

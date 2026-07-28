@@ -48,6 +48,19 @@ app = FastAPI(title="Mnemo", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
+@app.middleware("http")
+async def same_origin_writes(request: Request, call_next):
+    """Refuse a write that a browser sends from another site's page (cross-site request
+    forgery against the local UI). Browsers set Origin on cross-site form posts;
+    requests without it (curl, tests) are not from a web page and pass."""
+    origin = request.headers.get("origin")
+    if request.method not in ("GET", "HEAD", "OPTIONS") and origin is not None:
+        host = request.headers.get("host", "")
+        if origin.split("://", 1)[-1] != host:
+            return HTMLResponse("Cross-site request refused.", status_code=403)
+    return await call_next(request)
+
+
 async def get_store(request: Request) -> AsyncIterator[MnemoStore]:
     settings = request.app.state.settings
     conn = await connect(settings.db, create=False)
@@ -126,6 +139,8 @@ async def _fact_response(
             "fact_id": fact_id,
             "request_ids": request_ids,
             "correction_id": uuid4(),
+            # The guarded update accepts only durable memories; others get no form.
+            "correctable": fact is not None and DirectMemory._eligible(head),
             "message": message,
         },
         status_code=status_code,
@@ -211,9 +226,17 @@ async def diff_view(
     request: Request, a: str = "", b: str = "", store: MnemoStore = Depends(get_store)
 ):
     commits = await store.list_commits()
-    diff = await store.diff(UUID(a), UUID(b)) if a and b else None
+    diff, message = None, None
+    if a and b:
+        try:
+            diff = await store.diff(UUID(a), UUID(b))
+        except ValueError:  # not a UUID, or not a commit in this scope
+            message = "Pick two snapshots from the lists below."
     return TEMPLATES.TemplateResponse(
-        request, "diff.html", {"commits": commits, "diff": diff, "a": a, "b": b}
+        request,
+        "diff.html",
+        {"commits": commits, "diff": diff, "a": a, "b": b, "message": message},
+        status_code=400 if message else 200,
     )
 
 

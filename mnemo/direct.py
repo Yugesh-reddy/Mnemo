@@ -193,29 +193,39 @@ class DirectMemory:
         apply: Callable[[], Awaitable[MutationResult]],
     ) -> MutationResult:
         async with self.store.conn.transaction():
-            receipt = await self.store.conn.fetchrow(
-                "SELECT operation, request_payload, result FROM memory_mutation_receipt "
-                "WHERE namespace=?1 AND user_id=?2 AND agent_id=?3 AND request_id=?4",
-                *self._scope,
-                request_id,
-            )
-            if receipt is not None:
-                # Compared as canonical JSON text, so formatting (a receipt imported from
-                # Postgres) doesn't matter but 1 and true still differ.
-                matches = _canonical(json.loads(receipt["request_payload"])) == _canonical(payload)
-                if receipt["operation"] != operation or not matches:
-                    raise MnemoError(
-                        ErrorCode.REQUEST_ID_REUSED,
-                        "request_id was used for a different mutation",
-                        request_id=str(request_id),
-                    )
-                saved = receipt["result"]
-                if isinstance(saved, str):
-                    saved = json.loads(saved)
-                return MutationResult.model_validate(saved).model_copy(update={"replayed": True})
+            replayed = await self._replay(operation, request_id, payload)
+            if replayed is not None:
+                return replayed
             result = await apply()
             await self._insert_receipt(request_id, operation, payload, actor, result)
             return result
+
+    async def _replay(
+        self, operation: str, request_id: UUID, payload: dict[str, Any]
+    ) -> MutationResult | None:
+        """The saved result of an identical earlier request, or None if there is none.
+        Called before embedding too, so a retry replays without the model."""
+        receipt = await self.store.conn.fetchrow(
+            "SELECT operation, request_payload, result FROM memory_mutation_receipt "
+            "WHERE namespace=?1 AND user_id=?2 AND agent_id=?3 AND request_id=?4",
+            *self._scope,
+            request_id,
+        )
+        if receipt is None:
+            return None
+        # Compared as canonical JSON text, so formatting (a receipt imported from
+        # Postgres) doesn't matter but 1 and true still differ.
+        matches = _canonical(json.loads(receipt["request_payload"])) == _canonical(payload)
+        if receipt["operation"] != operation or not matches:
+            raise MnemoError(
+                ErrorCode.REQUEST_ID_REUSED,
+                "request_id was used for a different mutation",
+                request_id=str(request_id),
+            )
+        saved = receipt["result"]
+        if isinstance(saved, str):
+            saved = json.loads(saved)
+        return MutationResult.model_validate(saved).model_copy(update={"replayed": True})
 
     async def _insert_receipt(
         self,
@@ -269,6 +279,8 @@ class DirectMemory:
             source_span=source_span,
             **self._sourced(source),
         )
+        if (replayed := await self._replay("create", request_id, payload)) is not None:
+            return replayed
         embedding = await self.store._embed(f"{subject} {predicate} {value}")
 
         async def apply() -> MutationResult:
@@ -371,6 +383,8 @@ class DirectMemory:
             expected_event_id=str(expected_event_id),
             **self._sourced(source),
         )
+        if (replayed := await self._replay("update", request_id, payload)) is not None:
+            return replayed
         identity = await self._fact(fact_id)
         embedding = await self.store._embed(
             f"{identity['subject']} {identity['predicate']} {value}"

@@ -840,6 +840,8 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
   was last verified and leaves the witness unchanged. This catches the forgery §27
   could not: changing an event and recomputing every later hash. A witness on the same
   disk is only as safe as that disk; a copy kept elsewhere is the stronger check.
+  After restoring a backup or recreating the store on purpose, delete the witness file
+  (the failure message says so) and verify again to record the new head.
 
 ## 29. On PyPI as `mnemohive` — November 20, 2026
 
@@ -854,3 +856,21 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
   published: it checks the tag is `v` + the project version, runs the tests, builds,
   runs the wheel check, and uploads with PyPI trusted publishing from the `pypi`
   environment. No token is stored.
+
+## 30. Review fixes — November 20, 2026
+
+- **One embedding per search.** `memory_search` searches the project and global
+  scopes with one embedding of the query (`_EmbedOnce` in `mnemo/mcp_direct.py`).
+- **Retries replay without the model.** `create` and `update` look up the request's
+  receipt before embedding, so an identical retry replays from the file even when the
+  embedding model is unavailable. The receipt is checked again inside the write
+  transaction, as before.
+- **Ollama settings follow the agents.** For `--backend ollama` the installer also
+  writes `MNEMO_EMBED_MODEL` and `MNEMO_OLLAMA_HOST` into each agent's server entry,
+  as it already pinned the model for `local`.
+- **Web UI.** A write whose `Origin` is another site gets HTTP 403 (cross-site request
+  forgery against `127.0.0.1`); requests without `Origin` are not from a web page and
+  pass. A `/diff` link with a malformed or unknown snapshot returns 400 with the
+  pickers instead of a server error.
+- **Dependencies.** `typer` is no longer a dependency; the demo uses `argparse` like
+  the `mnemo` commands.

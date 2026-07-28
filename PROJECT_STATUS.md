@@ -6,6 +6,14 @@
 adds only the `mnemo` package (the review UI moved to `mnemo/web/`), and releases
 publish through PyPI trusted publishing ([spec §29](PROJECT_SPEC.md#29-on-pypi-as-mnemohive--november-20-2026)).
 
+## Review fixes (November 20, 2026)
+
+An outside review's findings that held up: searches now embed the query once for both
+scopes; a retried write replays its receipt before embedding, so it works while the
+model is down; `--backend ollama` pins the model and host for the agents; the web UI
+refuses cross-site writes and answers a bad diff link with 400; `typer` is gone
+([spec §30](PROJECT_SPEC.md#30-review-fixes--november-20-2026)).
+
 ## Poisoning defence (November 19, 2026)
 
 The web UI's **Retracted** page lists every memory agents withdrew, with who, when and
@@ -16,8 +24,9 @@ and, next time, catches a rewrite of the whole chain after it ([§28](PROJECT_SP
 The web UI's manual correction is now guarded like restore. Three harder poisoning
 scenarios (a file overwriting a user's memory, an instruction inside a stored memory, a
 code comment planting a global preference) found one gap: Claude offered to retract a
-poisoned memory instead of retracting it. After a memory-policy change the full eval
-passed 15 of 15 ([results](docs/agent-eval/README.md#harder-poisoning-november-20-2026-15-of-15-35-of-35)).
+poisoned memory instead of retracting it. After a memory-policy change, narrowed when a
+control showed it made Codex distrust a plain memory, the full eval passed 16 of 16
+([results](docs/agent-eval/README.md#harder-poisoning-november-20-2026-16-of-16)).
 CI runs on macOS and Linux; Mnemo also runs where SQLite cannot load extensions.
 
 ## One SQLite file (November 19, 2026)

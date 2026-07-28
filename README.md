@@ -84,7 +84,7 @@ so the agents keep working if you move or delete it; rerun it after changing cod
 
 ## Does it work?
 
-The [coding-agent eval](docs/agent-eval/README.md) runs fifteen scenarios with the real
+The [coding-agent eval](docs/agent-eval/README.md) runs sixteen scenarios with the real
 Claude Code and Codex CLIs in throwaway repositories: a convention told to one agent
 and used by the other, an end-of-day handoff, a correction, several values of one
 kind, isolation between projects, a preference for all projects, a restated rule, a
@@ -97,7 +97,8 @@ instructions, Codex never saved what it was told, and the first ten scenarios pa
 single-file store the same setup passed 12 of 12 in three more runs, one with Ollama
 and two with the model inside Mnemo, with no Mnemo tool errors. After a policy change
 for the three harder poisoning scenarios (tell the user about planted instructions;
-retract a poisoned memory unasked), all fifteen passed (**15 of 15**). Each scenario ran once
+retract a poisoned memory unasked), all sixteen passed (**16 of 16**, with a control
+that a plain memory is still used). Each scenario ran once
 per run on tiny planted repositories, so this shows the approach works, not how often it works in long, real sessions.
 
 ## How agents use it
@@ -232,7 +233,7 @@ the server from source.
 | git | Detecting the project | Only the global scope is available |
 
 No language model runs inside Mnemo for this path: the agent decides what to save.
-The optional web UI loads Tailwind and htmx from public CDNs.
+The optional web UI serves its own copies of Tailwind's CSS and htmx, so it works offline.
 
 ## What the store guarantees
 
@@ -240,7 +241,7 @@ The optional web UI loads Tailwind and htmx from public CDNs.
 |---|---|
 | Triggers reject changes to event payloads and receipts, deletes, and `INSERT OR REPLACE`; supersession and recall bookkeeping remain mutable. | [Schema](migrations/0001_sqlite_init.sql) |
 | Every write takes the file's single write lock; expected-event guards reject stale updates/reverts, including A→B→A. Eight processes racing one update give one winner. | [Direct API](mnemo/direct.py), [race tests](tests/test_concurrency.py) |
-| Each event is chained to the previous one by a SHA-256 hash; `mnemo verify` recomputes the chain and reports any event changed, removed or inserted outside Mnemo. It records the head it verified beside the store (`mnemo.db.verified`, or `--witness FILE`) and next time checks the chain still passes through it, which catches a rewrite of every later hash too. | [Chain](mnemo/chain.py), [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026) |
+| Each event is chained to the previous one by a SHA-256 hash; `mnemo verify` recomputes the chain and reports any event changed, removed or inserted outside Mnemo. It records the head it verified beside the store (`mnemo.db.verified`, or `--witness FILE`) and next time checks the chain still passes through it, which catches a rewrite of every later hash too. After restoring a backup on purpose, delete that file and verify again. | [Chain](mnemo/chain.py), [spec §27](PROJECT_SPEC.md#27-tamper-evidence--november-19-2026) |
 | Event, HEAD, and append-only receipt commit together. Receipts survive restarts and remain for the store's lifetime. | [Schema](migrations/0001_sqlite_init.sql) |
 | Revert copies source payload, embedding and lineage into a new event; it does not raise source trust. | [Core](mnemo/core.py), [direct contract](PROJECT_SPEC.md#15-additive-guarded-memory-contract--september-22-2026) |
 | Historical reads distinguish recording time (`as_of`) from world validity (`valid_at`). Archive is reversible; `blame`, `diff`, and `commit` expose history. | [Temporal contract](PROJECT_SPEC.md#14-correctness-amendment--september-9-2026) |

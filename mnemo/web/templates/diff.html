@@ -2,6 +2,10 @@
 {% block content %}
 <h1 class="text-xl font-semibold mb-4">Diff <span class="text-slate-400 font-normal text-sm">— how beliefs changed between two points</span></h1>
 
+{% if message %}
+<div role="alert" class="mb-4 border border-amber-300 bg-amber-50 text-amber-900 rounded-lg p-4">{{ message }}</div>
+{% endif %}
+
 <form method="post" action="/commit" class="mb-5 flex gap-2 items-center">
   <input name="label" placeholder="snapshot label (optional)"
     class="border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">

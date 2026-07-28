@@ -291,3 +291,49 @@ def test_witness_files_round_trip_privately(tmp_path):
     path.write_text("not a witness")
     with pytest.raises(ValueError, match="not a Mnemo witness file"):
         Witness.read(path)
+
+
+def test_a_recreated_store_names_the_way_out(_disposable_test_db, monkeypatch, capsys):
+    import asyncio
+
+    import mnemo.cli as cli
+    from mnemo.config import get_settings
+    from mnemo.embedder import HashEmbedder
+
+    async def write(value: str) -> None:
+        conn = await connect(_disposable_test_db)
+        try:
+            await DirectMemory(MnemoStore(conn, HashEmbedder(16))).create(
+                "editor", "is", value, request_id=uuid4()
+            )
+        finally:
+            await conn.close()
+
+    monkeypatch.setenv("MNEMO_DB", _disposable_test_db)
+    get_settings.cache_clear()
+    witness = witness_path(Path(_disposable_test_db))
+    try:
+        asyncio.run(write("vim"))
+        assert cli.main(["verify"]) == 0
+        # A fresh store at the same path: same seq, different history.
+        fresh = Path(_disposable_test_db)
+        for suffix in ("", "-wal", "-shm"):
+            Path(str(fresh) + suffix).unlink(missing_ok=True)
+        asyncio.run(_migrate(fresh))
+        asyncio.run(write("emacs"))
+        capsys.readouterr()
+        assert cli.main(["verify"]) == 1
+        err = capsys.readouterr().err
+        assert "history was rewritten" in err and "delete" in err and witness.name in err
+        witness.unlink()
+        assert cli.main(["verify"]) == 0
+    finally:
+        get_settings.cache_clear()
+
+
+async def _migrate(path: Path) -> None:
+    conn = await connect(path)
+    try:
+        await mdb.apply_migrations(conn)
+    finally:
+        await conn.close()
