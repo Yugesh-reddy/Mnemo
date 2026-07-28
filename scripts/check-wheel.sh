@@ -109,6 +109,9 @@ async def check_stdio():
 asyncio.run(check_stdio())
 print('Installed wheel: direct MCP console entry point, seven tools and JSON errors verified')
 PY
+# Everything above went through the packaged triggers; the chain and the seals agree.
+"$mnemo_wheel_env/venv/bin/mnemo" verify | grep -q "history intact, HEADs consistent"
+echo 'Installed wheel: mnemo verify passed on the store written above'
 
 # The source archive must support the same locked install as a fresh checkout.
 mkdir "$mnemo_wheel_env/source"

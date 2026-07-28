@@ -9,6 +9,10 @@ Someone who rewrites an event and every later hash leaves a self-consistent chai
 catch that, ``mnemo verify`` keeps the head it last verified in a witness file outside
 the store and checks that the chain still passes through it; keep a copy elsewhere
 (``--witness``) for a check that does not rely on the same disk.
+
+A memory's identity (its scope, subject, predicate and key) lives in memory_fact, not
+in its events. Migration 0003 seals each fact the same way, in a second chain over
+those columns, and the witness records that chain's head too.
 """
 
 from __future__ import annotations
@@ -50,14 +54,31 @@ CHAIN_COLUMNS = (
 )
 
 
+# The identity columns of memory_fact, in the order migration 0003's trigger seals them.
+FACT_COLUMNS = (
+    "fact_id",
+    "namespace",
+    "user_id",
+    "agent_id",
+    "session_id",
+    "subject",
+    "predicate",
+    "fact_key",
+    "kind",
+    "created_at",
+    "identity_mode",
+    "identity_ref",
+)
+
+
 def sha256_hex(text: str | bytes | None) -> str:
     """Registered as sha256_hex() on every connection."""
     data = b"" if text is None else text.encode() if isinstance(text, str) else text
     return hashlib.sha256(data).hexdigest()
 
 
-def payload_sql(alias: str) -> str:
-    return "json_array(" + ", ".join(f"{alias}.{c}" for c in CHAIN_COLUMNS) + ")"
+def payload_sql(alias: str, columns: tuple[str, ...] = CHAIN_COLUMNS) -> str:
+    return "json_array(" + ", ".join(f"{alias}.{c}" for c in columns) + ")"
 
 
 def backfill(raw: sqlite3.Connection) -> int:
@@ -71,24 +92,45 @@ def backfill(raw: sqlite3.Connection) -> int:
     return len(links)
 
 
+def seal_existing_facts(raw: sqlite3.Connection) -> int:
+    """Seal the facts stored before migration 0003, in the order they were stored."""
+    rows = raw.execute(
+        f"SELECT fact_id, {payload_sql('f', FACT_COLUMNS)} FROM memory_fact f ORDER BY rowid"
+    )
+    previous, seals = "", []
+    for fact_id, payload in rows:
+        previous = sha256_hex(previous + payload)
+        seals.append((fact_id, previous))
+    raw.executemany("INSERT INTO memory_fact_seal (fact_id, hash) VALUES (?, ?)", seals)
+    return len(seals)
+
+
 @dataclass(frozen=True)
 class Witness:
-    """A chain position verified earlier: the hash of the event at ``seq``."""
+    """A chain position verified earlier: the hash of the event at ``seq``, and the
+    seal of the fact at ``fact_seq`` (absent from witnesses written before migration 0003)."""
 
     seq: int
     hash: str
+    fact_seq: int | None = None
+    fact_hash: str | None = None
 
     @classmethod
     def read(cls, path: Path) -> Witness | None:
+        bad = f"{path} is not a Mnemo witness file (want 'SEQ HASH [FACT_SEQ FACT_HASH]')"
         try:
-            seq, digest = path.read_text().split()
-            witness = cls(int(seq), digest)
+            fields = path.read_text().split()
+            if len(fields) not in (2, 4):
+                raise ValueError(bad)
+            witness = cls(int(fields[0]), fields[1])
+            if len(fields) == 4:
+                witness = cls(witness.seq, witness.hash, int(fields[2]), fields[3])
         except FileNotFoundError:
             return None
         except ValueError as exc:
-            raise ValueError(f"{path} is not a Mnemo witness file (want 'SEQ HASH')") from exc
-        if len(witness.hash) != 64:
-            raise ValueError(f"{path} is not a Mnemo witness file (want 'SEQ HASH')")
+            raise ValueError(bad) from exc
+        if len(witness.hash) != 64 or len(witness.fact_hash or "f" * 64) != 64:
+            raise ValueError(bad)
         return witness
 
     def write(self, path: Path) -> None:
@@ -97,7 +139,8 @@ class Witness:
         temporary = path.with_name(path.name + ".tmp")
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(descriptor, "w") as handle:
-            handle.write(f"{self.seq} {self.hash}\n")
+            facts = f" {self.fact_seq} {self.fact_hash}" if self.fact_hash else ""
+            handle.write(f"{self.seq} {self.hash}{facts}\n")
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
@@ -114,11 +157,17 @@ class Verification:
     head: str | None = None
     """The newest event's hash: keep it to detect a rewrite of the whole chain."""
     head_seq: int | None = None
+    facts: int = 0
+    fact_head: str | None = None
+    """The newest fact seal: the witness keeps it to detect a rewrite of the seals."""
+    fact_head_seq: int | None = None
     problems: list[str] = field(default_factory=list)
 
     @property
     def witness(self) -> Witness | None:
-        return Witness(self.head_seq, self.head) if self.head and self.head_seq else None
+        if not (self.head and self.head_seq):
+            return None
+        return Witness(self.head_seq, self.head, self.fact_head_seq, self.fact_head)
 
     @property
     def ok(self) -> bool:
@@ -158,6 +207,7 @@ async def verify(conn: Connection, since: Witness | None = None) -> Verification
                     f"passes through seq {since.seq} with hash {since.hash[:16]}…"
                     + (" (that event is gone)" if seen is None else "")
                 )
+            seals(conn.raw, result, since)
             orphans = conn.raw.execute(
                 "SELECT c.seq FROM memory_event_chain c "
                 "LEFT JOIN memory_event e ON e.seq = c.seq WHERE e.seq IS NULL"
@@ -180,3 +230,47 @@ async def verify(conn: Connection, since: Witness | None = None) -> Verification
 
         await conn._call(chain)
     return result
+
+
+def seals(raw: sqlite3.Connection, result: Verification, since: Witness | None) -> None:
+    """Recompute the fact seals: a memory's identity changed, deleted or inserted
+    outside Mnemo breaks its seal, and a rewrite of every seal misses the witness."""
+    rows = raw.execute(
+        f"SELECT s.seq, s.fact_id, {payload_sql('f', FACT_COLUMNS)}, f.fact_id, s.hash "
+        "FROM memory_fact_seal s LEFT JOIN memory_fact f ON f.fact_id = s.fact_id "
+        "ORDER BY s.seq"
+    )
+    previous, seen, reported = "", None, 0
+
+    def problem(text: str) -> None:
+        nonlocal reported
+        reported += 1
+        if reported <= 20:
+            result.problems.append(text)
+
+    for seq, fact_id, payload, present, stored in rows:
+        result.facts += 1
+        result.fact_head_seq = seq
+        if present is None:
+            problem(f"memory {fact_id} was deleted outside Mnemo (its seal remains)")
+        elif sha256_hex(previous + payload) != stored:
+            problem(
+                f"memory {fact_id}: its identity (scope, subject, predicate or key) was "
+                "changed outside Mnemo, or an earlier seal was"
+            )
+        previous = stored
+        if since is not None and since.fact_seq == seq:
+            seen = previous
+    result.fact_head = previous or None
+    unsealed = raw.execute(
+        "SELECT f.fact_id FROM memory_fact f "
+        "LEFT JOIN memory_fact_seal s ON s.fact_id = f.fact_id WHERE s.fact_id IS NULL"
+    ).fetchall()
+    for (fact_id,) in unsealed:
+        problem(f"memory {fact_id} has no seal: it was inserted outside Mnemo")
+    if since is not None and since.fact_hash is not None and seen != since.fact_hash:
+        result.problems.append(
+            "memory identities were rewritten since they were last verified: the seals no "
+            f"longer pass through seq {since.fact_seq} with hash {since.fact_hash[:16]}…"
+            + (" (that seal is gone)" if seen is None else "")
+        )

@@ -1,5 +1,12 @@
 # Mnemo — implementation status
 
+## Permanent memory identity (November 20, 2026)
+
+A memory's scope, subject and key can no longer be changed or deleted through SQL, and
+each is sealed in a second hash chain that `mnemo verify` and its witness check
+(migration `0003_fact_identity.sql`, [spec §31](PROJECT_SPEC.md#31-a-memorys-identity-is-permanent--november-20-2026)).
+Stores from 0.1.2 upgrade with their event chain unchanged.
+
 ## On PyPI as `mnemohive` (November 20, 2026)
 
 `uv tool install mnemohive` installs Mnemo; the command is still `mnemo`. The wheel now

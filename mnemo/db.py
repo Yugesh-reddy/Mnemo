@@ -31,8 +31,17 @@ def _chain_existing_events(raw) -> None:
     backfill(raw)
 
 
+def _seal_existing_facts(raw) -> None:
+    from mnemo.chain import seal_existing_facts
+
+    seal_existing_facts(raw)
+
+
 # Python steps that finish a migration inside its transaction.
-_AFTER = {"0002_event_chain.sql": _chain_existing_events}
+_AFTER = {
+    "0002_event_chain.sql": _chain_existing_events,
+    "0003_fact_identity.sql": _seal_existing_facts,
+}
 
 
 def migration_names(migrations_dir: Path = MIGRATIONS_DIR) -> list[str]:
