@@ -8,7 +8,9 @@ vectors from the configured model.
 
 from __future__ import annotations
 
+import os
 import sqlite3
+import stat
 from pathlib import Path
 
 import httpx
@@ -23,6 +25,24 @@ def where(path: Path | str) -> str:
     text = str(path)
     home = str(Path.home())
     return "~" + text[len(home) :] if text.startswith(home + "/") else text
+
+
+def dir_permission_warning(db: Path) -> str | None:
+    """Warn when an existing store directory is accessible by group or others."""
+    if os.name != "posix":
+        return None
+    directory = db.expanduser().parent
+    try:
+        mode = stat.S_IMODE(directory.stat().st_mode)
+    except OSError:
+        return None
+    if mode & 0o077:
+        shown = where(directory)
+        return (
+            f"store directory {shown} has mode {mode:04o} "
+            f"(accessible by group or others); consider `chmod 700 {shown}`"
+        )
+    return None
 
 
 def service_error(exc: BaseException, settings: Settings) -> MnemoError | None:

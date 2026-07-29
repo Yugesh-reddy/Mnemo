@@ -593,3 +593,27 @@ def test_the_ollama_model_and_host_follow_the_agents():
     assert env["MNEMO_EMBED_MODEL"] == "mxbai-embed-large"
     assert env["MNEMO_OLLAMA_HOST"] == "http://gpu-box:11434"
     assert env["MNEMO_EMBED_DIM"] == "1024" and "MNEMO_MODEL_DIR" not in env
+
+
+def test_install_warns_without_chmodding_an_open_store_directory(
+    homes, tmp_path, monkeypatch, capsys
+):
+    import stat
+
+    claude, codex = homes
+    open_dir = tmp_path / "open-store"
+    open_dir.mkdir()
+    open_dir.chmod(0o755)
+    monkeypatch.setenv("MNEMO_DB", str(open_dir / "mnemo.db"))
+    inst.get_settings.cache_clear()
+    try:
+        assert inst.main(args(claude, codex, "--dry-run"), runner=FakeCli()) == 0
+        out = capsys.readouterr().out
+        assert "0755" in out and "chmod 700" in out
+        assert stat.S_IMODE(open_dir.stat().st_mode) == 0o755
+
+        open_dir.chmod(0o700)
+        assert inst.main(args(claude, codex, "--dry-run"), runner=FakeCli()) == 0
+        assert "chmod 700" not in capsys.readouterr().out
+    finally:
+        inst.get_settings.cache_clear()

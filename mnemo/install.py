@@ -638,6 +638,8 @@ def main(
         )
     for note in notes:
         print(f"Note: {note}")
+    if not args.uninstall and (perm_warning := services.dir_permission_warning(settings.db)):
+        print(f"Note: {perm_warning}")
     if checks.pull_model and backend == "local":
         size = LOCAL_MODELS.get(settings.embed_model, (0, 0, 0))[2]
         about = f" (about {size} MB)" if size else ""

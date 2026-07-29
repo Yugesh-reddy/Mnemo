@@ -69,6 +69,20 @@ async def test_a_new_file_is_private_migrated_once_and_in_wal_mode(tmp_path) -> 
     assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
 
 
+async def test_an_existing_store_parent_directory_is_not_chmodded(tmp_path) -> None:
+    existing = tmp_path / "existing"
+    existing.mkdir()
+    existing.chmod(0o755)
+    path = existing / "mnemo.db"
+    conn = await connect(path)
+    try:
+        assert await mdb.apply_migrations(conn)
+    finally:
+        await conn.close()
+    assert stat.S_IMODE(existing.stat().st_mode) == 0o755
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
 async def test_check_schema_names_the_fix(tmp_path) -> None:
     conn = await connect(tmp_path / "empty.db")
     try:

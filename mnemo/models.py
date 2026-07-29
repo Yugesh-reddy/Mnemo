@@ -13,7 +13,7 @@ from decimal import Decimal
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 # A row (mnemo.sqlite.Record) is mapping-like; dict(row) gives .get for optional columns.
 Row = Any
@@ -171,20 +171,6 @@ class Diff(BaseModel):
     seq_a: int
     seq_b: int
     entries: list[DiffEntry]
-
-
-class ExtractedFact(BaseModel):
-    """A candidate fact from the (untrusted) extractor — validated before use."""
-
-    subject: str
-    predicate: str
-    object: Any
-    kind: str = "triple"
-    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
-    importance: int = Field(default=5, ge=1, le=10)
-    assertion_type: str = "agent_inference"
-    evidence: str | None = Field(default=None, min_length=1)
-    """Untrusted quote hint; the worker checks it against the original input."""
 
 
 class MutationResult(BaseModel):

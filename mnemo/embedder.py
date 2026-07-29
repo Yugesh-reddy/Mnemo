@@ -175,7 +175,7 @@ def private_dirs(path: Path) -> None:
         missing.append(path)
         path = path.parent
     for directory in reversed(missing):
-        directory.mkdir(mode=0o700)
+        directory.mkdir(mode=0o700, exist_ok=True)
 
 
 def local_model_ready(model: str, cache_dir: Path) -> bool:

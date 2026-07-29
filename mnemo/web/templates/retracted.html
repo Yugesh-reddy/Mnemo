@@ -25,8 +25,8 @@
     </thead>
     <tbody>
       {% for r in items %}
-      <tr class="border-t hover:bg-slate-50 cursor-pointer" onclick="window.location='/fact/{{ r.fact_id }}'">
-        <td class="px-4 py-2.5"><a href="/fact/{{ r.fact_id }}">{{ r.subject }}</a></td>
+      <tr class="border-t hover:bg-slate-50 cursor-pointer" onclick="window.location='{{ url_for_scope('/fact/' ~ r.fact_id) }}'">
+        <td class="px-4 py-2.5"><a href="{{ url_for_scope('/fact/' ~ r.fact_id) }}">{{ r.subject }}</a></td>
         <td class="py-2.5">{{ r.predicate }}</td>
         <td class="py-2.5 mono text-slate-500 line-through">{{ r.value }}</td>
         <td class="py-2.5">{{ trust_badge(r.trust_level) }}</td>

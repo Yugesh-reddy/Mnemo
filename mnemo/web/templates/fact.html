@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macros.html" import trust_badge %}
 {% block content %}
-<a href="/" class="text-sm text-slate-500 hover:text-indigo-600">← back to memory</a>
+<a href="{{ url_for_scope('/') }}" class="text-sm text-slate-500 hover:text-indigo-600">← back to memory</a>
 
 {% if message %}
 <div role="alert" class="mt-4 border border-amber-300 bg-amber-50 text-amber-900 rounded-lg p-4">
@@ -20,7 +20,7 @@
   {% if correctable %}
   <label for="manual-correction" class="block mt-5 text-sm font-medium">Manual correction</label>
   <p class="text-xs text-slate-500 mt-1">Enter a value you have verified. This records your human review.</p>
-  <form method="post" action="/fact/{{ fact_id }}/edit" class="mt-2 flex gap-2">
+  <form method="post" action="{{ url_for_scope('/fact/' ~ fact_id ~ '/edit') }}" class="mt-2 flex gap-2">
     <input type="hidden" name="expected_event_id" value="{{ head_id }}">
     <input type="hidden" name="request_id" value="{{ correction_id }}">
     <input id="manual-correction" name="value" required placeholder="Corrected value…"
@@ -54,7 +54,7 @@
       {% if e.event_id == head_id %}
         <span class="text-xs text-slate-400">{{ 'retraction' if retracted else 'current' }}</span>
       {% elif e.event_id in request_ids %}
-        <form method="post" action="/fact/{{ fact_id }}/revert/{{ e.event_id }}">
+        <form method="post" action="{{ url_for_scope('/fact/' ~ fact_id ~ '/revert/' ~ e.event_id) }}">
           <input type="hidden" name="expected_event_id" value="{{ head_id }}">
           <input type="hidden" name="request_id" value="{{ request_ids[e.event_id] }}">
           <button class="text-xs px-2 py-1 rounded border hover:bg-indigo-50 hover:border-indigo-300">Revert to this</button>

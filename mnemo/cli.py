@@ -43,7 +43,7 @@ def serve_ui(port: int) -> int:
 async def _verify(witness: Path | None) -> int:
     from mnemo.chain import Witness, verify, witness_path
     from mnemo.db import check_schema, connect
-    from mnemo.services import where
+    from mnemo.services import dir_permission_warning, where
 
     conn = await connect(create=False)
     store = where(conn.path)
@@ -81,6 +81,8 @@ async def _verify(witness: Path | None) -> int:
     if result.witness is not None:
         result.witness.write(witness)
         print(f"     recorded in {where(witness)}; keep a copy elsewhere to catch a rewrite")
+    if warning := dir_permission_warning(conn.path):
+        print(f"warn {warning}")
     return 0
 
 

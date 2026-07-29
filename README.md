@@ -284,11 +284,14 @@ from the Postgres version ([spec §16](https://github.com/Yugesh-reddy/Mnemo/blo
 ## Review memory in the browser
 
 ```bash
-make ui                                                        # global memories
-MNEMO_NAMESPACE='default@github.com/you/your-repo' make ui      # one project's memories
-# installed as a tool: mnemo ui (same MNEMO_NAMESPACE)
+make ui            # installed as a tool: mnemo ui
 # then open http://127.0.0.1:8000
 ```
+
+The page opens on the global memories; the **Scope** menu in the header lists every
+project that has memories in the store, and the choice stays in the address
+(`?scope=…`) on every page. A correction or restore always applies to the scope the
+memory belongs to.
 
 A project's scope is `<MNEMO_NAMESPACE>@<project>`, where the project is the
 repository's remote in lower case (for example `github.com/you/your-repo`), or

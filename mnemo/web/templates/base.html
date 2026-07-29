@@ -13,13 +13,23 @@
 </head>
 <body class="bg-slate-50 text-slate-800">
   <header class="border-b bg-white">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-6">
-      <a href="/" class="font-semibold text-lg">Mnemo
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-6 flex-wrap">
+      <a href="{{ url_for_scope('/') }}" class="font-semibold text-lg">Mnemo
         <span class="text-slate-400 font-normal text-sm">— git for agent memory</span></a>
+      <label class="flex items-center gap-2 text-sm text-slate-500">
+        <span>Scope</span>
+        <select name="scope" aria-label="Scope"
+          onchange="window.location=this.value"
+          class="border rounded px-2 py-1 text-sm mono bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          {% for opt in scopes %}
+          <option value="{{ opt.url }}" data-scope="{{ opt.value }}" {{ 'selected' if opt.value == scope }}>{{ opt.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
       <nav class="ml-auto flex gap-4 text-sm">
-        <a href="/" class="hover:text-indigo-600">Memory</a>
-        <a href="/retracted" class="hover:text-indigo-600">Retracted</a>
-        <a href="/diff" class="hover:text-indigo-600">Diff</a>
+        <a href="{{ url_for_scope('/') }}" class="hover:text-indigo-600">Memory</a>
+        <a href="{{ url_for_scope('/retracted') }}" class="hover:text-indigo-600">Retracted</a>
+        <a href="{{ url_for_scope('/diff') }}" class="hover:text-indigo-600">Diff</a>
       </nav>
     </div>
   </header>

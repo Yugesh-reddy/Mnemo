@@ -391,3 +391,214 @@ async def test_writes_from_another_site_are_refused(store, web_client):
     assert (await store.get(first.fact_id)).value == "vim"
     own = await web_client.post(action, data=data, headers={"origin": "http://t"})
     assert own.status_code == 303 and (await store.get(first.fact_id)).value == "emacs"
+
+
+async def test_scope_switcher_lists_scopes_with_readable_labels_and_keeps_default(
+    db: Connection, fake_embedder, web_client
+):
+    global_store = MnemoStore(db, fake_embedder, namespace="default")
+    remote_ns = "default@github.com/acme/widget"
+    local_ns = "default@path:/Users/me/code/local-app"
+    remote_store = MnemoStore(db, fake_embedder, namespace=remote_ns)
+    local_store = MnemoStore(db, fake_embedder, namespace=local_ns)
+
+    await global_store.add("user", "editor", "neovim")
+    remote_event = await remote_store.add("project", "test_command", "pytest -q")
+    await local_store.add("project", "build_tool", "cargo")
+
+    # No scope parameter keeps the existing default (global).
+    home = await web_client.get("/")
+    assert home.status_code == 200
+    assert "neovim" in home.text
+    assert "pytest -q" not in home.text and "cargo" not in home.text
+    assert ">global</option>" in home.text
+    assert ">github.com/acme/widget</option>" in home.text
+    assert ">/Users/me/code/local-app</option>" in home.text
+    assert f'data-scope="{remote_ns}"' in home.text
+    assert f'data-scope="{local_ns}"' in home.text
+
+    # Switching to a remote project scope shows only its memories and carries scope everywhere.
+    proj = await web_client.get("/", params={"scope": remote_ns})
+    assert proj.status_code == 200
+    assert "pytest -q" in proj.text
+    assert "neovim" not in proj.text and "cargo" not in proj.text
+    encoded = "scope=default%40github.com%2Facme%2Fwidget"
+    assert f'href="/retracted?{encoded}"' in proj.text
+    assert f'href="/diff?{encoded}"' in proj.text
+    assert f'hx-get="/rows?{encoded}"' in proj.text
+    assert f"/fact/{remote_event.fact_id}?{encoded}" in proj.text
+
+    # HTMX search endpoint stays in the chosen scope.
+    rows = await web_client.get("/rows", params={"scope": remote_ns, "q": "test_command"})
+    assert rows.status_code == 200
+    assert "pytest -q" in rows.text and "neovim" not in rows.text
+    assert f"/fact/{remote_event.fact_id}?{encoded}" in rows.text
+
+    # Local path scope strips the path: prefix for its label and filters cleanly.
+    local_page = await web_client.get("/", params={"scope": local_ns})
+    assert local_page.status_code == 200
+    assert "cargo" in local_page.text and "pytest -q" not in local_page.text
+
+
+async def test_retracted_and_diff_stay_in_chosen_scope(db: Connection, fake_embedder, web_client):
+    global_store = MnemoStore(db, fake_embedder, namespace="default")
+    project_ns = "default@github.com/acme/widget"
+    project_store = MnemoStore(db, fake_embedder, namespace=project_ns)
+
+    gd, pd = DirectMemory(global_store), DirectMemory(project_store)
+    g_fact = await gd.create("user", "shell", "bash", request_id=uuid4())
+    await gd.retract(g_fact.fact_id, expected_event_id=g_fact.event_id, request_id=uuid4())
+    p_fact = await pd.create("deploy", "target", "staging", request_id=uuid4())
+    await pd.retract(p_fact.fact_id, expected_event_id=p_fact.event_id, request_id=uuid4())
+
+    encoded = "scope=default%40github.com%2Facme%2Fwidget"
+    default_retracted = await web_client.get("/retracted")
+    assert default_retracted.status_code == 200
+    assert "bash" in default_retracted.text and "staging" not in default_retracted.text
+
+    proj_retracted = await web_client.get("/retracted", params={"scope": project_ns})
+    assert proj_retracted.status_code == 200
+    assert "staging" in proj_retracted.text and "bash" not in proj_retracted.text
+    assert f"/fact/{p_fact.fact_id}?{encoded}" in proj_retracted.text
+
+    # Snapshots and diffs stay scoped.
+    g_commit = await global_store.commit("global-1")
+    await project_store.add("project", "linter", "flake8")
+    r1 = await web_client.post("/commit", params={"scope": project_ns}, data={"label": "before"})
+    assert r1.status_code == 303 and r1.headers["location"] == f"/diff?{encoded}"
+    await project_store.add("project", "linter", "ruff")
+    r2 = await web_client.post("/commit", params={"scope": project_ns}, data={"label": "after"})
+    assert r2.status_code == 303 and r2.headers["location"] == f"/diff?{encoded}"
+
+    commits = await project_store.list_commits()
+    assert len(commits) == 2
+    assert len(await global_store.list_commits()) == 1
+
+    diff_page = await web_client.get(
+        "/diff",
+        params={
+            "scope": project_ns,
+            "a": str(commits[1].commit_id),
+            "b": str(commits[0].commit_id),
+        },
+    )
+    assert diff_page.status_code == 200
+    assert "flake8" in diff_page.text and "ruff" in diff_page.text
+    assert f'<input type="hidden" name="scope" value="{project_ns}">' in diff_page.text
+    assert f'action="/commit?{encoded}"' in diff_page.text
+    assert "global-1" not in diff_page.text
+
+    # A commit from another scope is rejected cleanly with 400.
+    cross = await web_client.get(
+        "/diff",
+        params={"scope": project_ns, "a": str(g_commit.commit_id), "b": str(commits[0].commit_id)},
+    )
+    assert cross.status_code == 400 and "Pick two snapshots" in cross.text
+
+
+async def test_fact_correction_and_restore_use_facts_actual_scope(
+    db: Connection, fake_embedder, web_client
+):
+    project_ns = "default@github.com/acme/widget"
+    project_store = MnemoStore(db, fake_embedder, namespace=project_ns)
+    e1 = await project_store.add("project", "database", "PostgreSQL")
+    e2 = await project_store.add("project", "database", "MySQL")
+    encoded = "scope=default%40github.com%2Facme%2Fwidget"
+
+    # Viewing the fact in its scope shows its history and scoped forms.
+    page = await web_client.get(f"/fact/{e1.fact_id}", params={"scope": project_ns})
+    assert page.status_code == 200
+    assert "MySQL" in page.text and "PostgreSQL" in page.text
+    assert f'href="/?{encoded}"' in page.text
+    forms = Forms(page.text).forms
+    edit_action = f"/fact/{e1.fact_id}/edit?{encoded}"
+    revert_action = f"/fact/{e1.fact_id}/revert/{e1.event_id}?{encoded}"
+    assert edit_action in forms and revert_action in forms
+
+    # Cross-site POST on a scoped form is still refused with 403.
+    evil = await web_client.post(
+        edit_action,
+        data={**forms[edit_action], "value": "Oracle"},
+        headers={"origin": "https://evil.example"},
+    )
+    assert evil.status_code == 403
+    assert (await project_store.get(e1.fact_id)).value == "MySQL"
+
+    # Guarded correction in project scope succeeds and redirects back to project scope.
+    edited = await web_client.post(edit_action, data={**forms[edit_action], "value": "SQLite"})
+    assert edited.status_code == 303
+    assert edited.headers["location"] == f"/fact/{e1.fact_id}?{encoded}"
+    assert (await project_store.get(e1.fact_id)).value == "SQLite"
+    receipt_ns = await db.fetchval(
+        "SELECT namespace FROM memory_mutation_receipt WHERE fact_id=?1", e1.fact_id
+    )
+    assert receipt_ns == project_ns
+
+    # Stale revert form still returns 409 with refreshed scoped forms and writes nothing.
+    stale = await web_client.post(revert_action, data=forms[revert_action])
+    assert stale.status_code == 409
+    assert "SQLite" in stale.text
+    refreshed = Forms(stale.text).forms[revert_action]
+    assert refreshed["expected_event_id"] != str(e2.event_id)
+
+    # Restore works even when posted without ?scope= (uses the fact's actual scope).
+    restored = await web_client.post(f"/fact/{e1.fact_id}/revert/{e1.event_id}", data=refreshed)
+    assert restored.status_code == 303
+    assert restored.headers["location"] == f"/fact/{e1.fact_id}?{encoded}"
+    assert (await project_store.get(e1.fact_id)).value == "PostgreSQL"
+
+    # Correction posted with another valid scope (?scope=default) still writes in the fact's scope.
+    current = await project_store.get(e1.fact_id)
+    direct_edit = await web_client.post(
+        f"/fact/{e1.fact_id}/edit",
+        params={"scope": "default"},
+        data={
+            "value": "DuckDB",
+            "expected_event_id": str(current.event_id),
+            "request_id": str(uuid4()),
+        },
+    )
+    assert direct_edit.status_code == 303
+    assert direct_edit.headers["location"] == f"/fact/{e1.fact_id}?{encoded}"
+    assert (await project_store.get(e1.fact_id)).value == "DuckDB"
+
+
+async def test_unknown_scope_returns_400_without_writing(store, web_client, db):
+    first = await store.add("user", "editor", "vim")
+    bad = "<script>nope</script>"
+
+    for path in ("/", "/rows", "/retracted", "/diff", f"/fact/{first.fact_id}"):
+        response = await web_client.get(path, params={"scope": bad})
+        assert response.status_code == 400, path
+        assert "Unknown scope" in response.text
+        assert "<script>nope</script>" not in response.text
+
+    edit = await web_client.post(
+        f"/fact/{first.fact_id}/edit",
+        params={"scope": "no-such-scope"},
+        data={
+            "value": "emacs",
+            "expected_event_id": str(first.event_id),
+            "request_id": str(uuid4()),
+        },
+    )
+    assert edit.status_code == 400 and "Unknown scope" in edit.text
+
+    revert = await web_client.post(
+        f"/fact/{first.fact_id}/revert/{first.event_id}",
+        params={"scope": "no-such-scope"},
+        data={
+            "expected_event_id": str(first.event_id),
+            "request_id": str(uuid4()),
+        },
+    )
+    assert revert.status_code == 400 and "Unknown scope" in revert.text
+
+    commit = await web_client.post(
+        "/commit", params={"scope": "no-such-scope"}, data={"label": "x"}
+    )
+    assert commit.status_code == 400 and "Unknown scope" in commit.text
+
+    assert (await store.get(first.fact_id)).value == "vim"
+    assert await db.fetchval("SELECT count(*) FROM memory_commit") == 0
+    assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0

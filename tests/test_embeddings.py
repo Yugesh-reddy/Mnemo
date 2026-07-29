@@ -264,10 +264,14 @@ def test_mnemo_directories_are_private_however_they_are_created(tmp_path) -> Non
 
     from mnemo.embedder import private_dirs
 
-    private_dirs(tmp_path / "home" / ".mnemo" / "models")
+    existing = tmp_path / "existing"
+    existing.mkdir()
+    existing.chmod(0o755)
+    private_dirs(existing / "home" / ".mnemo" / "models")
+    assert stat.S_IMODE(existing.stat().st_mode) == 0o755
     for path in (
-        tmp_path / "home",
-        tmp_path / "home" / ".mnemo",
-        tmp_path / "home" / ".mnemo" / "models",
+        existing / "home",
+        existing / "home" / ".mnemo",
+        existing / "home" / ".mnemo" / "models",
     ):
         assert stat.S_IMODE(path.stat().st_mode) == 0o700

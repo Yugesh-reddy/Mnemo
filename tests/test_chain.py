@@ -296,6 +296,52 @@ def test_witness_files_round_trip_privately(tmp_path):
         Witness.read(path)
 
 
+def test_witness_creates_missing_parent_dirs_0700_and_leaves_existing_alone(tmp_path):
+    import stat
+
+    nested = tmp_path / "new" / "witness" / "mnemo.db.verified"
+    Witness(1, "a" * 64).write(nested)
+    assert stat.S_IMODE((tmp_path / "new").stat().st_mode) == 0o700
+    assert stat.S_IMODE((tmp_path / "new" / "witness").stat().st_mode) == 0o700
+    assert stat.S_IMODE(nested.stat().st_mode) == 0o600
+
+    existing = tmp_path / "shared"
+    existing.mkdir()
+    existing.chmod(0o755)
+    Witness(2, "b" * 64).write(existing / "mnemo.db.verified")
+    assert stat.S_IMODE(existing.stat().st_mode) == 0o755
+    assert stat.S_IMODE((existing / "mnemo.db.verified").stat().st_mode) == 0o600
+
+
+def test_verify_warns_without_chmodding_an_open_store_directory(
+    tmp_path, _migrated_template, monkeypatch, capsys
+):
+    import stat
+
+    import mnemo.cli as cli
+    from mnemo.config import get_settings
+
+    open_dir = tmp_path / "open"
+    open_dir.mkdir()
+    open_dir.chmod(0o755)
+    db_path = open_dir / "mnemo.db"
+    shutil.copyfile(_migrated_template, db_path)
+    db_path.chmod(0o600)
+    monkeypatch.setenv("MNEMO_DB", str(db_path))
+    get_settings.cache_clear()
+    try:
+        assert cli.main(["verify"]) == 0
+        out = capsys.readouterr().out
+        assert "warn" in out and "0755" in out and "chmod 700" in out
+        assert stat.S_IMODE(open_dir.stat().st_mode) == 0o755
+
+        open_dir.chmod(0o700)
+        assert cli.main(["verify"]) == 0
+        assert "chmod 700" not in capsys.readouterr().out
+    finally:
+        get_settings.cache_clear()
+
+
 def test_a_recreated_store_names_the_way_out(_disposable_test_db, monkeypatch, capsys):
     import asyncio
 

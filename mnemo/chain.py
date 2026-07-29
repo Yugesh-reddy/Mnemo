@@ -135,7 +135,9 @@ class Witness:
 
     def write(self, path: Path) -> None:
         """Replace the file atomically, readable only by its owner."""
-        path.parent.mkdir(parents=True, exist_ok=True)
+        from mnemo.embedder import private_dirs
+
+        private_dirs(path.parent)
         temporary = path.with_name(path.name + ".tmp")
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(descriptor, "w") as handle:

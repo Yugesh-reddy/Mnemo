@@ -6,7 +6,7 @@
 <div role="alert" class="mb-4 border border-amber-300 bg-amber-50 text-amber-900 rounded-lg p-4">{{ message }}</div>
 {% endif %}
 
-<form method="post" action="/commit" class="mb-5 flex gap-2 items-center">
+<form method="post" action="{{ url_for_scope('/commit') }}" class="mb-5 flex gap-2 items-center">
   <input name="label" placeholder="snapshot label (optional)"
     class="border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
   <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-700">Snapshot now</button>
@@ -15,6 +15,9 @@
 
 {% if commits|length >= 2 %}
 <form method="get" action="/diff" class="flex gap-3 items-end mb-6">
+  {% if scope != default_scope %}
+  <input type="hidden" name="scope" value="{{ scope }}">
+  {% endif %}
   <label class="text-sm text-slate-600">From
     <select name="a" class="block border rounded px-2 py-1.5 text-sm mono mt-1">
       {% for c in commits %}

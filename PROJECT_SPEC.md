@@ -900,3 +900,19 @@ request to finish the pending work.
   witness becomes `SEQ HASH FACT_SEQ FACT_HASH`; a two-field witness from before this
   migration still reads, and the next successful run adds the seal head. Rewriting a
   fact and every later seal is caught by the witness, as for events.
+
+## 32. Web UI scopes and store permissions — November 20, 2026
+
+- **Scope switcher.** The web UI lists the namespaces that hold memories or snapshots
+  for the configured user and agent, the configured one (normally the global lane)
+  first, labelled `global` or by project (the remote, or the path without `path:`).
+  `?scope=<namespace>` selects one on every page, link, form and redirect, and is left
+  out for the configured namespace. An unknown scope returns HTTP 400 and writes
+  nothing. Correction and restore run in the namespace the memory belongs to,
+  whatever the page's scope, so their receipts land in the right scope.
+- **Private directories.** Mnemo already created the store's directory with mode 0700;
+  the witness file's directory (`--witness` elsewhere) now is too. Mnemo never changes
+  the mode of an existing directory: `mnemo verify` and `mnemo install` print a
+  warning with the `chmod 700` to run when the store's directory is readable by group
+  or others.
+- **Dead code.** `ExtractedFact`, the archived extractor's candidate model, is gone.

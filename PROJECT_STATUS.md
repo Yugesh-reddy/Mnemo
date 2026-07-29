@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## Web UI scopes (November 20, 2026)
+
+The web UI's **Scope** menu switches between the global memories and each project's;
+`mnemo verify` and `mnemo install` warn when the store's directory is readable by other
+users ([spec §32](PROJECT_SPEC.md#32-web-ui-scopes-and-store-permissions--november-20-2026)).
+
 ## Permanent memory identity (November 20, 2026)
 
 A memory's scope, subject and key can no longer be changed or deleted through SQL, and
