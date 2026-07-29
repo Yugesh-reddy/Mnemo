@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1fbbc-1be5-7922-8642-65513ef990e9"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"YES — certificate verification protects against server impersonation and man-in-the-middle attacks."}}
+{"type":"turn.completed","usage":{"input_tokens":17093,"cached_input_tokens":16128,"cache_write_input_tokens":0,"output_tokens":156,"reasoning_output_tokens":134}}
