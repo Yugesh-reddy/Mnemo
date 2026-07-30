@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import sqlite3
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -119,19 +120,18 @@ class Witness:
     def read(cls, path: Path) -> Witness | None:
         bad = f"{path} is not a Mnemo witness file (want 'SEQ HASH [FACT_SEQ FACT_HASH]')"
         try:
-            fields = path.read_text().split()
-            if len(fields) not in (2, 4):
-                raise ValueError(bad)
-            witness = cls(int(fields[0]), fields[1])
-            if len(fields) == 4:
-                witness = cls(witness.seq, witness.hash, int(fields[2]), fields[3])
+            lines = [line for line in path.read_text().splitlines() if line.strip()]
         except FileNotFoundError:
             return None
-        except ValueError as exc:
-            raise ValueError(bad) from exc
-        if len(witness.hash) != 64 or len(witness.fact_hash or "f" * 64) != 64:
+        fields = lines[0].split() if len(lines) == 1 else []
+        if len(fields) not in (2, 4) or not all(
+            re.fullmatch(r"[1-9][0-9]*", seq) and re.fullmatch(r"[0-9a-f]{64}", digest)
+            for seq, digest in zip(fields[::2], fields[1::2], strict=True)
+        ):
             raise ValueError(bad)
-        return witness
+        if len(fields) == 2:
+            return cls(int(fields[0]), fields[1])
+        return cls(int(fields[0]), fields[1], int(fields[2]), fields[3])
 
     def write(self, path: Path) -> None:
         """Replace the file atomically, readable only by its owner."""
@@ -141,7 +141,8 @@ class Witness:
         temporary = path.with_name(path.name + ".tmp")
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(descriptor, "w") as handle:
-            facts = f" {self.fact_seq} {self.fact_hash}" if self.fact_hash else ""
+            sealed = self.fact_seq is not None and self.fact_hash is not None
+            facts = f" {self.fact_seq} {self.fact_hash}" if sealed else ""
             handle.write(f"{self.seq} {self.hash}{facts}\n")
             handle.flush()
             os.fsync(handle.fileno())
@@ -223,12 +224,24 @@ async def verify(conn: Connection, since: Witness | None = None) -> Verification
                   SELECT max(seq) FROM memory_event WHERE fact_id = f.fact_id)
                 """).fetchall()
             for fact_id, status, current, newest, op in heads:
+                expected = {"INVALIDATE": "invalidated", "DELETE": "deleted"}.get(op, "active")
                 if current != newest:
                     result.problems.append(f"memory {fact_id}: HEAD is not its newest event")
-                elif (status == "invalidated") != (op == "INVALIDATE"):
+                elif status != expected:
                     result.problems.append(
                         f"memory {fact_id}: status {status!r} disagrees with its HEAD ({op})"
                     )
+            stranded = conn.raw.execute(
+                "SELECT 'event seq ' || e.seq, e.fact_id FROM memory_event e "
+                "LEFT JOIN memory_fact f ON f.fact_id = e.fact_id WHERE f.fact_id IS NULL "
+                "UNION ALL "
+                "SELECT 'receipt ' || r.receipt_id, r.fact_id FROM memory_mutation_receipt r "
+                "LEFT JOIN memory_fact f ON f.fact_id = r.fact_id WHERE f.fact_id IS NULL"
+            ).fetchall()
+            for row, fact_id in stranded[:20]:
+                result.problems.append(
+                    f"{row} belongs to memory {fact_id}, which was deleted outside Mnemo"
+                )
 
         await conn._call(chain)
     return result
@@ -268,8 +281,8 @@ def seals(raw: sqlite3.Connection, result: Verification, since: Witness | None) 
         "SELECT f.fact_id FROM memory_fact f "
         "LEFT JOIN memory_fact_seal s ON s.fact_id = f.fact_id WHERE s.fact_id IS NULL"
     ).fetchall()
-    for (fact_id,) in unsealed:
-        problem(f"memory {fact_id} has no seal: it was inserted outside Mnemo")
+    for (fact_id,) in unsealed[:20]:  # counted apart, so seal problems cannot hide them
+        result.problems.append(f"memory {fact_id} has no seal: it was inserted outside Mnemo")
     if since is not None and since.fact_hash is not None and seen != since.fact_hash:
         result.problems.append(
             "memory identities were rewritten since they were last verified: the seals no "

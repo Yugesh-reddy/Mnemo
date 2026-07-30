@@ -42,7 +42,10 @@ TABLES = {
     "receipts": "memory_mutation_receipt",
 }
 ORDER = {
-    "facts": "f.created_at, f.fact_id",
+    # In the order the facts were sealed, so a whole-store import seals them the same
+    # way and verifies against the source's witness.
+    "facts": "(SELECT s.seq FROM memory_fact_seal s WHERE s.fact_id = f.fact_id), "
+    "f.created_at, f.fact_id",
     "events": "e.seq",
     "commits": "c.at_seq, c.created_at, c.commit_id",
     "receipts": "r.created_at, r.receipt_id",

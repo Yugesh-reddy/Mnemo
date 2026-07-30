@@ -6,8 +6,11 @@
 -- another project or change its subject without touching an event, so neither the
 -- append-only guards nor the event chain noticed.
 --
--- The triggers below reject such updates and any DELETE; status and current_event_id
--- remain the only columns Mnemo changes. Each fact also gets a seal: SHA-256 over the
+-- The triggers below reject such updates, any DELETE, an INSERT OR REPLACE over an
+-- existing fact, and any status but 'active' and 'invalidated' (nothing has ever
+-- written 'deleted'; setting it would hide a memory from every read). status and
+-- current_event_id remain the only columns Mnemo changes, and `mnemo verify` checks
+-- both against the memory's newest event. Each fact also gets a seal: SHA-256 over the
 -- previous seal and a json_array() of its identity columns, in the same order as
 -- mnemo/chain.py's FACT_COLUMNS, so `mnemo verify` notices a change made around the
 -- triggers, and its witness notices a rewrite of every later seal. Existing facts are
@@ -28,6 +31,18 @@ WHEN NEW.fact_id IS NOT OLD.fact_id
   OR NEW.identity_ref IS NOT OLD.identity_ref
 BEGIN
   SELECT RAISE(ABORT, 'memory_fact identity is immutable');
+END;
+
+CREATE TRIGGER memory_fact_status_guard BEFORE UPDATE OF status ON memory_fact
+WHEN NEW.status NOT IN ('active', 'invalidated')
+BEGIN
+  SELECT RAISE(ABORT, 'memory_fact status is active or invalidated; retract the memory instead');
+END;
+
+CREATE TRIGGER memory_fact_no_replace BEFORE INSERT ON memory_fact
+WHEN EXISTS (SELECT 1 FROM memory_fact WHERE fact_id = NEW.fact_id)
+BEGIN
+  SELECT RAISE(ABORT, 'memory_fact rows are permanent; retract the memory instead');
 END;
 
 CREATE TRIGGER memory_fact_no_delete BEFORE DELETE ON memory_fact

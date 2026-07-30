@@ -56,13 +56,18 @@ def test_the_seal_and_the_guard_cover_exactly_the_identity_columns():
         "UPDATE memory_fact SET fact_key='x'",
         "UPDATE memory_fact SET session_id='s1'",
         "DELETE FROM memory_fact",
+        "UPDATE memory_fact SET status='deleted'",
+        "INSERT OR REPLACE INTO memory_fact (fact_id, subject, predicate, fact_key) "
+        "SELECT fact_id, 'x', 'y', 'x|y' FROM memory_fact LIMIT 1",
         "UPDATE memory_fact_seal SET hash='" + "0" * 64 + "'",
         "DELETE FROM memory_fact_seal",
     ],
 )
 async def test_sql_cannot_move_rename_or_delete_a_memory(store, db, statement):
     await history(store)
-    with pytest.raises(sqlite3.IntegrityError, match="immutable|permanent|append-only"):
+    with pytest.raises(
+        sqlite3.IntegrityError, match="immutable|permanent|append-only|active or invalidated"
+    ):
         await db.execute(statement)
 
 
@@ -109,6 +114,63 @@ async def test_deleted_and_smuggled_facts_fail_verify(_disposable_test_db, fake_
     finally:
         await conn.close()
     assert [p for p in problems if "was deleted outside Mnemo (its seal remains)" in p]
+    assert [p for p in problems if "has no seal" in p]
+
+
+async def test_a_memory_hidden_or_stranded_around_the_triggers_fails_verify(
+    _disposable_test_db, fake_embedder
+):
+    conn = await connect(_disposable_test_db)
+    try:
+        d = await history(MnemoStore(conn, fake_embedder))
+        kept = await d.create("editor", "is", "vim", request_id=uuid4())
+        before = (await verify(conn)).witness
+    finally:
+        await conn.close()
+    # Hide one memory by status, and delete another with its seal (the newest one, so
+    # no later seal needs recomputing); its events and receipt stay behind.
+    around_mnemo(
+        _disposable_test_db,
+        "PRAGMA foreign_keys=OFF",
+        "UPDATE memory_fact SET status='deleted' WHERE rowid=1",
+        f"DELETE FROM memory_fact_seal WHERE fact_id='{kept.fact_id}'",
+        f"DELETE FROM memory_fact WHERE fact_id='{kept.fact_id}'",
+    )
+    conn = await connect(_disposable_test_db)
+    try:
+        problems = (await verify(conn)).problems
+        witnessed = (await verify(conn, before)).problems
+    finally:
+        await conn.close()
+    assert set(problems) < set(witnessed)
+    assert [p for p in witnessed if "(that seal is gone)" in p]
+    assert [p for p in problems if "status 'deleted' disagrees with its HEAD" in p]
+    assert [p for p in problems if p.startswith("event seq 6 belongs to memory")]
+    assert [p for p in problems if p.startswith("receipt ") and "deleted outside Mnemo" in p]
+
+
+async def test_unsealed_facts_are_reported_past_the_seal_problems(
+    _disposable_test_db, fake_embedder
+):
+    conn = await connect(_disposable_test_db)
+    try:
+        d = DirectMemory(MnemoStore(conn, fake_embedder))
+        for n in range(22):
+            await d.create(f"tool{n}", "is", "x", request_id=uuid4())
+    finally:
+        await conn.close()
+    around_mnemo(
+        _disposable_test_db,
+        "UPDATE memory_fact SET subject = subject || '!'",
+        "INSERT INTO memory_fact (fact_id, subject, predicate, fact_key, created_at) "
+        "VALUES ('" + str(uuid4()) + "', 's', 'p', 's|p', 'x')",
+    )
+    conn = await connect(_disposable_test_db)
+    try:
+        problems = (await verify(conn)).problems
+    finally:
+        await conn.close()
+    assert len([p for p in problems if "identity" in p]) == 20
     assert [p for p in problems if "has no seal" in p]
 
 
@@ -168,6 +230,32 @@ async def test_a_0_1_2_store_upgrades_with_its_chain_unchanged(tmp_path, fake_em
         await conn.close()
 
 
+async def test_an_import_seals_in_the_source_order(_migrated_template, tmp_path, fake_embedder):
+    """Two facts written in one transaction share created_at; the later one has the
+    smaller ID. The import must still seal them in the source's order."""
+    from mnemo.transfer import export_store, import_store
+
+    paths = [tmp_path / "a.db", tmp_path / "b.db"]
+    for path in paths:
+        shutil.copyfile(_migrated_template, path)
+    source, destination = [await connect(path) for path in paths]
+    try:
+        async with source.transaction():
+            for fact_id, subject in (("f" * 8, "zeta"), ("0" * 8, "alpha")):
+                await source.execute(
+                    "INSERT INTO memory_fact (fact_id, subject, predicate, fact_key) "
+                    "VALUES (?1 || '-0000-4000-8000-000000000000', ?2, 'is', ?2 || '|is')",
+                    fact_id,
+                    subject,
+                )
+        await import_store(destination, await export_store(source, scope=None))
+        a, b = await verify(source), await verify(destination)
+        assert b.fact_head == a.fact_head and (await verify(destination, a.witness)).ok
+    finally:
+        await source.close()
+        await destination.close()
+
+
 async def test_an_imported_store_is_sealed(_migrated_template, tmp_path, fake_embedder):
     from mnemo.transfer import export_store, import_store
 
@@ -183,6 +271,30 @@ async def test_an_imported_store_is_sealed(_migrated_template, tmp_path, fake_em
     finally:
         await source.close()
         await destination.close()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        f"1 {'a' * 64}\n2 {'b' * 64}\n",  # two witnesses appended, not one with seals
+        f"1 {'z' * 64}",
+        f"0 {'a' * 64}",
+        f"-1 {'a' * 64}",
+        f"1 {'a' * 64} None {'b' * 64}",
+        f"1 {'a' * 64} 2",
+    ],
+)
+def test_malformed_witness_files_are_refused(tmp_path, text):
+    path = tmp_path / "mnemo.db.verified"
+    path.write_text(text)
+    with pytest.raises(ValueError, match="not a Mnemo witness file"):
+        Witness.read(path)
+
+
+def test_a_witness_without_both_seal_fields_writes_two(tmp_path):
+    path = tmp_path / "w"
+    Witness(1, "a" * 64, None, "b" * 64).write(path)
+    assert Witness.read(path) == Witness(1, "a" * 64)
 
 
 def test_a_tampered_identity_fails_the_command(_disposable_test_db, monkeypatch, capsys):

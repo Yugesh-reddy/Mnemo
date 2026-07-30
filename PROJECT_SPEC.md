@@ -887,16 +887,22 @@ request to finish the pending work.
   event, and neither the append-only guards nor the §27 chain noticed.
 - **Guard.** A `BEFORE UPDATE` trigger rejects a change to any identity column
   (`mnemo/chain.py` `FACT_COLUMNS`); `status` and `current_event_id` stay the only
-  columns Mnemo moves. A `BEFORE DELETE` trigger rejects deleting a fact.
+  columns Mnemo moves, and `status` may only become `active` or `invalidated` (no
+  version ever wrote `deleted`, which would hide a memory from every read). Further
+  triggers reject deleting a fact and an `INSERT OR REPLACE` over an existing one.
 - **Seals.** `memory_fact_seal(seq, fact_id, hash)` holds, for every fact in the order
   it was stored, `sha256(previous seal || json_array(identity columns))`, written by an
   `AFTER INSERT` trigger and append-only like the event chain. Upgrading seals the
-  existing facts in `rowid` order inside the migration's transaction; import seals
-  facts as it inserts them. A test keeps the trigger's column list, the guard's and
+  existing facts in `rowid` order inside the migration's transaction. Export lists
+  facts in seal order, so a whole-store import seals them the same way and verifies
+  against the source's witness. A test keeps the trigger's column list, the guard's and
   `FACT_COLUMNS` in step, and checks that every other `memory_fact` column is
   `status` or `current_event_id`.
 - **`mnemo verify`** also recomputes the seals and reports a memory whose identity
-  changed, a memory deleted (its seal remains) or one inserted without a seal. The
+  changed, a memory deleted (its seal remains, or its events and receipts point at
+  nothing) or one inserted without a seal. A memory's status must match its newest
+  event: `invalidated` for `INVALIDATE`, otherwise `active`. Unsealed memories are
+  reported apart from seal mismatches, so twenty of those cannot hide them. The
   witness becomes `SEQ HASH FACT_SEQ FACT_HASH`; a two-field witness from before this
   migration still reads, and the next successful run adds the seal head. Rewriting a
   fact and every later seal is caught by the witness, as for events.
