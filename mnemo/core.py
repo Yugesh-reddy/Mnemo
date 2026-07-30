@@ -103,12 +103,27 @@ STOP_WORDS = frozenset("""
     """.split())
 
 
+# FTS5 bm25() sums idf(term) * tf(term, doc) (negated), where SQLite's single-term
+# IDF peaks at ln((N - 0.5) / 1.5) for N >= 3 and floors at 1e-6 for N <= 2. Dividing
+# -bm25 by that peak yields "fts_units": effective rare query words matched, invariant
+# to corpus size. A single average-length word caps at 1.0 unit; requiring 1.25 units
+# for partial OR matches admits multi-word or repeated-term hits while rejecting an
+# incidental single-word overlap in an off-topic question. Full-query AND matches
+# always pass regardless of corpus IDF (e.g. single-word queries or edited small stores).
+_FTS_MAX_REL = 0.85
+_FTS_MIN_PARTIAL_UNITS = 1.25
+
+
+def _fts_terms(text: str) -> list[str]:
+    words = [w for w in re.findall(r"\w+", text.lower()) if w not in STOP_WORDS]
+    return list(dict.fromkeys(words))
+
+
 def fts_query(text: str) -> str | None:
-    """Every non-stop word, ANDed, each quoted so FTS5 syntax in the text is literal.
+    """Every non-stop word, ORed, each quoted so FTS5 syntax in the text is literal.
 
     The porter tokenizer stems both sides, as Postgres plainto_tsquery did."""
-    words = [w for w in re.findall(r"\w+", text.lower()) if w not in STOP_WORDS]
-    return " AND ".join(f'"{w}"' for w in dict.fromkeys(words)) or None
+    return " OR ".join(f'"{w}"' for w in _fts_terms(text)) or None
 
 
 def like_pattern(text: str) -> str:
@@ -569,13 +584,24 @@ class MnemoStore:
                   AND valid_from <= ?15 AND (valid_to IS NULL OR valid_to > ?15)
                   AND (expires_at IS NULL OR expires_at > ?14)
             """
-        words = fts_query(query)
-        fts_hit = (
-            "eligible.seq IN (SELECT rowid FROM memory_search_text "
-            "WHERE memory_search_text MATCH ?4)"
-            if words
-            else "0"
+        terms = _fts_terms(query)
+        words_or = fts_query(query)
+        words_and = " AND ".join(f'"{w}"' for w in terms) if len(terms) > 1 else None
+        fts_cte = (
+            "SELECT rowid AS seq, -bm25(memory_search_text) AS raw_bm25 "
+            "FROM memory_search_text WHERE memory_search_text MATCH ?4"
+            if words_or
+            else "SELECT NULL AS seq, 0.0 AS raw_bm25 WHERE 0"
         )
+        if not words_or:
+            fts_all = "0"
+        elif words_and:
+            fts_all = (
+                "eligible.seq IN (SELECT rowid FROM memory_search_text "
+                "WHERE memory_search_text MATCH ?18)"
+            )
+        else:
+            fts_all = "(fts.seq IS NOT NULL)"
         sql = f"""
             WITH source AS ({source}),
             eligible AS (
@@ -583,30 +609,44 @@ class MnemoStore:
               WHERE (tier='durable' OR (tier='session' AND session_id=?13))
                 AND (?15 IS NULL OR valid_from <= ?15)
             ),
+            fts AS MATERIALIZED ({fts_cte}),
+            fts_scale AS (
+              SELECT CASE WHEN count(*) >= 3
+                          THEN ln((count(*) - 0.5) / 1.5)
+                          ELSE 1e-6 END AS idf_max
+              FROM memory_search_text
+            ),
             scored AS (
               SELECT eligible.*,
                 CASE WHEN m.vector IS NULL THEN 0
                   ELSE 1 - vec_distance_cosine(m.vector, ?5) END AS rel_vec,
-                {fts_hit} AS fts_hit,
+                COALESCE(fts.raw_bm25 / fts_scale.idf_max, 0.0) AS fts_units,
+                {fts_all} AS fts_all,
                 (subject LIKE ?6 ESCAPE '\\' OR predicate LIKE ?6 ESCAPE '\\'
                  OR object_text LIKE ?6 ESCAPE '\\') AS kw_hit,
                 pow(?9, (julianday(COALESCE(?14, now()))
                   - julianday(min(last_used, COALESCE(?14, now())))) * 24.0) AS recency
               FROM eligible
+              CROSS JOIN fts_scale
+              LEFT JOIN fts ON fts.seq = eligible.seq
               LEFT JOIN memory_embedding m
                 ON m.seq = eligible.seq AND m.model = ?16 AND m.dim = ?17
             )
-            SELECT *, (?10 * max(rel_vec, CASE WHEN fts_hit THEN 0.85 ELSE 0 END,
+            SELECT *, (?10 * max(rel_vec,
+                                 CASE WHEN fts_units > 0
+                                      THEN ?19 * fts_units / (fts_units + 1.0)
+                                      ELSE 0 END,
                                  CASE WHEN kw_hit THEN 0.80 ELSE 0 END)
                        + ?11 * recency
                        + ?12 * (COALESCE(importance, 5) / 10.0)) AS score
-            FROM scored WHERE fts_hit OR kw_hit OR rel_vec >= ?7
+            FROM scored
+            WHERE fts_all OR fts_units >= ?20 OR kw_hit OR rel_vec >= ?7
             ORDER BY score DESC, fact_id DESC LIMIT ?8
         """
         return await self.conn.fetch(
             sql,
             *self._scope,
-            words,
+            words_or,
             vector_blob(embedding),
             like_pattern(query),
             self.settings.search_floor,
@@ -620,6 +660,9 @@ class MnemoStore:
             valid_at,
             model_id(self.embedder),
             len(embedding),
+            words_and,
+            _FTS_MAX_REL,
+            _FTS_MIN_PARTIAL_UNITS,
         )
 
     async def list_current(self, *, limit: int = 200) -> list[Fact]:

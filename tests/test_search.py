@@ -223,3 +223,56 @@ async def test_the_python_cosine_scores_exactly_like_sqlite_vec(
     fallback = await search()
     assert (native[0], fallback[0]) == ("sqlite-vec", "python")
     assert len(native[1]) == 1 and native[1] == fallback[1]
+
+
+def test_fts_query_ors_non_stop_words() -> None:
+    from mnemo.core import fts_query
+
+    assert fts_query("How do I run the tests here?") == '"run" OR "tests"'
+    assert fts_query("the and or") is None
+    assert fts_query('"unbalanced AND (') == '"unbalanced"'
+
+
+async def test_fts_finds_memory_when_a_query_word_is_missing(store) -> None:
+    for subject, predicate, value in (
+        ("deploy", "target", "fly.io"),
+        ("tests", "command", "make test"),
+        ("database", "engine", "Postgres"),
+        ("logging", "library", "structlog"),
+        ("caching", "backend", "Redis"),
+    ):
+        await store.add(subject, predicate, value)
+
+    # "production" is absent from the memory; OR matching still finds it via "deploy" + "target".
+    hits = await store.search("deploy target production", reinforce=False)
+    assert [f.value for f in hits] == ["fly.io"]
+
+
+async def test_fts_bm25_ranks_stronger_word_matches_higher(store) -> None:
+    for subject, predicate, value in (
+        ("ci", "provider", "GitHub Actions is disabled; run make lint and tests before pushing"),
+        ("tests", "run command", "make test-db to run tests"),
+        ("deploys", "schedule", "Production deploys happen every Thursday"),
+        ("style", "formatter", "black with a line length of 100"),
+        ("logging", "library", "structlog with JSON output"),
+    ):
+        await store.add(subject, predicate, value)
+
+    hits = await store.search("How do I run the tests?", reinforce=False)
+    assert [f.subject for f in hits[:2]] == ["tests", "ci"]
+    assert hits[0].score > hits[1].score
+
+
+async def test_fts_off_topic_single_common_word_does_not_match(store) -> None:
+    for subject, predicate, value in (
+        ("project", "formatter", "black"),
+        ("project", "linter", "ruff"),
+        ("project", "database", "SQLite"),
+        ("project", "language", "Python"),
+        ("staging database", "name", "widget_stage_07"),
+        ("branches", "naming", "feature/ticket-slug"),
+    ):
+        await store.add(subject, predicate, value)
+
+    assert await store.search("project birthday cake", reinforce=False) == []
+    assert await store.search("what should I name my cat?", reinforce=False) == []

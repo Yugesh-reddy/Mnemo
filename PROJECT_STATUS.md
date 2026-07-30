@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## Search matches any word (November 20, 2026)
+
+Search's word match no longer needs every query word and ranks matches by bm25: on the
+retrieval set, memories found first rose from 20 to 21 (Ollama) and 19 to 21 (local
+model) with no more off-topic hits ([spec §33](PROJECT_SPEC.md#33-word-matches-on-any-word-ranked-by-bm25--november-20-2026)).
+
 ## Web UI scopes (November 20, 2026)
 
 The web UI's **Scope** menu switches between the global memories and each project's;

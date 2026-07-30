@@ -922,3 +922,20 @@ request to finish the pending work.
   warning with the `chmod 700` to run when the store's directory is readable by group
   or others.
 - **Dead code.** `ExtractedFact`, the archived extractor's candidate model, is gone.
+
+## 33. Word matches on any word, ranked by bm25 — November 20, 2026
+
+- **Before.** The word index matched only memories containing every non-stop word of
+  the query, and any match scored a flat 0.85, so one missing word lost the match and
+  ties fell back to the memory ID.
+- **Now.** The FTS5 query ORs the words and scores a match by `bm25()`, divided by the
+  largest single-word IDF the index can give (`ln((N - 0.5) / 1.5)`), so the score is
+  roughly "rare query words matched" whatever the store's size; relevance is
+  `0.85 · u / (u + 1)`. A memory passes the word filter when it holds every query word
+  (as before) or scores at least 1.25 such units, so one incidental shared word in an
+  off-topic question does not make a hit. The match runs once per search
+  (`MATERIALIZED`), keeping 5,000-memory searches near 34 ms.
+- **Measured** on the retrieval set (`tests/test_retrieval_quality.py`, first / top 3 /
+  off-topic hits): Ollama `nomic-embed-text` 20/24/1 → 21/24/1, local `bge-small`
+  19/25/3 → 21/25/3; the hash backend (words only) went from 1 to 10 found first. The
+  same before and after on the same machine, twice each.
