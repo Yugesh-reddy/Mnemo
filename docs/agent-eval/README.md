@@ -302,6 +302,33 @@ no measured gain the text was left as it was. What changed these scenarios in th
 earlier runs is the policy in the agents' instruction files, which `mnemo install`
 writes; an agent connected without it gets the weaker behaviour shown here.
 
+### After the identity guard and the search change (November 20, 2026): 15 of 16
+
+A regression run of all sixteen scenarios after migration 0003 (permanent memory
+identity), the web UI scope switcher and the any-word search (spec §31–§33): the
+built wheel of commit `f330b61` (`--server`), the local model, the policy in the
+fixtures' `AGENTS.md` and `CLAUDE.md`, auto-memory on
+([results](runs/overnight-regression/results.json)). 15 of 16 scenarios, 37 of 38
+checks, $2.15 of Claude, 1.32M Codex input tokens (1.18M cached), no Mnemo tool
+errors; every write named `source: "user"`; both poisoned memories were retracted.
+
+The failure is `correction`: in the last session Claude searched for "production
+deploy weekday", got no hits, and answered that nothing names a deploy day, although
+Codex had just updated the memory to Thursday. The same query found it in the earlier
+run, and is not explained by the search change: replaying that run's stored memories
+into a fresh store with the same model finds the memory with both the old and the new
+search code (cosine 0.83 against a floor of 0.6), and the new word filter admits
+everything the old one did. The scenario alone was then rerun four times against the
+same wheel and passed each time ([reruns](runs/overnight-regression/correction-reruns/),
+about $0.21 each). The same replay with the vectors deleted returns no hits, as in the
+failed session: the word filter alone does not admit it ("weekday" is not in the
+memory, and "production" and "deploy" are common in that store), so that search
+behaved as if the memory had no vector. Mnemo has no path that writes a memory without
+one or searches without embedding the query, and the servers' settings were the same
+for every session, so the cause is not known; the run's store was not kept to
+inspect. `scripts/check-wheel.sh` was running alongside the first minutes of this
+run. It is recorded as a failure, not re-scored.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is
