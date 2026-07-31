@@ -116,6 +116,25 @@ class DirectMemory:
         )
 
     @staticmethod
+    def _archived(status: str, head: Event | None) -> bool:
+        """A memory the removed decay job hid by copying HEAD into an ephemeral
+        revision (stores upgraded from the extraction pipeline still hold them)."""
+        return bool(
+            status == "active"
+            and head is not None
+            and head.op in {"ADD", "UPDATE", "REVERT"}
+            and head.tier == "ephemeral"
+            and head.session_id is None
+            and head.expires_at is None
+            and head.valid_to is None
+        )
+
+    @classmethod
+    def _withdrawn(cls, status: str, head: Event | None) -> bool:
+        """Hidden from search but restorable: retracted or archived."""
+        return cls._retracted(status, head) or cls._archived(status, head)
+
+    @staticmethod
     def _eligible(event: Event | None) -> bool:
         return bool(
             event is not None
@@ -138,12 +157,13 @@ class DirectMemory:
         return row
 
     async def _checked_head(self, fact_id: UUID, expected_event_id: UUID) -> tuple[Event, bool]:
-        """The locked HEAD if it is still ``expected_event_id``, and whether it is retracted."""
+        """The locked HEAD if it is still ``expected_event_id``, and whether it is
+        withdrawn (retracted or archived), so update and revert restore it."""
         fact = await self.store._locked_fact(fact_id)
         if fact is None:
             raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
         head = await self.store._get_event(fact["current_event_id"])
-        retracted = self._retracted(fact["status"], head)
+        retracted = self._withdrawn(fact["status"], head)
         if not retracted and (fact["status"] != "active" or not self._eligible(head)):
             raise MnemoError(
                 ErrorCode.UNSUPPORTED_STATE, "Only active, durable memories can be changed"
@@ -172,11 +192,12 @@ class DirectMemory:
         )
         if row is not None:
             head = await self.store._get_event(row["current_event_id"])
-            retracted = self._retracted(row["status"], head)
+            retracted = self._withdrawn(row["status"], head)
+            state = "archived" if self._archived(row["status"], head) else "retracted"
             raise MnemoError(
                 ErrorCode.ALREADY_EXISTS,
                 "Memory already exists; use its ID to update it"
-                + (" (it is retracted; update or revert restores it)" if retracted else ""),
+                + (f" (it is {state}; update or revert restores it)" if retracted else ""),
                 fact_id=str(row["fact_id"]),
                 current_event_id=str(row["current_event_id"]) if row["current_event_id"] else None,
                 fact_key=fact_key,
@@ -592,7 +613,7 @@ class DirectMemory:
                 current_event_id=fact["current_event_id"],
                 restorable=(
                     (fact["status"] == "active" and self._eligible(head))
-                    or self._retracted(fact["status"], head)
+                    or self._withdrawn(fact["status"], head)
                 )
                 and self._eligible(event),
             )
@@ -600,7 +621,7 @@ class DirectMemory:
     async def _retracted_value(self, fact_id: UUID) -> CurrentValue:
         fact = await self._fact(fact_id)
         head = await self.store._get_event(fact["current_event_id"])
-        if not self._retracted(fact["status"], head):
+        if not self._withdrawn(fact["status"], head):
             raise MnemoError(ErrorCode.NOT_FOUND, "Memory not found")
         assert head is not None
         return CurrentValue(
@@ -612,7 +633,7 @@ class DirectMemory:
             provenance=head.provenance,
             trust_level=head.trust_level,
             recorded_at=head.recorded_at,
-            status="retracted",
+            status="archived" if self._archived(fact["status"], head) else "retracted",
         )
 
     @staticmethod
@@ -724,7 +745,8 @@ class DirectMemory:
         ]
 
     async def retracted(self, *, limit: int = 200) -> list[RetractedMemory]:
-        """Memories in this scope withdrawn by retract, most recent first.
+        """Memories in this scope withdrawn by retract, most recent first, then any the
+        removed decay job archived.
 
         So a person can see what agents withdrew (including any retraction an agent
         was tricked into) and restore it from its history.
@@ -736,8 +758,9 @@ class DirectMemory:
             SELECT f.subject, f.predicate, f.status, {_HEAD_COLS}
             FROM memory_fact f JOIN memory_event e ON e.event_id = f.current_event_id
             WHERE f.namespace=?1 AND f.user_id=?2 AND f.agent_id=?3
-              AND f.status = 'invalidated' AND e.op = 'INVALIDATE'
-            ORDER BY e.seq DESC LIMIT ?4
+              AND ((f.status = 'invalidated' AND e.op = 'INVALIDATE')
+                   OR (f.status = 'active' AND e.tier = 'ephemeral'))
+            ORDER BY e.tier = 'ephemeral', e.seq DESC LIMIT ?4
             """,
             *self._scope,
             limit,
@@ -745,7 +768,7 @@ class DirectMemory:
         found = []
         for row in rows:
             head = Event.from_row(row)
-            if not self._retracted(row["status"], head):
+            if not self._withdrawn(row["status"], head):
                 continue
             reason = head.reason
             if reason in ("retracted", "invalidated"):

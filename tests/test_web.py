@@ -602,3 +602,22 @@ async def test_unknown_scope_returns_400_without_writing(store, web_client, db):
     assert (await store.get(first.fact_id)).value == "vim"
     assert await db.fetchval("SELECT count(*) FROM memory_commit") == 0
     assert await db.fetchval("SELECT count(*) FROM memory_mutation_receipt") == 0
+
+
+async def test_a_memory_archived_by_the_old_decay_job_is_listed_and_restorable(store, web_client):
+    from tests.conftest import legacy_archive
+
+    d = DirectMemory(store)
+    first = await d.create("tests", "command", "make test-db", request_id=uuid4())
+    archived = await legacy_archive(store, first.fact_id, first.event_id)
+    listing = (await web_client.get("/retracted")).text
+    assert "make test-db" in listing and "archived by decay" in listing
+    url = f"/fact/{first.fact_id}"
+    page = (await web_client.get(url)).text
+    assert "was archived" in page
+    form = Forms(page).forms[f"{url}/revert/{first.event_id}"]
+    assert form["expected_event_id"] == str(archived.event_id)
+    response = await web_client.post(f"{url}/revert/{first.event_id}", data=form)
+    assert response.status_code == 303
+    assert (await d.get(first.fact_id)).status == "active"
+    assert "make test-db" not in (await web_client.get("/retracted")).text

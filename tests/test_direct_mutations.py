@@ -396,13 +396,11 @@ async def test_12_foreign_ids_disclose_nothing_and_write_nothing(store, scope_fi
     assert await counts(store) == before
 
 
-@pytest.mark.parametrize("state", ["archived", "session", "expired", "session_id"])
+@pytest.mark.parametrize("state", ["session", "expired", "session_id"])
 async def test_13_unsupported_states_cannot_be_revived(store, state):
     d = direct(store)
     first = await create(d)
-    if state == "archived":
-        bad = await legacy_archive(store, first.fact_id, first.event_id)
-    elif state in ("session", "session_id"):
+    if state in ("session", "session_id"):
         bad = await store.add(
             "user",
             "preferred_database",
@@ -619,3 +617,42 @@ async def test_value_at_utf8_size_limit_is_preserved_and_creation_undo_is_unsupp
         await d.revert(first.fact_id, None, expected_event_id=first.event_id, request_id=uuid4())
     assert error.value.code == ErrorCode.UNSUPPORTED_OPERATION
     assert await counts(store) == (1, 1)
+
+
+@pytest.mark.parametrize("how", ["update", "revert"])
+async def test_13b_a_memory_archived_by_the_old_decay_job_can_be_restored(store, how):
+    """Stores upgraded from the extraction pipeline hold memories its decay job hid by
+    copying HEAD into an ephemeral revision. They are listed with the retracted ones,
+    and update or revert brings them back as durable memories."""
+    d = direct(store)
+    first = await create(d)
+    archived = await legacy_archive(store, first.fact_id, first.event_id)
+    assert await d.search("preferred database") == []
+    got = await d.get(first.fact_id)
+    assert got.status == "archived" and got.current_event_id == archived.event_id
+    [listed] = await d.retracted()
+    assert listed.fact_id == first.fact_id and listed.reason == "archived by decay"
+    assert (await d.get(first.fact_id, first.event_id)).restorable
+    with pytest.raises(MnemoError) as exists:
+        await create(d)
+    assert "it is archived" in exists.value.message and exists.value.details["retracted"]
+    retract = await d.retract(
+        first.fact_id, expected_event_id=archived.event_id, request_id=uuid4()
+    )
+    assert retract.status == "no_change"
+    if how == "update":
+        result = await d.update(
+            first.fact_id, "MySQL", expected_event_id=archived.event_id, request_id=uuid4()
+        )
+    else:
+        result = await d.revert(
+            first.fact_id,
+            first.event_id,
+            expected_event_id=archived.event_id,
+            request_id=uuid4(),
+        )
+    assert result.status == "applied" and result.previous_event_id == archived.event_id
+    got = await d.get(first.fact_id)
+    assert got.status == "active" and got.value == ("MySQL" if how == "update" else "PostgreSQL")
+    assert [hit.fact_id for hit in await d.search("preferred database")] == [first.fact_id]
+    assert await d.retracted() == []

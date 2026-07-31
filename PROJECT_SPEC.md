@@ -939,3 +939,20 @@ request to finish the pending work.
   off-topic hits): Ollama `nomic-embed-text` 20/24/1 → 21/24/1, local `bge-small`
   19/25/3 → 21/25/3; the hash backend (words only) went from 1 to 10 found first. The
   same before and after on the same machine, twice each.
+
+## 34. Archived memories can be restored — November 21, 2026
+
+- **What they are.** The removed decay job (§18, archived) hid unused memories by
+  copying HEAD into a new `UPDATE` revision with `tier='ephemeral'` and reason
+  `archived by decay`, leaving the memory `active`. Stores imported from the Postgres
+  version still hold them. Search and `memory_get` skipped them, and update and revert
+  refused them (`UNSUPPORTED_STATE`), so nothing could bring them back.
+- **Now** they are treated like retracted memories (§24): `memory_get` returns the
+  archived value with `status: "archived"`; update and revert (guarded on the archived
+  revision as `expected_event_id`) restore them as durable memories, revert to an
+  earlier durable revision only; retract answers `no_change`; creating the same
+  subject and predicate reports `ALREADY_EXISTS` saying it is archived; the web UI's
+  Retracted page lists them after the retracted ones, with the reason, and the
+  memory's page restores them. The tool descriptions are unchanged (they name
+  retracted memories; archived ones behave the same way).
+- Session, expired and session-bound revisions stay unrestorable, as before.

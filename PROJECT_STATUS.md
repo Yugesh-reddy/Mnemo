@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## Archived memories restorable (November 21, 2026)
+
+Memories the old decay job archived (in stores imported from the Postgres version) are
+listed on the web UI's Retracted page and restored by update or revert, like retracted
+ones ([spec §34](PROJECT_SPEC.md#34-archived-memories-can-be-restored--november-21-2026)).
+
 ## Search matches any word (November 20, 2026)
 
 Search's word match no longer needs every query word and ranks matches by bm25: on the

@@ -193,7 +193,7 @@ class CurrentValue(BaseModel):
     provenance: str
     trust_level: str
     recorded_at: datetime
-    status: Literal["active", "retracted"] = "active"
+    status: Literal["active", "retracted", "archived"] = "active"
     """retracted: hidden from search; value is what was retracted. Revert or update
     restores it."""
 

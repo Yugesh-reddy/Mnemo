@@ -32,7 +32,7 @@
   {% endif %}
 </div>
 {% elif retracted %}
-<p class="mt-4 text-slate-500">This memory was retracted, so agents no longer see it: <span class="mono text-slate-600">{{ retracted.subject }} · {{ retracted.predicate }}</span>. Revert to a revision below to restore it.</p>
+<p class="mt-4 text-slate-500">This memory was {{ retracted.status }}, so agents no longer see it: <span class="mono text-slate-600">{{ retracted.subject }} · {{ retracted.predicate }}</span>. Revert to a revision below to restore it.</p>
 {% else %}
 <p class="mt-4 text-slate-500">{{ 'This memory is not currently visible. Its history is preserved below.' if history else 'Memory not found.' }}</p>
 {% endif %}
@@ -52,7 +52,7 @@
     <span class="text-xs text-slate-400">{{ e.recorded_at.strftime('%Y-%m-%d %H:%M') if e.recorded_at else '' }}</span>
     <div class="ml-auto">
       {% if e.event_id == head_id %}
-        <span class="text-xs text-slate-400">{{ 'retraction' if retracted else 'current' }}</span>
+        <span class="text-xs text-slate-400">{{ ('archival' if retracted.status == 'archived' else 'retraction') if retracted else 'current' }}</span>
       {% elif e.event_id in request_ids %}
         <form method="post" action="{{ url_for_scope('/fact/' ~ fact_id ~ '/revert/' ~ e.event_id) }}">
           <input type="hidden" name="expected_event_id" value="{{ head_id }}">
