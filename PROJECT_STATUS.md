@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## Near-duplicate warning (November 21, 2026)
+
+`memory_create` reports current memories in the same scope that say nearly the same
+thing, so an agent can keep one memory instead of two that drift apart
+([spec §35](PROJECT_SPEC.md#35-near-duplicate-warning-on-create--november-21-2026)).
+
 ## Archived memories restorable (November 21, 2026)
 
 Memories the old decay job archived (in stores imported from the Postgres version) are

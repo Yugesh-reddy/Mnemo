@@ -23,6 +23,15 @@ LOCAL_MODELS: dict[str, tuple[int, float, int]] = {
 }
 DEFAULT_LOCAL_MODEL = "BAAI/bge-small-en-v1.5"
 
+# Cosine at or above which a new memory is reported as a near-duplicate of a current
+# one (spec §35). Measured on tests/data/duplicate_set.json against
+# retrieval_set.json (November 21, 2026): every floor keeps the 40 unrelated memories
+# apart. Unmeasured models get no warning.
+DUPLICATE_FLOORS: dict[tuple[str, str], float] = {
+    ("local", "BAAI/bge-small-en-v1.5"): 0.80,  # 19 of 20 near-duplicates
+    ("ollama", "nomic-embed-text"): 0.75,  # 20 of 20
+}
+
 
 class Settings(BaseSettings):
     """Mnemo settings, populated from environment / .env (prefix ``MNEMO_``)."""
@@ -79,6 +88,10 @@ class Settings(BaseSettings):
     search_floor: float = Field(0.5, ge=0.0, le=1.0)
     """Minimum cosine for a vector-only search hit (keyword matches bypass this)."""
 
+    duplicate_floor: float | None = Field(None, ge=0.0, le=1.0)
+    """Cosine for reporting a new memory's near-duplicates. Unset: measured per model
+    (DUPLICATE_FLOORS), else none reported."""
+
     search_reinforce: bool = True
     session_ttl_seconds: float = Field(86400.0, gt=0.0)
 
@@ -128,6 +141,8 @@ class Settings(BaseSettings):
                 self.embed_model = "text-embedding-3-small"
             if "embed_dim" not in self.model_fields_set:
                 self.embed_dim = 1536
+        if "duplicate_floor" not in self.model_fields_set:
+            self.duplicate_floor = DUPLICATE_FLOORS.get((self.backend, self.embed_model))
         if not 1 <= self.embed_dim <= 8192:
             raise ValueError("embed_dim must be 1..8192")
         if not 0 < self.recency_gamma <= 1:

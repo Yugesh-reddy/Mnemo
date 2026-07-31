@@ -13,7 +13,7 @@ from decimal import Decimal
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_serializer
 
 # A row (mnemo.sqlite.Record) is mapping-like; dict(row) gives .get for optional columns.
 Row = Any
@@ -173,6 +173,23 @@ class Diff(BaseModel):
     entries: list[DiffEntry]
 
 
+class SimilarMemory(BaseModel):
+    """A current memory in the same scope whose embedding is close to a new one's."""
+
+    fact_id: UUID
+    subject: str
+    predicate: str
+    value: str
+    current_event_id: UUID
+    similarity: float
+
+
+SIMILAR_NOTE = (
+    "Memories like this one already exist. If the new memory repeats or replaces one, "
+    "keep a single memory: update that one and retract this one."
+)
+
+
 class MutationResult(BaseModel):
     status: Literal["applied", "no_change"]
     fact_id: UUID
@@ -182,6 +199,18 @@ class MutationResult(BaseModel):
     value: str
     request_id: UUID
     replayed: bool = False
+    similar: list[SimilarMemory] = []
+    """Only on create: near-duplicates found in the same scope (spec §35)."""
+
+    @model_serializer(mode="wrap")
+    def _omit_empty_similar(self, handler: Any) -> dict[str, Any]:
+        # Results without near-duplicates serialize exactly as before the field existed.
+        data = handler(self)
+        if not data.get("similar"):
+            data.pop("similar", None)
+        else:
+            data["note"] = SIMILAR_NOTE
+        return data
 
 
 class CurrentValue(BaseModel):

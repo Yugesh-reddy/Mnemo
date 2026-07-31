@@ -956,3 +956,27 @@ request to finish the pending work.
   memory's page restores them. The tool descriptions are unchanged (they name
   retracted memories; archived ones behave the same way).
 - Session, expired and session-bound revisions stay unrestorable, as before.
+
+## 35. Near-duplicate warning on create — November 21, 2026
+
+- **Why.** Agents are told to search first and update a memory on the same subject,
+  but `ALREADY_EXISTS` only fires for the same subject and predicate after
+  normalisation. "tests · run command" and "test suite · command" are two memories
+  about one thing, and they drift apart when one is updated.
+- **What.** `memory_create` (and `DirectMemory.create`) still creates the memory, and
+  its result gains `similar`: up to three current, durable memories in the same scope
+  whose vector from the configured model has cosine ≥ `duplicate_floor` with the new
+  one, closest first, each with `fact_id`, `subject`, `predicate`, `value`,
+  `current_event_id` and `similarity`, plus a `note` saying to keep a single memory
+  (update the old one and retract the new one if it repeats or replaces it). Results
+  with no near-duplicates serialise exactly as before (no `similar`, no `note`), and
+  a replayed create returns the same list. Other operations never report it.
+- **Floors** (`MNEMO_DUPLICATE_FLOOR`, else measured per model): local
+  `bge-small-en-v1.5` 0.80, Ollama `nomic-embed-text` 0.75; no other model reports
+  near-duplicates until measured. Measured on `tests/data/duplicate_set.json` (20
+  rewordings of memories in `retrieval_set.json`, some with a changed value, written
+  before measuring): bge-small flags 19 of 20 (the miss is at 0.751), Ollama 20 of
+  20, and at those floors neither links any two of the 40 unrelated memories (their
+  highest pairwise cosines are 0.763 and 0.684). The floors were chosen on this set,
+  so they are tuned, not held out; `tests/test_duplicates.py` re-checks them live.
+- The tool descriptions are unchanged; the note travels in the result.

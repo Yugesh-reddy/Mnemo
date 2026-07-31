@@ -19,6 +19,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from mnemo.core import _EVENT_COLS, MnemoStore, canonicalize, derive_trust
+from mnemo.embedder import model_id, vector_blob
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import (
     CurrentValue,
@@ -29,6 +30,7 @@ from mnemo.models import (
     MutationResult,
     RetractedMemory,
     SearchHit,
+    SimilarMemory,
 )
 from mnemo.sqlite import Record
 
@@ -333,9 +335,49 @@ class DirectMemory:
                 event_id=event.event_id,
                 value=value,
                 request_id=request_id,
+                similar=await self._similar(fact_id, embedding),
             )
 
         return await self._mutate("create", request_id, payload, actor=actor, apply=apply)
+
+    async def _similar(self, fact_id: UUID, embedding: list[float]) -> list[SimilarMemory]:
+        """Current durable memories in this scope whose vector (from the configured
+        model) is within the duplicate floor of a new memory's, closest first."""
+        floor = self.store.settings.duplicate_floor
+        if floor is None:
+            return []
+        rows = await self.store.conn.fetch(
+            """
+            SELECT * FROM (
+              SELECT f.fact_id, f.subject, f.predicate, e.object_text, f.current_event_id,
+                     1 - vec_distance_cosine(m.vector, ?5) AS similarity
+              FROM memory_fact f
+              JOIN memory_event e ON e.event_id = f.current_event_id
+              JOIN memory_embedding m ON m.seq = e.seq AND m.model = ?6 AND m.dim = ?7
+              WHERE f.namespace = ?1 AND f.user_id = ?2 AND f.agent_id = ?3
+                AND f.fact_id <> ?4 AND f.status = 'active' AND e.tier = 'durable'
+                AND e.op IN ('ADD', 'UPDATE', 'REVERT')
+            ) WHERE similarity >= ?8
+            ORDER BY similarity DESC LIMIT 3
+            """,
+            *self._scope,
+            fact_id,
+            vector_blob(embedding),
+            model_id(self.store.embedder),
+            len(embedding),
+            floor,
+        )
+        return [
+            SimilarMemory(
+                fact_id=row["fact_id"],
+                subject=row["subject"],
+                predicate=row["predicate"],
+                value=row["object_text"] or "",
+                current_event_id=row["current_event_id"],
+                similarity=round(row["similarity"], 3),
+            )
+            for row in rows
+        ]
 
     async def update(
         self,

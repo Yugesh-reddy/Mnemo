@@ -15,6 +15,9 @@ returned a memory):
 - local bge-base-en-v1.5, floor 0.55: 19 / 26 / 2
 - local nomic-embed-text-v1.5-Q, floor 0.50: 17 / 24 / 2 (not offered)
 
+After search matched any query word, ranked by bm25 (November 20, 2026, spec §33):
+Ollama 21 / 24 / 1, local bge-small 21 / 25 / 3.
+
 The bar below is Ollama's top-3 result, with ranked-first and off-topic allowing the
 local default's measured result. Keep it there: the agent eval decides the default.
 """

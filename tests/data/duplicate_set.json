@@ -1,0 +1,25 @@
+{
+  "about": "Near-duplicates for the near-duplicate warning (PROJECT_SPEC.md §35): for a memory in retrieval_set.json (by index), how another agent might save the same subject again, in other words, sometimes with a changed value. Written by the agent that added the warning, before measuring; not independent gold.",
+  "duplicates": [
+    [0, {"subject": "test suite", "predicate": "command", "value": "run make test-db; Postgres must be up"}],
+    [1, {"subject": "production deploy", "predicate": "day", "value": "Thursday"}],
+    [2, {"subject": "formatting", "predicate": "tool", "value": "black, line length 100"}],
+    [3, {"subject": "PR titles", "predicate": "convention", "value": "begin with the ticket key like WID-142"}],
+    [5, {"subject": "package manager", "predicate": "python", "value": "uv (pip is not allowed)"}],
+    [6, {"subject": "dev ports", "predicate": "services", "value": "api on 8081, worker on 8090, admin on 8095"}],
+    [8, {"subject": "git branches", "predicate": "name format", "value": "feature/<ticket>-<slug>"}],
+    [9, {"subject": "commit messages", "predicate": "format", "value": "use Conventional Commits"}],
+    [11, {"subject": "migrations", "predicate": "process", "value": "add a new numbered SQL file under migrations/; applied ones are never edited"}],
+    [13, {"subject": "logs", "predicate": "format", "value": "structlog, JSON in prod"}],
+    [16, {"subject": "web frontend", "predicate": "stack", "value": "Next.js 15 (App Router) and Tailwind CSS"}],
+    [18, {"subject": "releases", "predicate": "owner", "value": "Priya; check with her before creating a tag"}],
+    [19, {"subject": "on-call handoff", "predicate": "day", "value": "Tuesday at 10am Central"}],
+    [23, {"subject": "k8s namespaces", "predicate": "names", "value": "widget-prod / widget-staging, cluster acme-east"}],
+    [26, {"subject": "mypy", "predicate": "strictness", "value": "strict for src/ only"}],
+    [29, {"subject": "python", "predicate": "version", "value": "Python 3.13"}],
+    [31, {"subject": "primary database", "predicate": "version", "value": "PostgreSQL 16 + pgvector"}],
+    [32, {"subject": "database access", "predicate": "approach", "value": "raw SQL with asyncpg, no ORM"}],
+    [34, {"subject": "user", "predicate": "prefers", "value": "small diffs, one commit per milestone"}],
+    [39, {"subject": "datetimes", "predicate": "convention", "value": "always UTC in storage, local time for display"}]
+  ]
+}
