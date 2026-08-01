@@ -329,6 +329,17 @@ for every session, so the cause is not known; the run's store was not kept to
 inspect. `scripts/check-wheel.sh` was running alongside the first minutes of this
 run. It is recorded as a failure, not re-scored.
 
+**Cause found (November 21, 2026).** It was a Mnemo bug, introduced by the review fix
+that embeds a query once for both scopes (commit `74e20b3`): the wrapper's class name
+became the query vector's model tag (`_embedonce` instead of
+`local:BAAI/bge-small-en-v1.5`), so `memory_search` over MCP compared against no
+stored vector and found memories by their words only. The replays above called the
+search directly, without the wrapper, which is why they found the memory. The
+reruns passed because Claude's queries there shared words with the memory. The same
+failure recurred in the next run with the store kept, which led to the bug. Every
+MCP search between `74e20b3` and the fix was words-only, including the rest of this
+run; the full run was repeated after the fix (below).
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is

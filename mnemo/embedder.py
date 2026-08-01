@@ -214,6 +214,7 @@ def build_embedder(settings: Settings | None = None) -> Embedder:
 
 def model_id(embedder: Any) -> str:
     """Which model made a vector. Search compares only vectors from the same model."""
+    embedder = getattr(embedder, "wrapped", embedder)
     kind = type(embedder).__name__.removesuffix("Embedder").lower() or "custom"
     model = getattr(embedder, "model", None)
     return f"{kind}:{model}" if isinstance(model, str) and model else kind

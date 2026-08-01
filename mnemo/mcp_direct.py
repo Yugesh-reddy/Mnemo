@@ -188,6 +188,7 @@ class _EmbedOnce:
 
     def __init__(self, embedder: Embedder) -> None:
         self._embedder = embedder
+        self.wrapped = embedder  # model_id() names the wrapped model, not this class
         self._vectors: dict[str, list[float]] = {}
 
     def embed(self, text: str) -> list[float]:

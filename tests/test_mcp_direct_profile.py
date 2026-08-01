@@ -94,3 +94,41 @@ async def test_a_search_embeds_its_query_once_for_both_scopes(
         result = await srv.memory_search("tests command")
     assert seen == ["tests command"]
     assert [hit["value"] for hit in result["hits"]] == ["make test"]
+
+
+async def test_a_search_finds_a_memory_by_its_vector_alone(
+    _disposable_test_db, fake_embedder, monkeypatch
+):
+    """Regression: the per-call embedding wrapper once gave query vectors its own model
+    tag, so the MCP search never matched a stored vector and fell back to words."""
+    import mnemo.mcp_direct as srv
+    from mnemo.embedder import model_id
+
+    settings = Settings(
+        _env_file=None,
+        db=_disposable_test_db,
+        backend="hash",
+        embed_dim=fake_embedder.dim,
+        project="github.com/acme/alpha",
+    )
+    stored = "deploys schedule Production deploys happen every Thursday"
+
+    class Synonyms:
+        """'weekday we ship' means the stored memory; no word is shared with it."""
+
+        model = "synonyms"
+        dim = fake_embedder.dim
+
+        def embed(self, text: str) -> list[float]:
+            return fake_embedder.embed(stored if text == "weekday we ship" else text)
+
+    embedder = Synonyms()
+    assert model_id(srv._EmbedOnce(embedder)) == model_id(embedder) == "synonyms:synonyms"
+    monkeypatch.setattr(srv, "get_settings", lambda: settings)
+    monkeypatch.setattr(srv, "build_embedder", lambda settings: embedder)
+    async with srv.lifespan(srv.mcp):
+        await srv.memory_create(
+            "deploys", "schedule", "Production deploys happen every Thursday", source="user"
+        )
+        result = await srv.memory_search("weekday we ship")
+    assert [hit["value"] for hit in result["hits"]] == ["Production deploys happen every Thursday"]

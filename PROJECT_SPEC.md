@@ -860,7 +860,11 @@ The owner approved this schema addition (migration `0002_event_chain.sql`).
 ## 30. Review fixes — November 20, 2026
 
 - **One embedding per search.** `memory_search` searches the project and global
-  scopes with one embedding of the query (`_EmbedOnce` in `mnemo/mcp_direct.py`).
+  scopes with one embedding of the query (`_EmbedOnce` in `mnemo/mcp_direct.py`). *(Until
+  November 21, 2026 the wrapper gave the query vector its own model tag, so MCP
+  searches matched no stored vector and found memories by words only; `model_id()`
+  now names the wrapped model, and a test searches through the tool by vector
+  alone.)*
 - **Retries replay without the model.** `create` and `update` look up the request's
   receipt before embedding, so an identical retry replays from the file even when the
   embedding model is unavailable. The receipt is checked again inside the write
