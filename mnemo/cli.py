@@ -126,7 +126,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("export", help="write memories and history as JSON", add_help=False)
     commands.add_parser("import", help="restore an export into an empty store", add_help=False)
     for name in GONE:
-        commands.add_parser(name, help=argparse.SUPPRESS)
+        commands.add_parser(name)  # no help: argparse leaves it out of the listing
     args, rest = parser.parse_known_args(argv)
     if args.command in ("install", "uninstall"):
         return install_main((["--uninstall"] if args.command == "uninstall" else []) + rest)

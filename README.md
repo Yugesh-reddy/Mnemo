@@ -9,9 +9,11 @@ be undone. Everything runs locally.
 
 ## Quick start
 
-You need a Mac with [uv](https://docs.astral.sh/uv/). Nothing else runs: memory is one
-file, `~/.mnemo/mnemo.db`, and the embedding model runs inside Mnemo. Linux should work
-too but hasn't been tested yet.
+You need macOS or Linux with [uv](https://docs.astral.sh/uv/). Nothing else runs: memory
+is one file, `~/.mnemo/mnemo.db`, and the embedding model runs inside Mnemo. On Linux a
+glibc distribution is needed (Debian, Ubuntu and uv's own Python are tested); Alpine
+and other musl systems are not supported, because `sqlite-vec` publishes no wheels for
+them. Windows has not been tested.
 
 ```bash
 uv tool install mnemohive
@@ -316,10 +318,12 @@ bash scripts/check-wheel.sh
 ```
 
 The packaging check uses a fresh environment and exercises installed SDK/MCP
-behavior. The [correctness workflow](https://github.com/Yugesh-reddy/Mnemo/blob/main/.github/workflows/correctness.yml) is retained;
-**GitHub Actions is disabled at the owner's request**, and Mnemo has so far been
-tested on macOS only. Optional live-Ollama tests skip when their models are
-unavailable.
+behavior. The [correctness workflow](https://github.com/Yugesh-reddy/Mnemo/blob/main/.github/workflows/correctness.yml)
+runs the tests on macOS and Linux. `bash scripts/check-linux.sh` (Docker) installs the
+wheel as a new user would in a fresh Linux container: `mnemo install` with and without
+agents present, the MCP server over stdio, `mnemo verify`, the web UI and
+`mnemo uninstall`; `--local` also downloads the embedding model. Optional live-Ollama
+tests skip when their models are unavailable.
 
 `mnemo/` contains the async store, direct API, SDK, MCP server and installer;
 `mnemo/web/` the review UI; `migrations/` holds the schema; `examples/`, `scripts/`

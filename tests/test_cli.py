@@ -68,3 +68,24 @@ def test_the_package_declares_the_command():
     included = project["tool"]["hatch"]["build"]["targets"]["wheel"]["force-include"]
     assert "docker-compose.yml" not in included
     assert not (root / "docker-compose.yml").exists()
+
+
+def test_help_lists_only_current_commands(capsys):
+    import pytest
+
+    import mnemo.cli as cli
+
+    with pytest.raises(SystemExit):
+        cli.main(["--help"])
+    out = capsys.readouterr().out
+    assert "verify" in out and "SUPPRESS" not in out
+    assert not [line for line in out.splitlines() if line.split()[:1] in (["up"], ["down"])]
+
+
+def test_opencode_dir_expands_a_tilde_in_xdg_config_home(monkeypatch):
+    from pathlib import Path
+
+    import mnemo.install as inst
+
+    monkeypatch.setenv("XDG_CONFIG_HOME", "~/conf")
+    assert inst.default_opencode_dir() == Path.home() / "conf" / "opencode"

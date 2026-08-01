@@ -107,7 +107,9 @@ def codex_config(text: str, command: str, env: dict[str, str]) -> str:
 
 
 def default_opencode_dir() -> Path:
-    return Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "opencode"
+    return (
+        Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config").expanduser() / "opencode"
+    )
 
 
 def opencode_detected(opencode_dir: Path) -> bool:
