@@ -46,7 +46,12 @@ from mnemo.db import apply_migrations, connect  # noqa: E402
 from mnemo.sqlite import Connection  # noqa: E402
 
 SCENARIOS = ROOT / "docs" / "agent-eval" / "scenarios.json"
-SERVER = ROOT / ".venv" / "bin" / "mnemo-mcp-direct"
+SERVER = (
+    ROOT
+    / ".venv"
+    / ("Scripts" if os.name == "nt" else "bin")
+    / ("mnemo-mcp-direct.exe" if os.name == "nt" else "mnemo-mcp-direct")
+)
 REMOTE = "https://github.com/mnemo-eval/{}.git"
 SESSION_TIMEOUT = 300
 PREVIEW = 600
@@ -131,7 +136,10 @@ class SessionRecord(BaseModel):
 
 
 def load_scenarios(path: Path = SCENARIOS) -> list[Scenario]:
-    scenarios = [Scenario.model_validate(s) for s in json.loads(path.read_text())["scenarios"]]
+    scenarios = [
+        Scenario.model_validate(s)
+        for s in json.loads(path.read_text(encoding="utf-8"))["scenarios"]
+    ]
     ids = [scenario.id for scenario in scenarios]
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate scenario ids")
@@ -525,7 +533,7 @@ def collect_auto_memory(work: Path, out: Path, projects: Path = CLAUDE_PROJECTS)
                     target = out / folder.name / file.relative_to(memory)
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(file, target)
-                    saved.append(str(target.relative_to(out)))
+                    saved.append(target.relative_to(out).as_posix())
         shutil.rmtree(folder)
     return saved
 
@@ -533,12 +541,14 @@ def collect_auto_memory(work: Path, out: Path, projects: Path = CLAUDE_PROJECTS)
 def make_repo(root: Path, name: str, files: dict[str, str]) -> Path:
     repo = root / name
     (repo / "src").mkdir(parents=True)
-    (repo / "README.md").write_text(f"# {name}\n\nA small internal service.\n")
-    (repo / "src" / "app.py").write_text('def main() -> None:\n    print("hello")\n')
+    (repo / "README.md").write_text(f"# {name}\n\nA small internal service.\n", encoding="utf-8")
+    (repo / "src" / "app.py").write_text(
+        'def main() -> None:\n    print("hello")\n', encoding="utf-8"
+    )
     for relative, content in files.items():
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content)
+        target.write_text(content, encoding="utf-8")
     for command in (["git", "init", "-q"], ["git", "remote", "add", "origin", REMOTE.format(name)]):
         subprocess.run(command, cwd=repo, check=True, capture_output=True)
     return repo
@@ -565,7 +575,7 @@ def run_session(
 ) -> tuple[SessionRecord, list[str], str, str]:
     if session.agent == "claude":
         config = work / f"claude-mcp-{uuid4().hex[:8]}.json"
-        config.write_text(json.dumps(claude_mcp_config(env)))
+        config.write_text(json.dumps(claude_mcp_config(env)), encoding="utf-8")
         auto_memory = args.claude_auto_memory == "on"
         command = claude_command(
             config, args.claude_session_usd, args.claude_model, auto_memory=auto_memory
@@ -608,7 +618,7 @@ async def run(args: argparse.Namespace) -> int:
     files = {}
     for spec in args.repo_file:
         source, _, dest = spec.partition(":")
-        files[dest or Path(source).name] = Path(source).read_text()
+        files[dest or Path(source).name] = Path(source).read_text(encoding="utf-8")
     settings = get_settings()
     if args.backend != settings.backend:  # dimension follows the backend's model
         settings = Settings(backend=args.backend)
@@ -689,9 +699,9 @@ async def run(args: argparse.Namespace) -> int:
                 record.writes = await event_count(conn, namespace) - before
                 claude_spent += record.cost_usd or 0.0
                 raw = out / "raw" / f"{scenario.id}-{index}-{session.agent}"
-                raw.with_suffix(".jsonl").write_text(stdout)
+                raw.with_suffix(".jsonl").write_text(stdout, encoding="utf-8")
                 if stderr.strip():
-                    raw.with_suffix(".stderr.txt").write_text(stderr[-20000:])
+                    raw.with_suffix(".stderr.txt").write_text(stderr[-20000:], encoding="utf-8")
                 records.append(record)
                 print(
                     f"[{number}/{len(scenarios)}] {scenario.id} #{index} {session.agent}: "
@@ -716,7 +726,9 @@ async def run(args: argparse.Namespace) -> int:
             )
             shutil.rmtree(work, ignore_errors=True)
             report["summary"] = summarize(report)
-            (out / "results.json").write_text(json.dumps(report, indent=2, default=str) + "\n")
+            (out / "results.json").write_text(
+                json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8"
+            )
     finally:
         await conn.close()
         report["finished_at_utc"] = datetime.now(UTC).isoformat()
@@ -727,7 +739,9 @@ async def run(args: argparse.Namespace) -> int:
             shutil.rmtree(scratch, ignore_errors=True)
             report["database_removed"] = True
         report["summary"] = summarize(report)
-        (out / "results.json").write_text(json.dumps(report, indent=2, default=str) + "\n")
+        (out / "results.json").write_text(
+            json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8"
+        )
     print(json.dumps(report["summary"], indent=2))
     for scenario in report["scenarios"]:
         failed = [c for c in scenario["checks"] if not c["passed"]]

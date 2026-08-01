@@ -32,6 +32,7 @@ import re
 import shutil
 import subprocess
 import sys
+import sysconfig
 import tomllib
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -57,7 +58,7 @@ class InstallError(RuntimeError):
 
 
 def policy_text() -> str:
-    return files("mnemo").joinpath("memory_policy.md").read_text()
+    return files("mnemo").joinpath("memory_policy.md").read_text(encoding="utf-8")
 
 
 def _block(begin: str, end: str) -> re.Pattern[str]:
@@ -79,14 +80,19 @@ def remove_block(text: str, begin: str, end: str) -> str:
     return kept + "\n" if kept else ""
 
 
+def _toml_string(value: str) -> str:
+    """TOML 1.0 basic string (escapes Windows backslashes; avoids UTF-16 surrogates)."""
+    return json.dumps(value, ensure_ascii=False).replace("\x7f", "\\u007f")
+
+
 def codex_table(command: str, env: dict[str, str]) -> str:
     lines = [
         "[mcp_servers.mnemo]",
-        f"command = {json.dumps(command)}",
+        f"command = {_toml_string(command)}",
         'default_tools_approval_mode = "approve"',
         "",
         "[mcp_servers.mnemo.env]",
-        *(f"{key} = {json.dumps(value)}" for key, value in env.items()),
+        *(f"{key} = {_toml_string(value)}" for key, value in env.items()),
     ]
     return "\n".join(lines)
 
@@ -107,9 +113,9 @@ def codex_config(text: str, command: str, env: dict[str, str]) -> str:
 
 
 def default_opencode_dir() -> Path:
-    return (
-        Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config").expanduser() / "opencode"
-    )
+    xdg = os.environ.get("XDG_CONFIG_HOME")
+    base = Path(xdg).expanduser() if xdg else Path.home() / ".config"
+    return base / "opencode"
 
 
 def opencode_detected(opencode_dir: Path) -> bool:
@@ -154,14 +160,24 @@ def opencode_entry(command: str, env: dict[str, str]) -> dict:
     return {"type": "local", "command": [command], "environment": env}
 
 
+_SERVER_NAMES = frozenset(
+    {
+        "mnemo-mcp-direct",
+        "mnemo-mcp-direct.exe",
+        "mnemo-mcp-direct.cmd",
+        "mnemo-mcp-direct.bat",
+    }
+)
+
+
 def _ours(entry: object) -> bool:
     """A server entry mnemo-install wrote: it runs a mnemo-mcp-direct."""
     command = entry.get("command") if isinstance(entry, dict) else None
-    return (
-        isinstance(command, list)
-        and bool(command)
-        and Path(str(command[0])).name == "mnemo-mcp-direct"
-    )
+    if not (isinstance(command, list) and command):
+        return False
+    # Normalize backslashes too so Windows entries are recognized even on POSIX.
+    name = Path(str(command[0]).replace("\\", "/")).name.lower()
+    return name in _SERVER_NAMES
 
 
 def opencode_config(text: str, path: Path, entry: dict | None) -> str:
@@ -264,14 +280,37 @@ def server_env(settings: Settings, actor: str, backend: str) -> dict[str, str]:
     return env
 
 
+def _is_windows() -> bool:
+    return os.name == "nt" or sys.platform == "win32"
+
+
 def server_command() -> str:
-    """The mnemo-mcp-direct next to the running interpreter (this installation)."""
-    return str(Path(sys.executable).parent / "mnemo-mcp-direct")
+    """The mnemo-mcp-direct installed alongside the running interpreter."""
+    exe_dir = Path(sys.executable).parent
+    scripts = sysconfig.get_path("scripts")
+    windows = _is_windows()
+    candidates: list[str] = []
+    extra_scripts = (
+        str(exe_dir / "Scripts") if windows and exe_dir.name.lower() != "scripts" else None
+    )
+    for directory in (scripts, str(exe_dir), extra_scripts):
+        if directory and directory not in candidates:
+            candidates.append(directory)
+    names = ("mnemo-mcp-direct.exe", "mnemo-mcp-direct") if windows else ("mnemo-mcp-direct",)
+    for directory in candidates:
+        for name in names:
+            # Pass a qualified path so Windows shutil.which never prepends CWD via PATHEXT.
+            found = shutil.which(os.path.join(directory, name))
+            if found:
+                return found
+    fallback_name = "mnemo-mcp-direct.exe" if windows else "mnemo-mcp-direct"
+    fallback_dir = Path(scripts) if windows and scripts else exe_dir
+    return str(fallback_dir / fallback_name)
 
 
 def running_from_checkout() -> bool:
     """True when this code runs from a source checkout rather than an installed package."""
-    return "site-packages" not in Path(__file__).resolve().parts
+    return not any(part.lower() == "site-packages" for part in Path(__file__).resolve().parts)
 
 
 def default_codex_home() -> Path:
@@ -304,7 +343,7 @@ class FileChange:
             self.path.unlink(missing_ok=True)
         else:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(self.after)
+            self.path.write_text(self.after, encoding="utf-8")
 
     def diff(self) -> str:
         return "".join(
@@ -324,7 +363,7 @@ class Command:
 
 
 def _read(path: Path) -> str:
-    return path.read_text() if path.exists() else ""
+    return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
 def claude_settings(text: str, auto_memory: str) -> str:
@@ -558,6 +597,16 @@ def probe_or(probe: Services | None) -> Services:
     return probe or Services()
 
 
+def _run_command(cmd: Sequence[str]) -> subprocess.CompletedProcess:
+    argv = list(cmd)
+    if _is_windows() and argv:
+        # On Windows, CreateProcess only resolves .exe; shutil.which finds .cmd/.bat shims too.
+        resolved = shutil.which(argv[0])
+        if resolved:
+            argv[0] = resolved
+    return subprocess.run(argv, capture_output=True, text=True, encoding="utf-8", errors="replace")
+
+
 def main(
     argv: Sequence[str] | None = None,
     *,
@@ -589,7 +638,7 @@ def main(
         help="turn Claude Code's own auto-memory off, or back on (default: leave it)",
     )
     args = parser.parse_args(argv)
-    run = runner or (lambda cmd: subprocess.run(list(cmd), capture_output=True, text=True))
+    run = runner or _run_command
     settings = get_settings()
     backend = args.backend or settings.backend
     if backend != settings.backend:

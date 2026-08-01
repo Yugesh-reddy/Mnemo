@@ -8,6 +8,7 @@ Ollama embeddings when the local model is available.
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import httpx
@@ -259,6 +260,7 @@ def test_checking_for_the_local_model_creates_nothing(tmp_path) -> None:
     assert not (tmp_path / ".mnemo").exists()
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file modes")
 def test_mnemo_directories_are_private_however_they_are_created(tmp_path) -> None:
     import stat
 
@@ -275,3 +277,33 @@ def test_mnemo_directories_are_private_however_they_are_created(tmp_path) -> Non
         existing / "home" / ".mnemo" / "models",
     ):
         assert stat.S_IMODE(path.stat().st_mode) == 0o700
+
+
+def test_private_dirs_creates_nested_dirs_and_stops_at_missing_root(tmp_path) -> None:
+    from mnemo.embedder import private_dirs
+
+    target = tmp_path / "a" / "b" / "c"
+    private_dirs(target)
+    assert target.is_dir()
+
+    # Simulate a nonexistent Windows drive root (e.g. Z:\missing) where parent == self.
+    class MissingPath:
+        def __init__(self, name: str, parent: MissingPath | None = None) -> None:
+            self.name = name
+            self._parent = parent
+            self.created = False
+
+        @property
+        def parent(self) -> MissingPath:
+            return self if self._parent is None else self._parent
+
+        def exists(self) -> bool:
+            return False
+
+        def mkdir(self, *, mode: int = 0o777, exist_ok: bool = False) -> None:
+            raise FileNotFoundError(f"missing drive: {self.name}")
+
+    root = MissingPath("Z:\\")
+    child = MissingPath("Z:\\mnemo", root)
+    with pytest.raises(FileNotFoundError, match=r"Z:\\"):
+        private_dirs(child)  # type: ignore[arg-type]

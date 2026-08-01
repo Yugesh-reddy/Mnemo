@@ -3,6 +3,7 @@ that make events and receipts append-only."""
 
 from __future__ import annotations
 
+import os
 import re
 import sqlite3
 import stat
@@ -65,10 +66,12 @@ async def test_a_new_file_is_private_migrated_once_and_in_wal_mode(tmp_path) -> 
         assert await conn.fetchval("SELECT vec_version()")
     finally:
         await conn.close()
-    assert stat.S_IMODE(path.stat().st_mode) == 0o600
-    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
+    if os.name == "posix":
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file modes")
 async def test_an_existing_store_parent_directory_is_not_chmodded(tmp_path) -> None:
     existing = tmp_path / "existing"
     existing.mkdir()

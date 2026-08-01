@@ -23,7 +23,13 @@ from mnemo.errors import ErrorCode, MnemoError
 def where(path: Path | str) -> str:
     """The store file as the user would type it (home shown as ~)."""
     text = str(path)
-    home = str(Path.home())
+    home = str(Path.home()).rstrip("\\/")
+    if os.name == "nt":
+        norm_text = text.replace("\\", "/").lower()
+        norm_home = home.replace("\\", "/").lower()
+        if norm_text.startswith(norm_home + "/"):
+            return "~" + text[len(home) :]
+        return text
     return "~" + text[len(home) :] if text.startswith(home + "/") else text
 
 

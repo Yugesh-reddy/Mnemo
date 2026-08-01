@@ -120,7 +120,7 @@ class Witness:
     def read(cls, path: Path) -> Witness | None:
         bad = f"{path} is not a Mnemo witness file (want 'SEQ HASH [FACT_SEQ FACT_HASH]')"
         try:
-            lines = [line for line in path.read_text().splitlines() if line.strip()]
+            lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
         except FileNotFoundError:
             return None
         fields = lines[0].split() if len(lines) == 1 else []
@@ -140,13 +140,17 @@ class Witness:
         private_dirs(path.parent)
         temporary = path.with_name(path.name + ".tmp")
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(descriptor, "w") as handle:
-            sealed = self.fact_seq is not None and self.fact_hash is not None
-            facts = f" {self.fact_seq} {self.fact_hash}" if sealed else ""
-            handle.write(f"{self.seq} {self.hash}{facts}\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+                sealed = self.fact_seq is not None and self.fact_hash is not None
+                facts = f" {self.fact_seq} {self.fact_hash}" if sealed else ""
+                handle.write(f"{self.seq} {self.hash}{facts}\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, path)
+        except BaseException:
+            temporary.unlink(missing_ok=True)
+            raise
 
 
 def witness_path(db: Path) -> Path:

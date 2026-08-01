@@ -33,7 +33,7 @@ def test_migrate_reindex_export_and_import_work_on_the_configured_file(
         assert "Embedded 0 of 0 events" in capsys.readouterr().out
         backup = tmp_path / "backup.json"
         assert cli.main(["export", "--out", str(backup)]) == 0
-        assert '"format_version": 2' in backup.read_text()
+        assert '"format_version": 2' in backup.read_text(encoding="utf-8")
         monkeypatch.setenv("MNEMO_DB", str(tmp_path / "restored.db"))
         get_settings.cache_clear()
         assert cli.main(["import", str(backup)]) == 0
@@ -63,7 +63,7 @@ def test_the_package_declares_the_command():
     import tomllib
 
     root = Path(__file__).resolve().parents[1]
-    project = tomllib.loads((root / "pyproject.toml").read_text())
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
     assert project["project"]["scripts"]["mnemo"] == "mnemo.cli:main"
     included = project["tool"]["hatch"]["build"]["targets"]["wheel"]["force-include"]
     assert "docker-compose.yml" not in included

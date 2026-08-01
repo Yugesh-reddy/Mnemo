@@ -247,8 +247,9 @@ async def test_a_retracted_memory_and_its_receipt_round_trip(source_and_destinat
 
 
 async def test_a_postgres_export_imports_with_the_same_history(db, fake_embedder):
-    doc = json.loads(V1.read_text(), parse_float=Decimal)
-    counts = await import_store(db, V1.read_text(), settings=SETTINGS, embedder=fake_embedder)
+    text = V1.read_text(encoding="utf-8")
+    doc = json.loads(text, parse_float=Decimal)
+    counts = await import_store(db, text, settings=SETTINGS, embedder=fake_embedder)
     assert counts == {"facts": 6, "events": 9, "commits": 1, "receipts": 7}
 
     events = await db.fetch(
@@ -317,7 +318,7 @@ async def test_a_postgres_export_imports_with_the_same_history(db, fake_embedder
 
 
 async def test_a_postgres_export_from_before_retract_is_refused(db):
-    doc = json.loads(V1.read_text())
+    doc = json.loads(V1.read_text(encoding="utf-8"))
     doc["schema_migrations"].remove("0012_retract_receipts.sql")
     with pytest.raises(TransferError, match="v0.0.1-postgres"):
         await import_store(db, json.dumps(doc), settings=SETTINGS)

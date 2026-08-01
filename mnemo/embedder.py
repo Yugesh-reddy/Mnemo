@@ -173,7 +173,10 @@ def private_dirs(path: Path) -> None:
     missing = []
     while not path.exists():
         missing.append(path)
-        path = path.parent
+        parent = path.parent
+        if parent == path:
+            break
+        path = parent
     for directory in reversed(missing):
         directory.mkdir(mode=0o700, exist_ok=True)
 

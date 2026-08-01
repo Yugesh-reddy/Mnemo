@@ -13,7 +13,9 @@ You need macOS or Linux with [uv](https://docs.astral.sh/uv/). Nothing else runs
 is one file, `~/.mnemo/mnemo.db`, and the embedding model runs inside Mnemo. On Linux a
 glibc distribution is needed (Debian, Ubuntu and uv's own Python are tested); Alpine
 and other musl systems are not supported, because `sqlite-vec` publishes no wheels for
-them. Windows has not been tested.
+them. Windows has not been tested: the code avoids the POSIX assumptions found so far
+(`.exe` server paths, escaped paths in agent configs, UTF-8 files, `path:` project
+names), but nobody has run it there yet.
 
 ```bash
 uv tool install mnemohive

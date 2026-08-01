@@ -4,6 +4,7 @@ and uninstall."""
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import tomllib
 from pathlib import Path
@@ -80,18 +81,23 @@ def test_codex_config_refuses_an_unmanaged_mnemo_server():
         inst.codex_config(foreign, "/x", ENV)
 
 
-def test_codex_home_prefers_env_then_a_pinning_wrapper(tmp_path, monkeypatch):
+def test_codex_home_prefers_env_else_dot_codex(tmp_path, monkeypatch):
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "explicit"))
     assert inst.default_codex_home() == tmp_path / "explicit"
     monkeypatch.delenv("CODEX_HOME")
+    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
+    assert inst.default_codex_home() == Path.home() / ".codex"
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX shell wrapper")
+def test_codex_home_detects_a_pinning_shell_wrapper(tmp_path, monkeypatch):
+    monkeypatch.delenv("CODEX_HOME", raising=False)
     wrapper = tmp_path / "bin" / "codex"
     wrapper.parent.mkdir()
     wrapper.write_text('#!/bin/sh\nexport CODEX_HOME="${CODEX_HOME:-$HOME/.codex-secondary}"\n')
     wrapper.chmod(0o755)
     monkeypatch.setenv("PATH", str(wrapper.parent))
     assert inst.default_codex_home() == Path.home() / ".codex-secondary"
-    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
-    assert inst.default_codex_home() == Path.home() / ".codex"
 
 
 class FakeCli:
@@ -109,10 +115,17 @@ class FakeCli:
 
 @pytest.fixture
 def homes(tmp_path, monkeypatch):
-    monkeypatch.setattr(inst.shutil, "which", lambda name: f"/usr/local/bin/{name}")
+    real_which = inst.shutil.which
+
+    def fake_which(name: str, mode: int = os.F_OK | os.X_OK, path: str | None = None):
+        if path is not None or os.path.dirname(name):
+            return real_which(name, mode=mode, path=path)
+        return f"/usr/local/bin/{name}"
+
+    monkeypatch.setattr(inst.shutil, "which", fake_which)
     claude, codex = tmp_path / "claude", tmp_path / "codex"
     codex.mkdir()
-    (codex / "config.toml").write_text(EXISTING_TOML)
+    (codex / "config.toml").write_text(EXISTING_TOML, encoding="utf-8")
     return claude, codex
 
 
@@ -192,8 +205,9 @@ async def test_migrate_creates_a_private_store_once(tmp_path, _disposable_test_d
     path = tmp_path / "home" / ".mnemo" / "mnemo.db"
     assert await inst.migrate(path) == migration_names()
     assert await inst.migrate(path) == []
-    assert stat.S_IMODE(path.stat().st_mode) == 0o600
-    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
+    if os.name == "posix":
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
     assert await inst.migrate(Path(_disposable_test_db)) == []
 
 
@@ -437,8 +451,15 @@ def test_opencode_reading_claude_md_gets_the_policy_there(homes, tmp_path, capsy
 
 def test_opencode_is_installed_by_default_only_when_detected(homes, tmp_path, monkeypatch):
     claude, codex = homes
+    real_which = inst.shutil.which
     monkeypatch.setattr(
-        inst.shutil, "which", lambda name: None if name == "opencode" else f"/bin/{name}"
+        inst.shutil,
+        "which",
+        lambda name, mode=os.F_OK | os.X_OK, path=None: (
+            real_which(name, mode=mode, path=path)
+            if path is not None or os.path.dirname(name)
+            else (None if name == "opencode" else f"/bin/{name}")
+        ),
     )
     assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
     assert not (tmp_path / "opencode").exists()
@@ -595,6 +616,7 @@ def test_the_ollama_model_and_host_follow_the_agents():
     assert env["MNEMO_EMBED_DIM"] == "1024" and "MNEMO_MODEL_DIR" not in env
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file modes")
 def test_install_warns_without_chmodding_an_open_store_directory(
     homes, tmp_path, monkeypatch, capsys
 ):
@@ -617,3 +639,182 @@ def test_install_warns_without_chmodding_an_open_store_directory(
         assert "chmod 700" not in capsys.readouterr().out
     finally:
         inst.get_settings.cache_clear()
+
+
+# ---- Windows compatibility (simulated) --------------------------------------
+
+
+def test_server_command_resolves_scripts_dir_on_windows(tmp_path, monkeypatch):
+    # 1. Windows venv / uv tool layout: python.exe and mnemo-mcp-direct.exe share Scripts\.
+    venv_scripts = tmp_path / "uv" / "tools" / "mnemohive" / "Scripts"
+    venv_scripts.mkdir(parents=True)
+    server_exe = venv_scripts / "mnemo-mcp-direct.exe"
+    server_exe.write_bytes(b"")
+    server_exe.chmod(0o755)
+    # Monkeypatch sys.platform (not os.name, which breaks PosixPath construction on macOS).
+    monkeypatch.setattr(inst.sys, "platform", "win32")
+    monkeypatch.setattr(inst.os, "pathsep", ";")
+    monkeypatch.setenv("PATHEXT", ".COM;.EXE;.BAT;.CMD")
+    monkeypatch.setattr(inst.sys, "executable", str(venv_scripts / "python.exe"))
+    monkeypatch.setattr(
+        inst.sysconfig,
+        "get_path",
+        lambda name, *a, **kw: str(venv_scripts) if name == "scripts" else None,
+    )
+    assert inst.server_command() == str(server_exe)
+
+    # 2. Windows system Python layout: python.exe in root, console scripts in Scripts\.
+    py_root = tmp_path / "Python312"
+    py_scripts = py_root / "Scripts"
+    py_scripts.mkdir(parents=True)
+    sys_server_exe = py_scripts / "mnemo-mcp-direct.exe"
+    sys_server_exe.write_bytes(b"")
+    sys_server_exe.chmod(0o755)
+    monkeypatch.setattr(inst.sys, "executable", str(py_root / "python.exe"))
+    monkeypatch.setattr(
+        inst.sysconfig,
+        "get_path",
+        lambda name, *a, **kw: str(py_scripts) if name == "scripts" else None,
+    )
+    assert inst.server_command() == str(sys_server_exe)
+
+    # 3. Windows PATHEXT discovery also finds .cmd shims and ignores CWD decoy binaries.
+    cmd_scripts = tmp_path / "shim" / "Scripts"
+    cmd_scripts.mkdir(parents=True)
+    shim_cmd = cmd_scripts / "mnemo-mcp-direct.CMD"
+    shim_cmd.write_bytes(b"")
+    shim_cmd.chmod(0o755)
+    decoy_cwd = tmp_path / "untrusted-repo"
+    decoy_cwd.mkdir()
+    decoy = decoy_cwd / "mnemo-mcp-direct.exe"
+    decoy.write_bytes(b"")
+    decoy.chmod(0o755)
+    monkeypatch.chdir(decoy_cwd)
+    monkeypatch.setattr(inst.sys, "executable", str(cmd_scripts / "python.exe"))
+    monkeypatch.setattr(
+        inst.sysconfig,
+        "get_path",
+        lambda name, *a, **kw: str(cmd_scripts) if name == "scripts" else None,
+    )
+    assert inst.server_command() == str(shim_cmd)
+
+    # 4. Windows fallback when script is not yet on disk uses Scripts\mnemo-mcp-direct.exe.
+    empty_scripts = tmp_path / "empty" / "Scripts"
+    monkeypatch.setattr(inst.sys, "executable", str(tmp_path / "empty" / "python.exe"))
+    monkeypatch.setattr(
+        inst.sysconfig,
+        "get_path",
+        lambda name, *a, **kw: str(empty_scripts) if name == "scripts" else None,
+    )
+    assert inst.server_command() == str(empty_scripts / "mnemo-mcp-direct.exe")
+
+    # 5. POSIX fallback preserves Path(sys.executable).parent / "mnemo-mcp-direct".
+    monkeypatch.setattr(inst.sys, "platform", "darwin")
+    monkeypatch.setattr(inst.os, "pathsep", ":")
+    posix_bin = tmp_path / "posix-venv" / "bin"
+    monkeypatch.setattr(inst.sys, "executable", str(posix_bin / "python"))
+    monkeypatch.setattr(
+        inst.sysconfig,
+        "get_path",
+        lambda name, *a, **kw: str(posix_bin) if name == "scripts" else None,
+    )
+    assert inst.server_command() == str(posix_bin / "mnemo-mcp-direct")
+
+
+def test_windows_paths_escape_and_round_trip_in_agent_configs(tmp_path, monkeypatch):
+    # Deliberately include \n, \t, \b, \u escape traps, spaces, accented chars and emoji.
+    win_cmd = r"C:\Users\nick\temp\backup\uv\tools\mnemohive\Scripts\mnemo-mcp-direct.exe"
+    win_env = {
+        "MNEMO_DB": r"C:\Users\nick\AppData\Local\new\mnemo.db",
+        "MNEMO_MODEL_DIR": r"C:\Users\José\My Models\🚀\bge",
+        "MNEMO_ACTOR": "codex",
+    }
+
+    # Codex TOML escapes backslashes and avoids illegal UTF-16 surrogates.
+    updated_toml = inst.codex_config(EXISTING_TOML, win_cmd, win_env)
+    assert r"C:\\Users\\nick\\temp\\backup" in updated_toml
+    parsed_toml = tomllib.loads(updated_toml)["mcp_servers"]["mnemo"]
+    assert parsed_toml["command"] == win_cmd
+    assert parsed_toml["env"] == win_env
+    assert inst.codex_config(updated_toml, win_cmd, win_env) == updated_toml
+    assert inst.remove_block(updated_toml, inst.TOML_BEGIN, inst.TOML_END) == EXISTING_TOML
+
+    # OpenCode JSON escapes backslashes and recognizes .exe / .EXE on reinstall & uninstall.
+    opencode_file = tmp_path / "opencode.json"
+    entry = inst.opencode_entry(win_cmd, win_env)
+    written_json = inst.opencode_config("{}", opencode_file, entry)
+    assert r"C:\\Users\\nick\\temp\\backup" in written_json
+    assert json.loads(written_json)["mcp"]["mnemo"] == entry
+    assert inst.opencode_config(written_json, opencode_file, entry) == written_json
+    # Uppercase .EXE from Windows PATHEXT is still recognized as ours.
+    upper = written_json.replace("mnemo-mcp-direct.exe", "mnemo-mcp-direct.EXE")
+    assert json.loads(inst.opencode_config(upper, opencode_file, None)) == {}
+    foreign = json.dumps({"mcp": {"mnemo": {"type": "local", "command": [r"C:\bin\other.exe"]}}})
+    with pytest.raises(inst.InstallError, match="did not write"):
+        inst.opencode_config(foreign, opencode_file, entry)
+
+    # Claude Code `add-json` passes valid escaped JSON with the Windows command and paths.
+    monkeypatch.setattr(inst.shutil, "which", lambda name, *a, **kw: f"C:\\bin\\{name}.exe")
+    settings = inst.Settings(
+        _env_file=None,
+        backend="local",
+        db=Path(r"C:\Users\nick\.mnemo\mnemo.db"),
+        model_dir=Path(r"C:\Users\nick\.mnemo\models"),
+    )
+    commands, _, _ = inst.plan(
+        agents=["claude"],
+        uninstall=False,
+        claude_dir=tmp_path / "claude",
+        codex_home=tmp_path / "codex",
+        settings=settings,
+        backend="local",
+        command=win_cmd,
+        runner=FakeCli(),
+    )
+    add_cmd = commands[-1]
+    assert add_cmd.argv[:4] == ["claude", "mcp", "add-json", "mnemo"]
+    payload = json.loads(add_cmd.argv[4])
+    assert payload["command"] == win_cmd
+    assert payload["env"]["MNEMO_DB"] == str(settings.db)
+    assert payload["env"]["MNEMO_MODEL_DIR"] == str(settings.model_dir)
+
+
+def test_default_runner_resolves_cmd_shims_on_windows(monkeypatch):
+    seen: list[tuple[list[str], dict]] = []
+
+    def fake_run(argv, **kwargs):
+        seen.append((list(argv), kwargs))
+        return subprocess.CompletedProcess(argv, 0, "", "")
+
+    monkeypatch.setattr(inst.os, "name", "nt")
+    monkeypatch.setattr(inst.sys, "platform", "win32")
+    monkeypatch.setattr(
+        inst.shutil,
+        "which",
+        lambda name: r"C:\Users\Alice\AppData\Roaming\npm\claude.cmd" if name == "claude" else None,
+    )
+    monkeypatch.setattr(inst.subprocess, "run", fake_run)
+    inst._run_command(["claude", "mcp", "get", "mnemo"])
+    assert seen == [
+        (
+            [r"C:\Users\Alice\AppData\Roaming\npm\claude.cmd", "mcp", "get", "mnemo"],
+            {"capture_output": True, "text": True, "encoding": "utf-8", "errors": "replace"},
+        )
+    ]
+
+
+def test_windows_default_config_locations_and_checkout_detection(tmp_path, monkeypatch):
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    monkeypatch.delenv("CODEX_HOME", raising=False)
+    monkeypatch.setattr(inst.Path, "home", staticmethod(lambda: tmp_path))
+    monkeypatch.setattr(inst.shutil, "which", lambda _name: None)
+    assert inst.default_codex_home() == tmp_path / ".codex"
+    assert inst.default_opencode_dir() == tmp_path / ".config" / "opencode"
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "custom-xdg"))
+    assert inst.default_opencode_dir() == tmp_path / "custom-xdg" / "opencode"
+
+    # Case-insensitive site-packages check works on Windows (e.g. Lib\Site-Packages).
+    monkeypatch.setattr(
+        inst, "__file__", str(tmp_path / "Lib" / "Site-Packages" / "mnemo" / "install.py")
+    )
+    assert not inst.running_from_checkout()

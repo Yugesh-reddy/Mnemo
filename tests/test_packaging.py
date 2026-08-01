@@ -3,7 +3,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = (ROOT / "scripts" / "check-wheel.sh").read_text()
+SCRIPT = (ROOT / "scripts" / "check-wheel.sh").read_text(encoding="utf-8")
 
 
 def test_wheel_check_points_every_store_step_at_a_scratch_file():
@@ -19,7 +19,7 @@ def test_readme_links_work_on_pypi():
     """PyPI renders README.md without the repository, so relative links would 404."""
     import re
 
-    readme = (ROOT / "README.md").read_text()
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
     links = re.findall(r"\]\(([^)\s]+)\)", readme)
     relative = [link for link in links if not re.match(r"(https?:|mailto:|#)", link)]
     assert not relative, relative

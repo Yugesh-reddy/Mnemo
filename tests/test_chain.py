@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import sqlite3
@@ -16,7 +17,7 @@ from mnemo.core import MnemoStore
 from mnemo.direct import DirectMemory
 from mnemo.sqlite import connect
 
-MIGRATION = (mdb.MIGRATIONS_DIR / "0002_event_chain.sql").read_text()
+MIGRATION = (mdb.MIGRATIONS_DIR / "0002_event_chain.sql").read_text(encoding="utf-8")
 
 
 async def history(store) -> DirectMemory:
@@ -63,7 +64,7 @@ def rewrite_history(path: str, edit: str) -> None:
 def test_the_trigger_hashes_exactly_the_payload_columns():
     listed = re.search(r"json_array\((NEW\..*?)\)\)\);", MIGRATION, re.S).group(1)
     assert tuple(c.strip().removeprefix("NEW.") for c in listed.split(",")) == CHAIN_COLUMNS
-    schema = (mdb.MIGRATIONS_DIR / "0001_sqlite_init.sql").read_text()
+    schema = (mdb.MIGRATIONS_DIR / "0001_sqlite_init.sql").read_text(encoding="utf-8")
     guarded = re.findall(r"NEW\.(\w+) IS NOT OLD", schema)
     assert set(guarded) == set(CHAIN_COLUMNS)
 
@@ -290,12 +291,14 @@ def test_witness_files_round_trip_privately(tmp_path):
     assert path.name == "mnemo.db.verified" and Witness.read(path) is None
     Witness(7, "b" * 64).write(path)
     assert Witness.read(path) == Witness(7, "b" * 64)
-    assert stat.S_IMODE(path.stat().st_mode) == 0o600
-    path.write_text("not a witness")
+    if os.name == "posix":
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    path.write_text("not a witness", encoding="utf-8")
     with pytest.raises(ValueError, match="not a Mnemo witness file"):
         Witness.read(path)
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file modes")
 def test_witness_creates_missing_parent_dirs_0700_and_leaves_existing_alone(tmp_path):
     import stat
 
@@ -313,6 +316,7 @@ def test_witness_creates_missing_parent_dirs_0700_and_leaves_existing_alone(tmp_
     assert stat.S_IMODE((existing / "mnemo.db.verified").stat().st_mode) == 0o600
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX file modes")
 def test_verify_warns_without_chmodding_an_open_store_directory(
     tmp_path, _migrated_template, monkeypatch, capsys
 ):

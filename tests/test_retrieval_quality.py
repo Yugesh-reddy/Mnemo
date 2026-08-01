@@ -37,7 +37,9 @@ from mnemo.direct import DirectMemory
 from mnemo.embedder import build_embedder, local_model_ready
 from mnemo.sqlite import connect
 
-SET = json.loads((Path(__file__).parent / "data" / "retrieval_set.json").read_text())
+SET = json.loads(
+    (Path(__file__).parent / "data" / "retrieval_set.json").read_text(encoding="utf-8")
+)
 FIRST, TOP3, OFF_TOPIC_HITS = 19, 24, 3
 
 

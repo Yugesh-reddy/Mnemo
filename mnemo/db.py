@@ -83,7 +83,7 @@ async def apply_migrations(conn: Connection, migrations_dir: Path = MIGRATIONS_D
     """Apply any un-applied ``*.sql`` files in order. Returns the names applied."""
     applied: list[str] = []
     for name in migration_names(migrations_dir):
-        sql = (migrations_dir / name).read_text()
+        sql = (migrations_dir / name).read_text(encoding="utf-8")
 
         def run(sql: str = sql, name: str = name) -> bool:
             raw = conn.raw

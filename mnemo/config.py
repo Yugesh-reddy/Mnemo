@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     )
 
     # --- Store ---
-    db: Path = Path.home() / ".mnemo" / "mnemo.db"
+    db: Path = Field(default_factory=lambda: Path.home() / ".mnemo" / "mnemo.db")
     """The SQLite file every agent shares. Keep it on a local disk, not a synced folder."""
 
     # --- Backend selection ---
@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     """local (default): an embedding model running inside Mnemo, no model server.
     ollama: a local Ollama server. hash: no model, word matches only. openai: hosted."""
 
-    model_dir: Path = Path.home() / ".mnemo" / "models"
+    model_dir: Path = Field(default_factory=lambda: Path.home() / ".mnemo" / "models")
     """Where the local backend keeps its model; `mnemo install` downloads it here."""
 
     # --- Ollama ---

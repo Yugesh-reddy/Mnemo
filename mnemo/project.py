@@ -9,13 +9,15 @@ falls back to its top-level path; outside a repository there is no project.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit
 
-# scp-like syntax: [user@]host:path (a leading "/" or "." means a local path instead).
-_SCP = re.compile(r"^(?:[^@/]+@)?(?P<host>[^:/]+):(?P<path>[^/].*)$")
+# scp-like syntax: [user@]host:path (a leading "/", "\\" or "." means a local path instead).
+_SCP = re.compile(r"^(?:[^@/]+@)?(?P<host>[^:/]+):(?P<path>[^/\\].*)$")
+_WIN_DRIVE = re.compile(r"^[A-Za-z]:")
 
 
 def normalize_remote(url: str) -> str | None:
@@ -25,6 +27,8 @@ def normalize_remote(url: str) -> str | None:
         parts = urlsplit(url)
         host, path = parts.hostname, parts.path
     else:
+        if _WIN_DRIVE.match(url):
+            return None
         match = _SCP.match(url)
         if match is None:
             return None
@@ -36,12 +40,35 @@ def normalize_remote(url: str) -> str | None:
     return f"{host}/{path}".lower()
 
 
+def normalize_project_path(path: Path | str) -> str:
+    """Canonical path for ``path:`` lanes (stable drive-letter case and slash direction)."""
+    text = str(path)
+    windows_style = os.name == "nt" or text.startswith("\\\\") or bool(_WIN_DRIVE.match(text))
+    if windows_style:
+        if text[:8].upper() == "\\\\?\\UNC\\":
+            text = "//" + text[8:]
+        elif text.startswith("\\\\?\\"):
+            text = text[4:]
+        text = text.replace("\\", "/")
+        if _WIN_DRIVE.match(text):
+            text = text[0].upper() + text[1:]
+            if len(text) > 2:
+                stripped = text.rstrip("/")
+                return stripped + "/" if len(stripped) == 2 else stripped
+            return text
+    if len(text) > 1 and not (windows_style and text == "//"):
+        text = text.rstrip("/")
+    return text
+
+
 def _git(cwd: Path, *args: str) -> str | None:
     try:
         result = subprocess.run(
             ["git", "-C", str(cwd), *args],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=5,
             check=False,
         )
@@ -61,4 +88,4 @@ def detect_project(cwd: Path | str) -> str | None:
         project = normalize_remote(_git(Path(top), "remote", "get-url", name) or "")
         if project:
             return project
-    return f"path:{Path(top).resolve()}"
+    return f"path:{normalize_project_path(Path(top).resolve())}"

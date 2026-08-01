@@ -303,7 +303,7 @@ def test_templates_load_nothing_from_the_internet():
 
     templates = Path(__file__).resolve().parents[1] / "mnemo" / "web" / "templates"
     for page in templates.glob("*.html"):
-        text = page.read_text()
+        text = page.read_text(encoding="utf-8")
         assert not re.search(r'(src|href)="(https?:)?//', text), page.name
 
 
@@ -325,7 +325,7 @@ def test_bundled_scripts_are_readable_source_not_minified():
     scripts = sorted(static.glob("*.js"))
     assert [path.name for path in scripts] == ["htmx.js"]
     for path in scripts:
-        lines = path.read_text().splitlines()
+        lines = path.read_text(encoding="utf-8").splitlines()
         assert len(lines) > 1000 and max(len(line) for line in lines) < 500, path.name
 
 

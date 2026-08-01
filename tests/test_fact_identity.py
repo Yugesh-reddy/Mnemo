@@ -17,7 +17,7 @@ from mnemo.direct import DirectMemory
 from mnemo.sqlite import connect
 from tests.test_chain import around_mnemo, history
 
-MIGRATION = (mdb.MIGRATIONS_DIR / "0003_fact_identity.sql").read_text()
+MIGRATION = (mdb.MIGRATIONS_DIR / "0003_fact_identity.sql").read_text(encoding="utf-8")
 
 
 def reseal(path: str, edit: str) -> None:
@@ -41,7 +41,7 @@ def test_the_seal_and_the_guard_cover_exactly_the_identity_columns():
     sealed = re.search(r"json_array\((NEW\..*?)\)\)\);", MIGRATION, re.S).group(1)
     assert tuple(c.strip().removeprefix("NEW.") for c in sealed.split(",")) == FACT_COLUMNS
     assert tuple(re.findall(r"NEW\.(\w+) IS NOT OLD", MIGRATION)) == FACT_COLUMNS
-    schema = (mdb.MIGRATIONS_DIR / "0001_sqlite_init.sql").read_text()
+    schema = (mdb.MIGRATIONS_DIR / "0001_sqlite_init.sql").read_text(encoding="utf-8")
     table = re.search(r"CREATE TABLE memory_fact \((.*?)\n\);", schema, re.S).group(1)
     columns = set(re.findall(r"^\s{2}(\w+)\s", table, re.M)) - {"UNIQUE", "CHECK"}
     # Everything but the two columns Mnemo moves: status and the HEAD pointer.

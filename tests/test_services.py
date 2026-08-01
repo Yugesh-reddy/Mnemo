@@ -66,8 +66,32 @@ def test_store_errors_name_the_fix(exc, fix):
 def test_store_paths_are_shown_from_home():
     from pathlib import Path
 
-    assert services.where(Path.home() / ".mnemo" / "mnemo.db") == "~/.mnemo/mnemo.db"
+    assert services.where(Path.home() / ".mnemo" / "mnemo.db") == str(
+        Path("~") / ".mnemo" / "mnemo.db"
+    )
     assert services.where("/srv/mnemo.db") == "/srv/mnemo.db"
+
+
+def test_where_shortens_home_on_windows(monkeypatch):
+    class FakeWinHome:
+        def __str__(self) -> str:
+            return r"C:\Users\Alice"
+
+    monkeypatch.setattr(services.os, "name", "nt")
+    monkeypatch.setattr(services.Path, "home", staticmethod(FakeWinHome))
+    assert services.where(r"C:\Users\Alice\.mnemo\mnemo.db") == r"~\.mnemo\mnemo.db"
+    assert services.where(r"c:\users\alice\.mnemo\mnemo.db") == r"~\.mnemo\mnemo.db"
+    assert services.where("C:/Users/Alice/.mnemo/mnemo.db") == "~/.mnemo/mnemo.db"
+    assert services.where(r"C:\Users\Alice2\.mnemo\mnemo.db") == r"C:\Users\Alice2\.mnemo\mnemo.db"
+    assert services.where(r"D:\shared\mnemo.db") == r"D:\shared\mnemo.db"
+
+
+def test_dir_permission_warning_is_disabled_on_windows(tmp_path, monkeypatch):
+    open_dir = tmp_path / "open-store"
+    open_dir.mkdir()
+    open_dir.chmod(0o755)
+    monkeypatch.setattr(services.os, "name", "nt")
+    assert services.dir_permission_warning(open_dir / "mnemo.db") is None
 
 
 def test_a_missing_local_model_says_to_run_the_installer(tmp_path):

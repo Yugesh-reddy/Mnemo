@@ -984,3 +984,21 @@ request to finish the pending work.
   highest pairwise cosines are 0.763 and 0.684). The floors were chosen on this set,
   so they are tuned, not held out; `tests/test_duplicates.py` re-checks them live.
 - The tool descriptions are unchanged; the note travels in the result.
+
+## 36. Linux checked, Windows prepared — November 21, 2026
+
+- **Linux.** `scripts/check-linux.sh` builds the wheel and, in a fresh Docker
+  container as a new non-root user, runs `uv tool install`, `mnemo install` with no
+  agents and with stub `claude`/`codex` and existing configs, the MCP server over
+  stdio as written into Codex's config, `mnemo verify`, the web UI and
+  `mnemo uninstall` (configs restored, store kept). It passed on Debian 12 and 13 and
+  Ubuntu 24.04, arm64 and amd64, hash and local backends; the suite passed in a
+  container too. Alpine (musl) is unsupported: `sqlite-vec` has no musl wheels.
+- **Windows (untested).** The installer finds `mnemo-mcp-direct.exe` in the
+  interpreter's scripts directory, writes Codex's TOML with Windows paths escaped,
+  recognises its OpenCode entry by `.exe`/`.cmd` names, resolves `claude.cmd` shims,
+  and reads and writes text as UTF-8; `path:` project names use forward slashes and
+  an upper-case drive letter, so agents in one repository share a lane. POSIX-only
+  tests (file modes) skip there. On macOS and Linux the server path and every project
+  name are unchanged. What still needs a Windows machine is listed in the overnight
+  report: native wheels, agent CLIs launching the server, NTFS behaviour.
