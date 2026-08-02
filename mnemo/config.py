@@ -55,6 +55,9 @@ class Settings(BaseSettings):
     model_dir: Path = Field(default_factory=lambda: Path.home() / ".mnemo" / "models")
     """Where the local backend keeps its model; `mnemo install` downloads it here."""
 
+    local_model_idle_seconds: float = Field(300.0, ge=0.0, allow_inf_nan=False)
+    """Release the loaded local model after this many idle seconds (0 disables)."""
+
     # --- Ollama ---
     ollama_host: str = "http://localhost:11434"
 

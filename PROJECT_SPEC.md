@@ -1002,3 +1002,18 @@ request to finish the pending work.
   tests (file modes) skip there. On macOS and Linux the server path and every project
   name are unchanged. What still needs a Windows machine is listed in the overnight
   report: native wheels, agent CLIs launching the server, NTFS behaviour.
+
+## 37. The local model is released when idle — November 21, 2026
+
+- Every agent session runs its own server, and with the `local` backend each held
+  the ONNX model (~160 MB of heap, ~300 MB resident in all) for the whole session.
+  `LocalEmbedder` now drops the model after `local_model_idle_seconds` (default 300,
+  `MNEMO_LOCAL_MODEL_IDLE_SECONDS`, 0 keeps it) without an embed, using one daemon
+  timer re-armed by activity and guarded by the embed lock and a generation counter;
+  the next embed reloads it. `close()` cancels the timer.
+- **Measured** over MCP stdio (server RSS, idle 2 s): on Debian (glibc) the drop
+  alone returned 22 MB, so the release also calls `malloc_trim(0)`; with it a warm
+  217 MB server fell to about 128–134 MB on each idle cycle (control without
+  unloading: no change). On macOS 27 resident memory barely moves at first, because
+  libmalloc reclaims freed pages lazily (physical footprint drifted from 246 to
+  221 MB over 30 s). A reload costs about 70–130 ms against 10 ms for a warm search.

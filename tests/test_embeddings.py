@@ -307,3 +307,212 @@ def test_private_dirs_creates_nested_dirs_and_stops_at_missing_root(tmp_path) ->
     child = MissingPath("Z:\\mnemo", root)
     with pytest.raises(FileNotFoundError, match=r"Z:\\"):
         private_dirs(child)  # type: ignore[arg-type]
+
+
+def _wait_until(predicate, *, timeout: float = 2.0, step: float = 0.01) -> bool:
+    import time
+
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if predicate():
+            return True
+        time.sleep(step)
+    return predicate()
+
+
+def test_local_model_idle_seconds_setting(tmp_path, monkeypatch) -> None:
+    from pydantic import ValidationError
+
+    from mnemo.embedder import LocalEmbedder, build_embedder
+
+    default = Settings(_env_file=None, backend="local", model_dir=tmp_path)
+    assert default.local_model_idle_seconds == 300.0
+    embedder = build_embedder(default)
+    assert isinstance(embedder, LocalEmbedder) and embedder.idle_seconds == 300.0
+
+    monkeypatch.setenv("MNEMO_LOCAL_MODEL_IDLE_SECONDS", "45")
+    from_env = Settings(_env_file=None, backend="local", model_dir=tmp_path)
+    assert from_env.local_model_idle_seconds == 45.0
+    assert build_embedder(from_env).idle_seconds == 45.0
+
+    monkeypatch.setenv("MNEMO_LOCAL_MODEL_IDLE_SECONDS", "0")
+    disabled = Settings(_env_file=None, backend="local", model_dir=tmp_path)
+    assert disabled.local_model_idle_seconds == 0.0
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, backend="local", local_model_idle_seconds=-1)
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, backend="local", local_model_idle_seconds=float("inf"))
+    with pytest.raises(ValueError, match="idle_seconds"):
+        LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=-0.5)
+    with pytest.raises(ValueError, match="idle_seconds"):
+        LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=float("nan"))
+
+
+def test_local_embedder_unloads_after_idle_and_reloads_on_next_call(tmp_path, monkeypatch) -> None:
+    import weakref
+
+    import mnemo.embedder as emb_mod
+
+    loads = 0
+    refs: list[weakref.ref] = []
+
+    class StubModel:
+        def embed(self, texts: list[str]):
+            for text in texts:
+                yield [float(len(text)), 1.0, 2.0, 3.0]
+
+    def fake_loader(model: str, cache_dir: Path, *, offline: bool) -> StubModel:
+        nonlocal loads
+        assert offline is True
+        loads += 1
+        instance = StubModel()
+        refs.append(weakref.ref(instance))
+        return instance
+
+    monkeypatch.setattr(emb_mod, "_text_embedding", fake_loader)
+    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=0.05)
+    try:
+        assert embedder._model is None and embedder._timer is None
+        assert embedder.embed("hello") == [5.0, 1.0, 2.0, 3.0]
+        assert loads == 1 and embedder._model is not None and embedder._timer is not None
+
+        assert _wait_until(lambda: embedder._model is None)
+        assert embedder._timer is None
+        assert refs[0]() is None
+
+        # Next call reloads transparently.
+        assert embedder.embed("reloaded") == [8.0, 1.0, 2.0, 3.0]
+        assert loads == 2 and embedder._model is not None
+    finally:
+        embedder.close()
+    assert embedder._model is None and embedder._timer is None
+    assert refs[-1]() is None
+
+
+def test_local_embedder_activity_extends_idle_window(tmp_path, monkeypatch) -> None:
+    import time
+
+    import mnemo.embedder as emb_mod
+
+    loads = 0
+
+    class StubModel:
+        def embed(self, texts: list[str]):
+            for _ in texts:
+                yield [1.0, 0.0, 0.0, 0.0]
+
+    def fake_loader(model: str, cache_dir: Path, *, offline: bool) -> StubModel:
+        nonlocal loads
+        loads += 1
+        return StubModel()
+
+    monkeypatch.setattr(emb_mod, "_text_embedding", fake_loader)
+    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=0.15)
+    try:
+        embedder.embed("a")
+        time.sleep(0.07)
+        embedder.embed("b")
+        time.sleep(0.07)
+        embedder.embed("c")
+        assert loads == 1 and embedder._model is not None
+
+        assert _wait_until(lambda: embedder._model is None)
+        assert loads == 1 and embedder._timer is None
+    finally:
+        embedder.close()
+
+
+def test_local_embedder_zero_idle_seconds_disables_unloading(tmp_path, monkeypatch) -> None:
+    import time
+
+    import mnemo.embedder as emb_mod
+
+    loads = 0
+
+    class StubModel:
+        def embed(self, texts: list[str]):
+            for _ in texts:
+                yield [0.5, 0.5, 0.5, 0.5]
+
+    def fake_loader(model: str, cache_dir: Path, *, offline: bool) -> StubModel:
+        nonlocal loads
+        loads += 1
+        return StubModel()
+
+    monkeypatch.setattr(emb_mod, "_text_embedding", fake_loader)
+    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=0)
+    try:
+        assert embedder.embed("first") == [0.5, 0.5, 0.5, 0.5]
+        assert loads == 1 and embedder._model is not None and embedder._timer is None
+        time.sleep(0.08)
+        assert embedder._model is not None
+        assert embedder.embed("second") == [0.5, 0.5, 0.5, 0.5]
+        assert loads == 1 and embedder._timer is None
+    finally:
+        embedder.close()
+    assert embedder._model is None
+
+
+def test_local_embedder_thread_safety_under_concurrent_embeds_and_unloads(
+    tmp_path, monkeypatch
+) -> None:
+    import threading
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    import mnemo.embedder as emb_mod
+
+    loads = 0
+    in_flight = 0
+    overlap_detected = False
+    state_lock = threading.Lock()
+
+    class StubModel:
+        def embed(self, texts: list[str]):
+            nonlocal in_flight, overlap_detected
+            with state_lock:
+                in_flight += 1
+                if in_flight > 1:
+                    overlap_detected = True
+            try:
+                time.sleep(0.002)
+                for text in texts:
+                    yield [float(len(text)), 0.0, 0.0, 1.0]
+            finally:
+                with state_lock:
+                    in_flight -= 1
+
+    def fake_loader(model: str, cache_dir: Path, *, offline: bool) -> StubModel:
+        nonlocal loads
+        time.sleep(0.005)
+        loads += 1
+        return StubModel()
+
+    monkeypatch.setattr(emb_mod, "_text_embedding", fake_loader)
+    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=0.02)
+    barrier = threading.Barrier(6)
+    try:
+
+        def worker(worker_id: int) -> None:
+            for round_idx in range(3):
+                text = f"w{worker_id}-r{round_idx}"
+                vec = embedder.embed(text)
+                assert vec == [float(len(text)), 0.0, 0.0, 1.0]
+                if round_idx < 2:
+                    # Wait for the round to finish, then pause past idle_seconds so the
+                    # unload timer fires before all workers race the next reload together.
+                    barrier.wait()
+                    time.sleep(0.05)
+
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            futures = [pool.submit(worker, i) for i in range(6)]
+            for future in futures:
+                future.result()
+
+        assert not overlap_detected
+        assert loads >= 2  # at least one idle unload + reload occurred across the pauses
+        assert _wait_until(lambda: embedder._model is None)
+    finally:
+        embedder.close()
+    assert embedder._model is None and embedder._timer is None

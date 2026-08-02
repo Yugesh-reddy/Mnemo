@@ -8,8 +8,13 @@ The hash backend supports tests and direct-memory demos without any model.
 
 from __future__ import annotations
 
+import ctypes
+import gc
 import hashlib
+import math
+import sys
 import threading
+import time
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
@@ -140,16 +145,26 @@ class LocalEmbedder:
 
     The model loads on the first call, so tools that need no embedding never load
     it, and it is never downloaded here: ``mnemo install`` downloads it into
-    ``cache_dir`` (see :func:`download_local_model`). Queries and memories are
-    embedded the same way, as with the other backends.
+    ``cache_dir`` (see :func:`download_local_model`). When ``idle_seconds > 0``,
+    a daemon timer releases the model after that much idle time and the next call
+    reloads it transparently. Queries and memories are embedded the same way, as
+    with the other backends.
     """
 
-    def __init__(self, *, model: str, dim: int, cache_dir: Path) -> None:
+    def __init__(
+        self, *, model: str, dim: int, cache_dir: Path, idle_seconds: float = 300.0
+    ) -> None:
+        if not math.isfinite(idle_seconds) or idle_seconds < 0:
+            raise ValueError("idle_seconds must be a finite number >= 0")
         self.model = model
         self.dim = dim
         self.cache_dir = cache_dir
+        self.idle_seconds = float(idle_seconds)
         self._lock = threading.Lock()
         self._model: Any = None
+        self._last_used: float = 0.0
+        self._timer: threading.Timer | None = None
+        self._timer_generation: int = 0
 
     def _loaded(self) -> Any:
         if self._model is None:
@@ -159,13 +174,68 @@ class LocalEmbedder:
                 raise LocalModelUnavailable(self.model, self.cache_dir, str(exc)) from exc
         return self._model
 
-    def embed(self, text: str) -> list[float]:
-        # One lock covers loading and inference: calls are a few milliseconds each.
+    def _arm_timer_locked(self, delay: float) -> None:
+        self._timer_generation += 1
+        generation = self._timer_generation
+        timer = threading.Timer(delay, self._unload_if_idle, args=(generation,))
+        timer.daemon = True
+        self._timer = timer
+        timer.start()
+
+    def _unload_if_idle(self, generation: int) -> None:
+        unloaded = False
         with self._lock:
-            vector = next(iter(self._loaded().embed([text])))
+            if generation != self._timer_generation or self._model is None:
+                return
+            remaining = (self._last_used + self.idle_seconds) - time.monotonic()
+            if remaining > 0:
+                self._arm_timer_locked(remaining)
+                return
+            self._model = None
+            self._timer = None
+            unloaded = True
+        if unloaded:
+            _release_memory()
+
+    def embed(self, text: str) -> list[float]:
+        # One lock covers loading, inference and idle unloading: calls are a few ms each.
+        with self._lock:
+            try:
+                vector = next(iter(self._loaded().embed([text])))
+            finally:
+                if self._model is not None and self.idle_seconds > 0:
+                    self._last_used = time.monotonic()
+                    if self._timer is None:
+                        self._arm_timer_locked(self.idle_seconds)
         if len(vector) != self.dim:
             raise ValueError(f"{self.model} returned dim {len(vector)}, expected {self.dim}")
         return [float(x) for x in vector]
+
+    def close(self) -> None:
+        """Cancel any pending idle timer and release the loaded model."""
+        unloaded = False
+        with self._lock:
+            self._timer_generation += 1
+            if self._timer is not None:
+                self._timer.cancel()
+                self._timer = None
+            if self._model is not None:
+                self._model = None
+                unloaded = True
+        if unloaded:
+            _release_memory()
+
+
+def _release_memory() -> None:
+    """Free the unloaded model's objects and, on glibc, hand the freed heap back to the
+    OS: without malloc_trim Linux keeps about 70 MB of the ~90 MB the model freed
+    (measured November 21, 2026). macOS reclaims freed pages lazily on its own."""
+    gc.collect()
+    if sys.platform.startswith("linux"):
+        try:
+            ctypes.CDLL("libc.so.6").malloc_trim(0)
+        except (OSError, AttributeError):  # not glibc (e.g. musl)
+            pass
 
 
 def private_dirs(path: Path) -> None:
@@ -204,7 +274,12 @@ def build_embedder(settings: Settings | None = None) -> Embedder:
     if s.backend == "hash":
         return HashEmbedder(s.embed_dim)
     if s.backend == "local":
-        return LocalEmbedder(model=s.embed_model, dim=s.embed_dim, cache_dir=s.model_dir)
+        return LocalEmbedder(
+            model=s.embed_model,
+            dim=s.embed_dim,
+            cache_dir=s.model_dir,
+            idle_seconds=s.local_model_idle_seconds,
+        )
     if s.backend == "openai":
         return OpenAIEmbedder(
             model=s.embed_model,

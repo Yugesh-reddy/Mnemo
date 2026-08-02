@@ -168,7 +168,10 @@ the entry to paste instead, and when OpenCode was only detected, not named with
 `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB, from Hugging Face)
 into `~/.mnemo/models`; nothing is downloaded later. Each agent session's server uses
 about 300 MB of memory once it has searched or written (about 60 MB before), and its
-first search takes about 2 s while the model loads. On a 28-question check it found
+first search takes about 2 s while the model loads. After 5 minutes without a search or
+write the server lets the model go (`MNEMO_LOCAL_MODEL_IDLE_SECONDS`, 0 to keep it):
+on Linux that gives back about 90 MB per idle session; macOS reclaims the memory
+gradually; the next call reloads it in about 0.1 s. On a 28-question check it found
 memories about as well as Ollama (see `tests/test_retrieval_quality.py`), but an
 unrelated question returns a memory more often (3 of 8 questions against 1); the
 model is English-only. `--backend ollama` uses Ollama's `nomic-embed-text` instead
