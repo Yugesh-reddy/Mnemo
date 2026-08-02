@@ -1,0 +1,11 @@
+{"type":"thread.started","thread_id":"01a1fc03-a8ab-7480-a1d4-9e95b2f85a44"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the project memory first."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification conventions","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification conventions","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"TLS","limit":10},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"TLS","limit":10},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_3","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"","limit":10},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_3","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"","limit":10},"result":{"content":[{"type":"text","text":"{\"code\": \"INVALID_INPUT\", \"message\": \"query must be nonblank text without NUL\", \"details\": {}}"}],"structured_content":null},"error":null,"status":"failed"}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"YES — verifying TLS certificates authenticates the server and protects against man-in-the-middle attacks."}}
+{"type":"turn.completed","usage":{"input_tokens":92869,"cached_input_tokens":87040,"cache_write_input_tokens":0,"output_tokens":408,"reasoning_output_tokens":177}}

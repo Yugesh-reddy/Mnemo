@@ -1,5 +1,22 @@
 # Mnemo — implementation status
 
+## MCP search uses vectors again (November 21, 2026)
+
+Since the review fix that embeds a query once for both scopes, `memory_search` over MCP
+had matched memories by their words only (the wrapper gave query vectors the wrong
+model tag). Fixed with a test through the tool; this was the cause of the
+`correction` failure in the regression run. After the fix the full agent eval passed
+16 of 16 ([results](docs/agent-eval/README.md#near-duplicate-warning-and-the-vector-fix-november-21-2026-16-of-16)).
+
+## Linux checked, Windows prepared, idle model released (November 21, 2026)
+
+`scripts/check-linux.sh` installs the wheel in a fresh Docker container and runs the
+whole flow; it passes on Debian and Ubuntu, arm64 and amd64 (Alpine is unsupported).
+A static audit removed the POSIX assumptions found for Windows, which remains
+untested ([spec §36](PROJECT_SPEC.md#36-linux-checked-windows-prepared--november-21-2026)).
+The local model is released after five idle minutes: about 90 MB back per idle
+session on Linux ([§37](PROJECT_SPEC.md#37-the-local-model-is-released-when-idle--november-21-2026)).
+
 ## Near-duplicate warning (November 21, 2026)
 
 `memory_create` reports current memories in the same scope that say nearly the same

@@ -983,6 +983,11 @@ request to finish the pending work.
   20, and at those floors neither links any two of the 40 unrelated memories (their
   highest pairwise cosines are 0.763 and 0.684). The floors were chosen on this set,
   so they are tuned, not held out; `tests/test_duplicates.py` re-checks them live.
+- **Seen with agents** (eval, November 21, 2026): the only warnings were for parallel
+  facts (the API's, the worker's and the admin UI's local ports, 0.855–0.882), which
+  the set does not cover; agents kept each memory, as the note's "if it repeats or
+  replaces one" allows. Cosine alone cannot separate these from rewordings (16 of the
+  20 rewordings score above 0.85), so the warning stays advisory.
 - The tool descriptions are unchanged; the note travels in the result.
 
 ## 36. Linux checked, Windows prepared — November 21, 2026

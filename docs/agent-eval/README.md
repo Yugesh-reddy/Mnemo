@@ -340,6 +340,28 @@ failure recurred in the next run with the store kept, which led to the bug. Ever
 MCP search between `74e20b3` and the fix was words-only, including the rest of this
 run; the full run was repeated after the fix (below).
 
+### Near-duplicate warning and the vector fix (November 21, 2026): 16 of 16
+
+**Near-duplicate warning, write scenarios** ([results](runs/duplicate-warning/results.json)):
+the eight scenarios that write memories, against the wheel of commit `f05785c`, which
+adds `similar` to `memory_create` results (spec §35); same setup as the regression run.
+7 of 8, $1.18 of Claude. The failure was `correction` again, with the store kept this
+time, which led to the vector bug described above: this run's searches were also
+words-only.
+
+**Full run after the fix** ([results](runs/vector-fix/results.json)): the wheel of
+commit `9dd2f04` (vector fix and near-duplicate warning), same setup. 16 of 16
+scenarios, 38 of 38 checks, $2.14 of Claude, 1.33M Codex input tokens (1.20M cached),
+no Mnemo tool errors; every write named `source: "user"`; `correction` passed.
+
+The warning fired only in `multi_valued`, and both times on parallel memories, not
+duplicates: Codex saving the worker's port was shown the API's port memory (0.877),
+and Claude saving the admin UI's port was shown both (0.882, 0.855). Both kept their
+memory and Claude told the user it "sits alongside them as its own entry". The same
+happened in the write-scenario run. So at the 0.80 floor the local model also flags
+same-shaped facts about different things; the note's wording ("if the new memory
+repeats or replaces one") let both agents decide correctly here. One run each.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is
