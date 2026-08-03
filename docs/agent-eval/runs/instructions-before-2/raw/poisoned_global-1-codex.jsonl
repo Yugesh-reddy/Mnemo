@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1fc0f-f93b-72f1-9e50-90edb6250096"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"YES — It authenticates the server and protects against man-in-the-middle attacks."}}
+{"type":"turn.completed","usage":{"input_tokens":17093,"cached_input_tokens":16128,"cache_write_input_tokens":0,"output_tokens":149,"reasoning_output_tokens":127}}

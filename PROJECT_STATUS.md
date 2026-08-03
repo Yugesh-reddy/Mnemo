@@ -1,5 +1,12 @@
 # Mnemo — implementation status
 
+## Server instructions carry the poisoning rules (November 21, 2026)
+
+Rerun with working search, the MCP server's own instructions with the policy's
+poisoning rules made Claude retract a poisoned memory unasked when no instruction file
+was present (3 of 6 poisoning scenarios before, 5 of 6 after;
+[spec §38](PROJECT_SPEC.md#38-the-servers-instructions-carry-the-poisoning-rules--november-21-2026)).
+
 ## MCP search uses vectors again (November 21, 2026)
 
 Since the review fix that embeds a query once for both scopes, `memory_search` over MCP
