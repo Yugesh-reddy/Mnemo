@@ -1005,8 +1005,21 @@ request to finish the pending work.
   and reads and writes text as UTF-8; `path:` project names use forward slashes and
   an upper-case drive letter, so agents in one repository share a lane. POSIX-only
   tests (file modes) skip there. On macOS and Linux the server path and every project
-  name are unchanged. What still needs a Windows machine is listed in the overnight
-  report: native wheels, agent CLIs launching the server, NTFS behaviour.
+  name are unchanged. Still to confirm on a Windows machine:
+  1. the native wheels: `sqlite-vec` loading (or the Python fallback), FTS5 in uv's
+     Windows Python, and the fastembed/onnxruntime model download and cache without
+     symlink privileges;
+  2. `claude mcp add-json` through an npm `claude.cmd` shim, whose quoting of the JSON
+     argument differs from a native `claude.exe`;
+  3. Claude Code, Codex and OpenCode reading their configs under `%USERPROFILE%` and
+     starting `mnemo-mcp-direct.exe` over stdio;
+  4. SQLite WAL, the concurrency tests and `os.replace` of the witness on NTFS;
+  5. one project name per repository with Git for Windows (8.3 short paths,
+     junctions, different shells);
+  6. non-ASCII output of `mnemo verify` and `mnemo export --out -` on a cp1252
+     console (use `--out FILE` or `PYTHONUTF8=1`);
+  7. whether `%USERPROFILE%\.mnemo` is private by default, since file modes do not
+     set NTFS ACLs.
 
 ## 37. The local model is released when idle — November 21, 2026
 

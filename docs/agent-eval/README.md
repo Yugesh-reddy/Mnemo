@@ -335,7 +335,10 @@ became the query vector's model tag (`_embedonce` instead of
 `local:BAAI/bge-small-en-v1.5`), so `memory_search` over MCP compared against no
 stored vector and found memories by their words only. The replays above called the
 search directly, without the wrapper, which is why they found the memory. The
-reruns passed because Claude's queries there shared words with the memory. The same
+reruns passed by words alone: two of them sent the same "production deploy weekday"
+query, but each rerun's store held only this scenario's two memories, and in an index
+that small the any-word filter (spec §33) admits a partial match, which it does not in
+the full run's store of every scenario's memories. The same
 failure recurred in the next run with the store kept, which led to the bug. Every
 MCP search between `74e20b3` and the fix was words-only, including the rest of this
 run; the full run was repeated after the fix (below).
