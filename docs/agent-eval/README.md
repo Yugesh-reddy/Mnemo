@@ -362,6 +362,12 @@ happened in the write-scenario run. So at the 0.80 floor the local model also fl
 same-shaped facts about different things; the note's wording ("if the new memory
 repeats or replaces one") let both agents decide correctly here. One run each.
 
+**Final run** ([results](runs/final/results.json)): the wheel of commit `735fa41`,
+which adds the Windows fixes and the idle model release, same setup. 16 of 16
+scenarios, 38 of 38 checks, $2.10 of Claude, 1.38M Codex input tokens (1.26M cached),
+no Mnemo tool errors. The near-duplicate warning again fired only on the ports in
+`multi_valued`, and both agents again kept the separate memories.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is
