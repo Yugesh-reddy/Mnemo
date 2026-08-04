@@ -18,7 +18,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 from uuid import UUID, uuid4
 
-from mnemo.core import _EVENT_COLS, MnemoStore, canonicalize, derive_trust
+from mnemo.core import _EVENT_COLS, MnemoStore, _row_value, canonicalize, derive_trust
 from mnemo.embedder import model_id, vector_blob
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import (
@@ -349,14 +349,14 @@ class DirectMemory:
         rows = await self.store.conn.fetch(
             """
             SELECT * FROM (
-              SELECT f.fact_id, f.subject, f.predicate, e.object_text, f.current_event_id,
+              -- memory_current: HEAD, live now (validity window and expiry applied).
+              SELECT c.fact_id, c.subject, c.predicate, c.object_text, c.object_number,
+                     c.object_json, c.event_id AS current_event_id,
                      1 - vec_distance_cosine(m.vector, ?5) AS similarity
-              FROM memory_fact f
-              JOIN memory_event e ON e.event_id = f.current_event_id
-              JOIN memory_embedding m ON m.seq = e.seq AND m.model = ?6 AND m.dim = ?7
-              WHERE f.namespace = ?1 AND f.user_id = ?2 AND f.agent_id = ?3
-                AND f.fact_id <> ?4 AND f.status = 'active' AND e.tier = 'durable'
-                AND e.op IN ('ADD', 'UPDATE', 'REVERT')
+              FROM memory_current c
+              JOIN memory_embedding m ON m.seq = c.seq AND m.model = ?6 AND m.dim = ?7
+              WHERE c.namespace = ?1 AND c.user_id = ?2 AND c.agent_id = ?3
+                AND c.fact_id <> ?4 AND c.tier = 'durable'
             ) WHERE similarity >= ?8
             ORDER BY similarity DESC LIMIT 3
             """,
@@ -372,7 +372,7 @@ class DirectMemory:
                 fact_id=row["fact_id"],
                 subject=row["subject"],
                 predicate=row["predicate"],
-                value=row["object_text"] or "",
+                value="" if (value := _row_value(row)) is None else str(value),
                 current_event_id=row["current_event_id"],
                 similarity=round(row["similarity"], 3),
             )

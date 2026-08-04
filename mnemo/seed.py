@@ -42,21 +42,29 @@ async def add_seed_fact(
     Returns the new event_id, or None if the fact already existed.
     """
     async with conn.transaction():
+        fact_key = _fact_key(subject, predicate)
+        # Look first: migration 0004's trigger refuses an existing identity before any
+        # ON CONFLICT clause could skip it. The default scope is the seed's.
+        if await conn.fetchval(
+            """
+            SELECT 1 FROM memory_fact
+            WHERE namespace = 'default' AND user_id = 'default' AND agent_id = 'default'
+              AND fact_key = ?1 AND identity_mode = 'attribute'
+            """,
+            fact_key,
+        ):
+            return None  # already seeded
         fact_id = await conn.fetchval(
             """
             INSERT INTO memory_fact (fact_id, subject, predicate, fact_key, kind)
             VALUES (?4, ?1, ?2, ?3, 'triple')
-            ON CONFLICT (namespace, user_id, agent_id, fact_key, identity_mode, identity_ref)
-            DO NOTHING
             RETURNING fact_id
             """,
             subject,
             predicate,
-            _fact_key(subject, predicate),
+            fact_key,
             uuid4(),
         )
-        if fact_id is None:
-            return None  # already seeded
 
         event_id = await conn.fetchval(
             """

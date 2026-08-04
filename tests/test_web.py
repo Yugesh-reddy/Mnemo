@@ -515,6 +515,11 @@ async def test_fact_correction_and_restore_use_facts_actual_scope(
     revert_action = f"/fact/{e1.fact_id}/revert/{e1.event_id}?{encoded}"
     assert edit_action in forms and revert_action in forms
 
+    # A bare link (no ?scope=) opens the memory in its own scope with the same forms.
+    bare = await web_client.get(f"/fact/{e1.fact_id}")
+    assert bare.status_code == 200 and "MySQL" in bare.text
+    assert Forms(bare.text).forms.keys() == forms.keys()
+
     # Cross-site POST on a scoped form is still refused with 403.
     evil = await web_client.post(
         edit_action,

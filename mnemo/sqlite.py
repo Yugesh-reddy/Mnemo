@@ -335,14 +335,23 @@ def _vector_functions(raw: sqlite3.Connection) -> str:
 
 
 def capability_problem() -> str | None:
-    """None when this Python's SQLite can run the store (FTS5 is required; vectors fall
-    back to Python without sqlite-vec); else the fix."""
+    """None when this Python's SQLite can run the store (FTS5 and the math functions
+    word search ranks with are required; vectors fall back to Python without
+    sqlite-vec); else the fix."""
     raw = sqlite3.connect(":memory:")
     try:
         _vector_functions(raw)
-        raw.execute("CREATE VIRTUAL TABLE t USING fts5(x, tokenize = 'porter unicode61')")
-    except sqlite3.OperationalError as exc:
-        return f"this Python's SQLite lacks FTS5 ({exc}); install Mnemo with uv's Python 3.12"
+        for needs, probe in (
+            ("FTS5", "CREATE VIRTUAL TABLE t USING fts5(x, tokenize = 'porter unicode61')"),
+            ("its math functions", "SELECT ln(2.0), pow(2.0, 2.0)"),
+        ):
+            try:
+                raw.execute(probe)
+            except sqlite3.OperationalError as exc:
+                return (
+                    f"this Python's SQLite lacks {needs} ({exc}); "
+                    "install Mnemo with uv's Python 3.12"
+                )
     finally:
         raw.close()
     return None

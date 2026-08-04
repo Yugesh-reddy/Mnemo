@@ -59,6 +59,12 @@ def test_the_seal_and_the_guard_cover_exactly_the_identity_columns():
         "UPDATE memory_fact SET status='deleted'",
         "INSERT OR REPLACE INTO memory_fact (fact_id, subject, predicate, fact_key) "
         "SELECT fact_id, 'x', 'y', 'x|y' FROM memory_fact LIMIT 1",
+        # A fresh fact_id on an existing identity: REPLACE would delete the old row.
+        "INSERT OR REPLACE INTO memory_fact (fact_id, namespace, user_id, agent_id, "
+        "subject, predicate, fact_key, kind, identity_mode, identity_ref) "
+        "SELECT 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', namespace, user_id, agent_id, "
+        "'evil', predicate, fact_key, kind, identity_mode, identity_ref "
+        "FROM memory_fact LIMIT 1",
         "UPDATE memory_fact_seal SET hash='" + "0" * 64 + "'",
         "DELETE FROM memory_fact_seal",
     ],
@@ -66,7 +72,8 @@ def test_the_seal_and_the_guard_cover_exactly_the_identity_columns():
 async def test_sql_cannot_move_rename_or_delete_a_memory(store, db, statement):
     await history(store)
     with pytest.raises(
-        sqlite3.IntegrityError, match="immutable|permanent|append-only|active or invalidated"
+        sqlite3.IntegrityError,
+        match="immutable|permanent|append-only|active or invalidated|identity exists",
     ):
         await db.execute(statement)
 
@@ -218,7 +225,7 @@ async def test_a_0_1_2_store_upgrades_with_its_chain_unchanged(tmp_path, fake_em
         seq, digest = await conn.fetchrow(
             "SELECT seq, hash FROM memory_event_chain ORDER BY seq DESC LIMIT 1"
         )
-        assert await mdb.apply_migrations(conn) == ["0003_fact_identity.sql"]
+        assert await mdb.apply_migrations(conn) == mdb.migration_names()[2:]
         after = await verify(conn, Witness(seq, digest))
         assert after.ok and after.head == digest and after.facts == 2
         await DirectMemory(MnemoStore(conn, fake_embedder)).create(

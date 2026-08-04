@@ -168,10 +168,7 @@ async def test_upgrading_a_store_chains_the_events_it_already_has(tmp_path, fake
     try:
         assert await mdb.apply_migrations(conn, only_first) == ["0001_sqlite_init.sql"]
         await history(MnemoStore(conn, fake_embedder))
-        assert await mdb.apply_migrations(conn) == [
-            "0002_event_chain.sql",
-            "0003_fact_identity.sql",
-        ]
+        assert await mdb.apply_migrations(conn) == mdb.migration_names()[1:]
         result = await verify(conn)
         assert result.ok and result.events == 5
         await DirectMemory(MnemoStore(conn, fake_embedder)).create(

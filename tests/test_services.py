@@ -133,6 +133,30 @@ async def test_memories_without_a_vector_from_this_model_are_counted(_disposable
         await conn.close()
 
 
+def test_a_sqlite_without_math_functions_is_reported(monkeypatch):
+    import sqlite3
+
+    import mnemo.sqlite as sq
+
+    real = sqlite3.connect
+
+    class NoMath:
+        def __init__(self, raw):
+            self._raw = raw
+
+        def execute(self, sql, *args):
+            if "ln(" in sql:
+                raise sqlite3.OperationalError("no such function: ln")
+            return self._raw.execute(sql, *args)
+
+        def __getattr__(self, name):
+            return getattr(self._raw, name)
+
+    monkeypatch.setattr(sq.sqlite3, "connect", lambda *a, **k: NoMath(real(*a, **k)))
+    problem = sq.capability_problem()
+    assert problem and "math functions" in problem and "no such function: ln" in problem
+
+
 async def test_a_python_without_extension_loading_still_runs_the_store(tmp_path, monkeypatch):
     import sqlite3
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from uuid import uuid4
 
@@ -62,6 +63,22 @@ async def test_only_current_durable_memories_in_the_same_scope_count(db, fake_em
     gone = await d.create("tests", "command", "make test-db", request_id=uuid4())
     await d.retract(gone.fact_id, expected_event_id=gone.event_id, request_id=uuid4())
     assert (await d.create("test", "command", "make test-db", request_id=uuid4())).similar == []
+
+
+async def test_memories_not_yet_or_no_longer_valid_are_not_reported(db, fake_embedder):
+    d = memory(db, fake_embedder)
+    later = datetime.now(tz=UTC) + timedelta(days=30)
+    await d.store.add("tests", "command", "make test-db", valid_from=later)
+    ended = await d.create("test-suite", "command", "make test-db", request_id=uuid4())
+    await d.store.invalidate(ended.fact_id)
+    assert (await d.create("test", "command", "make test-db", request_id=uuid4())).similar == []
+
+
+async def test_a_number_is_reported_as_its_text(db, fake_embedder):
+    d = memory(db, fake_embedder)
+    await d.store.add("database", "port", 5432)
+    [similar] = (await d.create("databases", "port", "5432", request_id=uuid4())).similar
+    assert similar.value == "5432"
 
 
 async def test_no_floor_no_warning(db, fake_embedder):

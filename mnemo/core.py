@@ -502,7 +502,10 @@ class MnemoStore:
                     identity_ref,
                 )
         except sqlite3.IntegrityError as exc:
-            if "UNIQUE constraint failed: memory_fact" not in str(exc):
+            # The UNIQUE key, or migration 0004's trigger guarding it.
+            if not str(exc).startswith(
+                ("UNIQUE constraint failed: memory_fact", "memory_fact identity exists")
+            ):
                 raise
             return None
 

@@ -893,7 +893,7 @@ request to finish the pending work.
   (`mnemo/chain.py` `FACT_COLUMNS`); `status` and `current_event_id` stay the only
   columns Mnemo moves, and `status` may only become `active` or `invalidated` (no
   version ever wrote `deleted`, which would hide a memory from every read). Further
-  triggers reject deleting a fact and an `INSERT OR REPLACE` over an existing one.
+  triggers reject deleting a fact and an `INSERT OR REPLACE` over an existing one (by `fact_id`; by identity since §39).
 - **Seals.** `memory_fact_seal(seq, fact_id, hash)` holds, for every fact in the order
   it was stored, `sha256(previous seal || json_array(identity columns))`, written by an
   `AFTER INSERT` trigger and append-only like the event chain. Upgrading seals the
@@ -1048,3 +1048,29 @@ naming its source. Measured with no instruction files in the fixtures, one run e
 the six poisoning scenarios: 3 of 6 before, 5 of 6 after; the change that matters is
 Claude retracting the poisoned memory unasked (eval README). An earlier comparison
 (November 20) ran with the vector bug of §30 and is superseded.
+
+## 39. Second review fixes — November 21, 2026
+
+- **`INSERT OR REPLACE` by identity.** Migration `0004_fact_identity_unique.sql` adds
+  `memory_fact_identity_unique`, which refuses an insert whose scope, `fact_key` and
+  identity match an existing memory. §31's guard covered only a reused `fact_id`; a
+  fresh `fact_id` with an existing identity replaced the row, because SQLite fires no
+  delete trigger for `REPLACE` unless `recursive_triggers` is on. `mnemo verify`
+  already reported the result as a deleted memory; now the insert fails. The trigger
+  fires before any `ON CONFLICT` clause, so `MnemoStore.insert_fact` treats its message
+  like the `UNIQUE` error, and the demo seed looks for a memory before inserting it.
+  0003 stays as released, since stores record migrations by file name.
+- **Near-duplicates are live memories.** §35's lookup reads `memory_current`, so a
+  memory not yet valid, ended or expired is not reported, and a numeric or JSON value
+  is shown as its text instead of an empty string.
+- **SQLite math functions.** Word ranking (§33) calls `ln()` and `pow()`, which need
+  SQLite built with its math functions; `capability_problem()` now checks them with
+  FTS5, so `mnemo install` names the fix instead of search failing later.
+- **Web UI.** `/fact/<id>` without `?scope=` opens the memory in its own scope, as the
+  edit and restore posts already did, instead of "Memory not found." for a project
+  memory.
+- **Known, not changed.** The word index's document count and term frequencies span
+  every scope and revision, so a word common in other projects ranks lower in this
+  one. Scoping them is a ranking change and waits for a before/after run (golden
+  rule 2). `Fact.source` and `Fact.raw_text` remain from the archived pipeline; they
+  are public SDK fields, so removing them waits for a contract change.

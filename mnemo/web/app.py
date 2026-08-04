@@ -341,8 +341,12 @@ async def fact_detail(
     scoped, known = await _resolve_scope(store, scope)
     if scoped is None:
         return _unknown_scope_response(request, scope or "", known, store.namespace)
+    # A memory opens in its own scope, as the edit and restore posts do, so a bare
+    # /fact/<id> link to a project memory works.
+    fact_ns = await _fact_namespace(store, fact_id)
+    target = _scoped_store(store, fact_ns) if fact_ns is not None else scoped
     return await _fact_response(
-        request, fact_id, scoped, default_scope=store.namespace, known=known
+        request, fact_id, target, default_scope=store.namespace, known=known
     )
 
 

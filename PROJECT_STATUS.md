@@ -1,5 +1,13 @@
 # Mnemo — implementation status
 
+## Second review fixes (November 21, 2026)
+
+An `INSERT OR REPLACE` with a new ID and an existing memory's identity is now refused
+by a trigger (migration `0004_fact_identity_unique.sql`); the near-duplicate warning
+ignores memories that are not live and shows numbers as text; `mnemo install` checks
+SQLite's math functions; bare `/fact/<id>` links open project memories
+([spec §39](PROJECT_SPEC.md#39-second-review-fixes--november-21-2026)).
+
 ## Server instructions carry the poisoning rules (November 21, 2026)
 
 Rerun with working search, the MCP server's own instructions with the policy's
