@@ -147,6 +147,65 @@ def test_dry_run_shows_every_change_and_writes_nothing(homes, capsys):
     assert cli.calls == [["claude", "mcp", "get", "mnemo"]]
 
 
+# Shaped like real credentials so both the name and the shape rules are exercised.
+GITHUB_PAT = "github_pat_11AAAAAAA0exampleexampleexample"
+MEM0_KEY = "m0-exampleexampleexample"
+OTHER_KEY = "sk-proj-exampleexampleexample"
+
+
+def test_the_preview_hides_credentials_and_the_files_keep_them(homes, tmp_path, capsys):
+    claude, codex = homes
+    toml = EXISTING_TOML + (
+        "\n[mcp_servers.github.env]\n"
+        f"GITHUB_PERSONAL_ACCESS_TOKEN = '{GITHUB_PAT}'\n"
+        f"MEM0_API_KEY = '{MEM0_KEY}'\n"
+    )
+    (codex / "config.toml").write_text(toml, encoding="utf-8")
+    opencode = tmp_path / "opencode"
+    opencode.mkdir()
+    other = {"type": "local", "command": ["x"], "environment": {"OPENAI_API_KEY": OTHER_KEY}}
+    (opencode / "opencode.json").write_text(json.dumps({**OPENCODE, "mcp": {"other": other}}))
+
+    assert (
+        inst.main(
+            args(claude, codex, "--dry-run", "--agent", "codex", "--agent", "opencode"),
+            runner=FakeCli(),
+        )
+        == 0
+    )
+    out = capsys.readouterr().out
+    assert "+[mcp_servers.mnemo]" in out and '"mnemo"' in out  # the changes still show
+    assert " GITHUB_PERSONAL_ACCESS_TOKEN = <hidden>" in out and '"OPENAI_API_KEY": <hidden>' in out
+    for secret in (GITHUB_PAT, MEM0_KEY, OTHER_KEY):
+        assert secret not in out
+
+    assert (
+        inst.main(
+            args(claude, codex, "--yes", "--agent", "codex", "--agent", "opencode"),
+            runner=FakeCli(),
+        )
+        == 0
+    )
+    capsys.readouterr()
+    assert GITHUB_PAT in (codex / "config.toml").read_text()
+    assert json.loads((opencode / "opencode.json").read_text())["mcp"]["other"] == other
+
+
+@pytest.mark.parametrize(
+    "line, shown",
+    [
+        ("MNEMO_DB = '/home/me/.mnemo/mnemo.db'", "MNEMO_DB = '/home/me/.mnemo/mnemo.db'"),
+        ('"headers": {', '"headers": {'),
+        ('"Authorization": "Bearer abc.def",', '"Authorization": <hidden>,'),
+        ('args = ["--token", "ghp_exampleexample1"]', 'args = ["--token", "<hidden>"]'),
+        ("PASSWORD=hunter2", "PASSWORD=<hidden>"),
+        ('url = "https://mcp.example.com"', 'url = "https://mcp.example.com"'),
+    ],
+)
+def test_hide_secrets(line, shown):
+    assert inst.hide_secrets(line) == shown
+
+
 def test_declining_the_prompt_changes_nothing(homes):
     claude, codex = homes
     cli = FakeCli()

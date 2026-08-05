@@ -1,5 +1,11 @@
 # Mnemo — implementation status
 
+## The installer's preview hides credentials (November 21, 2026)
+
+`mnemo install` no longer prints other tools' tokens and API keys from the config files
+it previews; they show as `<hidden>`
+([spec §40](PROJECT_SPEC.md#40-the-installers-preview-hides-credentials--november-21-2026)).
+
 ## Second review fixes (November 21, 2026)
 
 An `INSERT OR REPLACE` with a new ID and an existing memory's identity is now refused

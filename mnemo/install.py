@@ -330,6 +330,37 @@ def default_codex_home() -> Path:
     return Path.home() / ".codex"
 
 
+# The preview shows lines around each change, and OpenCode's config is rewritten whole,
+# so other tools' credentials in these files would be printed. A setting whose name
+# looks like a credential, and any value shaped like a known token, shows as <hidden>.
+_SECRET_NAME = re.compile(
+    r"token|secret|passw|api[_-]?key|access[_-]?key|private[_-]?key|credential|"
+    r"auth|bearer|cookie|(?:^|[_-])pat(?:$|[_-])",
+    re.I,
+)
+_SETTING = re.compile(
+    r"""^(?P<lead>\s*["']?(?P<name>[\w.-]+)["']?\s*[:=]\s*)(?P<value>.*?)(?P<tail>,?\s*)$"""
+)
+_TOKEN = re.compile(
+    r"\b(?:github_pat_|gh[pousr]_|glpat-|sk-|sk_live_|rk_live_|xox[abpr]-|hf_|m0-|AKIA|AIza)"
+    r"[\w-]{8,}"
+)
+HIDDEN = "<hidden>"
+
+
+def hide_secrets(line: str) -> str:
+    """``line`` with credential-looking values replaced by ``<hidden>``."""
+    match = _SETTING.match(line)
+    if (
+        match
+        and _SECRET_NAME.search(match["name"])
+        and match["value"]
+        and match["value"][0] not in "{["
+    ):
+        line = f"{match['lead']}{HIDDEN}{match['tail']}"
+    return _TOKEN.sub(HIDDEN, line)
+
+
 @dataclass
 class FileChange:
     path: Path
@@ -346,13 +377,17 @@ class FileChange:
             self.path.write_text(self.after, encoding="utf-8")
 
     def diff(self) -> str:
+        """The preview of this change, with credentials hidden (the file gets the
+        real values)."""
+        lines = difflib.unified_diff(
+            self.before.splitlines(keepends=True),
+            self.after.splitlines(keepends=True),
+            fromfile=str(self.path),
+            tofile=str(self.path),
+        )
         return "".join(
-            difflib.unified_diff(
-                self.before.splitlines(keepends=True),
-                self.after.splitlines(keepends=True),
-                fromfile=str(self.path),
-                tofile=str(self.path),
-            )
+            line if line.startswith(("---", "+++", "@@")) else line[0] + hide_secrets(line[1:])
+            for line in lines
         )
 
 

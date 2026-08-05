@@ -1074,3 +1074,16 @@ Claude retracting the poisoned memory unasked (eval README). An earlier comparis
   one. Scoping them is a ranking change and waits for a before/after run (golden
   rule 2). `Fact.source` and `Fact.raw_text` remain from the archived pipeline; they
   are public SDK fields, so removing them waits for a contract change.
+
+## 40. The installer's preview hides credentials — November 21, 2026
+
+`mnemo install` previews each file change as a unified diff. Its context lines, and
+OpenCode's config (rewritten whole), printed other tools' credentials from the same
+files: installing on a real machine showed a GitHub token and a Mem0 key from
+`~/.codex/config.toml`. The preview now shows `<hidden>` for the value of any setting
+whose name looks like a credential (token, secret, password, API or access key, auth,
+bearer, cookie, PAT) and for any value shaped like a known token (`github_pat_`,
+`ghp_`, `sk-`, `xoxb-`, `hf_`, `m0-`, `AKIA` and similar). Only the preview changes; the
+files keep their values. Mnemo writes no credentials itself, so nothing it adds is
+hidden. Checked on a copy of a real Codex config: none of its three credentials
+reached the preview.
