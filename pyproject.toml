@@ -1,6 +1,6 @@
 [project]
 name = "mnemohive"
-version = "0.1.5"
+version = "0.1.6"
 description = "One shared, versioned memory for your coding agents (Claude Code, Codex, OpenCode) over MCP, in one local file."
 readme = "README.md"
 requires-python = ">=3.12"
