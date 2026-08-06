@@ -288,6 +288,23 @@ reads back what it wrote and rolls back if anything differs, so IDs, sequence
 numbers, history and receipt replays come through unchanged. It also reads exports
 from the Postgres version ([spec §16](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#16-exportimport--september-22-2026)).
 
+## Check memory from the terminal
+
+```bash
+mnemo ls                 # this project's and global memories, newest first
+mnemo ls --all           # every scope;  --retracted: what agents withdrew, and why
+mnemo search deploy      # exactly what an agent's memory_search finds here
+mnemo show 3f2a91c0      # one memory in full with its history (an ID or its start)
+mnemo log                # recent changes: who wrote, updated, retracted or restored what
+```
+
+Run them inside a project to see what the agents working there see: the same project
+and global scopes, the same search. Each command takes `--json`, and `ls`, `search`
+and `log` take `--limit N`. They only read: the connection refuses writes, and search
+leaves recall counts alone. Memory text is untrusted, so control characters and line
+breaks print escaped and cannot fake a row or change your terminal. Corrections and
+restores are in the web UI ([spec §42](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#42-read-only-commands-in-the-terminal--november-22-2026)).
+
 ## Review memory in the browser
 
 ```bash

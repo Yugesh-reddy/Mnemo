@@ -1196,3 +1196,45 @@ predicate's name is a further contract change, left for the owner.
 Built as described: `mnemo/credentials.py` and `tests/test_credentials.py`. The tests
 cover the acceptance lists, each checked field, the empty store after a refusal, the
 retry with the same `request_id`, and the error over real stdio. 0.1.6.
+
+## 42. Read-only commands in the terminal — November 22, 2026
+
+`mnemo ls`, `mnemo search`, `mnemo show` and `mnemo log` (`mnemo/browse.py`) let a
+person check what the agents saved without opening the web UI. They are for people,
+not agents: the MCP tools and their text are unchanged, and nothing here is a §15
+contract.
+- **Scopes.** By default they read what an agent's server started in the current
+  directory reads: this project (from `MNEMO_PROJECT` or the repository, as
+  `mnemo.project.resolve_lanes`, which the server now shares), then global. `ls` and
+  `log` take `--all` for every scope of the configured user. When nothing is found but
+  other scopes hold memories, the output says how many and points to `--all` (for
+  `search`, which reads the agents' scopes only, to `mnemo ls --all`). Scopes are kept
+  by namespace, so two projects that print the same name are both read.
+- **`ls`** lists current memories, newest first, with ID prefix, time (UTC), actor,
+  source/trust, scope, subject · predicate = value; `--retracted` lists what was
+  withdrawn, by whom and why (`DirectMemory.retracted`).
+- **`search`** is `memory_search`: the same scopes, `DirectMemory.search`, merge and
+  order, with the query embedded once by the configured model, and the score shown. A
+  test runs both on one store and gets the same memories in the same order, with
+  scores equal to float32 precision.
+- **`show ID`** takes a full ID or its first 4 or more characters, resolved across all
+  of the user's scopes; an ambiguous prefix lists the candidates and exits 1. It prints
+  the subject, predicate and value in full and every event, newest first, with
+  actor, source/trust, retraction reasons and the revision a revert restored.
+- **`log`** lists recent events across the scopes, newest first.
+- **Read-only.** The store is opened without creating it, its schema is checked (never
+  migrated), and the connection is set `query_only`, so any write fails; search runs
+  with recall reinforcement off. A test checks events, receipts and recall counters are
+  unchanged after every command.
+- **Untrusted text.** Every printed field escapes C0/C1 control characters, DEL,
+  bidirectional controls, line/paragraph separators and invisible format characters
+  (zero-width and tag characters, which can hide text an agent reads; the emoji joiner
+  is kept); list views also escape line breaks, so a planted value cannot move the cursor, recolour the terminal or forge a
+  row. `show` prints multi-line values behind a `│` gutter. `--json` output is JSON
+  with its own escaping.
+- **Errors** (no store, an unmigrated store, a bad or unknown ID, an embedding model or
+  server that is unavailable) print one line on stderr and exit 1. Text the console
+  cannot encode prints as backslash escapes.
+
+Write commands (`add`, `retract`, `revert`) are left out: the web UI already corrects
+and restores, and the agents write through the guarded tools.

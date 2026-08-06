@@ -89,3 +89,12 @@ def detect_project(cwd: Path | str) -> str | None:
         if project:
             return project
     return f"path:{normalize_project_path(Path(top).resolve())}"
+
+
+def resolve_lanes(namespace: str, project: str | None, cwd: Path | str) -> dict[str, str]:
+    """Scope -> namespace for a process started in ``cwd``: the project scope first (when
+    there is a project: ``project``, else the one detected from ``cwd``), then global."""
+    project = project or detect_project(cwd)
+    lanes = {"project": f"{namespace}@{project}"} if project else {}
+    lanes["global"] = namespace
+    return lanes

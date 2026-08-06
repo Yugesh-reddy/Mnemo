@@ -1,5 +1,12 @@
 # Mnemo — implementation status
 
+## Read-only commands in the terminal (November 22, 2026)
+
+`mnemo ls`, `search`, `show` and `log` show what the agents saved in this project and
+global (or every scope with `--all`), with who wrote each memory and how far to trust
+it. Search is the agents' `memory_search`; the commands never write, and memory text
+prints escaped ([spec §42](PROJECT_SPEC.md#42-read-only-commands-in-the-terminal--november-22-2026)).
+
 ## Writes refuse credentials (November 22, 2026)
 
 `memory_create`, `memory_update`, `memory_retract`'s reason and the web UI's correction

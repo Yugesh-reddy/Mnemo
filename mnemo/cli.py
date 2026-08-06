@@ -6,6 +6,10 @@
     mnemo migrate     # apply pending schema migrations to the store file
     mnemo reindex     # rebuild vectors and the word index (after a model change)
     mnemo verify      # check the history was not changed outside Mnemo since last time
+    mnemo ls          # this project's and global memories, newest first (--all: every scope)
+    mnemo search Q    # what an agent's memory_search finds for Q here
+    mnemo show ID     # one memory in full, with its history (ID or its first characters)
+    mnemo log         # recent changes: who wrote, updated, retracted or restored what
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
@@ -105,6 +109,13 @@ async def _reindex() -> dict[str, int]:
             close()
 
 
+def _limit(text: str) -> int:
+    value = int(text) if text.isdigit() else 0
+    if not 1 <= value <= 1000:
+        raise argparse.ArgumentTypeError("must be a whole number from 1 to 1000")
+    return value
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="mnemo", description="Shared, versioned memory for your coding agents."
@@ -123,6 +134,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         metavar="FILE",
         help="the head verified last time (default: beside the store, MNEMO_DB.verified)",
     )
+    ls = commands.add_parser("ls", help="list memories in this project and global")
+    ls.add_argument("--all", action="store_true", help="every scope in the store")
+    ls.add_argument("--retracted", action="store_true", help="retracted memories instead")
+    search = commands.add_parser("search", help="search memory as the agents do")
+    search.add_argument("query", nargs="+")
+    show = commands.add_parser("show", help="one memory in full, with its history")
+    show.add_argument("id", help="a memory ID, or its first characters as `mnemo ls` shows")
+    log = commands.add_parser("log", help="recent changes, newest first")
+    log.add_argument("--all", action="store_true", help="every scope in the store")
+    for sub, default in ((ls, 50), (search, 5), (log, 20)):
+        sub.add_argument("--limit", type=_limit, default=default, metavar="N")
+    for sub in (ls, search, show, log):
+        sub.add_argument("--json", action="store_true", help="print JSON")
     commands.add_parser("export", help="write memories and history as JSON", add_help=False)
     commands.add_parser("import", help="restore an export into an empty store", add_help=False)
     for name in GONE:
@@ -147,6 +171,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.command == "verify":
         return asyncio.run(_verify(args.witness))
+    if args.command in ("ls", "search", "show", "log"):
+        from mnemo.browse import run
+
+        return run(args.command, args)
     if args.command == "reindex":
         counts = asyncio.run(_reindex())
         print(f"Embedded {counts['embedded']} of {counts['events']} events; word index rebuilt.")
