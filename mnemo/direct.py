@@ -19,6 +19,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from mnemo.core import _EVENT_COLS, MnemoStore, _row_value, canonicalize, derive_trust
+from mnemo.credentials import refuse_credentials
 from mnemo.embedder import model_id, vector_blob
 from mnemo.errors import ErrorCode, MnemoError
 from mnemo.models import (
@@ -292,6 +293,9 @@ class DirectMemory:
         self._uuid(request_id, "request_id")
         for name, text in (("subject", subject), ("predicate", predicate), ("value", value)):
             self._text(text, name)
+        # Before the payload: a refused secret is never embedded, receipted or replayed.
+        for name, text in (("subject", subject), ("predicate", predicate), ("value", value)):
+            refuse_credentials(name, text)
         provenance = self._provenance(source)
         fact_key = canonicalize(subject, predicate)
         payload = self._payload(
@@ -302,6 +306,8 @@ class DirectMemory:
             source_span=source_span,
             **self._sourced(source),
         )
+        if payload["source_span"] is not None:  # JSON-checked by _payload, not yet stored
+            refuse_credentials("source_span", json.dumps(payload["source_span"]))
         if (replayed := await self._replay("create", request_id, payload)) is not None:
             return replayed
         embedding = await self.store._embed(f"{subject} {predicate} {value}")
@@ -439,6 +445,7 @@ class DirectMemory:
         ):
             self._uuid(identifier, name)
         self._text(value, "value")
+        refuse_credentials("value", value)
         payload = self._payload(
             actor,
             fact_id=str(fact_id),
@@ -585,6 +592,11 @@ class DirectMemory:
             self._uuid(identifier, name)
         if reason is not None:
             self._text(reason, "reason")
+            refuse_credentials(
+                "reason",
+                reason,
+                retry="retract again without a reason, or with the credential left out.",
+            )
         payload = self._payload(
             actor, fact_id=str(fact_id), expected_event_id=str(expected_event_id), reason=reason
         )

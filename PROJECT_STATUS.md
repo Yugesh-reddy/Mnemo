@@ -1,5 +1,14 @@
 # Mnemo — implementation status
 
+## Writes refuse credentials (November 22, 2026)
+
+`memory_create`, `memory_update`, `memory_retract`'s reason and the web UI's correction
+refuse text shaped like a credential (GitHub, GitLab, OpenAI/Anthropic, Stripe, Slack,
+Hugging Face, Mem0, AWS and Google keys, private keys, remote URLs with a password,
+`DB_PASSWORD=`-style lines) with `INVALID_INPUT`, before anything is embedded or
+written. The error names the field and kind, never the secret
+([spec §41](PROJECT_SPEC.md#41-writes-refuse-credentials--november-22-2026)).
+
 ## The installer's preview hides credentials (November 21, 2026)
 
 `mnemo install` no longer prints other tools' tokens and API keys from the config files

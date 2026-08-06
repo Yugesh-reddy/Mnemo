@@ -338,6 +338,9 @@ and `tests/` hold the demos, the agent eval and checks.
 
 This is a local, single-user service. Scope columns do not provide authentication
 or access control, and memories are stored unencrypted, so don't save secrets.
+Writes refuse text shaped like a known credential (API keys and tokens, private keys,
+remote URLs with a password, `DB_PASSWORD=`-style lines); that catches common
+mistakes, not every secret.
 Identity is one current value per subject/predicate in a scope. Direct mutations
 accept strings up to 8192 UTF-8 bytes and operate on active, durable, non-expiring
 memories, or retracted ones. Grouped undo, branching, merging and multi-user access

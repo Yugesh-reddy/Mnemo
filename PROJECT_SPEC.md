@@ -346,7 +346,8 @@ through the separate `mnemo-mcp-direct` stdio server.
 - **Scope and values.** Scope is bound to the client/store. `create(subject,
   predicate, value)` is create-only under the existing canonical identity rules.
   `update(fact_id, value)` changes that fact's value without alias deduplication.
-  Values are exact, nonblank UTF-8 strings, at most 8192 bytes, without NUL.
+  Values are exact, nonblank UTF-8 strings, at most 8192 bytes, without NUL, and hold
+  no credential (since §41).
   Create/update always write durable `agent_inference` / low-trust events.
 - **Revision guards.** Update and revert require `expected_event_id`. Under the
   existing scope and fact locks, HEAD must equal that ID before a no-op or write.
@@ -1087,3 +1088,111 @@ bearer, cookie, PAT) and for any value shaped like a known token (`github_pat_`,
 files keep their values. Mnemo writes no credentials itself, so nothing it adds is
 hidden. Checked on a copy of a real Codex config: none of its three credentials
 reached the preview.
+
+## 41. Writes refuse credentials — November 22, 2026
+
+*Changes §15 tool semantics; the owner approved it, with recommendations A–D below
+(golden rule 4).*
+
+**Why.** The policy's "don't save secrets" holds only while the agent obeys it, and a
+secret that reaches the store can never be removed: retract leaves it in history,
+`memory_get` with an `event_id` and `memory_history` still return it, export copies it,
+and append-only (golden rule 3) forbids erasing it. So the store refuses credential-
+shaped text before anything is written. Prevention is the only protection.
+
+**Where it runs.** One check, `refuse_credentials(field, text)` in a new
+`mnemo/credentials.py` (not `secrets.py`, which shadows the standard library name), with no new
+dependency.
+- `DirectMemory.create` checks `subject`, `predicate`, `value` and `source_span`
+  (as JSON text); `_update` checks `value`, which covers `update` (MCP, SDK) and
+  `correct` (web UI); `retract` checks `reason`. Both run right after
+  `_text()` and before `_payload()`, so a refused secret is never embedded (or sent to
+  Ollama or OpenAI), never written to a request receipt, and never replayed.
+- **Not checked**, because they add no new text: `revert` and the web UI's restore (§34)
+  copy a revision already in the store forward; `mnemo-transfer` import replays a whole
+  store, and dropping one row would break its chain. `MnemoStore.add` and the SDK's
+  `Mnemo.add` are the raw layer under the guarded tools and stay unchecked, like SQL.
+  Events written before this change stay as they are.
+
+**What it refuses** (deterministic patterns only; no entropy guessing):
+
+| kind | shape |
+|---|---|
+| `github_token` | `ghp_`/`gho_`/`ghu_`/`ghs_`/`ghr_` + 30 or more letters/digits; `github_pat_` + 22 or more `[A-Za-z0-9_]` |
+| `gitlab_token` | `glpat-` + 20 or more `[\w-]` |
+| `openai_or_anthropic_key` | `sk-` + 20 or more `[\w-]` with a hyphen-free run of 20 or more characters containing a digit, so a kebab-case name passes |
+| `stripe_key` | `sk_live_` / `rk_live_` + 20 or more letters/digits |
+| `slack_token` | `xoxa-`/`xoxb-`/`xoxp-`/`xoxr-` + 20 or more `[\w-]` |
+| `huggingface_token` | `hf_` + 30 or more letters/digits |
+| `mem0_key` | `m0-` + 20 or more `[\w-]` containing a digit |
+| `aws_access_key` | `AKIA` + exactly 16 upper-case letters/digits |
+| `google_api_key` | `AIza` + 30 or more `[\w-]` |
+| `private_key` | a `-----BEGIN … PRIVATE KEY-----` line (RSA, EC, OPENSSH, DSA, ENCRYPTED or none) |
+| `url_password` | `scheme://user:password@host`, unless the host is local (decision B) |
+| `credential_assignment` | `NAME=value` or `name: value` (decision C) |
+
+The lengths are proposals, set by the acceptance lists below. Preview hiding (§40)
+keeps its looser `[\w-]{8,}`, because hiding too much there costs nothing.
+- **Not a secret:** a token whose random part is one repeated character, or contains
+  `example`, `dummy`, `fake`, `placeholder` or `redacted` (any case). AWS's
+  documentation key `AKIAIOSFODNN7EXAMPLE` is the model for this rule.
+- **Placeholders pass**, in a URL's password slot or an assignment's value: `<…>`,
+  `${…}`, `$NAME`, `%…`, `***`, `xxx`, `your…`, and the words password, pass, secret,
+  token and changeme.
+
+**The error.** `MnemoError(INVALID_INPUT, ...)` with `details={"field": ..., "kind": ...}`,
+naming the field and the kind and saying how to retry, for example: *"value looks like a
+credential (github_token). Memories cannot hold secrets: save where it lives instead
+(an environment variable's name or a file path) or use a placeholder such as <token>."*
+The matched text, its position and any part of it never appear in the message, the
+details or the logs.
+
+**Tool text.** The tool descriptions and server instructions don't change; they already
+say "don't save secrets". So there is no before/after eval (golden rule 2).
+
+**Acceptance (tests; build token fixtures by concatenation, never write a whole realistic
+token in the repo, since GitHub push protection blocks it):**
+- **Must save:**
+  - "keys look like `sk-test-1234`"
+  - "GitHub tokens start with `ghp_`"
+  - "the key lives in `OPENAI_API_KEY` in `.env`"
+  - "AWS docs use `AKIAIOSFODNN7EXAMPLE`"
+  - "branch ids look like `sk-feature-flag-rollout-config-v2`"
+  - "`DATABASE_URL=postgres://app:<password>@db.internal/app`"
+  - `postgres://postgres:postgres@localhost:5432/app` (decision B)
+  - `token = uuid4().hex[:8]` (code: an assignment value with brackets or parentheses)
+- **Must refuse**, in each checked field:
+  - a full-length `ghp_` or `github_pat_` token
+  - an `sk-` key with mixed case and digits
+  - a non-example `AKIA` key
+  - a PEM private-key header
+  - `https://deploy:<20 random characters>@git.example.com/repo.git`
+- **Errors and receipts:**
+  - A refused write leaves no event, receipt or embedding.
+  - Retrying the same `request_id` with the secret removed succeeds.
+  - The error's text and details contain no part of the token.
+
+**Decisions (the owner took each recommendation):**
+- **A. `reason` on retract** is checked. A credential there refuses the retraction, and
+  the message says to retract again without a reason or with the credential left
+  out. Nothing is changed without saying so.
+- **B. Local dev credentials** in a URL pass when the host is `localhost`, `127.0.0.1`,
+  `[::1]` or `host.docker.internal`. Coding agents need local connection strings, and
+  those defaults are not secrets in practice. Any other host is refused.
+- **C. Assignments** are refused when the name *ends* in password, passwd, secret,
+  token, an API, access, private or secret key (`DB_PASSWORD=`, `client_secret:`,
+  `GITHUB_TOKEN=`; not `tokenizer:` or `max_tokens:`) and the value has 12 or more
+  characters without spaces, a letter and a digit, and is not a placeholder. This
+  catches pasted `.env` lines; when it refuses something harmless, the message says
+  how to retry. A value with brackets or parentheses is code, not a credential.
+- **D. `source_span`** (SDK only, not exposed over MCP) is checked as its JSON text,
+  since it is stored with the event.
+
+**Known limit.** Fields are checked one at a time, so a credential split across them
+passes: `create("db", "password", "<16 random characters>")` is saved, although it is
+exactly what decision C targets in one string. Checking a value against its
+predicate's name is a further contract change, left for the owner.
+
+Built as described: `mnemo/credentials.py` and `tests/test_credentials.py`. The tests
+cover the acceptance lists, each checked field, the empty store after a refusal, the
+retry with the same `request_id`, and the error over real stdio. 0.1.6.
