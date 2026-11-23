@@ -98,6 +98,7 @@ _INJECTED_START = (
     "<environment_context>",
     "<user_instructions>",
     "Caveat: The messages below were generated",
+    "Stop hook feedback:",
 )
 
 

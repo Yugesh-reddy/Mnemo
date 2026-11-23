@@ -251,7 +251,11 @@ def test_mnemo_install_adds_the_hook_and_hides_credentials_in_its_preview(
     command = data["hooks"]["SessionStart"][-1]["hooks"][0]["command"]
     assert command == inst.brief_command(get_settings())
     assert data["env"] == SETTINGS["env"]  # the file keeps the real value
-    assert inst.main(base + ["--no-session-brief", "--yes"], runner=runner) == 0
+    stop = data["hooks"]["Stop"][-1]["hooks"][0]["command"]
+    assert stop == inst.remind_command(get_settings())
+    assert (
+        inst.main(base + ["--no-session-brief", "--no-save-reminder", "--yes"], runner=runner) == 0
+    )
     assert json.loads((claude / "settings.json").read_text())["hooks"] == SETTINGS["hooks"]
     assert inst.main(base + ["--yes"], runner=runner) == 0
     assert inst.main(base + ["--uninstall", "--yes"], runner=runner) == 0
@@ -368,7 +372,13 @@ def test_settings_it_cannot_read_skip_only_the_brief(tmp_path, monkeypatch, caps
         return subprocess.CompletedProcess(argv, int(argv[:3] == ["claude", "mcp", "get"]), "", "")
 
     assert inst.main(base, runner=runner) == 0
-    assert "Skipped the session brief:" in capsys.readouterr().out
-    assert (claude / "settings.json").read_text() == text
+    out = capsys.readouterr().out
+    assert "Skipped the session brief:" in out
+    after = (claude / "settings.json").read_text()
+    if "SessionStart" in text:  # readable, with a SessionStart it can't use: Stop is added
+        data = json.loads(after)
+        assert data["hooks"]["SessionStart"] == {} and "remind --hook" in after
+    else:
+        assert after == text and "Skipped the save reminder:" in out
     assert (claude / "CLAUDE.md").exists()  # the rest of the install went ahead
     assert inst.main(base + ["--uninstall"], runner=runner) == 0

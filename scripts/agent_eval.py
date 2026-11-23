@@ -134,6 +134,7 @@ class SessionRecord(BaseModel):
     model: str | None = None
     seconds: float = 0.0
     writes: int = 0
+    reminders: int = 0  # times a Stop hook made Claude continue
     error: str | None = None
 
 
@@ -182,7 +183,12 @@ def claude_env(auto_memory: bool) -> dict[str, str]:
 
 
 def claude_command(
-    mcp_config: Path, max_usd: float, model: str | None = None, *, auto_memory: bool = False
+    mcp_config: Path,
+    max_usd: float,
+    model: str | None = None,
+    *,
+    auto_memory: bool = False,
+    keep_sessions: bool = False,
 ) -> list[str]:
     """The prompt goes on stdin, so variadic flags cannot swallow it."""
     command = [
@@ -196,7 +202,7 @@ def claude_command(
         "--strict-mcp-config",
         "--setting-sources",
         "project",
-        "--no-session-persistence",
+        *([] if keep_sessions else ["--no-session-persistence"]),
         "--max-budget-usd",
         f"{max_usd:.2f}",
     ]
@@ -272,13 +278,28 @@ def _preview(value: Any) -> str:
 def parse_claude(stdout: str) -> dict[str, Any]:
     calls: dict[str, dict[str, Any]] = {}
     parsed: dict[str, Any] = {"answer": "", "usage": {}, "cost_usd": None, "model": None}
-    parsed["error"] = None
+    parsed["error"], parsed["reminders"] = None, 0
+    last_text, before_reminder = "", None
     for line in stdout.splitlines():
         try:
             event = json.loads(line)
         except ValueError:
             continue
         kind = event.get("type")
+        content = (event.get("message") or {}).get("content")
+        texts = [
+            block.get("text", "")
+            for block in (content if isinstance(content, list) else [])
+            if isinstance(block, dict) and block.get("type") == "text"
+        ]
+        if kind == "assistant" and texts:
+            last_text = "\n".join(texts)
+        if kind == "user" and any(text.startswith("Stop hook feedback:") for text in texts):
+            # A Stop hook (Mnemo's save reminder) made Claude continue: the answer is
+            # the reply the user got before it.
+            parsed["reminders"] += 1
+            if before_reminder is None:
+                before_reminder = last_text
         if kind == "system" and event.get("subtype") == "init":
             parsed["model"] = event.get("model")
         elif kind in ("assistant", "user"):
@@ -299,6 +320,8 @@ def parse_claude(stdout: str) -> dict[str, Any]:
             parsed["cost_usd"] = event.get("total_cost_usd")
             if event.get("is_error"):
                 parsed["error"] = event.get("subtype") or "error"
+    if before_reminder:
+        parsed["answer"] = before_reminder
     parsed["tool_calls"] = list(calls.values())
     return parsed
 
@@ -515,6 +538,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         },
         "write_sources": write_sources(mnemo_calls),
         "memory_writes": sum(s["writes"] for s in sessions),
+        "claude_reminders": sum(s.get("reminders", 0) for s in sessions),
         "claude_auto_memory_files": sum(
             len(s.get("claude_auto_memory_files", [])) for s in scenarios
         ),
@@ -601,7 +625,11 @@ def run_session(
         config.write_text(json.dumps(claude_mcp_config(env)), encoding="utf-8")
         auto_memory = args.claude_auto_memory == "on"
         command = claude_command(
-            config, args.claude_session_usd, args.claude_model, auto_memory=auto_memory
+            config,
+            args.claude_session_usd,
+            args.claude_model,
+            auto_memory=auto_memory,
+            keep_sessions=args.claude_keep_sessions,
         )
         child_env = claude_env(auto_memory)
         parse: Callable[[str], dict[str, Any]] = parse_claude
@@ -622,6 +650,7 @@ def run_session(
         usage=parsed["usage"],
         cost_usd=parsed["cost_usd"],
         model=parsed["model"],
+        reminders=parsed.get("reminders", 0),
         seconds=round(time.monotonic() - started, 2),
         error=parsed["error"] or (stderr[-PREVIEW:] if status != "ok" else None),
     )
@@ -684,6 +713,7 @@ async def run(args: argparse.Namespace) -> int:
             "codex_servers_disabled": codex_disable,
             "repo_files": sorted(files),
             "codex_home_isolated": args.isolate_codex_home,
+            "claude_sessions_kept": args.claude_keep_sessions,
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
             "claude_auto_memory": args.claude_auto_memory,
@@ -810,6 +840,11 @@ def main() -> None:
         "--isolate-codex-home",
         action="store_true",
         help="run Codex from a temporary home (login linked, no global AGENTS.md)",
+    )
+    parser.add_argument(
+        "--claude-keep-sessions",
+        action="store_true",
+        help="let Claude Code save its transcripts (a Stop hook reads the turn from them)",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

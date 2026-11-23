@@ -351,3 +351,27 @@ def test_an_isolated_codex_home_links_the_login_and_keeps_only_the_model(tmp_pat
     assert (home / "auth.json").is_symlink()
     assert not (home / "AGENTS.md").exists()
     assert (home / "config.toml").read_text() == 'model = "m"\nmodel_reasoning_effort = "high"\n'
+
+
+def test_a_reply_after_a_stop_hook_reminder_does_not_replace_the_answer():
+    def event(kind, content, **more):
+        return json.dumps({"type": kind, "message": {"content": content}, **more})
+
+    stream = "\n".join(
+        [
+            event("assistant", [{"type": "text", "text": "Run `make check`."}]),
+            event("user", [{"type": "text", "text": "Stop hook feedback:\nBefore you finish"}]),
+            event("assistant", [{"type": "text", "text": "Nothing to save."}]),
+            json.dumps({"type": "result", "result": "Nothing to save.", "total_cost_usd": 0.01}),
+        ]
+    )
+    parsed = ae.parse_claude(stream)
+    assert parsed["answer"] == "Run `make check`." and parsed["reminders"] == 1
+    plain = ae.parse_claude(json.dumps({"type": "result", "result": "Hi"}))
+    assert plain["answer"] == "Hi" and plain["reminders"] == 0
+
+
+def test_claude_sessions_can_keep_their_transcripts_for_a_stop_hook():
+    kept = ae.claude_command(ae.Path("m.json"), 0.5, keep_sessions=True)
+    assert "--no-session-persistence" not in kept
+    assert "--no-session-persistence" in ae.claude_command(ae.Path("m.json"), 0.5)
