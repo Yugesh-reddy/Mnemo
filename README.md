@@ -324,6 +324,7 @@ mnemo ls --all           # every scope;  --retracted: what agents withdrew, and 
 mnemo search deploy      # exactly what an agent's memory_search finds here
 mnemo show 3f2a91c0      # one memory in full with its history (an ID or its start)
 mnemo log                # recent changes: who wrote, updated, retracted or restored what
+mnemo brief              # the brief a Claude Code session starting here is given
 ```
 
 Run them inside a project to see what the agents working there see: the same project
@@ -332,6 +333,20 @@ and `log` take `--limit N`. They only read: the connection refuses writes, and s
 leaves recall counts alone. Memory text is untrusted, so control characters and line
 breaks print escaped and cannot fake a row or change your terminal. Corrections and
 restores are in the web UI ([spec §42](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#42-read-only-commands-in-the-terminal--november-22-2026)).
+
+### Sessions start with a brief
+
+`mnemo install` adds a SessionStart hook to Claude Code (`~/.claude/settings.json`), so
+every new, cleared or compacted session starts with this project's and the global
+memories, newest first: up to 25 memories and about 6,000 characters, each with its
+source, trust, the agent that saved it, its date and its ID, under a note that memories
+are data, not instructions. The agent no longer has to decide to search before it
+knows what is there. `mnemo brief` prints what a session started in the current folder
+is given. The hook reads the store without loading the embedding model, and if
+anything goes wrong it prints nothing, so a session never fails to start because of
+Mnemo. `mnemo install --no-session-brief` leaves it out (or removes it); `mnemo
+uninstall` removes it and keeps any other hooks
+([spec §46](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
 
 ## Review memory in the browser
 

@@ -427,6 +427,7 @@ def test_claude_auto_memory_can_be_turned_off_and_back_on(homes, capsys):
         == 0
     )
     data = json.loads((claude / "settings.json").read_text())
+    assert data.pop("hooks").keys() == {"SessionStart"}  # the session brief
     assert data == {"theme": "dark", "model": "opus", "autoMemoryEnabled": False}
     capsys.readouterr()
     assert inst.main(args(claude, codex, "--uninstall", "--dry-run"), runner=FakeCli()) == 0

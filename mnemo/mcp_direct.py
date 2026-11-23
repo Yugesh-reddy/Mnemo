@@ -34,7 +34,7 @@ from mnemo.db import check_schema, connect
 from mnemo.direct import DirectMemory
 from mnemo.embedder import Embedder, build_embedder
 from mnemo.errors import ErrorCode, MnemoError
-from mnemo.project import project_root, resolve_lanes
+from mnemo.project import server_lanes
 from mnemo.services import service_error
 from mnemo.sqlite import Connection
 
@@ -54,8 +54,7 @@ def _settings() -> Settings:
 
 def _resolve_lanes(settings: Settings) -> dict[str, str]:
     """Project scope first (when there is a project), then the global namespace."""
-    root = project_root(settings.project_dir, Path.cwd())
-    return resolve_lanes(settings.namespace, settings.project, root)
+    return server_lanes(settings.namespace, settings.project, settings.project_dir, Path.cwd())
 
 
 def _actor(settings: Settings) -> str:
