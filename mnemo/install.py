@@ -8,9 +8,9 @@ and add the shared-memory policy.
 Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``), the
 policy in ``~/.claude/CLAUDE.md``, and a SessionStart hook in
 ``~/.claude/settings.json`` that starts each session with a brief of the project's and
-global memories (``mnemo brief --hook``; ``--no-session-brief`` leaves it out) and a
-Stop hook that, after a task that did work but saved nothing, reminds Claude once to
-save what lasts (``mnemo remind --hook``; ``--no-save-reminder`` leaves it out). Codex
+global memories (``mnemo brief --hook``; ``--no-session-brief`` leaves it out), and with
+``--save-reminder`` a Stop hook that, after a task that did work but saved nothing,
+reminds Claude once to save what lasts (``mnemo remind --hook``). Codex
 gets an ``[mcp_servers.mnemo]`` table with its tools pre-approved in
 ``$CODEX_HOME/config.toml`` and the policy in ``$CODEX_HOME/AGENTS.md``. OpenCode (when
 installed) gets a ``mnemo`` server under ``mcp`` in its global ``opencode.json`` and the
@@ -706,7 +706,7 @@ def plan(
     antigravity_dirs: Sequence[Path] = (),
     antigravity_optional: bool = False,
     session_brief: bool = True,
-    save_reminder: bool = True,
+    save_reminder: bool = False,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
     """Commands, file changes and notes for the agents. ``opencode_optional``,
     ``cursor_optional`` and ``antigravity_optional``: the client was detected rather than
@@ -777,7 +777,7 @@ def plan(
             notes.append(
                 "After a task that did work but saved nothing, Claude Code is reminded once "
                 "to save what lasts (a Stop hook running `mnemo remind --hook`, at most every "
-                "20 minutes a session). --no-save-reminder leaves it out."
+                "20 minutes a session). Without --save-reminder it is removed."
             )
         current = _read(settings_path)
         if claude_auto_memory:
@@ -1047,9 +1047,10 @@ def main(
         help="don't start Claude Code sessions with a brief of the memories (removes it)",
     )
     parser.add_argument(
-        "--no-save-reminder",
+        "--save-reminder",
         action="store_true",
-        help="don't remind Claude Code to save what lasts at the end of a task (removes it)",
+        help="also remind Claude Code at the end of a task to save what lasts (off by "
+        "default: in the agent eval it added saves of one-off answers and no new saves)",
     )
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
@@ -1109,7 +1110,7 @@ def main(
             antigravity_dirs=antigravity_dirs,
             antigravity_optional=not (args.agent and "antigravity" in args.agent),
             session_brief=not args.no_session_brief,
-            save_reminder=not args.no_save_reminder,
+            save_reminder=args.save_reminder,
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)

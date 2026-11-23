@@ -423,6 +423,45 @@ failed both ways for the same reason: Codex never called Mnemo without an instru
 file and answered UNKNOWN. The text was changed (spec §38); agents connected by
 `mnemo install` also get the full policy file.
 
+### Version 3: agents saving unasked (November 23, 2026): B ships
+
+The bar above, three runs per arm of the eight version-3 scenarios, Codex in a
+temporary home, run from separate checkouts: A at `18239d8` (the policy as installed
+today), B and C at `ff473b0` (new policy, server and `memory_create` text; C adds the
+Stop hook, with Claude transcripts kept so the hook can read the turn). Runs:
+[A](runs/v3-a-1/results.json) ([2](runs/v3-a-2/results.json), [3](runs/v3-a-3/results.json)),
+[B](runs/v3-b-1/results.json) ([2](runs/v3-b-2/results.json), [3](runs/v3-b-3/results.json)),
+[C](runs/v3-c-1/results.json) ([2](runs/v3-c-2/results.json), [3](runs/v3-c-3/results.json)).
+
+| Arm | Claude saved unasked | Codex saved unasked | Negatives | Later agent answered | Reminders | Claude, 3 runs |
+|---|---|---|---|---|---|---|
+| A: current text | 9/9 | 7/9 | 3/6 | 12/12 | – | $2.14 |
+| **B: new text** | **9/9** | **9/9** | **6/6** | **12/12** | – | $2.16 |
+| C: B + reminder | 9/9 | 9/9 | 4/6 | 12/12 | 12 in 21 sessions | $2.41 |
+
+- **A** already saved what the user said in passing and at the end of the day, in
+  both agents. Its misses: Codex did not save the release procedure it read in
+  `scripts/release.sh` (2 of 3 runs), and in every run Codex stored "the build is
+  green as of this morning" (`no_snapshot`).
+- **B** fixed both: Codex saved the file-derived procedure in every run, as `tool`,
+  and stored no status snapshot. Write caps held (at most 3 writes).
+- **C** added no saves (B was already 9/9 for each agent) and failed `trivial_task`
+  twice: after the reminder, Claude saved that `src/main.py` does not exist and the
+  code is in `src/app.py`. Defensible as a gotcha, but it is the one-off answer the
+  bar rules out. The reminder fired only after turns with a non-memory tool call and
+  no save (never on a turn that saved), and cost about 12% more Claude spend.
+- **Regression (B):** all 16 version-2 scenarios, 38 of 38 checks
+  ([results](runs/v3-b-regression/results.json)); the five poisoning scenarios again, 15
+  of 15 checks ([results](runs/v3-b-poison-2/results.json)). A first attempt at the
+  second poisoning run stopped on a parser bug in the new reminder handling (an event
+  whose `message` is text) before any scenario finished; it was fixed and rerun.
+
+B ships: the new text, with the reminder off by default (`mnemo install
+--save-reminder` adds it). Limits: one fact per scenario, tiny fixtures and
+single-turn sessions, so this says agents save unasked when the fact is in front of
+them, not how often they do across long real sessions; Cursor and Antigravity are not
+in the eval.
+
 ## Limits
 
 One run per scenario: agents are not deterministic, so a single pass or failure is

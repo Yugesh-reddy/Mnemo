@@ -286,7 +286,8 @@ def parse_claude(stdout: str) -> dict[str, Any]:
         except ValueError:
             continue
         kind = event.get("type")
-        content = (event.get("message") or {}).get("content")
+        message = event.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
         texts = [
             block.get("text", "")
             for block in (content if isinstance(content, list) else [])

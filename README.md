@@ -349,6 +349,19 @@ Mnemo. `mnemo install --no-session-brief` leaves it out (or removes it); `mnemo
 uninstall` removes it and keeps any other hooks
 ([spec §46](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
 
+### Agents save as they work
+
+The instructions `mnemo install` gives each agent ask it to save, without being asked,
+what a later session in the project would need: commands that build, test or release
+it, conventions, decisions and their reasons, where things live, gotchas, your
+preferences, and when you stop, what is unfinished and the next step. Facts read in
+files are saved with source `tool`; status at a moment ("tests pass now") is not saved.
+In the agent eval this took Codex from 7 to 9 of 9 unasked saves, with Claude already
+at 9 of 9. `mnemo install --save-reminder` also reminds Claude Code at the end of a
+task that did work but saved nothing (at most every 20 minutes); it is off by default
+because in the eval it added no saves and saved one-off answers
+([spec §48](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#48-agents-save-what-lasts-without-being-asked--november-23-2026)).
+
 ### Optional: notes from finished conversations
 
 Agents write memories themselves as they work. For more, in the manner of claude-mem,

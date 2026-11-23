@@ -1,0 +1,11 @@
+{"type":"thread.started","thread_id":"01a20ac9-c311-72a1-a72c-00ec2206b9d3"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check memory and the README title."}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc \"rg --files -g 'README*' -g 'readme*' -g 'AGENTS.md'\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc \"rg --files -g 'README*' -g 'readme*' -g 'AGENTS.md'\"","aggregated_output":"AGENTS.md\nREADME.md\n","exit_code":0,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"README title","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"README title","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_3","type":"command_execution","command":"/bin/zsh -lc 'head -n 30 README.md'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_3","type":"command_execution","command":"/bin/zsh -lc 'head -n 30 README.md'","aggregated_output":"# beta\n\nA small internal service.\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"beta"}}
+{"type":"turn.completed","usage":{"input_tokens":55274,"cached_input_tokens":41856,"cache_write_input_tokens":0,"output_tokens":143,"reasoning_output_tokens":0}}

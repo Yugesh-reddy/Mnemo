@@ -375,3 +375,13 @@ def test_claude_sessions_can_keep_their_transcripts_for_a_stop_hook():
     kept = ae.claude_command(ae.Path("m.json"), 0.5, keep_sessions=True)
     assert "--no-session-persistence" not in kept
     assert "--no-session-persistence" in ae.claude_command(ae.Path("m.json"), 0.5)
+
+
+def test_events_whose_message_is_plain_text_are_skipped():
+    stream = "\n".join(
+        [
+            json.dumps({"type": "system", "subtype": "notification", "message": "rate limited"}),
+            json.dumps({"type": "result", "result": "Done"}),
+        ]
+    )
+    assert ae.parse_claude(stream)["answer"] == "Done"

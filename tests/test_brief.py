@@ -246,18 +246,16 @@ def test_mnemo_install_adds_the_hook_and_hides_credentials_in_its_preview(
     out = capsys.readouterr().out
     assert "brief --hook" in out and "sk-proj-example" not in out
     assert "Claude Code sessions start with a brief" in out
-    assert inst.main(base + ["--yes"], runner=runner) == 0
+    assert inst.main(base + ["--save-reminder", "--yes"], runner=runner) == 0
     data = json.loads((claude / "settings.json").read_text())
     command = data["hooks"]["SessionStart"][-1]["hooks"][0]["command"]
     assert command == inst.brief_command(get_settings())
     assert data["env"] == SETTINGS["env"]  # the file keeps the real value
     stop = data["hooks"]["Stop"][-1]["hooks"][0]["command"]
     assert stop == inst.remind_command(get_settings())
-    assert (
-        inst.main(base + ["--no-session-brief", "--no-save-reminder", "--yes"], runner=runner) == 0
-    )
+    assert inst.main(base + ["--no-session-brief", "--yes"], runner=runner) == 0
     assert json.loads((claude / "settings.json").read_text())["hooks"] == SETTINGS["hooks"]
-    assert inst.main(base + ["--yes"], runner=runner) == 0
+    assert inst.main(base + ["--save-reminder", "--yes"], runner=runner) == 0
     assert inst.main(base + ["--uninstall", "--yes"], runner=runner) == 0
     assert json.loads((claude / "settings.json").read_text()) == SETTINGS
 
@@ -375,10 +373,6 @@ def test_settings_it_cannot_read_skip_only_the_brief(tmp_path, monkeypatch, caps
     out = capsys.readouterr().out
     assert "Skipped the session brief:" in out
     after = (claude / "settings.json").read_text()
-    if "SessionStart" in text:  # readable, with a SessionStart it can't use: Stop is added
-        data = json.loads(after)
-        assert data["hooks"]["SessionStart"] == {} and "remind --hook" in after
-    else:
-        assert after == text and "Skipped the save reminder:" in out
+    assert after == text
     assert (claude / "CLAUDE.md").exists()  # the rest of the install went ahead
     assert inst.main(base + ["--uninstall"], runner=runner) == 0
