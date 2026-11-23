@@ -11,7 +11,7 @@
     mnemo show ID     # one memory in full, with its history (ID or its first characters)
     mnemo log         # recent changes: who wrote, updated, retracted or restored what
     mnemo brief       # what an agent starting a session here is shown (Claude Code's hook)
-    mnemo capture     # save what lasts from finished Claude Code and Codex conversations
+    mnemo capture     # optional: Haiku notes from finished conversations (your Claude quota)
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
@@ -159,19 +159,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     brief.add_argument("--namespace", help="global namespace (default: MNEMO_NAMESPACE)")
     brief.add_argument("--user-id", help="user (default: MNEMO_USER_ID)")
     capture = commands.add_parser(
-        "capture", help="save what lasts from finished agent conversations (a small model)"
+        "capture", help="optional: Haiku notes from finished conversations (your Claude quota)"
     )
     capture.add_argument(
         "--dry-run", action="store_true", help="list the notes; save nothing, record nothing"
     )
     capture.add_argument("--out", type=Path, help="with --dry-run: write the notes as JSON")
     capture.add_argument("--from", dest="source", type=Path, help="save notes a --out wrote")
+    capture.add_argument("--model", help="Claude model (default haiku)")
     capture.add_argument(
-        "--worker", choices=("ollama", "claude"), default="ollama", help="model (default ollama)"
-    )
-    capture.add_argument("--model", help="model name (ollama: qwen3.5:4b-mlx, claude: haiku)")
-    capture.add_argument(
-        "--agent", action="append", choices=("claude-code", "codex"), help="only this agent"
+        "--agent",
+        action="append",
+        choices=("claude-code", "codex"),
+        help="whose conversations (default claude-code; codex sends them to Anthropic)",
     )
     capture.add_argument(
         "--since", type=float, default=2.0, metavar="DAYS", help="conversations this recent"
@@ -223,7 +223,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _capture(args: argparse.Namespace) -> int:
-    from mnemo.capture import AGENTS, Options, build_worker, run, save_file, write_result
+    from mnemo.capture import DEFAULT_AGENTS, Options, build_worker, run, save_file, write_result
     from mnemo.config import get_settings
 
     settings = get_settings()
@@ -231,14 +231,14 @@ def _capture(args: argparse.Namespace) -> int:
         asyncio.run(save_file(settings, args.source))
         return 0
     options = Options(
-        agents=tuple(args.agent or AGENTS),
+        agents=tuple(args.agent or DEFAULT_AGENTS),
         since_days=args.since,
         idle_minutes=args.idle,
         limit=args.limit,
         only=args.transcript,
         dry_run=args.dry_run,
     )
-    result = asyncio.run(run(settings, build_worker(args.worker, args.model, settings), options))
+    result = asyncio.run(run(settings, build_worker(args.model), options))
     if args.out is not None:
         write_result(result, args.out)
     verb = "proposed" if args.dry_run else "saved"

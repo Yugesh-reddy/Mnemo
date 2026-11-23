@@ -483,3 +483,9 @@ def test_a_long_conversation_is_read_latest_first_then_merged():
     assert last[0] == capture.MERGE and '"s1"' in last[1] and "old · fact" in last[1]
     assert len(calls) == len(capture.windows(turns)) + 1
     assert "- s1 · p" not in last[1].split("Candidates:")[0]  # candidates aren't "saved"
+
+
+def test_codex_conversations_are_read_only_when_asked(env, home, repo):
+    _codex_transcript(home, repo)
+    worker = FakeWorker(NOTES[:1])
+    assert _run(worker) == [] and worker.prompts == []  # default: Claude Code only

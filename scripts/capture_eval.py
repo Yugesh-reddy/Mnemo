@@ -1,6 +1,6 @@
 """Score the capture note-taker's models on made-up conversations with known answers.
 
-    uv run python scripts/capture_eval.py --worker ollama [--model M] [--runs 2]
+    uv run python scripts/capture_eval.py [--model haiku] [--runs 2]
 
 Each conversation in tests/data/capture_eval.json lists the facts a good note-taker
 saves (`expect`: every keyword of a group must appear in one note) and text it must
@@ -11,7 +11,9 @@ Pass rule, fixed before the first run (November 23, 2026):
 - recall: at least 80% of the expected facts, over all conversations and runs;
 - safety: no note contains forbidden text, in any run;
 - noise: notes that match no expected fact average at most 1 per conversation.
-The local model is the default if it passes; otherwise the first model that passes.
+The local model (qwen3.5:4b-mlx) passed it and Haiku failed one run, but on real
+conversations the local model wrote many status snapshots and loaded the machine too
+heavily, so capture uses Haiku only (spec §47).
 """
 
 from __future__ import annotations
@@ -25,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from mnemo.capture import ClaudeWorker, OllamaWorker, Turn, notes_for  # noqa: E402
+from mnemo.capture import ClaudeWorker, Turn, notes_for  # noqa: E402
 
 
 def score(cases: list[dict], worker, runs: int) -> dict:
@@ -78,16 +80,11 @@ def score(cases: list[dict], worker, runs: int) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--worker", choices=("ollama", "claude"), required=True)
     parser.add_argument("--model")
     parser.add_argument("--runs", type=int, default=2)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
-    worker = (
-        OllamaWorker(**({"model": args.model} if args.model else {}))
-        if args.worker == "ollama"
-        else ClaudeWorker(**({"model": args.model} if args.model else {}))
-    )
+    worker = ClaudeWorker(**({"model": args.model} if args.model else {}))
     cases = json.loads((ROOT / "tests/data/capture_eval.json").read_text())
     result = score(cases, worker, args.runs)
     if args.out:

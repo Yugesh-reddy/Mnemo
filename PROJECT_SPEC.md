@@ -1415,9 +1415,8 @@ the worker: score a local model and Haiku, prefer local.
   started there. A folder that is not a project, or is under a temp, cache or scratch
   folder (`/tmp`, `/var/folders`, `~/.cache`, `~/.t3/scratch`, `~/.mnemo`), is
   skipped; capture never writes global memories.
-- **The model.** A swappable worker: `ollama` (default `qwen3.5:4b-mlx`, temperature 0,
-  JSON schema output, nothing leaves the machine) or `claude` (`claude -p --model
-  haiku` through the user's login, with `--tools ""`, `--strict-mcp-config`,
+- **The model.** First a swappable worker, `ollama` (`qwen3.5:4b-mlx`) or `claude`
+  (`claude -p --model haiku` through the user's login, with `--tools ""`, `--strict-mcp-config`,
   `--setting-sources ""` and `--no-session-persistence`, from an empty temp folder, so
   it can only answer and leaves no transcript). The prompt asks for commands that
   worked, conventions, decisions with reasons, stated preferences, where things live
@@ -1469,6 +1468,15 @@ reasons (commit to main because pushing main deploys; which files stay out of
 commits; why the Scripting app). Both carry facts from old conversations that are no
 longer true (Mnemo's archived pipeline). Capture never updates, so a newer
 conversation cannot replace an older captured note with the same subject.
+
+**Haiku only, opt-in (same day).** Running the local model over 30 days of
+conversations took about 6 minutes of the whole GPU and a 4 GB model, which the owner
+found too heavy for a laptop doing other work; claude-mem, checked in its source, also
+calls Haiku through the Claude login (once per event by default) rather than a local
+model. The owner chose agents writing their own notes as the main path and capture as
+an optional extra: the Ollama worker is removed, `mnemo capture` uses `claude -p
+--model haiku` only, and reads Claude Code conversations unless `--agent codex` is
+given (Codex conversations would otherwise go to Anthropic). Nothing schedules it.
 
 **Not covered:** Cursor (its current chats are in `state.vscdb`; `agent-transcripts`
 stopped updating in October) and Antigravity (its `.pb` conversations are encrypted

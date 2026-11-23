@@ -1,11 +1,14 @@
 """`mnemo capture`: a note-taker that reads finished agent conversations and saves what
 lasts as low-trust memories in each conversation's project.
 
-Agents save only when they decide to, and in ordinary coding work they rarely do. This
-reads the conversations Claude Code and Codex already keep on disk, once each has been
-idle for a while, and asks a small model (local Ollama, or Haiku through the user's
-Claude login) for the facts worth keeping: commands that worked, conventions, decisions,
-preferences, where things live, and unfinished work.
+Agents write memories themselves as they work (the memory policy and Claude Code's
+reminder hook). This is an optional extra, off unless the user runs it, in the manner of
+claude-mem: it reads the conversations Claude Code (and, when asked, Codex) keeps on
+disk, once each has been idle for a while, and asks Haiku through the user's own Claude
+login for the facts worth keeping: commands that worked, conventions, decisions,
+preferences, where things live, and unfinished work. It uses the user's Claude quota
+and nothing runs on the machine but the ``claude`` CLI; a local model was tried and
+left out because it loaded the machine too heavily (spec §47).
 
 What the model sees is cut down on purpose. Only the user's typed messages and the
 agent's visible replies go in: no tool output (where a web page or a planted file could
@@ -39,8 +42,6 @@ from pathlib import Path
 from typing import Any, Protocol
 from uuid import UUID, uuid5
 
-import httpx
-
 from mnemo.config import Settings
 from mnemo.credentials import find_credential
 from mnemo.install import hide_secrets
@@ -48,6 +49,7 @@ from mnemo.project import detect_project
 
 ACTOR = "mnemo-capture"
 AGENTS = ("claude-code", "codex")
+DEFAULT_AGENTS = ("claude-code",)  # Codex conversations go to Anthropic only when asked
 IDLE_MINUTES = 30  # a conversation untouched this long counts as finished
 MESSAGE_CHARS = 1500  # each message is cut to this, keeping its start and end
 WINDOW_CHARS = 14000  # conversation text per model call
@@ -56,7 +58,7 @@ MAX_PER_CONVERSATION = 8  # after the merge pass
 KNOWN_LIMIT = 80  # existing memories listed so the model does not repeat them
 VALUE_CHARS = 400
 REQUEST_NAMESPACE = UUID("0b6c5f7e-3d2a-4e1f-9a8b-7c6d5e4f3a2b")
-DEFAULT_MODELS = {"ollama": "qwen3.5:4b-mlx", "claude": "haiku"}
+DEFAULT_MODEL = "haiku"
 
 # Folders whose conversations are never read: scratch work, test fixtures, caches.
 _SKIP_PARTS = ("/tmp/", "/private/tmp/", "/var/folders/", "/private/var/folders/")
@@ -305,26 +307,6 @@ sense without the conversation (name the files, commands and terms). Write at mo
 {MAX_NOTES} notes, fewer is better, and none when nothing qualifies. Answer with JSON \
 only: {{"notes": [{{"subject": "...", "predicate": "...", "value": "..."}}]}}"""
 
-NOTES_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "notes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "subject": {"type": "string"},
-                    "predicate": {"type": "string"},
-                    "value": {"type": "string"},
-                },
-                "required": ["subject", "predicate", "value"],
-            },
-        }
-    },
-    "required": ["notes"],
-}
-
-
 MERGE = f"""You keep the long-term memory for a user's coding projects. Below are \
 candidate notes taken from one long conversation, read in parts from the latest part \
 to the earliest, so earlier entries in the list are more recent.
@@ -382,41 +364,12 @@ class Worker(Protocol):
 
 
 @dataclass
-class OllamaWorker:
-    """A local model through Ollama: free, and nothing leaves the machine."""
-
-    model: str = DEFAULT_MODELS["ollama"]
-    host: str = "http://localhost:11434"
-    timeout: float = 300.0
-    name: str = "ollama"
-
-    def complete(self, system: str, user: str) -> str:
-        response = httpx.post(
-            f"{self.host.rstrip('/')}/api/chat",
-            json={
-                "model": self.model,
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-                "format": NOTES_SCHEMA,
-                "stream": False,
-                "think": False,
-                "options": {"temperature": 0, "num_ctx": 16384},
-            },
-            timeout=self.timeout,
-        )
-        response.raise_for_status()
-        return str(response.json()["message"]["content"])
-
-
-@dataclass
 class ClaudeWorker:
     """Claude through the user's own ``claude`` login (``claude -p``): no API key. It
     runs with no tools, no MCP servers, no settings (so no hooks) and no saved session,
     from an empty folder, so it can only read the prompt and answer."""
 
-    model: str = DEFAULT_MODELS["claude"]
+    model: str = DEFAULT_MODEL
     command: str = "claude"
     timeout: float = 300.0
     name: str = "claude"
@@ -456,12 +409,8 @@ class ClaudeWorker:
         return str(envelope.get("result") or "")
 
 
-def build_worker(kind: str, model: str | None, settings: Settings) -> Worker:
-    if kind == "ollama":
-        return OllamaWorker(model or DEFAULT_MODELS["ollama"], settings.ollama_host)
-    if kind == "claude":
-        return ClaudeWorker(model or DEFAULT_MODELS["claude"])
-    raise ValueError(f"unknown worker {kind!r}")
+def build_worker(model: str | None = None) -> Worker:
+    return ClaudeWorker(model or DEFAULT_MODEL)
 
 
 _JSON_OBJECT = re.compile(r"\{.*\}", re.S)
@@ -554,7 +503,7 @@ class Result:
 
 @dataclass
 class Options:
-    agents: tuple[str, ...] = AGENTS
+    agents: tuple[str, ...] = DEFAULT_AGENTS
     since_days: float = 2.0
     idle_minutes: float = IDLE_MINUTES
     limit: int | None = None
