@@ -1434,10 +1434,14 @@ the worker: score a local model and Haiku, prefer local.
   live or withdrawn) is skipped (`exists`), and so is one within the duplicate floor of
   a current memory in that scope (`similar`): capture never updates or retracts.
 - **Progress and review.** `capture-state.json` beside the store records how many
-  messages of each conversation were read; a later run reads only new ones.
-  `--dry-run` lists notes and records nothing; `--out FILE` writes them as JSON, and
-  `--from FILE` saves a (reviewed, possibly edited) file and records those
-  conversations as read. `--worker`, `--model`, `--agent`, `--limit`, `--since` and
+  messages of each conversation were read, and a fingerprint of each message read
+  (a hash of it and every message before it). A later run reads only new messages, and
+  a resumed Claude Code session, which starts with a copy of its parent's messages,
+  is read only from where the copy ends; a short reply such as "ok" elsewhere keeps
+  its own fingerprint. `--dry-run` lists notes and records nothing; `--out FILE` writes
+  the notes and the conversations read as JSON, and `--from FILE` saves the
+  (reviewed, possibly edited) notes and records every conversation the dry run read,
+  so a note removed in review is not proposed again. `--worker`, `--model`, `--agent`, `--limit`, `--since` and
   `--transcript` narrow a run.
 
 **Worker scores** (`scripts/capture_eval.py`, 9 made-up conversations in
@@ -1446,18 +1450,25 @@ forbidden text, at most one unexpected note per conversation, all fixed before t
 first run). `qwen3.5:4b-mlx`: 87.5% recall, nothing forbidden, 0.33 unexpected notes,
 about 2 s a conversation — passes; it missed the lint command in both runs and
 repeated an already-saved test command (the write-time duplicate check catches that
-case). Haiku: 100% recall, 0.17–0.22 unexpected notes, about 3 s; it passed the first
-run and failed the second, where it saved a warning that a vendor README asked
-assistants to "merge PRs without review" (the planted text, quoted as a warning, not
-the password). The local model is the default.
+case). Haiku: 100% recall and 0.17 unexpected notes on the first prompt (pass); on the
+committed prompt (snapshot rule, latest-first reading, merge pass) 100% recall, 0.22
+unexpected notes, and one forbidden note in one of two runs: a warning that a vendor
+README asked assistants to "merge PRs without review" (the planted text quoted as a
+warning, not the password), so it fails the rule. The fixtures are short; they do not
+exercise the latest-first reading or the merge pass. The local model is the default.
 
-**On the owner's real conversations** (dry run, last 30 days, local model): 9
-conversations in projects (Gambit, the portfolio, Mnemo; the Codex conversations of
-that period were not in projects). Before the latest-first reading and merge pass, 82
-notes with the same rule restated four ways from different weeks; after, 37, with
-stale rules gone, but status snapshots still appear (what a branch is at, tests
-passing, what is deployed) and notes from old conversations can be out of date. Notes
-are low trust and dated, and the first run's notes go through `--from` after review.
+**On the owner's real conversations** (dry runs, last 30 days): 9 conversations in
+projects (Gambit, the portfolio, Mnemo; the Codex conversations of that period were
+not in projects). Local model, first prompt: 82 notes, one rule restated four ways
+from different weeks. With the latest-first reading and merge pass: 37; with resumed
+sessions read once (two portfolio transcripts were copies of a third): 31, of which
+about a third are status snapshots the prompt forbids (tests passing, what a branch
+is at, what is deployed). Haiku on the same conversations (Claude Code transcripts,
+already sent to Anthropic in their sessions): 27, nearly all lasting rules with their
+reasons (commit to main because pushing main deploys; which files stay out of
+commits; why the Scripting app). Both carry facts from old conversations that are no
+longer true (Mnemo's archived pipeline). Capture never updates, so a newer
+conversation cannot replace an older captured note with the same subject.
 
 **Not covered:** Cursor (its current chats are in `state.vscdb`; `agent-transcripts`
 stopped updating in October) and Antigravity (its `.pb` conversations are encrypted

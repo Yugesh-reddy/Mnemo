@@ -25,6 +25,7 @@ saving or recording progress.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import os
 import re
@@ -69,6 +70,7 @@ _SKIP_HOME = (".cache", ".t3/scratch", ".mnemo", "Library/Caches")
 class Turn:
     role: str  # "user" or "agent"
     text: str
+    key: str = ""  # this message and everything before it, hashed (see fingerprint)
 
 
 @dataclass
@@ -210,7 +212,20 @@ def transcripts(agents: tuple[str, ...], home: Path | None = None) -> Iterator[t
 
 
 def read(agent: str, path: Path) -> Conversation | None:
-    return read_claude(path) if agent == "claude-code" else read_codex(path)
+    conv = read_claude(path) if agent == "claude-code" else read_codex(path)
+    if conv is not None:
+        fingerprint(conv.turns)
+    return conv
+
+
+def fingerprint(turns: list[Turn]) -> None:
+    """Key each message by itself and every message before it. A resumed session starts
+    with a copy of its parent's messages, which get the parent's keys; a short message
+    such as "ok" in another conversation does not, because what came before differs."""
+    chain = ""
+    for turn in turns:
+        chain = hashlib.sha256(f"{chain}\0{turn.role}\0{turn.text}".encode()).hexdigest()[:20]
+        turn.key = chain
 
 
 def skipped_folder(folder: Path | None, home: Path | None = None) -> bool:
@@ -488,24 +503,31 @@ def parse_notes(text: str, limit: int = MAX_NOTES) -> list[Note]:
 
 
 class State:
-    """Which conversations were read, up to which turn (``capture-state.json``)."""
+    """What was read (``capture-state.json``): how many messages of each conversation,
+    and a fingerprint of every message read, so the history a resumed session copies
+    from its parent is not read again."""
 
     def __init__(self, path: Path) -> None:
         self.path = path
         try:
-            self.data: dict[str, Any] = json.loads(path.read_text())
+            data = json.loads(path.read_text())
         except (OSError, json.JSONDecodeError):
-            self.data = {}
+            data = {}
+        data = data if isinstance(data, dict) else {}
+        self.read: dict[str, Any] = data.get("read") if isinstance(data.get("read"), dict) else {}
+        self.seen: set[str] = set(data.get("seen") or [])
 
     def done(self, path: Path) -> int:
-        entry = self.data.get(str(path))
+        entry = self.read.get(str(path))
         return int(entry["turns"]) if isinstance(entry, dict) and "turns" in entry else 0
 
-    def mark(self, path: Path, turns: int) -> None:
+    def mark(self, path: Path, turns: list[Turn]) -> None:
         at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        self.data[str(path)] = {"turns": turns, "at": at}
+        self.read[str(path)] = {"turns": max(len(turns), self.done(path)), "at": at}
+        self.seen.update(turn.key for turn in turns)
         tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(self.data, indent=1, sort_keys=True))
+        data = {"read": self.read, "seen": sorted(self.seen)}
+        tmp.write_text(json.dumps(data, indent=1, sort_keys=True))
         os.replace(tmp, self.path)
 
 
@@ -522,7 +544,12 @@ class Proposal:
     predicate: str
     value: str
     outcome: str = "proposed"  # proposed | saved | exists | similar | refused
-    turns: int = 0  # the conversation's messages read so far, for the progress file
+
+
+@dataclass
+class Result:
+    proposals: list[Proposal] = field(default_factory=list)
+    read: list[dict[str, Any]] = field(default_factory=list)  # transcript, agent, turns
 
 
 @dataclass
@@ -535,8 +562,11 @@ class Options:
     dry_run: bool = False
 
 
-def pending(options: Options, state: State, now: float | None = None) -> Iterator[Conversation]:
-    """Finished conversations in a project with turns not read yet, newest first."""
+def pending(
+    options: Options, state: State, seen: set[str], now: float | None = None
+) -> Iterator[tuple[Conversation, list[Turn]]]:
+    """Finished conversations in a project, newest first, with their messages not read
+    yet (in this file, or copied from a conversation already read)."""
     now = now or time.time()
     found: list[tuple[str, Path]] = (
         [(_agent_of(path), path) for path in options.only]
@@ -560,18 +590,21 @@ def pending(options: Options, state: State, now: float | None = None) -> Iterato
         conv = read(agent, path)
         if conv is None or skipped_folder(conv.folder) or not conv.folder.is_dir():
             continue
-        if len(conv.turns) <= state.done(path) or not any(t.role == "user" for t in conv.turns):
+        if len(conv.turns) <= state.done(path):
             continue
-        yield conv
+        new = [
+            turn
+            for turn in conv.turns[state.done(path) :]
+            if turn.key not in state.seen and turn.key not in seen
+        ]
+        yield conv, new
 
 
 def _agent_of(path: Path) -> str:
     return "codex" if path.name.startswith("rollout-") else "claude-code"
 
 
-async def run(
-    settings: Settings, worker: Worker, options: Options, out: Any = None
-) -> list[Proposal]:
+async def run(settings: Settings, worker: Worker, options: Options, out: Any = None) -> Result:
     """Read pending conversations, ask the model for notes, and save them (or, with
     ``dry_run``, only list them)."""
     out = out or sys.stdout
@@ -582,15 +615,22 @@ async def run(
 
     state = State(settings.db.with_name("capture-state.json"))
     embedder = build_embedder(settings)
-    proposals: list[Proposal] = []
-    read_count = 0
-    for conv in pending(options, state):
-        if options.limit is not None and read_count >= options.limit:
+    result = Result()
+    seen: set[str] = set()  # read in this run (a dry run records nothing)
+    for conv, turns in pending(options, state, seen):
+        if options.limit is not None and len(result.read) >= options.limit:
             break
         project = detect_project(conv.folder) if conv.folder else None
         if project is None:
             continue
-        read_count += 1
+        seen.update(turn.key for turn in conv.turns)
+        result.read.append(
+            {"transcript": str(conv.path), "agent": conv.agent, "turns": len(conv.turns)}
+        )
+        if not any(turn.role == "user" for turn in turns):
+            if not options.dry_run:
+                state.mark(conv.path, conv.turns)
+            continue
         namespace = f"{settings.namespace}@{project}"
         async with reading(settings) as conn:
             rows = await conn.fetch(
@@ -602,10 +642,10 @@ async def run(
                 KNOWN_LIMIT,
             )
         # Newer conversations come first: what they proposed counts as known here.
-        known = [f"{row['subject']} · {row['predicate']}" for row in rows]
-        known += [f"{p.subject} · {p.predicate}" for p in proposals if p.namespace == namespace]
-        start = state.done(conv.path)
-        turns = conv.turns[start:]
+        known = [
+            f"{p.subject} · {p.predicate}" for p in result.proposals if p.namespace == namespace
+        ]
+        known += [f"{row['subject']} · {row['predicate']}" for row in rows]
         print(
             f"{conv.agent}: {conv.path.name} in {project} ({len(turns)} new messages)",
             file=out,
@@ -614,14 +654,7 @@ async def run(
         notes = await asyncio.to_thread(notes_for, worker, project, known[:KNOWN_LIMIT], turns)
         batch = [
             Proposal(
-                namespace,
-                project,
-                conv.agent,
-                str(conv.path),
-                n.subject,
-                n.predicate,
-                n.value,
-                turns=len(conv.turns),
+                namespace, project, conv.agent, str(conv.path), n.subject, n.predicate, n.value
             )
             for n in notes
         ]
@@ -635,7 +668,7 @@ async def run(
             finally:
                 await conn.close()
         if not options.dry_run:
-            state.mark(conv.path, len(conv.turns))
+            state.mark(conv.path, conv.turns)
         for proposal in batch:
             print(
                 f"  {proposal.outcome:<8} {proposal.subject} · {proposal.predicate}: "
@@ -643,8 +676,8 @@ async def run(
                 file=out,
                 flush=True,
             )
-        proposals += batch
-    return proposals
+        result.proposals += batch
+    return result
 
 
 async def save(memory: Any, proposal: Proposal) -> str:
@@ -675,21 +708,23 @@ async def save(memory: Any, proposal: Proposal) -> str:
     return "saved"
 
 
-async def save_file(settings: Settings, path: Path, out: Any = None) -> list[Proposal]:
-    """Save the proposals a ``--dry-run --out`` wrote (after the user reviewed them), and
-    record their conversations as read up to where the dry run read them."""
+async def save_file(settings: Settings, path: Path, out: Any = None) -> Result:
+    """Save the notes a ``--dry-run --out`` wrote (after the user reviewed and perhaps
+    removed some), and record every conversation that dry run read as read, so a
+    removed note is not proposed or saved again."""
     out = out or sys.stdout
     from mnemo.browse import _store
     from mnemo.db import check_schema, connect
     from mnemo.direct import DirectMemory
     from mnemo.embedder import build_embedder
 
-    proposals = [Proposal(**item) for item in json.loads(path.read_text())]
+    data = json.loads(path.read_text())
+    result = Result([Proposal(**item) for item in data["notes"]], list(data["read"]))
     embedder = build_embedder(settings)
     conn = await connect(settings.db, create=False)
     try:
         await check_schema(conn)
-        for proposal in proposals:
+        for proposal in result.proposals:
             memory = DirectMemory(_store(conn, settings, proposal.namespace, embedder))
             proposal.outcome = await save(memory, proposal)
             print(
@@ -700,12 +735,14 @@ async def save_file(settings: Settings, path: Path, out: Any = None) -> list[Pro
     finally:
         await conn.close()
     state = State(settings.db.with_name("capture-state.json"))
-    for proposal in proposals:
-        transcript = Path(proposal.transcript)
-        if proposal.turns > state.done(transcript):
-            state.mark(transcript, proposal.turns)
-    return proposals
+    for entry in result.read:
+        transcript = Path(entry["transcript"])
+        conv = read(entry["agent"], transcript) if transcript.exists() else None
+        if conv is not None:
+            state.mark(transcript, conv.turns[: int(entry["turns"])])
+    return result
 
 
-def write_proposals(proposals: list[Proposal], path: Path) -> None:
-    path.write_text(json.dumps([asdict(p) for p in proposals], indent=1) + "\n")
+def write_result(result: Result, path: Path) -> None:
+    data = {"read": result.read, "notes": [asdict(p) for p in result.proposals]}
+    path.write_text(json.dumps(data, indent=1) + "\n")

@@ -223,7 +223,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _capture(args: argparse.Namespace) -> int:
-    from mnemo.capture import AGENTS, Options, build_worker, run, save_file, write_proposals
+    from mnemo.capture import AGENTS, Options, build_worker, run, save_file, write_result
     from mnemo.config import get_settings
 
     settings = get_settings()
@@ -238,12 +238,12 @@ def _capture(args: argparse.Namespace) -> int:
         only=args.transcript,
         dry_run=args.dry_run,
     )
-    proposals = asyncio.run(run(settings, build_worker(args.worker, args.model, settings), options))
+    result = asyncio.run(run(settings, build_worker(args.worker, args.model, settings), options))
     if args.out is not None:
-        write_proposals(proposals, args.out)
+        write_result(result, args.out)
     verb = "proposed" if args.dry_run else "saved"
-    saved = sum(p.outcome in ("proposed", "saved") for p in proposals)
-    print(f"{saved} of {len(proposals)} notes {verb}.")
+    saved = sum(p.outcome in ("proposed", "saved") for p in result.proposals)
+    print(f"{saved} notes {verb} from {len(result.read)} conversations.")
     return 0
 
 

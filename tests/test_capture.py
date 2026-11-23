@@ -191,8 +191,7 @@ NOTES = [
 
 def _run(worker, **options) -> list[capture.Proposal]:
     out = io.StringIO()
-    result = asyncio.run(capture.run(get_settings(), worker, Options(**options), out=out))
-    return result
+    return asyncio.run(capture.run(get_settings(), worker, Options(**options), out=out)).proposals
 
 
 async def _rows(db: Path, namespace: str) -> list:
@@ -393,6 +392,54 @@ def test_reviewed_notes_from_a_dry_run_are_saved_from_the_file(
     assert cli.main(["capture", "--from", str(out)]) == 0
     assert [r["subject"] for r in asyncio.run(_rows(env, f"default@{PROJECT}"))] == ["widget tests"]
     assert "saved" in capsys.readouterr().out
+
+
+def test_a_note_removed_in_review_is_not_proposed_again(env, home, repo, tmp_path, monkeypatch):
+    _claude_transcript(home, repo)
+    worker = FakeWorker(NOTES)
+    monkeypatch.setattr(capture, "build_worker", lambda *a: worker)
+    out = tmp_path / "notes.json"
+    assert cli.main(["capture", "--dry-run", "--out", str(out)]) == 0
+    data = json.loads(out.read_text())
+    data["notes"] = []  # the user removed every note
+    out.write_text(json.dumps(data))
+    assert cli.main(["capture", "--from", str(out)]) == 0
+    worker.prompts.clear()
+    assert cli.main(["capture"]) == 0
+    assert worker.prompts == [] and asyncio.run(_rows(env, f"default@{PROJECT}")) == []
+
+
+def test_history_a_resumed_session_copies_is_not_read_again(env, home, repo):
+    first = _claude_transcript(home, repo, name="first", modified=OLD - 600)
+    more = {
+        "type": "user",
+        "cwd": str(repo),
+        "message": {"role": "user", "content": "Deploys go through make ship."},
+    }
+    _write(first.with_name("resumed.jsonl"), _claude_lines(repo, [more]))
+    worker = FakeWorker([])
+    _run(worker)
+    (sent,) = worker.prompts  # the resumed copy, newest, read whole; the original skipped
+    assert "make ship" in sent and "make test" in sent
+    later = first.with_name("again.jsonl")
+    again = {
+        "type": "user",
+        "cwd": str(repo),
+        "message": {"role": "user", "content": "Docs live in docs/."},
+    }
+    _write(later, _claude_lines(repo, [more, again]))
+    worker.prompts.clear()
+    _run(worker)
+    (sent,) = worker.prompts
+    assert "docs/" in sent and "make ship" not in sent and "make test" not in sent
+
+
+def test_the_same_short_reply_in_another_conversation_is_still_read():
+    a = [Turn("user", "fix the build"), Turn("agent", "ok")]
+    b = [Turn("user", "add a test"), Turn("agent", "ok")]
+    capture.fingerprint(a)
+    capture.fingerprint(b)
+    assert a[1].key != b[1].key
 
 
 def test_the_claude_worker_runs_without_tools_mcp_settings_or_a_saved_session(monkeypatch):
