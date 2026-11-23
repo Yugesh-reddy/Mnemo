@@ -13,9 +13,9 @@ from scripts import agent_eval as ae
 
 def test_the_committed_scenarios_are_valid_and_never_name_the_tools():
     scenarios = ae.load_scenarios()
-    assert len(scenarios) == 16
+    assert len(scenarios) == 24
     agents = [session.agent for s in scenarios for session in s.sessions]
-    assert (agents.count("claude"), agents.count("codex")) == (18, 18)
+    assert (agents.count("claude"), agents.count("codex")) == (25, 25)
     for scenario in scenarios:
         for session in scenario.sessions:
             assert "mnemo" not in session.prompt.lower()
@@ -326,3 +326,28 @@ def test_local_runs_pin_the_model_like_the_installer(tmp_path):
     assert env["MNEMO_EMBED_MODEL"] == "BAAI/bge-small-en-v1.5"
     assert env["MNEMO_MODEL_DIR"] == str(tmp_path / "models")
     assert "MNEMO_MODEL_DIR" not in ae.mnemo_env("/x", "ns", "codex", "ollama", 768, settings)
+
+
+def test_store_checks_can_count_only_memories_with_a_given_source():
+    check = ae.Check(kind="store", match="pytest", sources=["tool", "agent"], min=1)
+    row = {"namespace": "eval-x@github.com/a/b", "subject": "tests", "predicate": "command"}
+    as_user = {**row, "value": "uv run pytest", "provenance": "direct_user_statement"}
+    as_tool = {**row, "value": "uv run pytest", "provenance": "tool_output"}
+    assert [c["passed"] for c in ae.evaluate(one(check), [record()], [as_user])] == [False]
+    assert [c["passed"] for c in ae.evaluate(one(check), [record()], [as_tool])] == [True]
+
+
+def test_an_isolated_codex_home_links_the_login_and_keeps_only_the_model(tmp_path):
+    real = tmp_path / "real"
+    real.mkdir()
+    (real / "auth.json").write_text("{}")
+    (real / "AGENTS.md").write_text("global rules")
+    (real / "config.toml").write_text(
+        'model = "m"\nmodel_reasoning_effort = "high"\napproval_policy = "x"\n'
+        '[mcp_servers.other]\ncommand = "o"\nmodel = "not top level"\n'
+    )
+    home = ae.isolated_codex_home(real, tmp_path)
+    assert (home / "auth.json").resolve() == (real / "auth.json").resolve()
+    assert (home / "auth.json").is_symlink()
+    assert not (home / "AGENTS.md").exists()
+    assert (home / "config.toml").read_text() == 'model = "m"\nmodel_reasoning_effort = "high"\n'
