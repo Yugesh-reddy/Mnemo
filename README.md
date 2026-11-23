@@ -325,6 +325,7 @@ mnemo search deploy      # exactly what an agent's memory_search finds here
 mnemo show 3f2a91c0      # one memory in full with its history (an ID or its start)
 mnemo log                # recent changes: who wrote, updated, retracted or restored what
 mnemo brief              # the brief a Claude Code session starting here is given
+mnemo capture --dry-run  # optional: what Haiku would note from finished conversations
 ```
 
 Run them inside a project to see what the agents working there see: the same project
@@ -347,6 +348,26 @@ anything goes wrong it prints nothing, so a session never fails to start because
 Mnemo. `mnemo install --no-session-brief` leaves it out (or removes it); `mnemo
 uninstall` removes it and keeps any other hooks
 ([spec §46](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
+
+### Optional: notes from finished conversations
+
+Agents write memories themselves as they work. For more, in the manner of claude-mem,
+`mnemo capture` reads finished Claude Code conversations (idle for 30 minutes) and has
+Haiku, through your own Claude login, write down what lasts: commands that worked,
+conventions, decisions, stated preferences, where things live and the agreed next step.
+It is off unless you run it and uses your Claude quota. Only your messages and the
+agent's replies are read (no tool output), secrets are hidden first, conversations
+outside a project are skipped, and a resumed session is read once. Notes are saved in
+that project as low-trust memories by `mnemo-capture`; a note on a subject that already
+exists is skipped.
+
+```bash
+mnemo capture --dry-run --out notes.json   # read and propose; saves nothing
+mnemo capture --from notes.json            # save the notes you kept
+mnemo capture --agent codex                # also Codex conversations (sent to Anthropic)
+```
+
+([spec §47](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#47-capture-a-note-taker-for-finished-conversations--november-23-2026))
 
 ## Review memory in the browser
 

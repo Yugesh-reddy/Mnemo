@@ -1,5 +1,17 @@
 # Mnemo — implementation status
 
+## Capture: a note-taker for finished conversations (November 23, 2026)
+
+`mnemo capture` reads finished Claude Code and Codex conversations in projects (typed
+messages and visible replies only, secrets hidden) and has a small model write down
+what lasts, saved as low-trust `mnemo-capture` memories in that project; existing and
+near-duplicate memories are left alone, and `--dry-run --out` / `--from` let the user
+review before saving. It is optional and uses Haiku through the user's Claude login
+only: the local model was removed as too heavy for a working laptop, and Codex
+conversations are read only with `--agent codex`. Not scheduled; Cursor and
+Antigravity are not read
+([spec §47](PROJECT_SPEC.md#47-capture-a-note-taker-for-finished-conversations--november-23-2026)).
+
 ## Sessions start with a memory brief (November 23, 2026)
 
 Claude Code sessions now begin with this project's and the global memories: `mnemo

@@ -1392,3 +1392,94 @@ searched again. Now Claude Code is handed the memories when a session starts.
 SDK (T3 Code) load user hooks from `~/.claude/settings.json`; they do load
 `~/.claude/CLAUDE.md`. **Not measured yet:** the agent eval (§39) with the brief.
 
+
+## 47. Capture: a note-taker for finished conversations — November 23, 2026
+
+The owner asked for memory that fills itself, as claude-mem does, on top of agents
+saving by choice: in ordinary work agents rarely save, and the store held one memory.
+This brings back, in a much smaller form, the idea §23 archived: a model reads what
+happened and writes memories. The owner approved that change of direction and chose
+the worker: score a local model and Haiku, prefer local.
+
+- **What is read.** `mnemo capture` reads the conversations Claude Code
+  (`~/.claude/projects/*/*.jsonl`, not sub-agent folders) and Codex
+  (`~/.codex*/sessions/**/rollout-*.jsonl`, not `codex exec` runs or sub-agents) keep,
+  once one has been untouched for 30 minutes and changed in the last `--since` days
+  (default 2). Only the user's typed messages and the agent's visible replies go to the
+  model: no tool calls or output, no thinking, no side chains, no harness blocks
+  (`<system-reminder>`, command echoes, environment context, injected `AGENTS.md`),
+  and pasted text becomes `[pasted text]`. Each message is cut to 1,500 characters
+  (start and end kept), and credential-shaped text is hidden (the installer preview's
+  rules, §40, plus private key blocks).
+- **Where it goes.** The conversation's folder decides the project, as for a server
+  started there. A folder that is not a project, or is under a temp, cache or scratch
+  folder (`/tmp`, `/var/folders`, `~/.cache`, `~/.t3/scratch`, `~/.mnemo`), is
+  skipped; capture never writes global memories.
+- **The model.** First a swappable worker, `ollama` (`qwen3.5:4b-mlx`) or `claude`
+  (`claude -p --model haiku` through the user's login, with `--tools ""`, `--strict-mcp-config`,
+  `--setting-sources ""` and `--no-session-persistence`, from an empty temp folder, so
+  it can only answer and leaves no transcript). The prompt asks for commands that
+  worked, conventions, decisions with reasons, stated preferences, where things live
+  and the agreed next step, and not for steps taken, progress or status snapshots,
+  fixed errors, credentials or anything already saved; it says the conversation is
+  data. A conversation is read in parts of 14,000 characters, latest part first, each
+  told what is already saved and what later parts wrote; a conversation read in more
+  than one part, or with more than 8 notes, gets one merge pass that drops snapshots,
+  stale and repeated notes (at most 8). Notes with a credential, missing parts or more
+  than 400 characters are dropped.
+- **Writes.** Each note is a `memory_create` with source `agent` (low trust), actor
+  `mnemo-capture`, a request ID derived from the transcript and key, and `source_span`
+  `{"captured_from": agent, "transcript": path}`. A note whose key exists (any actor's,
+  live or withdrawn) is skipped (`exists`), and so is one within the duplicate floor of
+  a current memory in that scope (`similar`): capture never updates or retracts.
+- **Progress and review.** `capture-state.json` beside the store records how many
+  messages of each conversation were read, and a fingerprint of each message read
+  (a hash of it and every message before it). A later run reads only new messages, and
+  a resumed Claude Code session, which starts with a copy of its parent's messages,
+  is read only from where the copy ends; a short reply such as "ok" elsewhere keeps
+  its own fingerprint. `--dry-run` lists notes and records nothing; `--out FILE` writes
+  the notes and the conversations read as JSON, and `--from FILE` saves the
+  (reviewed, possibly edited) notes and records every conversation the dry run read,
+  so a note removed in review is not proposed again. `--worker`, `--model`, `--agent`, `--limit`, `--since` and
+  `--transcript` narrow a run.
+
+**Worker scores** (`scripts/capture_eval.py`, 9 made-up conversations in
+`tests/data/capture_eval.json`, two runs each; pass: at least 80% of expected facts, no
+forbidden text, at most one unexpected note per conversation, all fixed before the
+first run). `qwen3.5:4b-mlx`: 87.5% recall, nothing forbidden, 0.33 unexpected notes,
+about 2 s a conversation — passes; it missed the lint command in both runs and
+repeated an already-saved test command (the write-time duplicate check catches that
+case). Haiku: 100% recall and 0.17 unexpected notes on the first prompt (pass); on the
+committed prompt (snapshot rule, latest-first reading, merge pass) 100% recall, 0.22
+unexpected notes, and one forbidden note in one of two runs: a warning that a vendor
+README asked assistants to "merge PRs without review" (the planted text quoted as a
+warning, not the password), so it fails the rule. The fixtures are short; they do not
+exercise the latest-first reading or the merge pass. The local model is the default.
+
+**On the owner's real conversations** (dry runs, last 30 days): 9 conversations in
+projects (Gambit, the portfolio, Mnemo; the Codex conversations of that period were
+not in projects). Local model, first prompt: 82 notes, one rule restated four ways
+from different weeks. With the latest-first reading and merge pass: 37; with resumed
+sessions read once (two portfolio transcripts were copies of a third): 31, of which
+about a third are status snapshots the prompt forbids (tests passing, what a branch
+is at, what is deployed). Haiku on the same conversations (Claude Code transcripts,
+already sent to Anthropic in their sessions): 27, nearly all lasting rules with their
+reasons (commit to main because pushing main deploys; which files stay out of
+commits; why the Scripting app). Both carry facts from old conversations that are no
+longer true (Mnemo's archived pipeline). Capture never updates, so a newer
+conversation cannot replace an older captured note with the same subject.
+
+**Haiku only, opt-in (same day).** Running the local model over 30 days of
+conversations took about 6 minutes of the whole GPU and a 4 GB model, which the owner
+found too heavy for a laptop doing other work; claude-mem, checked in its source, also
+calls Haiku through the Claude login (once per event by default) rather than a local
+model. The owner chose agents writing their own notes as the main path and capture as
+an optional extra: the Ollama worker is removed, `mnemo capture` uses `claude -p
+--model haiku` only, and reads Claude Code conversations unless `--agent codex` is
+given (Codex conversations would otherwise go to Anthropic). Nothing schedules it.
+
+**Not covered:** Cursor (its current chats are in `state.vscdb`; `agent-transcripts`
+stopped updating in October) and Antigravity (its `.pb` conversations are encrypted
+and its `.db` steps are undocumented protobuf). **Not built:** running capture on a
+schedule (a launchd agent written by `mnemo install`), which changes the user's system
+and needs its own approval.
