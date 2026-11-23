@@ -11,6 +11,7 @@
     mnemo show ID     # one memory in full, with its history (ID or its first characters)
     mnemo log         # recent changes: who wrote, updated, retracted or restored what
     mnemo brief       # what an agent starting a session here is shown (Claude Code's hook)
+    mnemo remind      # Claude Code's end-of-task reminder to save what lasts (a Stop hook)
     mnemo capture     # optional: Haiku notes from finished conversations (your Claude quota)
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
@@ -158,6 +159,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     brief.add_argument("--db", type=Path, help="store file (default: MNEMO_DB)")
     brief.add_argument("--namespace", help="global namespace (default: MNEMO_NAMESPACE)")
     brief.add_argument("--user-id", help="user (default: MNEMO_USER_ID)")
+    remind = commands.add_parser(
+        "remind", help="Claude Code's end-of-task reminder to save what lasts (its Stop hook)"
+    )
+    remind.add_argument("--hook", action="store_true", help="read Claude Code's Stop payload")
+    remind.add_argument("--db", type=Path, help="store file; the reminder state sits beside it")
     capture = commands.add_parser(
         "capture", help="optional: Haiku notes from finished conversations (your Claude quota)"
     )
@@ -213,6 +219,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         from mnemo.brief import run as brief_run
 
         return brief_run(args)
+    if args.command == "remind":
+        from mnemo.remind import REMINDER
+        from mnemo.remind import run as remind_run
+
+        if not args.hook:
+            print(REMINDER)
+            return 0
+        return remind_run(args)
     if args.command == "capture":
         return _capture(args)
     if args.command == "reindex":

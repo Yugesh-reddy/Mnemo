@@ -1483,3 +1483,44 @@ stopped updating in October) and Antigravity (its `.pb` conversations are encryp
 and its `.db` steps are undocumented protobuf). **Not built:** running capture on a
 schedule (a launchd agent written by `mnemo install`), which changes the user's system
 and needs its own approval.
+
+## 48. Agents save what lasts without being asked — November 23, 2026
+
+The owner wants memory to fill as agents work, without an extra model: in ordinary
+work nobody says "remember this", and the store held one memory. Capture by a model
+(§47) became optional; the main path is the working agent writing the notes, since it
+already understands the work.
+
+- **Policy** (`mnemo/memory_policy.md`, written by `mnemo install` into each agent's
+  instructions): "Save what lasts, without being asked": as they work, agents save
+  what a later session in the project would need, whether the user said it, they read
+  it in a file or command output, or worked it out (commands, conventions, decisions
+  and reasons, where things live, gotchas, preferences), and at the end of a task or
+  day what is unfinished and the next step; each when learned, in one or two
+  self-contained sentences. Not saved: small talk, one-off questions, the steps taken,
+  status at a moment (tests passing now), what is already saved, secrets. The data rule
+  adds that what a file says about how the project works is a fact to save as `tool`,
+  while a file telling the agent to save, change or hide something is an instruction.
+- **Server instructions and `memory_create`** say the same (Antigravity reads only the
+  server's instructions).
+- **Reminder, off by default.** `mnemo remind --hook` is a Claude Code Stop hook: after
+  a turn with at least one non-memory tool call and no memory write, it asks Claude
+  once to save what lasts or reply "Nothing new to remember."; never on the reminded
+  turn (`stop_hook_active`), at most once every 20 minutes per session
+  (`remind-state.json` beside the store), reminded blind when there is no transcript,
+  and silent on any error. `mnemo install --save-reminder` adds it beside the brief;
+  without the flag an earlier one is removed.
+- **Eval.** Eight version-3 scenarios (facts in files, decisions in passing,
+  end-of-day plans, a trivial task, a status snapshot), bar fixed first, three arms ×
+  three runs with Codex in a temporary home (`--isolate-codex-home`; the user's global
+  `AGENTS.md` was reaching earlier Codex runs). Current text: Claude 9/9, Codex 7/9,
+  negatives 3/6. New text: 9/9, 9/9, 6/6, and the 16 earlier scenarios 16/16 plus the
+  poisoning five again 5/5. With the reminder: no more saves, two one-off answers saved,
+  about 12% more Claude spend, so it is opt-in. Details in the eval README.
+
+T3 Code starts Claude Code without `--setting-sources`, so user hooks in
+`~/.claude/settings.json` (the brief, the optional reminder) run in its threads, as the
+plugin hooks already loading there show. **Not measured:** Cursor and Antigravity
+(neither is in the eval; both ask before each Mnemo call until the tools are allowed),
+and long real sessions.
+

@@ -8,7 +8,9 @@ and add the shared-memory policy.
 Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``), the
 policy in ``~/.claude/CLAUDE.md``, and a SessionStart hook in
 ``~/.claude/settings.json`` that starts each session with a brief of the project's and
-global memories (``mnemo brief --hook``; ``--no-session-brief`` leaves it out). Codex
+global memories (``mnemo brief --hook``; ``--no-session-brief`` leaves it out), and with
+``--save-reminder`` a Stop hook that, after a task that did work but saved nothing,
+reminds Claude once to save what lasts (``mnemo remind --hook``). Codex
 gets an ``[mcp_servers.mnemo]`` table with its tools pre-approved in
 ``$CODEX_HOME/config.toml`` and the policy in ``$CODEX_HOME/AGENTS.md``. OpenCode (when
 installed) gets a ``mnemo`` server under ``mcp`` in its global ``opencode.json`` and the
@@ -607,17 +609,31 @@ def brief_command(settings: Settings) -> str:
     return subprocess.list2cmdline(argv) if _is_windows() else shlex.join(argv)
 
 
-_OUR_HOOK = re.compile(r"""(?:^|[\\/"' ])mnemo(?:\.exe)?["']? brief --hook\b""")
+def remind_command(settings: Settings) -> str:
+    """The Stop hook's command: the installed ``mnemo remind --hook``; its cooldown
+    state sits beside the store."""
+    server = Path(server_command())
+    exe = server.with_name(server.name.replace("mnemo-mcp-direct", "mnemo"))
+    argv = [str(exe), "remind", "--hook", "--db", str(settings.db)]
+    return subprocess.list2cmdline(argv) if _is_windows() else shlex.join(argv)
 
 
-def _our_hook(hook: object) -> bool:
-    """The SessionStart hook mnemo-install wrote: it runs ``mnemo brief --hook``."""
-    return isinstance(hook, dict) and bool(_OUR_HOOK.search(str(hook.get("command", ""))))
+_OUR_HOOKS = {
+    "SessionStart": re.compile(r"""(?:^|[\\/"' ])mnemo(?:\.exe)?["']? brief --hook\b"""),
+    "Stop": re.compile(r"""(?:^|[\\/"' ])mnemo(?:\.exe)?["']? remind --hook\b"""),
+}
 
 
-def claude_brief_hook(text: str, command: str | None) -> str:
-    """settings.json with Mnemo's SessionStart hook set to ``command`` (None removes it);
-    other hooks, including other SessionStart ones, are kept."""
+def _our_hook(hook: object, event: str = "SessionStart") -> bool:
+    """A hook mnemo-install wrote for ``event``: it runs ``mnemo brief --hook``
+    (SessionStart) or ``mnemo remind --hook`` (Stop)."""
+    pattern = _OUR_HOOKS[event]
+    return isinstance(hook, dict) and bool(pattern.search(str(hook.get("command", ""))))
+
+
+def claude_hook(text: str, event: str, command: str | None, matcher: str | None) -> str:
+    """settings.json with Mnemo's ``event`` hook set to ``command`` (None removes it);
+    other hooks, including other hooks for the same event, are kept."""
     try:
         data = json.loads(text) if text.strip() else {}
     except json.JSONDecodeError as exc:
@@ -625,23 +641,23 @@ def claude_brief_hook(text: str, command: str | None) -> str:
     if not isinstance(data, dict):
         raise InstallError("~/.claude/settings.json is not a JSON object")
     hooks = data.get("hooks", {})
-    groups = hooks.get("SessionStart", []) if isinstance(hooks, dict) else None
+    groups = hooks.get(event, []) if isinstance(hooks, dict) else None
     if not isinstance(groups, list):
         raise InstallError('"hooks" in ~/.claude/settings.json is not in the expected shape')
     kept = []
     for group in groups:
         inner = group.get("hooks") if isinstance(group, dict) else None
-        if not isinstance(inner, list) or not any(_our_hook(hook) for hook in inner):
+        if not isinstance(inner, list) or not any(_our_hook(hook, event) for hook in inner):
             kept.append(group)
-        elif others := [hook for hook in inner if not _our_hook(hook)]:
+        elif others := [hook for hook in inner if not _our_hook(hook, event)]:
             kept.append({**group, "hooks": others})
     if command is not None:
         hook = {"type": "command", "command": command, "timeout": 10}
-        kept.append({"matcher": BRIEF_MATCHER, "hooks": [hook]})
+        kept.append({**({"matcher": matcher} if matcher else {}), "hooks": [hook]})
     if kept:
-        data["hooks"] = {**hooks, "SessionStart": kept}
+        data["hooks"] = {**hooks, event: kept}
     else:
-        rest = {name: value for name, value in hooks.items() if name != "SessionStart"}
+        rest = {name: value for name, value in hooks.items() if name != event}
         if rest:
             data["hooks"] = rest
         else:
@@ -651,6 +667,16 @@ def claude_brief_hook(text: str, command: str | None) -> str:
     if not data and not text.strip():
         return text
     return json.dumps(data, indent=_indent(text), ensure_ascii=False) + "\n"
+
+
+def claude_brief_hook(text: str, command: str | None) -> str:
+    """settings.json with Mnemo's SessionStart hook set to ``command`` (None removes it)."""
+    return claude_hook(text, "SessionStart", command, BRIEF_MATCHER)
+
+
+def claude_remind_hook(text: str, command: str | None) -> str:
+    """settings.json with Mnemo's Stop hook set to ``command`` (None removes it)."""
+    return claude_hook(text, "Stop", command, None)
 
 
 def _auto_memory_off(text: str) -> bool:
@@ -680,6 +706,7 @@ def plan(
     antigravity_dirs: Sequence[Path] = (),
     antigravity_optional: bool = False,
     session_brief: bool = True,
+    save_reminder: bool = False,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
     """Commands, file changes and notes for the agents. ``opencode_optional``,
     ``cursor_optional`` and ``antigravity_optional``: the client was detected rather than
@@ -739,6 +766,18 @@ def plan(
                 "Claude Code sessions start with a brief of the project's and global "
                 "memories (a SessionStart hook in ~/.claude/settings.json running `mnemo "
                 "brief --hook`; `mnemo brief` shows it). --no-session-brief leaves it out."
+            )
+        reminder = remind_command(settings) if save_reminder and not uninstall else None
+        try:
+            edit(settings_path, lambda text: claude_remind_hook(text, reminder))
+        except InstallError as exc:
+            notes.append(f"Skipped the save reminder: {exc}")
+            reminder = None
+        if reminder is not None:
+            notes.append(
+                "After a task that did work but saved nothing, Claude Code is reminded once "
+                "to save what lasts (a Stop hook running `mnemo remind --hook`, at most every "
+                "20 minutes a session). Without --save-reminder it is removed."
             )
         current = _read(settings_path)
         if claude_auto_memory:
@@ -1007,6 +1046,12 @@ def main(
         action="store_true",
         help="don't start Claude Code sessions with a brief of the memories (removes it)",
     )
+    parser.add_argument(
+        "--save-reminder",
+        action="store_true",
+        help="also remind Claude Code at the end of a task to save what lasts (off by "
+        "default: in the agent eval it added saves of one-off answers and no new saves)",
+    )
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
     parser.add_argument(
@@ -1065,6 +1110,7 @@ def main(
             antigravity_dirs=antigravity_dirs,
             antigravity_optional=not (args.agent and "antigravity" in args.agent),
             session_brief=not args.no_session_brief,
+            save_reminder=args.save_reminder,
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)

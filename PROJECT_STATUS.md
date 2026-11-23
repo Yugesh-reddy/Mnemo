@@ -1,5 +1,16 @@
 # Mnemo — implementation status
 
+## Agents save what lasts without being asked (November 23, 2026)
+
+The memory policy, the server's instructions and `memory_create` now ask agents to
+save, as they work, what a later session would need (from the user, files, command
+output or their own work) and the next step when a task ends, and not status
+snapshots. On eight new scenarios Codex went from 7/9 to 9/9 saves and stopped storing
+"the build is green"; Claude stayed 9/9; the 16 earlier scenarios still pass. A Claude
+Code Stop-hook reminder (`mnemo remind --hook`) added no saves and saved one-off
+answers, so it is opt-in (`mnemo install --save-reminder`)
+([spec §48](PROJECT_SPEC.md#48-agents-save-what-lasts-without-being-asked--november-23-2026)).
+
 ## Capture: a note-taker for finished conversations (November 23, 2026)
 
 `mnemo capture` reads finished Claude Code and Codex conversations in projects (typed

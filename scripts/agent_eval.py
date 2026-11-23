@@ -75,6 +75,8 @@ class Check(BaseModel):
     scope: Literal["project", "global", "any"] = "any"
     min: int | None = None
     max: int | None = None
+    sources: list[Literal["user", "tool", "agent"]] | None = None
+    """Store checks: count only memories saved with one of these sources."""
     note: str = ""
 
 
@@ -132,6 +134,7 @@ class SessionRecord(BaseModel):
     model: str | None = None
     seconds: float = 0.0
     writes: int = 0
+    reminders: int = 0  # times a Stop hook made Claude continue
     error: str | None = None
 
 
@@ -180,7 +183,12 @@ def claude_env(auto_memory: bool) -> dict[str, str]:
 
 
 def claude_command(
-    mcp_config: Path, max_usd: float, model: str | None = None, *, auto_memory: bool = False
+    mcp_config: Path,
+    max_usd: float,
+    model: str | None = None,
+    *,
+    auto_memory: bool = False,
+    keep_sessions: bool = False,
 ) -> list[str]:
     """The prompt goes on stdin, so variadic flags cannot swallow it."""
     command = [
@@ -194,7 +202,7 @@ def claude_command(
         "--strict-mcp-config",
         "--setting-sources",
         "project",
-        "--no-session-persistence",
+        *([] if keep_sessions else ["--no-session-persistence"]),
         "--max-budget-usd",
         f"{max_usd:.2f}",
     ]
@@ -237,6 +245,23 @@ def codex_command(env: dict[str, str], disable: list[str], model: str | None = N
     return command + ["-"]
 
 
+def isolated_codex_home(real: Path, root: Path) -> Path:
+    """A Codex home holding only a link to the real login and the real model settings,
+    so sessions see the fixture's AGENTS.md and not the user's global one (which carries
+    whatever memory policy is installed)."""
+    home = root / "codex-home"
+    home.mkdir()
+    (home / "auth.json").symlink_to(real / "auth.json")
+    top = []
+    for line in (real / "config.toml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("["):
+            break
+        if re.match(r"(model|model_reasoning_effort)\s*=", line):
+            top.append(line)
+    (home / "config.toml").write_text("\n".join(top) + "\n", encoding="utf-8")
+    return home
+
+
 def other_codex_servers() -> list[str]:
     """Configured Codex MCP servers other than mnemo, to turn off for each run."""
     result = subprocess.run(
@@ -253,13 +278,29 @@ def _preview(value: Any) -> str:
 def parse_claude(stdout: str) -> dict[str, Any]:
     calls: dict[str, dict[str, Any]] = {}
     parsed: dict[str, Any] = {"answer": "", "usage": {}, "cost_usd": None, "model": None}
-    parsed["error"] = None
+    parsed["error"], parsed["reminders"] = None, 0
+    last_text, before_reminder = "", None
     for line in stdout.splitlines():
         try:
             event = json.loads(line)
         except ValueError:
             continue
         kind = event.get("type")
+        message = event.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
+        texts = [
+            block.get("text", "")
+            for block in (content if isinstance(content, list) else [])
+            if isinstance(block, dict) and block.get("type") == "text"
+        ]
+        if kind == "assistant" and texts:
+            last_text = "\n".join(texts)
+        if kind == "user" and any(text.startswith("Stop hook feedback:") for text in texts):
+            # A Stop hook (Mnemo's save reminder) made Claude continue: the answer is
+            # the reply the user got before it.
+            parsed["reminders"] += 1
+            if before_reminder is None:
+                before_reminder = last_text
         if kind == "system" and event.get("subtype") == "init":
             parsed["model"] = event.get("model")
         elif kind in ("assistant", "user"):
@@ -280,6 +321,8 @@ def parse_claude(stdout: str) -> dict[str, Any]:
             parsed["cost_usd"] = event.get("total_cost_usd")
             if event.get("is_error"):
                 parsed["error"] = event.get("subtype") or "error"
+    if before_reminder:
+        parsed["answer"] = before_reminder
     parsed["tool_calls"] = list(calls.values())
     return parsed
 
@@ -403,7 +446,7 @@ async def store_state(conn: Connection, namespace: str) -> dict[str, list[dict]]
     current = await conn.fetch(
         "SELECT f.fact_id, f.namespace, f.subject, f.predicate, "
         "coalesce(f.object_text, f.object_json, f.object_number) AS value, "
-        f"f.actor FROM memory_current f WHERE {LANES} ORDER BY f.recorded_at",
+        f"f.actor, f.provenance FROM memory_current f WHERE {LANES} ORDER BY f.recorded_at",
         namespace,
     )
     return {"events": [dict(row) for row in events], "current": [dict(row) for row in current]}
@@ -411,6 +454,9 @@ async def store_state(conn: Connection, namespace: str) -> dict[str, list[dict]]
 
 def scope_of(namespace: str) -> str:
     return "project" if "@" in namespace else "global"
+
+
+SOURCE_OF = {"direct_user_statement": "user", "tool_output": "tool", "agent_inference": "agent"}
 
 
 def memory_text(row: dict) -> str:
@@ -439,6 +485,7 @@ def evaluate(
                 if check.scope in ("any", scope_of(row["namespace"]))
                 and re.search(check.match, memory_text(row), re.I)
                 and not (check.exclude and re.search(check.exclude, memory_text(row), re.I))
+                and (check.sources is None or SOURCE_OF.get(row.get("provenance")) in check.sources)
             ]
             passed = _in_range(len(rows), check)
             observed = [f"[{scope_of(row['namespace'])}] {memory_text(row)}" for row in rows]
@@ -492,6 +539,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         },
         "write_sources": write_sources(mnemo_calls),
         "memory_writes": sum(s["writes"] for s in sessions),
+        "claude_reminders": sum(s.get("reminders", 0) for s in sessions),
         "claude_auto_memory_files": sum(
             len(s.get("claude_auto_memory_files", [])) for s in scenarios
         ),
@@ -578,7 +626,11 @@ def run_session(
         config.write_text(json.dumps(claude_mcp_config(env)), encoding="utf-8")
         auto_memory = args.claude_auto_memory == "on"
         command = claude_command(
-            config, args.claude_session_usd, args.claude_model, auto_memory=auto_memory
+            config,
+            args.claude_session_usd,
+            args.claude_model,
+            auto_memory=auto_memory,
+            keep_sessions=args.claude_keep_sessions,
         )
         child_env = claude_env(auto_memory)
         parse: Callable[[str], dict[str, Any]] = parse_claude
@@ -599,6 +651,7 @@ def run_session(
         usage=parsed["usage"],
         cost_usd=parsed["cost_usd"],
         model=parsed["model"],
+        reminders=parsed.get("reminders", 0),
         seconds=round(time.monotonic() - started, 2),
         error=parsed["error"] or (stderr[-PREVIEW:] if status != "ok" else None),
     )
@@ -622,6 +675,10 @@ async def run(args: argparse.Namespace) -> int:
     settings = get_settings()
     if args.backend != settings.backend:  # dimension follows the backend's model
         settings = Settings(backend=args.backend)
+    if args.isolate_codex_home and not args.dry_run:
+        real = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex-secondary")
+        isolated = isolated_codex_home(real, Path(tempfile.mkdtemp(prefix="mnemo-eval-codex-")))
+        os.environ["CODEX_HOME"] = str(isolated)
     codex_disable = other_codex_servers()
     if args.dry_run:
         env = mnemo_env("<db>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
@@ -656,6 +713,8 @@ async def run(args: argparse.Namespace) -> int:
             "embed_dim": settings.embed_dim,
             "codex_servers_disabled": codex_disable,
             "repo_files": sorted(files),
+            "codex_home_isolated": args.isolate_codex_home,
+            "claude_sessions_kept": args.claude_keep_sessions,
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
             "claude_auto_memory": args.claude_auto_memory,
@@ -777,6 +836,16 @@ def main() -> None:
         choices=["off", "on"],
         default="off",
         help="leave Claude Code's own auto-memory on (its saves are copied into the evidence)",
+    )
+    parser.add_argument(
+        "--isolate-codex-home",
+        action="store_true",
+        help="run Codex from a temporary home (login linked, no global AGENTS.md)",
+    )
+    parser.add_argument(
+        "--claude-keep-sessions",
+        action="store_true",
+        help="let Claude Code save its transcripts (a Stop hook reads the turn from them)",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

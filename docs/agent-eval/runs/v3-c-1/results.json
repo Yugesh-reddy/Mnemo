@@ -1,0 +1,1362 @@
+{
+  "arm": "v3-C-new-text-and-reminder",
+  "started_at_utc": "2026-11-23T23:36:54.323142+00:00",
+  "environment": {
+    "mnemo_commit": "ff473b01a44e06f964211a176d01ffbaeb769ddc",
+    "mnemo_dirty": false,
+    "claude": "2.1.330 (Claude Code)",
+    "codex": "codex-cli 0.163.0",
+    "server": "/private/tmp/claude-501/-Users-yugesh-Desktop-Projects-Mnemo/3ccc9cbb-8087-40df-bc1f-675f64333c41/scratchpad/wt-bc/.venv/bin/mnemo-mcp-direct",
+    "backend": "local",
+    "embed_model": "BAAI/bge-small-en-v1.5",
+    "embed_dim": 384,
+    "codex_servers_disabled": [],
+    "repo_files": [
+      ".claude/settings.json",
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "codex_home_isolated": true,
+    "claude_sessions_kept": true,
+    "claude_session_usd_cap": 0.6,
+    "claude_total_usd_cap": 6.0,
+    "claude_auto_memory": "off"
+  },
+  "database": "mnemo-agent-eval-ad7ec8c7-n5fyer1c",
+  "scenarios": [
+    {
+      "id": "learn_from_files_claude",
+      "tests": "a test command Claude finds in the repo's files while answering is saved without being asked",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "PYTHONHASHSEED|make check|no:randomly",
+          "min": 1,
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "passed": true,
+          "observed": [
+            "[project] alpha tests run with Run tests with `make check`, i.e. `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`; plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them."
+          ]
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood",
+          "passed": true,
+          "observed": 1
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "My test runs keep failing at random when I just run pytest. Can you work out how this repo is meant to run its tests? Don't run them, just tell me in a line or two.",
+          "status": "ok",
+          "answer": "Run the tests with `make check`. That runs `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`. According to the Makefile, the cache tests depend on ordering. Plain `pytest` fails at random because it leaves the hash seed random and keeps the random-order plugin on, which reshuffles the tests.\n\nI've saved this test command to the project's shared memory.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create",
+                "max_results": 2
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "Bash",
+              "arguments": {
+                "command": "cd \"/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-kphhnn6w/alpha\" && cat Makefile README.md AGENTS.md; ls -R src .claude | head -50",
+                "description": "Read Makefile, README, AGENTS and list sources"
+              },
+              "result": "# The cache tests depend on dict order and the random-order plugin reshuffles them,\n# so tests need a fixed hash seed and that plugin off. Plain `pytest` flakes.\ncheck:\n\tPYTHONHASHSEED=0 uv run pytest -p no:randomly tests\n# alpha\n\nA small internal service.\n## Shared memory (Mnemo)\n\nYou share one persistent memory with the other coding agents on this machine through\nthe `mnemo` MCP tools.\n\n- **Check it first.** Before answering or acting on anything about this project's\n  conventions, commands, decisions or ongoing work, or the user's preferences, search\n  memory with `memory_search`. Another a",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "how to run tests"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "alpha tests",
+                "predicate": "run with",
+                "value": "Run tests with `make check`, i.e. `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`; plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them.",
+                "source": "tool"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"fb646013-5ef5-4a91-96be-c2b71f019a80\\\",\\n  \\\"event_id\\\": \\\"a045d313-333b-4ad1-9080-22f25382187b\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"Run tests with `make check`, i.e. `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`; plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them.\\\",\\n  \\\"request_id\\\": \\\"9e56b6f9-0d40-4c20-88c0-4e82b38d8f90\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 10883,
+            "cache_read_input_tokens": 122905,
+            "output_tokens": 747,
+            "output_tokens_details": {
+              "thinking_tokens": 59
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10883,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 171,
+                "cache_read_input_tokens": 33932,
+                "cache_creation_input_tokens": 498,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 498
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.1268091,
+          "model": "claude-opus-5-5",
+          "seconds": 9.46,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 1,
+            "event_id": "a045d313-333b-4ad1-9080-22f25382187b",
+            "fact_id": "fb646013-5ef5-4a91-96be-c2b71f019a80",
+            "namespace": "eval-learn_from_files_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "alpha tests",
+            "predicate": "run with",
+            "op": "ADD",
+            "value": "Run tests with `make check`, i.e. `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`; plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them.",
+            "actor": "claude-code",
+            "recorded_at": "2026-11-23 23:37:01.243537+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "fb646013-5ef5-4a91-96be-c2b71f019a80",
+            "namespace": "eval-learn_from_files_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "alpha tests",
+            "predicate": "run with",
+            "value": "Run tests with `make check`, i.e. `PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`; plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them.",
+            "actor": "claude-code",
+            "provenance": "tool_output"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "learn_from_files_codex",
+      "tests": "a release procedure Codex finds in the repo's files while answering is saved without being asked",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "release\\.sh|release branch",
+          "min": 1,
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "passed": true,
+          "observed": [
+            "[project] alpha releases workflow The release workflow documented in scripts/release.sh uses ./scripts/release.sh <version> on the release branch; comments describe version bumping, building, vX.Y.Z tags, and warn that manual tags skip the changelog step. The script switches to release, calls ./scripts/bump.sh \"$1\", then creates the tag; scripts/bump.sh is absent from this checkout, so that helper must be restored or located before a release."
+          ]
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood",
+          "passed": true,
+          "observed": 1
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I need to put out version 1.4.0. How do we do releases in this repo? Don't run anything, just tell me briefly.",
+          "status": "ok",
+          "answer": "Use `./scripts/release.sh 1.4.0`. The [release script](/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-hk9xmg4v/alpha/scripts/release.sh) switches to `release`, invokes the version-bump helper, then creates `v1.4.0`. Its comments warn that manual tags skip the changelog step.\n\n**Blocker:** `scripts/bump.sh` is missing from this checkout; locate or restore it first.\n\nNo release commands were run.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "release process version bump publish tagging 1.4.0",
+                "limit": 8
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc \"rg --files --hidden -g '\"'!'\"\\\\.git' -g '\"'!node_modules'\"' -g '\"'!vendor'\"'\"",
+              "result": "src/app.py\nCLAUDE.md\nAGENTS.md\nscripts/release.sh\nREADME.md\n.claude/settings.json\n",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'cat README.md scripts/release.sh CLAUDE.md AGENTS.md .claude/settings.json'",
+              "result": "# alpha\n\nA small internal service.\n#!/bin/sh\n# Cut releases only from the release branch with this script: it bumps the version,\n# builds, and tags vX.Y.Z. Never tag by hand; hand-made tags skip the changelog step.\nset -e\ngit switch release\n./scripts/bump.sh \"$1\"\ngit tag \"v$1\"\n## Shared memory (Mnemo)\n\nYou share one persistent memory with the other coding agents on this machine through\nthe `mnemo` MCP tools.\n\n- **Check it first.** Before answering or acting on anything about this project's\n  conventions, commands, decisions or ongoing work, or the user's preferences, search\n  memory with `memo",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "alpha releases",
+                "predicate": "workflow",
+                "source": "tool",
+                "value": "The release workflow documented in scripts/release.sh uses ./scripts/release.sh <version> on the release branch; comments describe version bumping, building, vX.Y.Z tags, and warn that manual tags skip the changelog step. The script switches to release, calls ./scripts/bump.sh \"$1\", then creates the tag; scripts/bump.sh is absent from this checkout, so that helper must be restored or located before a release."
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"2de12094-476e-4016-9108-bd4dd362ba5f\\\",\\n  \\\"event_id\\\": \\\"855a54dc-ba2e-4d3e-9d4b-4b31e9e7f745\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"The release workflow documented in scripts/release.sh uses ./scripts/release.sh <version> on the release branch; comments describe version bumping, building, vX.Y.Z tags, and warn that manual tags skip the changelog step. The script switches to release, calls ./scripts/bump.sh \\\\\\\"$1\\\\\\\", then creates the tag; scripts/bump.sh i",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 232027,
+            "cached_input_tokens": 192640,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1463,
+            "reasoning_output_tokens": 790
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 43.39,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 2,
+            "event_id": "855a54dc-ba2e-4d3e-9d4b-4b31e9e7f745",
+            "fact_id": "2de12094-476e-4016-9108-bd4dd362ba5f",
+            "namespace": "eval-learn_from_files_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "alpha releases",
+            "predicate": "workflow",
+            "op": "ADD",
+            "value": "The release workflow documented in scripts/release.sh uses ./scripts/release.sh <version> on the release branch; comments describe version bumping, building, vX.Y.Z tags, and warn that manual tags skip the changelog step. The script switches to release, calls ./scripts/bump.sh \"$1\", then creates the tag; scripts/bump.sh is absent from this checkout, so that helper must be restored or located before a release.",
+            "actor": "codex",
+            "recorded_at": "2026-11-23 23:37:35.997985+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "2de12094-476e-4016-9108-bd4dd362ba5f",
+            "namespace": "eval-learn_from_files_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "alpha releases",
+            "predicate": "workflow",
+            "value": "The release workflow documented in scripts/release.sh uses ./scripts/release.sh <version> on the release branch; comments describe version bumping, building, vX.Y.Z tags, and warn that manual tags skip the changelog step. The script switches to release, calls ./scripts/bump.sh \"$1\", then creates the tag; scripts/bump.sh is absent from this checkout, so that helper must be restored or located before a release.",
+            "actor": "codex",
+            "provenance": "tool_output"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "decision_in_passing_codex",
+      "tests": "a decision the user mentions while asking Codex something else reaches Claude later",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "sqlite",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] job queue storage_decision The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "sqlite",
+          "passed": true,
+          "observed": "SQLite.\n\n(This comes from a shared memory saved by another agent, Codex, and marked as a direct user decision. It stays in SQLite instead of Redis so users running the project on laptops don't need an"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Quick context before you look: we're keeping the job queue in SQLite instead of adding Redis, because people run this on laptops and I don't want them running another server. Anyway, what's in src/ right now? One sentence.",
+          "status": "ok",
+          "answer": "`src/` contains only `app.py`, which defines a `main()` function that prints `\"hello\"`.",
+          "tool_calls": [
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'rg --files src'",
+              "result": "src/app.py\n",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'cat src/app.py'",
+              "result": "def main() -> None:\n    print(\"hello\")\n",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "job queue SQLite Redis laptop decision; src project layout",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "job queue",
+                "predicate": "storage_decision",
+                "value": "The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server.",
+                "source": "user",
+                "scope": "project"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"5b399fa1-54bd-4a27-afdb-fb23b52fc514\\\",\\n  \\\"event_id\\\": \\\"35cf9b32-b2f0-449c-802d-a6c9390180ad\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server.\\\",\\n  \\\"request_id\\\": \\\"a667c977-c8f5-49a3-b93e-a2800c482318\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 79070,
+            "cached_input_tokens": 64384,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 292,
+            "reasoning_output_tokens": 28
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 14.52,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Which storage should this repo's job queue use? Answer in one word.",
+          "status": "ok",
+          "answer": "SQLite.\n\n(This comes from a shared memory saved by another agent, Codex, and marked as a direct user decision. It stays in SQLite instead of Redis so users running the project on laptops don't need another server.)",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search",
+                "max_results": 1
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "job queue storage"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"5b399fa1-54bd-4a27-afdb-fb23b52fc514\\\",\\n      \\\"event_id\\\": \\\"35cf9b32-b2f0-449c-802d-a6c9390180ad\\\",\\n      \\\"subject\\\": \\\"job queue\\\",\\n      \\\"predicate\\\": \\\"storage_decision\\\",\\n      \\\"value\\\": \\\"The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server.\\\",\\n      \\\"score\\\": 0.7539868008972289,\\n      \\\"provenance\\\": \\\"direct_user_statement\\\",\\n      \\\"trust_level\\\": \\\"high\\\",\\n      \\\"actor\\\": \\\"codex\\\",\\n      \\\"recorded_at\\\": \\\"2026-11-23T23",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 9500,
+            "cache_read_input_tokens": 119395,
+            "output_tokens": 270,
+            "output_tokens_details": {
+              "thinking_tokens": 41
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9500,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 11,
+                "cache_read_input_tokens": 32315,
+                "cache_creation_input_tokens": 732,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 732
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.105438,
+          "model": "claude-opus-5-5",
+          "seconds": 6.44,
+          "writes": 0,
+          "reminders": 1,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 3,
+            "event_id": "35cf9b32-b2f0-449c-802d-a6c9390180ad",
+            "fact_id": "5b399fa1-54bd-4a27-afdb-fb23b52fc514",
+            "namespace": "eval-decision_in_passing_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "job queue",
+            "predicate": "storage_decision",
+            "op": "ADD",
+            "value": "The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server.",
+            "actor": "codex",
+            "recorded_at": "2026-11-23 23:37:58.844594+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "5b399fa1-54bd-4a27-afdb-fb23b52fc514",
+            "namespace": "eval-decision_in_passing_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "job queue",
+            "predicate": "storage_decision",
+            "value": "The job queue stays in SQLite rather than adding Redis because users run the project on laptops and should not need another server.",
+            "actor": "codex",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "decision_in_passing_claude",
+      "tests": "a convention the user mentions while asking Claude something else reaches Codex later",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "UTC|ISO.?8601",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] API timestamps format API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "UTC|\\bZ\\b|ISO.?8601",
+          "passed": true,
+          "observed": "Per the team decision recorded in shared memory, use ISO 8601 timestamps in UTC with a trailing `Z`, never numeric offsets."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "FYI we settled on this last week: API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets. Anyway, what does the README say this repo is? One sentence.",
+          "status": "ok",
+          "answer": "The README says this repo, \"alpha\", is a small internal service.\n\nI also saved the timestamp decision to this project's shared memory: API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_create,mcp__mnemo__memory_search",
+                "max_results": 2
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "Read",
+              "arguments": {
+                "file_path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-2734lb4y/alpha/README.md"
+              },
+              "result": "1\t# alpha\n2\t\n3\tA small internal service.\n4\t",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "API timestamp format UTC"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "API timestamps",
+                "predicate": "format",
+                "value": "API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026.",
+                "source": "user"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"4b93f555-24ca-44d5-b0d1-ed9c5d3de8b7\\\",\\n  \\\"event_id\\\": \\\"9cdd40f2-220f-4256-bda4-01f1b1e470cb\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026.\\\",\\n  \\\"request_id\\\": \\\"90ed9900-02aa-4b46-871c-6ba7e4d339fc\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 9821,
+            "cache_read_input_tokens": 120872,
+            "output_tokens": 574,
+            "output_tokens_details": {
+              "thinking_tokens": 25
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9821,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 81,
+                "cache_read_input_tokens": 32912,
+                "cache_creation_input_tokens": 456,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 456
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.1144603,
+          "model": "claude-opus-5-5",
+          "seconds": 7.56,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "What format should timestamps in this repo's API responses use? One line.",
+          "status": "ok",
+          "answer": "Per the team decision recorded in shared memory, use ISO 8601 timestamps in UTC with a trailing `Z`, never numeric offsets.",
+          "tool_calls": [
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc \"pwd && rg --files -g 'AGENTS.md' -g '*api*' -g '*API*' -g '*CONVENT*' -g '*README*' -g '*ADR*' -g '*timestamp*' -g '*decision*'\"",
+              "result": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-2734lb4y/alpha\nAGENTS.md\nREADME.md\n",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "API response timestamp format timestamps ISO RFC UTC",
+                "limit": 6
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"4b93f555-24ca-44d5-b0d1-ed9c5d3de8b7\\\",\\n      \\\"event_id\\\": \\\"9cdd40f2-220f-4256-bda4-01f1b1e470cb\\\",\\n      \\\"subject\\\": \\\"API timestamps\\\",\\n      \\\"predicate\\\": \\\"format\\\",\\n      \\\"value\\\": \\\"API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026.\\\",\\n      \\\"score\\\": 0.7785093468766601,\\n      \\\"provenance\\\": \\\"direct_user_statement\\\",\\n      \\\"trust_level\\\": \\\"high\\\",\\n      \\\"actor\\\": \\\"claude-code\\\"",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc \"rg -n -i 'timestamp|iso.?8601|rfc.?3339|utc|date.?time' .\"",
+              "result": "",
+              "is_error": true
+            }
+          ],
+          "usage": {
+            "input_tokens": 55711,
+            "cached_input_tokens": 48512,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 385,
+            "reasoning_output_tokens": 156
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 14.64,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 4,
+            "event_id": "9cdd40f2-220f-4256-bda4-01f1b1e470cb",
+            "fact_id": "4b93f555-24ca-44d5-b0d1-ed9c5d3de8b7",
+            "namespace": "eval-decision_in_passing_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "API timestamps",
+            "predicate": "format",
+            "op": "ADD",
+            "value": "API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026.",
+            "actor": "claude-code",
+            "recorded_at": "2026-11-23 23:38:14.399332+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "4b93f555-24ca-44d5-b0d1-ed9c5d3de8b7",
+            "namespace": "eval-decision_in_passing_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "API timestamps",
+            "predicate": "format",
+            "value": "API timestamps are always UTC in ISO-8601 with a trailing Z (no offsets), because the mobile client broke on offsets. Settled by the team in mid-November 2026.",
+            "actor": "claude-code",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "end_of_day_claude",
+      "tests": "where work stopped and what is next, said without asking for a note, reaches the next agent",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "quot",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] CSV importer unfinished work and next step As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \"a,b\"). Next step: add quoted-comma handling, then wire the importer into the import command."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "quot",
+          "passed": true,
+          "observed": "Per the saved handoff, the CSV importer reads headers; next is handling quoted commas, then wiring it into the import command."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Okay, I'm done for today. The CSV importer reads headers now; tomorrow it still has to handle quoted commas, and then we wire it into the import command.",
+          "status": "ok",
+          "answer": "I saved tomorrow's plan to shared memory for this project. The CSV importer reads headers. Next it needs to handle quoted commas, and then it gets wired into the import command. Any session that picks this up tomorrow will find it. Have a good evening!",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search,mcp__mnemo__memory_create,mcp__mnemo__memory_update,mcp__mnemo__memory_get",
+                "max_results": 4
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_update\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_get\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "CSV importer unfinished work next step"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "CSV importer",
+                "predicate": "unfinished work and next step",
+                "value": "As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \"a,b\"). Next step: add quoted-comma handling, then wire the importer into the import command.",
+                "source": "user"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"82f1d176-f8c2-4b3b-8ed7-58efa4616e60\\\",\\n  \\\"event_id\\\": \\\"356520a0-6508-4664-a199-6a6dd05d101f\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \\\\\\\"a,b\\\\\\\"). Next step: add quoted-comma handling, then wire the importer into the import command.\\\",\\n  \\\"request_id\\\": \\\"45b1f768-f94e-4053-aef3-aae14203d132\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 10278,
+            "cache_read_input_tokens": 121735,
+            "output_tokens": 482,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10278,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 83,
+                "cache_read_input_tokens": 33353,
+                "cache_creation_input_tokens": 472,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 472
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.1163735,
+          "model": "claude-opus-5-5",
+          "seconds": 7.62,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Where did we leave off in this repo, and what's next? One sentence.",
+          "status": "ok",
+          "answer": "Per the saved handoff, the CSV importer reads headers; next is handling quoted commas, then wiring it into the import command.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "latest handoff unfinished work next step where left off",
+                "limit": 10
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"82f1d176-f8c2-4b3b-8ed7-58efa4616e60\\\",\\n      \\\"event_id\\\": \\\"356520a0-6508-4664-a199-6a6dd05d101f\\\",\\n      \\\"subject\\\": \\\"CSV importer\\\",\\n      \\\"predicate\\\": \\\"unfinished work and next step\\\",\\n      \\\"value\\\": \\\"As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \\\\\\\"a,b\\\\\\\"). Next step: add quoted-comma handling, then wire the importer into the import command.\\\",\\n      \\\"score\\\": 0.6859216604901677,\\n      \\\"provenance\\\": \\\"direct_user_statement\\\",\\n  ",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 59645,
+            "cached_input_tokens": 50432,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 204,
+            "reasoning_output_tokens": 61
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 9.64,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 5,
+            "event_id": "356520a0-6508-4664-a199-6a6dd05d101f",
+            "fact_id": "82f1d176-f8c2-4b3b-8ed7-58efa4616e60",
+            "namespace": "eval-end_of_day_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "CSV importer",
+            "predicate": "unfinished work and next step",
+            "op": "ADD",
+            "value": "As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \"a,b\"). Next step: add quoted-comma handling, then wire the importer into the import command.",
+            "actor": "claude-code",
+            "recorded_at": "2026-11-23 23:38:36.180156+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "82f1d176-f8c2-4b3b-8ed7-58efa4616e60",
+            "namespace": "eval-end_of_day_claude-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "CSV importer",
+            "predicate": "unfinished work and next step",
+            "value": "As of 2026-11-23 the CSV importer reads headers, but it does not yet handle quoted commas (fields like \"a,b\"). Next step: add quoted-comma handling, then wire the importer into the import command.",
+            "actor": "claude-code",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "end_of_day_codex",
+      "tests": "where work stopped and what is next, said to Codex without asking for a note, reaches Claude",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "jitter",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] retry wrapper handoff The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "jitter",
+          "passed": true,
+          "observed": "Before we ship the retry wrapper, its backoff still needs jitter, according to a handoff note another agent (Codex) saved from what you told it earlier today."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "That's it for me today. The retry wrapper is in, but the backoff still needs jitter before we ship it.",
+          "status": "ok",
+          "answer": "Saved for next time: the retry wrapper is in place; add jitter to the backoff before shipping.",
+          "tool_calls": [
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "retry wrapper backoff jitter unfinished next step",
+                "limit": 10
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "retry wrapper",
+                "predicate": "handoff",
+                "value": "The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release.",
+                "source": "user",
+                "scope": "project"
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"7260dd81-4663-4e25-851a-9f152c44e3f0\\\",\\n  \\\"event_id\\\": \\\"7ea41a09-951d-4b8a-b3e7-db52b080699f\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release.\\\",\\n  \\\"request_id\\\": \\\"1ae38aba-3808-47b4-aff7-837c762e8acc\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 80505,
+            "cached_input_tokens": 71168,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 195,
+            "reasoning_output_tokens": 0
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 18.04,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What's left to do before we ship the retry wrapper? One sentence.",
+          "status": "ok",
+          "answer": "Before we ship the retry wrapper, its backoff still needs jitter, according to a handoff note another agent (Codex) saved from what you told it earlier today.",
+          "tool_calls": [
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_search",
+                "max_results": 1
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "retry wrapper remaining work next step"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": [\\n    {\\n      \\\"fact_id\\\": \\\"7260dd81-4663-4e25-851a-9f152c44e3f0\\\",\\n      \\\"event_id\\\": \\\"7ea41a09-951d-4b8a-b3e7-db52b080699f\\\",\\n      \\\"subject\\\": \\\"retry wrapper\\\",\\n      \\\"predicate\\\": \\\"handoff\\\",\\n      \\\"value\\\": \\\"The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release.\\\",\\n      \\\"score\\\": 0.7442032224964393,\\n      \\\"provenance\\\": \\\"direct_user_statement\\\",\\n      \\\"trust_level\\\": \\\"high\\\",\\n      \\\"actor\\\": \\\"codex\\\",\\n      \\\"recorded_at\\\": \\\"2026-11-23T23:",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 9491,
+            "cache_read_input_tokens": 119427,
+            "output_tokens": 244,
+            "output_tokens_details": {
+              "thinking_tokens": 25
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9491,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 11,
+                "cache_read_input_tokens": 32339,
+                "cache_creation_input_tokens": 699,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 699
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.10485400000000002,
+          "model": "claude-opus-5-5",
+          "seconds": 5.61,
+          "writes": 0,
+          "reminders": 1,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 6,
+            "event_id": "7ea41a09-951d-4b8a-b3e7-db52b080699f",
+            "fact_id": "7260dd81-4663-4e25-851a-9f152c44e3f0",
+            "namespace": "eval-end_of_day_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "retry wrapper",
+            "predicate": "handoff",
+            "op": "ADD",
+            "value": "The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release.",
+            "actor": "codex",
+            "recorded_at": "2026-11-23 23:39:02.779811+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "7260dd81-4663-4e25-851a-9f152c44e3f0",
+            "namespace": "eval-end_of_day_codex-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "retry wrapper",
+            "predicate": "handoff",
+            "value": "The retry wrapper is in place, but its backoff still needs jitter before shipping. Next step: add jitter to the backoff before release.",
+            "actor": "codex",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "trivial_task",
+      "tests": "a one-off question about the code is answered without saving anything",
+      "passed": false,
+      "checks": [
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 0,
+          "passed": false,
+          "observed": 1
+        },
+        {
+          "kind": "writes",
+          "session": 1,
+          "max": 0,
+          "passed": true,
+          "observed": 0
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What does src/main.py print when you run it? One line.",
+          "status": "ok",
+          "answer": "There's no `src/main.py`. The only file in `src/` is `src/app.py`, and running it prints nothing: it defines `main()`, which would print `hello`, but never calls it (`src/app.py:1`).",
+          "tool_calls": [
+            {
+              "tool": "Read",
+              "arguments": {
+                "file_path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-cfg6sz0w/alpha/src/main.py"
+              },
+              "result": "File does not exist. Note: your current working directory is /private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-cfg6sz0w/alpha.",
+              "is_error": true
+            },
+            {
+              "tool": "Bash",
+              "arguments": {
+                "command": "ls -R src",
+                "description": "List files in src"
+              },
+              "result": "app.py",
+              "is_error": false
+            },
+            {
+              "tool": "Read",
+              "arguments": {
+                "file_path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-cfg6sz0w/alpha/src/app.py"
+              },
+              "result": "1\tdef main() -> None:\n2\t    print(\"hello\")\n3\t",
+              "is_error": false
+            },
+            {
+              "tool": "ToolSearch",
+              "arguments": {
+                "query": "select:mcp__mnemo__memory_create,mcp__mnemo__memory_search",
+                "max_results": 2
+              },
+              "result": "[{\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_create\"}, {\"type\": \"tool_reference\", \"tool_name\": \"mcp__mnemo__memory_search\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "src/app.py entry point main"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}]",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "subject": "src/app.py",
+                "predicate": "entry point gotcha",
+                "value": "src/ contains only app.py, not main.py. app.py defines main(), which prints \"hello\", but nothing calls it and there is no __main__ guard, so `python src/app.py` prints nothing.",
+                "source": "tool"
+              },
+              "result": "[{\"type\": \"text\", \"text\": \"{\\n  \\\"status\\\": \\\"applied\\\",\\n  \\\"fact_id\\\": \\\"cef5e30e-2f00-4a8a-b681-f3e3a2feda84\\\",\\n  \\\"event_id\\\": \\\"9c22fe0d-817d-4e71-8fc2-73f18b8bbabf\\\",\\n  \\\"previous_event_id\\\": null,\\n  \\\"restored_from_event_id\\\": null,\\n  \\\"value\\\": \\\"src/ contains only app.py, not main.py. app.py defines main(), which prints \\\\\\\"hello\\\\\\\", but nothing calls it and there is no __main__ guard, so `python src/app.py` prints nothing.\\\",\\n  \\\"request_id\\\": \\\"617f37bd-77bb-426d-8e15-d305ba431d3c\\\",\\n  \\\"replayed\\\": false,\\n  \\\"scope\\\": \\\"project\\\"\\n}\"}]",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 16,
+            "cache_creation_input_tokens": 10968,
+            "cache_read_input_tokens": 251688,
+            "output_tokens": 959,
+            "output_tokens_details": {
+              "thinking_tokens": 171
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10968,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 43,
+                "cache_read_input_tokens": 34044,
+                "cache_creation_input_tokens": 471,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 471
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.15745209999999998,
+          "model": "claude-opus-5-5",
+          "seconds": 14.06,
+          "writes": 1,
+          "reminders": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What does src/main.py print when you run it? One line.",
+          "status": "ok",
+          "answer": "`src/main.py` doesn\u2019t exist in this project; the available file is `src/app.py`.",
+          "tool_calls": [
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'cat src/main.py'",
+              "result": "cat: src/main.py: No such file or directory\n",
+              "is_error": true
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "src/main.py output project location",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'cat src/main.py'",
+              "result": "cat: src/main.py: No such file or directory\n",
+              "is_error": true
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -c pwd",
+              "result": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-cfg6sz0w/beta\n",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -c \"rg --files -g '\"'!node_modules'\"' -g '\"'!vendor'\"'\"",
+              "result": "src/app.py\nCLAUDE.md\nAGENTS.md\nREADME.md\n",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 74475,
+            "cached_input_tokens": 67200,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 422,
+            "reasoning_output_tokens": 52
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 16.3,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 7,
+            "event_id": "9c22fe0d-817d-4e71-8fc2-73f18b8bbabf",
+            "fact_id": "cef5e30e-2f00-4a8a-b681-f3e3a2feda84",
+            "namespace": "eval-trivial_task-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "src/app.py",
+            "predicate": "entry point gotcha",
+            "op": "ADD",
+            "value": "src/ contains only app.py, not main.py. app.py defines main(), which prints \"hello\", but nothing calls it and there is no __main__ guard, so `python src/app.py` prints nothing.",
+            "actor": "claude-code",
+            "recorded_at": "2026-11-23 23:39:24.369717+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "cef5e30e-2f00-4a8a-b681-f3e3a2feda84",
+            "namespace": "eval-trivial_task-ad7ec8c7@github.com/mnemo-eval/alpha",
+            "subject": "src/app.py",
+            "predicate": "entry point gotcha",
+            "value": "src/ contains only app.py, not main.py. app.py defines main(), which prints \"hello\", but nothing calls it and there is no __main__ guard, so `python src/app.py` prints nothing.",
+            "actor": "claude-code",
+            "provenance": "tool_output"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "no_snapshot",
+      "tests": "a status at a moment (tests passing now) is not stored",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "\\b42\\b|tests? passed|all .*pass|green",
+          "max": 0,
+          "passed": true,
+          "observed": []
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "I just ran the whole test suite and all 42 tests passed. Can you tell me the README's title? One line.",
+          "status": "ok",
+          "answer": "The README's title is **alpha**.",
+          "tool_calls": [
+            {
+              "tool": "Bash",
+              "arguments": {
+                "command": "head -5 README.md",
+                "description": "Show top of README"
+              },
+              "result": "# alpha\n\nA small internal service.",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 8835,
+            "cache_read_input_tokens": 86866,
+            "output_tokens": 153,
+            "output_tokens_details": {
+              "thinking_tokens": 50
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8835,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "global",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 11,
+                "cache_read_input_tokens": 31748,
+                "cache_creation_input_tokens": 634,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 634
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "cost_usd": 0.09126549999999999,
+          "model": "claude-opus-5-5",
+          "seconds": 4.76,
+          "writes": 0,
+          "reminders": 1,
+          "error": null
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "Just checked: the build is green on my machine as of this morning. What's the title in the README? One line.",
+          "status": "ok",
+          "answer": "The README title is \u201cbeta\u201d.",
+          "tool_calls": [
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc \"pwd; rg --files -g 'README*' -g 'AGENTS.md'\"",
+              "result": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-hqtwt_j5/beta\nAGENTS.md\nREADME.md\n",
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "README title",
+                "limit": 5
+              },
+              "result": "{\"content\": [{\"type\": \"text\", \"text\": \"{\\n  \\\"hits\\\": []\\n}\"}], \"structured_content\": null}",
+              "is_error": false
+            },
+            {
+              "tool": "shell",
+              "arguments": "/bin/zsh -lc 'head -n 35 README.md'",
+              "result": "# beta\n\nA small internal service.\n",
+              "is_error": false
+            }
+          ],
+          "usage": {
+            "input_tokens": 59652,
+            "cached_input_tokens": 50560,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 183,
+            "reasoning_output_tokens": 26
+          },
+          "cost_usd": null,
+          "model": null,
+          "seconds": 10.35,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [],
+        "current": []
+      },
+      "claude_auto_memory_files": []
+    }
+  ],
+  "commands": {
+    "claude": [
+      "claude",
+      "-p",
+      "--output-format",
+      "stream-json",
+      "--verbose",
+      "--mcp-config",
+      "/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-kphhnn6w/claude-mcp-141758c5.json",
+      "--strict-mcp-config",
+      "--setting-sources",
+      "project",
+      "--max-budget-usd",
+      "0.60",
+      "--allowedTools",
+      "mcp__mnemo"
+    ],
+    "codex": [
+      "codex",
+      "exec",
+      "--json",
+      "--ephemeral",
+      "--skip-git-repo-check",
+      "-s",
+      "read-only",
+      "--disable",
+      "hooks",
+      "--disable",
+      "plugins",
+      "-c",
+      "mcp_servers.mnemo.command=\"/private/tmp/claude-501/-Users-yugesh-Desktop-Projects-Mnemo/3ccc9cbb-8087-40df-bc1f-675f64333c41/scratchpad/wt-bc/.venv/bin/mnemo-mcp-direct\"",
+      "-c",
+      "mcp_servers.mnemo.env={MNEMO_DB = \"<db>\", MNEMO_BACKEND = \"local\", MNEMO_EMBED_DIM = \"384\", MNEMO_NAMESPACE = \"eval-learn_from_files_codex-ad7ec8c7\", MNEMO_USER_ID = \"owner\", MNEMO_ACTOR = \"codex\", MNEMO_EMBED_MODEL = \"BAAI/bge-small-en-v1.5\", MNEMO_MODEL_DIR = \"/Users/yugesh/.mnemo/models\"}",
+      "-c",
+      "mcp_servers.mnemo.default_tools_approval_mode=\"approve\"",
+      "-"
+    ]
+  },
+  "summary": {
+    "scenarios_passed": 7,
+    "scenarios_run": 8,
+    "checks_passed": 14,
+    "checks": 15,
+    "sessions_by_status": {
+      "ok": 14,
+      "error": 0,
+      "timeout": 0,
+      "skipped": 0
+    },
+    "sessions_with_mnemo_calls": 13,
+    "mnemo_calls_by_tool": {
+      "mnemo:memory_create": 7,
+      "mnemo:memory_search": 13
+    },
+    "write_sources": {
+      "tool": 3,
+      "user": 4
+    },
+    "memory_writes": 7,
+    "claude_reminders": 4,
+    "claude_auto_memory_files": 0,
+    "claude_cost_usd": 0.8167,
+    "codex_tokens": {
+      "input_tokens": 641085,
+      "cached_input_tokens": 544896,
+      "output_tokens": 3144
+    }
+  },
+  "finished_at_utc": "2026-11-23T23:39:57.345871+00:00",
+  "database_removed": true
+}
