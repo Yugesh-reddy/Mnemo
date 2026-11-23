@@ -1,5 +1,13 @@
 # Mnemo — implementation status
 
+## Antigravity in the installer (November 23, 2026)
+
+`mnemo install` connects Antigravity: the `agy` CLI's `~/.gemini` and the folders T3
+Code runs it with each get a `mnemo` server in `config/mcp_config.json`. Antigravity
+follows the server's own instructions; it starts the server in its own folder, so
+the project is right when it is started in the project, as T3 Code does
+([spec §45](PROJECT_SPEC.md#45-antigravity-in-the-installer--november-23-2026)).
+
 ## The web UI opens where the memories are (November 23, 2026)
 
 `mnemo ui` opens on global when it holds memories, otherwise on the project whose

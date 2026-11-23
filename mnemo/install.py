@@ -1,5 +1,5 @@
-"""Register Mnemo with Claude Code, Codex, OpenCode, Cursor and Claude Desktop, and add the
-shared-memory policy.
+"""Register Mnemo with Claude Code, Codex, OpenCode, Cursor, Claude Desktop and Antigravity,
+and add the shared-memory policy.
 
     mnemo-install                 # show every change, then ask before applying
     mnemo-install --yes           # apply without asking
@@ -15,7 +15,10 @@ installed) gets a ``mnemo`` server in ``~/.cursor/mcp.json``, told the open proj
 through ``${workspaceFolder}``, and the policy as the always-applied rule
 ``~/.cursor/rules/mnemo.mdc``. Claude Desktop, only when named with ``--agent
 claude-desktop``, gets a server in ``claude_desktop_config.json``; it works outside any
-project, so it uses global memories, and has no instructions file. Text written into a
+project, so it uses global memories, and has no instructions file. Antigravity (when
+installed, standalone or inside T3 Code) gets a ``mnemo`` server in each Gemini folder's
+``config/mcp_config.json``; it reads the server's own instructions, so it needs no policy
+file. Text written into a
 file sits between mnemo markers, so it can be updated or removed without touching the
 rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one store file
 (MNEMO_DB, default ~/.mnemo/mnemo.db), namespace and user.
@@ -373,6 +376,23 @@ def claude_desktop_entry(command: str, env: dict[str, str]) -> dict:
     return {"command": command, "args": [], "env": env}
 
 
+def default_antigravity_dirs() -> list[Path]:
+    """The Gemini folders Antigravity reads ``config/mcp_config.json`` from: ``~/.gemini``
+    when the Antigravity CLI is installed, and the per-account folders T3 Code gives the
+    Antigravity it runs (``agy acp --gemini-dir``)."""
+    gemini = Path.home() / ".gemini"
+    cli = [gemini / "antigravity-cli", gemini / "bin" / "agy", gemini / "bin" / "agy.exe"]
+    found = [gemini] if any(path.exists() for path in cli) else []
+    t3 = Path.home() / ".t3" / "userdata" / "providers" / "antigravity"
+    if t3.is_dir():
+        found += sorted(path for path in t3.iterdir() if (path / "config").is_dir())
+    return found
+
+
+def antigravity_entry(command: str, env: dict[str, str]) -> dict:
+    return {"command": command, "args": [], "env": env}
+
+
 def opencode_config_path(opencode_dir: Path) -> Path:
     for name in ("opencode.jsonc", "opencode.json"):
         if (opencode_dir / name).exists():
@@ -594,10 +614,13 @@ def plan(
     cursor_dir: Path | None = None,
     cursor_optional: bool = False,
     claude_desktop_config: Path | None = None,
+    antigravity_dirs: Sequence[Path] = (),
+    antigravity_optional: bool = False,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
-    """Commands, file changes and notes for the agents. ``opencode_optional`` and
-    ``cursor_optional``: the client was detected rather than requested, so a config
-    mnemo-install must not rewrite skips it with a note instead of stopping the others."""
+    """Commands, file changes and notes for the agents. ``opencode_optional``,
+    ``cursor_optional`` and ``antigravity_optional``: the client was detected rather than
+    requested, so a config mnemo-install must not rewrite skips it with a note instead of
+    stopping the others."""
     commands: list[Command] = []
     notes: list[str] = []
     policy = policy_text()
@@ -728,6 +751,35 @@ def plan(
                 "only, and it has no instructions file for the policy. Quit it fully and "
                 "reopen it to load the server."
             )
+    if "antigravity" in agents:
+        if not antigravity_dirs:
+            raise InstallError(
+                "Antigravity not found (no ~/.gemini/antigravity-cli or T3 Code Antigravity "
+                "folder); pass --antigravity-dir with its Gemini folder"
+            )
+        entry = (
+            None
+            if uninstall
+            else antigravity_entry(command, server_env(settings, "antigravity", backend))
+        )
+        for gemini_dir in antigravity_dirs:
+            config_path = gemini_dir / "config" / "mcp_config.json"
+            try:
+                edit(
+                    config_path,
+                    lambda text, path=config_path: mcp_servers_config(text, path, entry),
+                )
+            except InstallError as exc:
+                if not antigravity_optional:
+                    raise
+                notes.append(f"Skipped Antigravity in {gemini_dir}: {exc}")
+        if not uninstall:
+            notes.append(
+                "Antigravity starts Mnemo in the folder Antigravity itself was started in "
+                "(T3 Code starts it in the thread's project), so run `agy` from inside the "
+                "project; started elsewhere it can use global memories only. It asks before "
+                "each Mnemo tool call until you allow them."
+            )
     changes = [
         FileChange(path, before, after, path in remove_if_empty)
         for path, (before, after) in texts.items()
@@ -843,13 +895,13 @@ def main(
     probe: Services | None = None,
 ) -> int:
     parser = argparse.ArgumentParser(
-        description="Register Mnemo with Claude Code, Codex and OpenCode and add the memory policy."
+        description="Register Mnemo with your coding agents and add the memory policy."
     )
     parser.add_argument(
         "--agent",
-        choices=["claude", "codex", "opencode", "cursor", "claude-desktop"],
+        choices=["claude", "codex", "opencode", "cursor", "claude-desktop", "antigravity"],
         action="append",
-        help="default: claude, codex, and opencode and cursor when installed; "
+        help="default: claude, codex, and opencode, cursor and antigravity when installed; "
         "claude-desktop when named, or already set up",
     )
     parser.add_argument("--uninstall", action="store_true")
@@ -865,6 +917,14 @@ def main(
         type=Path,
         metavar="FILE",
         help="default: the claude_desktop_config.json Claude Desktop reads on this system",
+    )
+    parser.add_argument(
+        "--antigravity-dir",
+        type=Path,
+        action="append",
+        metavar="GEMINI_DIR",
+        help="Antigravity's Gemini folder (repeatable); default: ~/.gemini when the "
+        "Antigravity CLI is installed, plus T3 Code's Antigravity folders",
     )
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
@@ -884,6 +944,7 @@ def main(
     opencode_dir = args.opencode_dir or default_opencode_dir()
     cursor_dir = args.cursor_dir or default_cursor_dir()
     claude_desktop = args.claude_desktop_config or default_claude_desktop_config()
+    antigravity_dirs = args.antigravity_dir or default_antigravity_dirs()
     agents = args.agent or ["claude", "codex"] + (
         ["opencode"] if opencode_detected(opencode_dir) else []
     ) + (["cursor"] if cursor_detected(cursor_dir) else []) + (
@@ -891,6 +952,8 @@ def main(
         ["claude-desktop"]
         if claude_desktop_installed(claude_desktop)
         else []
+    ) + (
+        ["antigravity"] if antigravity_dirs else []
     )
     checks = Preflight(ready=[], problems=[])
     if not (args.uninstall or args.skip_checks):
@@ -918,6 +981,8 @@ def main(
             cursor_dir=cursor_dir,
             cursor_optional=not (args.agent and "cursor" in args.agent),
             claude_desktop_config=claude_desktop,
+            antigravity_dirs=antigravity_dirs,
+            antigravity_optional=not (args.agent and "antigravity" in args.agent),
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)
@@ -931,6 +996,9 @@ def main(
         print(f"Cursor config: {cursor_dir}  (pass --cursor-dir for another)")
     if "claude-desktop" in agents:
         print(f"Claude Desktop config: {claude_desktop}  (pass --claude-desktop-config)")
+    if "antigravity" in agents:
+        for gemini_dir in antigravity_dirs:
+            print(f"Antigravity config: {gemini_dir}  (pass --antigravity-dir for another)")
     if not args.uninstall and running_from_checkout():
         print(
             f"Note: the agents will run {server_command()} from this checkout; moving or "

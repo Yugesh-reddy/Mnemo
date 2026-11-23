@@ -19,15 +19,15 @@ names), but nobody has run it there yet.
 
 ```bash
 uv tool install mnemohive
-mnemo install   # connect Claude Code, Codex, OpenCode and Cursor (shows every change, asks first)
+mnemo install   # connect Claude Code, Codex, OpenCode, Cursor and Antigravity (shows every change, asks first)
 ```
 
 The package is `mnemohive` on PyPI; the command it installs is `mnemo`.
 
 `mnemo install` downloads the embedding model (`BAAI/bge-small-en-v1.5`, about 67 MB,
 from Hugging Face) after you confirm, creates the memory file (readable only by you),
-registers Mnemo with Claude Code and Codex (and OpenCode and Cursor, when they are
-installed), and
+registers Mnemo with Claude Code and Codex (and OpenCode, Cursor and Antigravity, when
+they are installed), and
 adds a short [memory policy](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
 example, tell Claude Code:
@@ -153,10 +153,10 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
 
 `mnemo install` options: `--dry-run` shows the changes only,
-`--agent claude|codex|opencode|cursor|claude-desktop` limits them to the agents named,
+`--agent claude|codex|opencode|cursor|claude-desktop|antigravity` limits them to the agents named,
 `--codex-home` points at another Codex home (a `codex` wrapper that pins one is
 detected), `--opencode-dir` at another OpenCode config directory, `--cursor-dir` at
-another Cursor folder, `--claude-desktop-config` at another Claude Desktop config file, `--backend ollama` uses Ollama's
+another Cursor folder, `--claude-desktop-config` at another Claude Desktop config file, `--antigravity-dir` at another Antigravity Gemini folder, `--backend ollama` uses Ollama's
 `nomic-embed-text` instead of the model inside Mnemo, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
 
 OpenCode gets a `mnemo` server under `mcp` in `~/.config/opencode/opencode.json`
@@ -184,6 +184,15 @@ Windows `%APPDATA%\Claude\`, Linux `~/.config/Claude/`). It works outside any
 project, so it reads and writes global memories. It has no instructions file, and
 whether it passes the server's own instructions to the model is not documented, so it
 may not follow the policy. Quit it fully and reopen it after installing.
+
+Antigravity (when its CLI is installed in `~/.gemini`, or T3 Code runs it) gets a
+`mnemo` server in each Gemini folder's `config/mcp_config.json`: `~/.gemini` for the
+`agy` CLI, and the per-account folders under `~/.t3/userdata/providers/antigravity/`
+that T3 Code passes as `--gemini-dir`. Antigravity reads the server's own
+instructions, so it gets no policy file. It starts the server in the folder
+Antigravity itself was started in (T3 Code starts it in the thread's project), so run
+`agy` from inside the project; started elsewhere it can use global memories only. It
+asks before each Mnemo tool call until you allow them.
 
 **The default `local` backend** runs the embedding model inside each Mnemo server.
 `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB, from Hugging Face)

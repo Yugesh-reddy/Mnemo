@@ -1088,3 +1088,85 @@ def test_a_plain_uninstall_also_removes_claude_desktop_once_it_was_set_up(homes,
     assert "mnemo" in json.loads(config.read_text())["mcpServers"]
     assert inst.main(base + ["--uninstall", "--yes"], runner=FakeCli()) == 0
     assert json.loads(config.read_text()) == DESKTOP
+
+
+# --- Antigravity -----------------------------------------------------------------------
+
+
+def antigravity_homes(tmp_path: Path) -> tuple[Path, Path]:
+    """The standalone CLI's ~/.gemini and a T3 Code account folder, each with the empty
+    mcp_config.json Antigravity creates."""
+    home = Path(os.environ["HOME"])
+    gemini = home / ".gemini"
+    (gemini / "antigravity-cli").mkdir(parents=True)
+    t3 = home / ".t3" / "userdata" / "providers" / "antigravity" / "ac0a3dfd"
+    for folder in (gemini, t3):
+        (folder / "config").mkdir(parents=True)
+        (folder / "config" / "mcp_config.json").write_text("")
+    return gemini, t3
+
+
+def test_antigravity_gets_a_server_in_every_gemini_folder_it_reads(homes, tmp_path, capsys):
+    claude, codex = homes
+    gemini, t3 = antigravity_homes(tmp_path)
+    assert inst.default_antigravity_dirs() == [gemini, t3]
+    # Detected, so a plain install includes it.
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    out = capsys.readouterr().out
+    assert f"Antigravity config: {gemini}" in out and f"Antigravity config: {t3}" in out
+    assert "run `agy` from inside the project" in out
+    for folder in (gemini, t3):
+        config = folder / "config" / "mcp_config.json"
+        server = json.loads(config.read_text())["mcpServers"]["mnemo"]
+        assert server["command"] == inst.server_command() and server["args"] == []
+        assert server["env"]["MNEMO_ACTOR"] == "antigravity"
+        assert "MNEMO_PROJECT_DIR" not in server["env"]  # it starts the server in the project
+    assert not (gemini / "GEMINI.md").exists()  # it reads the server's own instructions
+
+    before = {f: (f / "config" / "mcp_config.json").read_text() for f in (gemini, t3)}
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    assert {f: (f / "config" / "mcp_config.json").read_text() for f in before} == before
+
+    assert inst.main(args(claude, codex, "--uninstall", "--yes"), runner=FakeCli()) == 0
+    for folder in (gemini, t3):
+        assert json.loads((folder / "config" / "mcp_config.json").read_text()) == {}
+
+
+def test_antigravity_keeps_other_servers_and_takes_a_folder_by_flag(homes, tmp_path):
+    claude, codex = homes
+    folder = tmp_path / "gem"
+    (folder / "config").mkdir(parents=True)
+    config = folder / "config" / "mcp_config.json"
+    config.write_text(json.dumps({"mcpServers": {"docker": OTHER_SERVER}}, indent=2) + "\n")
+    chosen = args(claude, codex, "--agent", "antigravity", "--antigravity-dir", str(folder))
+    assert inst.main(chosen + ["--yes"], runner=FakeCli()) == 0
+    servers = json.loads(config.read_text())["mcpServers"]
+    assert servers["docker"] == OTHER_SERVER and servers["mnemo"]["env"]["MNEMO_ACTOR"] == (
+        "antigravity"
+    )
+    assert inst.main(chosen + ["--uninstall", "--yes"], runner=FakeCli()) == 0
+    assert json.loads(config.read_text()) == {"mcpServers": {"docker": OTHER_SERVER}}
+
+
+def test_antigravity_is_left_alone_when_it_is_not_installed(homes, tmp_path, capsys):
+    claude, codex = homes
+    assert inst.default_antigravity_dirs() == []
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    assert "Antigravity" not in capsys.readouterr().out
+    assert not (Path(os.environ["HOME"]) / ".gemini").exists()
+    asked = args(claude, codex, "--agent", "antigravity", "--yes")
+    assert inst.main(asked, runner=FakeCli()) == 2
+    assert "Antigravity not found" in capsys.readouterr().err
+
+
+def test_an_antigravity_config_it_cannot_rewrite_skips_that_folder_only(homes, tmp_path, capsys):
+    claude, codex = homes
+    gemini, t3 = antigravity_homes(tmp_path)
+    unmanaged = json.dumps({"mcpServers": {"mnemo": {"command": "something-else"}}})
+    (gemini / "config" / "mcp_config.json").write_text(unmanaged)
+    assert inst.main(args(claude, codex, "--yes"), runner=FakeCli()) == 0
+    assert f"Skipped Antigravity in {gemini}:" in capsys.readouterr().out
+    assert (gemini / "config" / "mcp_config.json").read_text() == unmanaged
+    assert "mnemo" in json.loads((t3 / "config" / "mcp_config.json").read_text())["mcpServers"]
+    asked = args(claude, codex, "--agent", "antigravity", "--yes")
+    assert inst.main(asked, runner=FakeCli()) == 2

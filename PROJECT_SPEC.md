@@ -1308,3 +1308,36 @@ files in this format.
 - **Empty states.** An empty list says `No memories in <scope> yet.`, and a search with
   no results says `No memories match this search.`, instead of naming `make seed`, a
   developer command.
+
+## 45. Antigravity in the installer — November 23, 2026
+
+`mnemo install` sets up Antigravity (Google's agent; the `agy` CLI 1.5.13) when it is
+installed, and on request with `--agent antigravity`. Antigravity keeps its MCP servers
+in `<gemini dir>/config/mcp_config.json` with a top-level `mcpServers` object (what
+`agy mcp add` writes); the installer sets `mcpServers.mnemo` to `{"command", "args":
+[], "env"}` with `MNEMO_ACTOR=antigravity` through `mcp_servers_config` (§43), so other
+servers are kept, an empty file becomes a JSON object, and a file it cannot rewrite is
+skipped with a note when Antigravity was detected rather than named.
+
+- **Folders.** `~/.gemini` when `~/.gemini/antigravity-cli` or `~/.gemini/bin/agy`
+  exists, and every account folder under `~/.t3/userdata/providers/antigravity/` (T3
+  Code runs `agy acp --gemini-dir <that folder>`). `--antigravity-dir` (repeatable)
+  replaces the list. `~/.gemini/antigravity/mcp_config.json`, which the Antigravity
+  editor may read, is not written: its use is not verified.
+- **Project.** Checked with `agy acp` on November 23, 2026: Antigravity starts MCP
+  servers in its own working directory, not the session's, and expands no variables
+  in `env` (`${workspaceFolder}` arrives literally). Started inside a repository, the
+  server's project is that repository; started in the home folder, it has none, so
+  project writes fail with `INVALID_INPUT` and only global memories work. T3 Code
+  starts one Antigravity process per thread, in the thread's project (seen in its
+  process list and logs), so threads get their project. Antigravity does offer MCP
+  roots (the process folder, then each session's folder), which a later change could
+  use to follow the session's project.
+- **Policy.** None is written. Antigravity saves each server's instructions to
+  `mcp/<server>/instructions.md` and the agent read them before acting: told a
+  convention without being asked to save it, it searched Mnemo and saved two project
+  memories with `source=user`. `~/.gemini/GEMINI.md` (which T3 Code links into its
+  folders) is left alone.
+- **Approval.** Antigravity asks before each MCP tool call; the installer's note says
+  so.
+
