@@ -1,5 +1,13 @@
 # Mnemo — implementation status
 
+## Sessions start with a memory brief (November 23, 2026)
+
+Claude Code sessions now begin with this project's and the global memories: `mnemo
+install` adds a SessionStart hook running `mnemo brief --hook`, which prints them
+escaped and framed as data, capped at 25, using the server's own scope rule, and never
+fails a session start. `mnemo brief` shows it. The agent eval has not been rerun with
+it ([spec §46](PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
+
 ## Antigravity in the installer (November 23, 2026)
 
 `mnemo install` connects Antigravity: the `agy` CLI's `~/.gemini` and the folders T3

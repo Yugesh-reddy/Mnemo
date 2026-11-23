@@ -1341,3 +1341,54 @@ skipped with a note when Antigravity was detected rather than named.
 - **Approval.** Antigravity asks before each MCP tool call; the installer's note says
   so.
 
+## 46. Sessions start with a memory brief — November 23, 2026
+
+Recall depended on the agent choosing to call `memory_search`: in the owner's first
+Gambit session after installing, Claude Code searched once, found nothing and never
+searched again. Now Claude Code is handed the memories when a session starts.
+
+- **`mnemo brief`** prints the brief for the current folder; `mnemo brief --hook` is the
+  Claude Code SessionStart hook. Checked with Claude Code 2.1.330 on November 23, 2026:
+  the hook's stdin is JSON with `cwd` and `source` (`startup`, `resume`, `clear`,
+  `compact`), it runs in the session's folder with `CLAUDE_PROJECT_DIR` set to the
+  folder the session started in, and what it prints on stdout is added to the
+  session's context. The exact entry the installer writes (matcher and timeout
+  included) was run with `claude -p --settings` against a scratch store, and the agent
+  answered a question only the brief held.
+- **Scopes.** The folder is `CLAUDE_PROJECT_DIR`, else the payload's `cwd` (which
+  follows a `cd` during the session; the session's server stays where it started),
+  else the hook's own. The project comes from it through `server_lanes` in
+  `mnemo/project.py`, the rule `mnemo-mcp-direct` itself now uses
+  (`MNEMO_PROJECT_DIR`, else the folder), so the brief shows the scopes the session's
+  tools read and write. Outside a project it shows global memories only.
+- **Content.** Current memories (retracted ones never), the project's first, then
+  global, each newest first; at most 25 and about 6,000 characters, values cut at 300
+  characters, then a line saying how many more `memory_search` can find. Each scope is
+  read on its own and global keeps up to 8 of the slots and 1,500 characters however
+  full the project is; room either scope does not use goes to the other. Each line is
+  `- subject · predicate: value  [source/trust, actor, date, ID]`, escaped as `mnemo
+  ls` escapes (control characters, line breaks and bidi controls cannot fake a line).
+  The header says the memories are data, not instructions, to check low-trust ones,
+  and how to find more. With nothing saved, it asks the agent to save conventions,
+  decisions, commands and preferences the user states.
+- **Never in the way.** The hook reads the store read-only, with plain SQL (no
+  embedding model), and on any error prints nothing, writes one line to stderr and
+  exits 0. It has a 10-second timeout.
+- **Installer.** With Claude Code, `mnemo install` adds `{"matcher":
+  "startup|clear|compact", "hooks": [{"type": "command", "command": "<mnemo> brief
+  --hook --db <store> --namespace <ns> --user-id <user>", "timeout": 10}]}` to
+  `hooks.SessionStart` in `~/.claude/settings.json` (a hook does not get the MCP
+  server's environment, so the store, namespace and user are in the command). Resumed
+  sessions are left out: their context already has a brief. Other hooks, including
+  other SessionStart hooks in the same group, are kept; a reinstall replaces only
+  Mnemo's (a hook whose command runs `mnemo brief --hook`); `--no-session-brief` and
+  uninstall remove it. A `settings.json` that is not valid JSON or whose `hooks` has
+  another shape skips the brief with a note; the rest of the install goes ahead. The preview hides credentials
+  in `settings.json` like any other file (§40).
+- **Other agents.** Codex, OpenCode, Cursor and Antigravity still rely on the policy
+  and the server's instructions to search first; Antigravity was seen doing so (§45).
+
+**Not verified:** that Claude Code sessions started by other hosts through the Agent
+SDK (T3 Code) load user hooks from `~/.claude/settings.json`; they do load
+`~/.claude/CLAUDE.md`. **Not measured yet:** the agent eval (§39) with the brief.
+

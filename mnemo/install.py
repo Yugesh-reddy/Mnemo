@@ -5,23 +5,26 @@ and add the shared-memory policy.
     mnemo-install --yes           # apply without asking
     mnemo-install --uninstall     # remove what it added (memories are kept)
 
-Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``) and the
-policy in ``~/.claude/CLAUDE.md``. Codex gets an ``[mcp_servers.mnemo]`` table with its
-tools pre-approved in ``$CODEX_HOME/config.toml`` and the policy in
-``$CODEX_HOME/AGENTS.md``. OpenCode (when installed) gets a ``mnemo`` server under ``mcp``
-in its global ``opencode.json`` and the policy in its global ``AGENTS.md``, or in
-``~/.claude/CLAUDE.md`` while OpenCode is reading that file instead. Cursor (when
-installed) gets a ``mnemo`` server in ``~/.cursor/mcp.json``, told the open project
-through ``${workspaceFolder}``, and the policy as the always-applied rule
-``~/.cursor/rules/mnemo.mdc``. Claude Desktop, only when named with ``--agent
-claude-desktop``, gets a server in ``claude_desktop_config.json``; it works outside any
-project, so it uses global memories, and has no instructions file. Antigravity (when
-installed, standalone or inside T3 Code) gets a ``mnemo`` server in each Gemini folder's
-``config/mcp_config.json``; it reads the server's own instructions, so it needs no policy
-file. Text written into a
-file sits between mnemo markers, so it can be updated or removed without touching the
-rest of the file. Each agent gets its own MNEMO_ACTOR; all of them share one store file
-(MNEMO_DB, default ~/.mnemo/mnemo.db), namespace and user.
+Claude Code gets a user-scope MCP server (``claude mcp add-json --scope user``), the
+policy in ``~/.claude/CLAUDE.md``, and a SessionStart hook in
+``~/.claude/settings.json`` that starts each session with a brief of the project's and
+global memories (``mnemo brief --hook``; ``--no-session-brief`` leaves it out). Codex
+gets an ``[mcp_servers.mnemo]`` table with its tools pre-approved in
+``$CODEX_HOME/config.toml`` and the policy in ``$CODEX_HOME/AGENTS.md``. OpenCode (when
+installed) gets a ``mnemo`` server under ``mcp`` in its global ``opencode.json`` and the
+policy in its global ``AGENTS.md``, or in ``~/.claude/CLAUDE.md`` while OpenCode is
+reading that file instead. Cursor (when installed) gets a ``mnemo`` server in
+``~/.cursor/mcp.json``, told the open project through ``${workspaceFolder}``, and the
+policy as the always-applied rule ``~/.cursor/rules/mnemo.mdc``. Claude Desktop, only
+when named with ``--agent claude-desktop``, gets a server in
+``claude_desktop_config.json``; it works outside any project, so it uses global
+memories, and has no instructions file. Antigravity (when installed, standalone or
+inside T3 Code) gets a ``mnemo`` server in each Gemini folder's
+``config/mcp_config.json``; it reads the server's own instructions, so it needs no
+policy file. Text written into a file sits between mnemo markers, so it can be updated
+or removed without touching the rest of the file. Each agent gets its own MNEMO_ACTOR;
+all of them share one store file (MNEMO_DB, default ~/.mnemo/mnemo.db), namespace and
+user.
 
 Before changing anything it checks that the store file is usable with this Python and,
 for the Ollama backend, that Ollama is running; a missing embedding model (Ollama's,
@@ -38,6 +41,7 @@ import difflib
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -590,6 +594,65 @@ def claude_settings(text: str, auto_memory: str) -> str:
     return text if json.loads(text or "{}") == data else updated
 
 
+BRIEF_MATCHER = "startup|clear|compact"
+
+
+def brief_command(settings: Settings) -> str:
+    """The SessionStart hook's command: the installed ``mnemo brief --hook``, told the
+    store, namespace and user the agents' servers use (a hook gets none of their env)."""
+    server = Path(server_command())
+    exe = server.with_name(server.name.replace("mnemo-mcp-direct", "mnemo"))
+    argv = [str(exe), "brief", "--hook", "--db", str(settings.db)]
+    argv += ["--namespace", settings.namespace, "--user-id", settings.user_id]
+    return subprocess.list2cmdline(argv) if _is_windows() else shlex.join(argv)
+
+
+_OUR_HOOK = re.compile(r"""(?:^|[\\/"' ])mnemo(?:\.exe)?["']? brief --hook\b""")
+
+
+def _our_hook(hook: object) -> bool:
+    """The SessionStart hook mnemo-install wrote: it runs ``mnemo brief --hook``."""
+    return isinstance(hook, dict) and bool(_OUR_HOOK.search(str(hook.get("command", ""))))
+
+
+def claude_brief_hook(text: str, command: str | None) -> str:
+    """settings.json with Mnemo's SessionStart hook set to ``command`` (None removes it);
+    other hooks, including other SessionStart ones, are kept."""
+    try:
+        data = json.loads(text) if text.strip() else {}
+    except json.JSONDecodeError as exc:
+        raise InstallError(f"~/.claude/settings.json is not valid JSON ({exc})") from exc
+    if not isinstance(data, dict):
+        raise InstallError("~/.claude/settings.json is not a JSON object")
+    hooks = data.get("hooks", {})
+    groups = hooks.get("SessionStart", []) if isinstance(hooks, dict) else None
+    if not isinstance(groups, list):
+        raise InstallError('"hooks" in ~/.claude/settings.json is not in the expected shape')
+    kept = []
+    for group in groups:
+        inner = group.get("hooks") if isinstance(group, dict) else None
+        if not isinstance(inner, list) or not any(_our_hook(hook) for hook in inner):
+            kept.append(group)
+        elif others := [hook for hook in inner if not _our_hook(hook)]:
+            kept.append({**group, "hooks": others})
+    if command is not None:
+        hook = {"type": "command", "command": command, "timeout": 10}
+        kept.append({"matcher": BRIEF_MATCHER, "hooks": [hook]})
+    if kept:
+        data["hooks"] = {**hooks, "SessionStart": kept}
+    else:
+        rest = {name: value for name, value in hooks.items() if name != "SessionStart"}
+        if rest:
+            data["hooks"] = rest
+        else:
+            data.pop("hooks", None)
+    if data == json.loads(text or "{}"):
+        return text
+    if not data and not text.strip():
+        return text
+    return json.dumps(data, indent=_indent(text), ensure_ascii=False) + "\n"
+
+
 def _auto_memory_off(text: str) -> bool:
     try:
         data = json.loads(text) if text.strip() else {}
@@ -616,6 +679,7 @@ def plan(
     claude_desktop_config: Path | None = None,
     antigravity_dirs: Sequence[Path] = (),
     antigravity_optional: bool = False,
+    session_brief: bool = True,
 ) -> tuple[list[Command], list[FileChange], list[str]]:
     """Commands, file changes and notes for the agents. ``opencode_optional``,
     ``cursor_optional`` and ``antigravity_optional``: the client was detected rather than
@@ -664,6 +728,18 @@ def plan(
                 )
         edit(claude_dir / "CLAUDE.md", policy_block)
         settings_path = claude_dir / "settings.json"
+        hook = brief_command(settings) if session_brief and not uninstall else None
+        try:
+            edit(settings_path, lambda text: claude_brief_hook(text, hook))
+        except InstallError as exc:
+            notes.append(f"Skipped the session brief: {exc}")
+            hook = None
+        if hook is not None:
+            notes.append(
+                "Claude Code sessions start with a brief of the project's and global "
+                "memories (a SessionStart hook in ~/.claude/settings.json running `mnemo "
+                "brief --hook`; `mnemo brief` shows it). --no-session-brief leaves it out."
+            )
         current = _read(settings_path)
         if claude_auto_memory:
             edit(settings_path, lambda text: claude_settings(text, claude_auto_memory))
@@ -926,6 +1002,11 @@ def main(
         help="Antigravity's Gemini folder (repeatable); default: ~/.gemini when the "
         "Antigravity CLI is installed, plus T3 Code's Antigravity folders",
     )
+    parser.add_argument(
+        "--no-session-brief",
+        action="store_true",
+        help="don't start Claude Code sessions with a brief of the memories (removes it)",
+    )
     parser.add_argument("--skip-migrate", action="store_true")
     parser.add_argument("--skip-checks", action="store_true", help="don't probe the services")
     parser.add_argument(
@@ -983,6 +1064,7 @@ def main(
             claude_desktop_config=claude_desktop,
             antigravity_dirs=antigravity_dirs,
             antigravity_optional=not (args.agent and "antigravity" in args.agent),
+            session_brief=not args.no_session_brief,
         )
     except InstallError as exc:
         print(f"mnemo-install: {exc}", file=sys.stderr)

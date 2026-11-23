@@ -110,3 +110,11 @@ def resolve_lanes(namespace: str, project: str | None, cwd: Path | str | None) -
     lanes = {"project": f"{namespace}@{project}"} if project else {}
     lanes["global"] = namespace
     return lanes
+
+
+def server_lanes(
+    namespace: str, project: str | None, project_dir: str | None, cwd: Path | str
+) -> dict[str, str]:
+    """The scopes a Mnemo server started in ``cwd`` reads and writes (the session brief
+    uses the same rule): ``MNEMO_PROJECT_DIR`` when set, else the folder."""
+    return resolve_lanes(namespace, project, project_root(project_dir, cwd))

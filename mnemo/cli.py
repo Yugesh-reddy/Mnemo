@@ -10,6 +10,7 @@
     mnemo search Q    # what an agent's memory_search finds for Q here
     mnemo show ID     # one memory in full, with its history (ID or its first characters)
     mnemo log         # recent changes: who wrote, updated, retracted or restored what
+    mnemo brief       # what an agent starting a session here is shown (Claude Code's hook)
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
@@ -147,6 +148,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         sub.add_argument("--limit", type=_limit, default=default, metavar="N")
     for sub in (ls, search, show, log):
         sub.add_argument("--json", action="store_true", help="print JSON")
+    brief = commands.add_parser("brief", help="the memories an agent starting here is shown")
+    brief.add_argument(
+        "--hook",
+        action="store_true",
+        help="run as Claude Code's SessionStart hook: folder from stdin, never fails",
+    )
+    brief.add_argument("--db", type=Path, help="store file (default: MNEMO_DB)")
+    brief.add_argument("--namespace", help="global namespace (default: MNEMO_NAMESPACE)")
+    brief.add_argument("--user-id", help="user (default: MNEMO_USER_ID)")
     commands.add_parser("export", help="write memories and history as JSON", add_help=False)
     commands.add_parser("import", help="restore an export into an empty store", add_help=False)
     for name in GONE:
@@ -175,6 +185,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         from mnemo.browse import run
 
         return run(args.command, args)
+    if args.command == "brief":
+        from mnemo.brief import run as brief_run
+
+        return brief_run(args)
     if args.command == "reindex":
         counts = asyncio.run(_reindex())
         print(f"Embedded {counts['embedded']} of {counts['events']} events; word index rebuilt.")
