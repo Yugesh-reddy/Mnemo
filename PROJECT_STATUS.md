@@ -1,5 +1,12 @@
 # Mnemo — implementation status
 
+## The web UI opens where the memories are (November 23, 2026)
+
+`mnemo ui` opens on global when it holds memories, otherwise on the project whose
+memory changed last; every link names its scope, and empty pages say which scope is
+empty instead of pointing at `make seed`
+([spec §44](PROJECT_SPEC.md#44-the-web-ui-opens-where-the-memories-are--november-23-2026)).
+
 ## Cursor and Claude Desktop in the installer (November 23, 2026)
 
 `mnemo install` sets up Cursor when it is installed (server in `~/.cursor/mcp.json`,

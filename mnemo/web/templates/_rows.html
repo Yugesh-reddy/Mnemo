@@ -16,7 +16,7 @@
 {% else %}
 <tr>
   <td colspan="8" class="px-4 py-10 text-center text-slate-400">
-    No facts yet. Run <span class="mono text-slate-600">make seed</span>.
+    {% if q %}No memories match this search.{% else %}No memories in {{ scope_label }} yet. Your agents save memories here as they work.{% endif %}
   </td>
 </tr>
 {% endfor %}

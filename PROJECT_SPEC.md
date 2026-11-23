@@ -918,7 +918,7 @@ request to finish the pending work.
   for the configured user and agent, the configured one (normally the global lane)
   first, labelled `global` or by project (the remote, or the path without `path:`).
   `?scope=<namespace>` selects one on every page, link, form and redirect, and is left
-  out for the configured namespace. An unknown scope returns HTTP 400 and writes
+  out for the configured namespace (since §44 it is always written out). An unknown scope returns HTTP 400 and writes
   nothing. Correction and restore run in the namespace the memory belongs to,
   whatever the page's scope, so their receipts land in the right scope.
 - **Private directories.** Mnemo already created the store's directory with mode 0700;
@@ -1294,3 +1294,17 @@ servers and debugging; Claude's support pages on Desktop and local servers.
 user-level `mcp.json` (check: after Cursor saves a memory in a repository, `mnemo ls`
 in that repository lists it under `project`), and that it reads `~/.cursor/rules`
 files in this format.
+
+## 44. The web UI opens where the memories are — November 23, 2026
+
+- **Landing scope.** `/` with no `?scope=` and no search opens global when global holds
+  a current memory; otherwise it redirects (HTTP 303) to the scope whose current memory
+  was recorded most recently; an empty store stays on global. So a store whose
+  memories all belong to projects no longer opens on an empty page.
+- **Explicit scope in URLs.** Every link, form action and redirect now carries
+  `?scope=`, global included (`?scope=default`), so choosing global in the switcher
+  stays there instead of bouncing to the landing scope. A bare URL still resolves to
+  global on every page but `/`; `/fact/<id>` still opens in the memory's own scope.
+- **Empty states.** An empty list says `No memories in <scope> yet.`, and a search with
+  no results says `No memories match this search.`, instead of naming `make seed`, a
+  developer command.

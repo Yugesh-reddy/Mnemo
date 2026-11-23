@@ -101,14 +101,10 @@ def _scope_label(namespace: str, default: str) -> str:
     return namespace
 
 
-def _scope_url(path: str, scope: str, default_scope: str, **params: str) -> str:
-    query: list[tuple[str, str]] = []
-    if scope != default_scope:
-        query.append(("scope", scope))
-    for key, value in params.items():
-        if value:
-            query.append((key, value))
-    return f"{path}?{urlencode(query)}" if query else path
+def _scope_url(path: str, scope: str, **params: str) -> str:
+    # The scope is always explicit: a bare "/" picks where to open (_landing_scope).
+    query = [("scope", scope), *((key, value) for key, value in params.items() if value)]
+    return f"{path}?{urlencode(query)}"
 
 
 def _scoped_store(base: MnemoStore, namespace: str) -> MnemoStore:
@@ -167,11 +163,11 @@ def _scope_context(
             ScopeOption(
                 value=ns,
                 label=_scope_label(ns, default_scope),
-                url=_scope_url(switch_target, ns, default_scope),
+                url=_scope_url(switch_target, ns),
             )
             for ns in known
         ],
-        "url_for_scope": lambda path, **params: _scope_url(path, active, default_scope, **params),
+        "url_for_scope": lambda path, **params: _scope_url(path, active, **params),
     }
 
 
@@ -212,6 +208,19 @@ def _unknown_scope_response(
     )
 
 
+async def _landing_scope(store: MnemoStore) -> str:
+    """Where a bare "/" opens: global when it holds memories, else the scope whose memory
+    changed most recently, else global."""
+    namespace = await store.conn.fetchval(
+        "SELECT namespace FROM memory_current WHERE user_id=?1 AND agent_id=?2 "
+        "ORDER BY namespace = ?3 DESC, recorded_at DESC LIMIT 1",
+        store.user_id,
+        store.agent_id,
+        store.namespace,
+    )
+    return namespace or store.namespace
+
+
 async def _facts(store: MnemoStore, q: str):
     # Browsing is not recall: a person's search leaves the recall counters alone.
     return await store.search(q, reinforce=False) if q.strip() else await store.list_current()
@@ -224,6 +233,10 @@ async def index(
     scope: str | None = None,
     store: MnemoStore = Depends(get_store),
 ):
+    if scope is None and not q:
+        landing = await _landing_scope(store)
+        if landing != store.namespace:
+            return RedirectResponse(_scope_url("/", landing), status_code=303)
     scoped, known = await _resolve_scope(store, scope)
     if scoped is None:
         return _unknown_scope_response(request, scope or "", known, store.namespace)
@@ -275,6 +288,7 @@ async def rows(
         "_rows.html",
         {
             "facts": facts,
+            "q": q,
             **_scope_context(known, scoped.namespace, store.namespace, switch_target="/"),
         },
     )
@@ -375,9 +389,7 @@ async def do_revert(
         )
     except MnemoError as exc:
         return await _refused(request, fact_id, target, store.namespace, known, exc, "restore")
-    return RedirectResponse(
-        _scope_url(f"/fact/{fact_id}", target.namespace, store.namespace), status_code=303
-    )
+    return RedirectResponse(_scope_url(f"/fact/{fact_id}", target.namespace), status_code=303)
 
 
 @app.post("/fact/{fact_id}/edit")
@@ -416,9 +428,7 @@ async def do_edit(
         )
     except MnemoError as exc:
         return await _refused(request, fact_id, target, store.namespace, known, exc, "correction")
-    return RedirectResponse(
-        _scope_url(f"/fact/{fact_id}", target.namespace, store.namespace), status_code=303
-    )
+    return RedirectResponse(_scope_url(f"/fact/{fact_id}", target.namespace), status_code=303)
 
 
 async def _refused(
@@ -499,4 +509,4 @@ async def do_commit(
     if scoped is None:
         return _unknown_scope_response(request, scope or "", known, store.namespace)
     await scoped.commit(label.strip() or None)
-    return RedirectResponse(_scope_url("/diff", scoped.namespace, store.namespace), status_code=303)
+    return RedirectResponse(_scope_url("/diff", scoped.namespace), status_code=303)
