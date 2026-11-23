@@ -11,6 +11,7 @@
     mnemo show ID     # one memory in full, with its history (ID or its first characters)
     mnemo log         # recent changes: who wrote, updated, retracted or restored what
     mnemo brief       # what an agent starting a session here is shown (Claude Code's hook)
+    mnemo capture     # save what lasts from finished Claude Code and Codex conversations
     mnemo export      # write this scope's memories, with their history, as JSON
     mnemo import FILE # restore an export (or a Postgres-era export) into an empty store
 
@@ -157,6 +158,29 @@ def main(argv: Sequence[str] | None = None) -> int:
     brief.add_argument("--db", type=Path, help="store file (default: MNEMO_DB)")
     brief.add_argument("--namespace", help="global namespace (default: MNEMO_NAMESPACE)")
     brief.add_argument("--user-id", help="user (default: MNEMO_USER_ID)")
+    capture = commands.add_parser(
+        "capture", help="save what lasts from finished agent conversations (a small model)"
+    )
+    capture.add_argument(
+        "--dry-run", action="store_true", help="list the notes; save nothing, record nothing"
+    )
+    capture.add_argument("--out", type=Path, help="with --dry-run: write the notes as JSON")
+    capture.add_argument("--from", dest="source", type=Path, help="save notes a --out wrote")
+    capture.add_argument(
+        "--worker", choices=("ollama", "claude"), default="ollama", help="model (default ollama)"
+    )
+    capture.add_argument("--model", help="model name (ollama: qwen3.5:4b-mlx, claude: haiku)")
+    capture.add_argument(
+        "--agent", action="append", choices=("claude-code", "codex"), help="only this agent"
+    )
+    capture.add_argument(
+        "--since", type=float, default=2.0, metavar="DAYS", help="conversations this recent"
+    )
+    capture.add_argument("--idle", type=float, default=30.0, metavar="MIN", help=argparse.SUPPRESS)
+    capture.add_argument("--limit", type=_limit, metavar="N", help="read at most N conversations")
+    capture.add_argument(
+        "--transcript", action="append", type=Path, default=[], help="read only this file"
+    )
     commands.add_parser("export", help="write memories and history as JSON", add_help=False)
     commands.add_parser("import", help="restore an export into an empty store", add_help=False)
     for name in GONE:
@@ -189,11 +213,38 @@ def main(argv: Sequence[str] | None = None) -> int:
         from mnemo.brief import run as brief_run
 
         return brief_run(args)
+    if args.command == "capture":
+        return _capture(args)
     if args.command == "reindex":
         counts = asyncio.run(_reindex())
         print(f"Embedded {counts['embedded']} of {counts['events']} events; word index rebuilt.")
         return 0
     return serve_ui(args.port)
+
+
+def _capture(args: argparse.Namespace) -> int:
+    from mnemo.capture import AGENTS, Options, build_worker, run, save_file, write_proposals
+    from mnemo.config import get_settings
+
+    settings = get_settings()
+    if args.source is not None:
+        asyncio.run(save_file(settings, args.source))
+        return 0
+    options = Options(
+        agents=tuple(args.agent or AGENTS),
+        since_days=args.since,
+        idle_minutes=args.idle,
+        limit=args.limit,
+        only=args.transcript,
+        dry_run=args.dry_run,
+    )
+    proposals = asyncio.run(run(settings, build_worker(args.worker, args.model, settings), options))
+    if args.out is not None:
+        write_proposals(proposals, args.out)
+    verb = "proposed" if args.dry_run else "saved"
+    saved = sum(p.outcome in ("proposed", "saved") for p in proposals)
+    print(f"{saved} of {len(proposals)} notes {verb}.")
+    return 0
 
 
 if __name__ == "__main__":

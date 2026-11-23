@@ -325,6 +325,7 @@ mnemo search deploy      # exactly what an agent's memory_search finds here
 mnemo show 3f2a91c0      # one memory in full with its history (an ID or its start)
 mnemo log                # recent changes: who wrote, updated, retracted or restored what
 mnemo brief              # the brief a Claude Code session starting here is given
+mnemo capture --dry-run  # what the note-taker would save from finished conversations
 ```
 
 Run them inside a project to see what the agents working there see: the same project
@@ -347,6 +348,29 @@ anything goes wrong it prints nothing, so a session never fails to start because
 Mnemo. `mnemo install --no-session-brief` leaves it out (or removes it); `mnemo
 uninstall` removes it and keeps any other hooks
 ([spec §46](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
+
+### Notes from finished conversations
+
+Agents save when they decide to, and in ordinary work that is rarely. `mnemo capture`
+reads the conversations Claude Code and Codex keep on disk, once each has been idle for
+30 minutes, and has a small model write down what lasts: commands that worked,
+conventions, decisions, stated preferences, where things live and the agreed next
+step. Only your messages and the agent's replies are read (no tool output), secrets
+are hidden first, and conversations outside a project are skipped. Notes are saved in
+that project as low-trust memories by `mnemo-capture`, so you can review and retract
+them in the web UI; a note on a subject that already exists is skipped.
+
+```bash
+mnemo capture --dry-run --out notes.json   # read and propose; saves nothing
+mnemo capture --from notes.json            # save the (edited) notes
+mnemo capture                              # read and save in one go
+mnemo capture --worker claude              # Haiku through your Claude login instead
+```
+
+The default model is local (`qwen3.5:4b-mlx` through [Ollama](https://ollama.com)), so
+nothing leaves your machine; `--worker claude` uses Haiku through `claude -p` and your
+Claude quota. Cursor and Antigravity conversations are not read yet
+([spec §47](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#47-capture-a-note-taker-for-finished-conversations--november-23-2026)).
 
 ## Review memory in the browser
 
