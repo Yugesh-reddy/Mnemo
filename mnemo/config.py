@@ -119,6 +119,12 @@ class Settings(BaseSettings):
     but never used to filter reads. Unset: the agent_id."""
     project: str | None = None
     """The direct server's project scope. Unset: detected from its working directory."""
+    project_dir: str | None = None
+    """Where the direct server detects its project instead of its working directory, for
+    clients that start servers elsewhere (Cursor starts them in the home folder and
+    passes ${workspaceFolder} here). Set but unusable (empty, a variable the client left
+    unexpanded, or not a directory): no project, so writes go to global rather than to a
+    wrong project."""
 
     @model_validator(mode="after")
     def validate_configuration(self) -> Settings:

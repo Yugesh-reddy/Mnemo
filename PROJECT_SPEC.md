@@ -1238,3 +1238,59 @@ contract.
 
 Write commands (`add`, `retract`, `revert`) are left out: the web UI already corrects
 and restores, and the agents write through the guarded tools.
+
+## 43. Cursor and Claude Desktop in the installer — November 23, 2026
+
+`mnemo install` now also sets up Cursor (when `~/.cursor` exists, or with `--agent
+cursor`) and Claude Desktop (with `--agent claude-desktop`, and by default once its
+config holds the server mnemo-install wrote, so a plain reinstall refreshes it and a
+plain uninstall removes it). Both keep their MCP
+servers in a JSON file with a top-level `mcpServers` object; `mcp_servers_config`
+sets or removes `mcpServers.mnemo` there and keeps every other key and server and the
+file's indent. As for OpenCode, a file with comments or trailing commas is never
+rewritten (the error shows the entry to paste), a `mnemo` server the installer did not
+write stops it, and a detected (not named) client it cannot rewrite is skipped with a
+note while the other agents are set up. Sources checked November 22, 2026: Cursor's MCP
+reference, config interpolation, rules and permissions pages; the MCP docs on local
+servers and debugging; Claude's support pages on Desktop and local servers.
+- **Cursor** gets `{"type": "stdio", "command", "args": [], "env"}` in
+  `~/.cursor/mcp.json`, with `MNEMO_ACTOR=cursor`. Cursor starts global servers in the
+  home folder (per Cursor staff; not documented), so the cwd never names the project.
+  The entry adds `MNEMO_PROJECT_DIR=${workspaceFolder}`, which Cursor documents as
+  interpolated in `env`; how it resolves in the user-level config is not documented.
+- **`MNEMO_PROJECT_DIR`** (new setting, `mnemo.project.project_root`): when set, the
+  server detects its project there instead of in its working directory. Empty, still
+  containing `${`, or not a directory means no project, so writes go to global, never
+  to the project the home folder happens to be (a dotfiles repository). The server
+  prints its scopes on stderr at startup, which clients show as its log.
+- **Cursor's policy** goes into `~/.cursor/rules/mnemo.mdc` with `alwaysApply: true`
+  frontmatter around the managed block. Cursor documents the user-level folder but not
+  its file format; this is the project-rule format. Uninstall removes the block and
+  deletes the file when nothing else was added. The server's own instructions (§38)
+  carry the same rules, which Cursor documents passing to the model.
+- **Tool approval.** Cursor reads an allowlist from `~/.cursor/permissions.json`, but a
+  file-defined allowlist overrides the one set in its UI, so the installer does not
+  create it; a note says how to allow `mnemo:*`.
+- **Claude Desktop** gets `{"command", "args": [], "env"}` with
+  `MNEMO_ACTOR=claude-desktop` in `claude_desktop_config.json`: macOS
+  `~/Library/Application Support/Claude/`, Windows `%APPDATA%\Claude\` (or the
+  Microsoft Store package's `LocalCache\Roaming\Claude\` when only that exists), Linux
+  (beta) `$XDG_CONFIG_HOME/Claude/`. It starts servers outside any project (cwd may be
+  `/`), so it uses global memories; it has no instructions file, and whether it passes
+  server instructions to the model for local servers is unknown. So it is opt-in, and
+  the installer says to quit and reopen it. Its README entry says the policy may not
+  reach it.
+- **Preview.** §40 hid a credential-named setting only at the start of a line, so a
+  minified JSON file (Cursor writes `mcp.json` on one line) or a TOML inline table
+  showed it. Now a `name: value` or `name=value` pair anywhere in a line is hidden when
+  the name looks like a credential (including `--api-key=...` arguments), and so are
+  passwords in URLs (`scheme://user:<hidden>@host`). A last line without a newline is
+  marked as in `diff`. Rewriting a one-line `mcp.json` writes it indented; uninstalling
+  does not restore the one-line form.
+- **Tests** run the installer with a temporary `HOME`, `APPDATA` and `LOCALAPPDATA`, so
+  no default path reaches a real config.
+
+**Not verified in the apps:** that Cursor expands `${workspaceFolder}` in the
+user-level `mcp.json` (check: after Cursor saves a memory in a repository, `mnemo ls`
+in that repository lists it under `project`), and that it reads `~/.cursor/rules`
+files in this format.

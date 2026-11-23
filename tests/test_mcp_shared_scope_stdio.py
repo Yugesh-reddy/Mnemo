@@ -191,3 +191,43 @@ async def test_actor_defaults_to_agent_id_when_unset(_disposable_test_db, clean_
                 await client.call_tool("memory_history", {"fact_id": created["fact_id"]})
             )
             assert [e["actor"] for e in history["entries"]] == ["legacy-agent"]
+
+
+async def test_a_client_names_the_project_directory_as_cursor_does(
+    _disposable_test_db, clean_memory, tmp_path
+):
+    """Cursor starts servers in the home folder and passes ${workspaceFolder}: the named
+    directory decides the project, and an unexpanded variable means no project (never
+    the working directory)."""
+    namespace = "shared-dir-" + uuid4().hex
+    repo = tmp_path / "widget"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+    subprocess.run(
+        ["git", "remote", "add", "origin", "https://github.com/Acme/Widget.git"],
+        cwd=repo,
+        check=True,
+    )
+    home = tmp_path / "home"
+    home.mkdir()
+    subprocess.run(["git", "init", "-q"], cwd=home, check=True)  # a dotfiles repository
+    named = {**server_env(_disposable_test_db, namespace, "cursor", None)}
+    named["MNEMO_PROJECT_DIR"] = str(repo)
+    literal = {**named, "MNEMO_PROJECT_DIR": "${workspaceFolder}"}
+    async with asyncio.timeout(60):
+        async with (
+            agent(named, cwd=home) as cursor,
+            agent(literal, cwd=home) as unexpanded,
+            agent(server_env(_disposable_test_db, namespace, "codex", WIDGET)) as codex,
+        ):
+            created = payload(
+                await cursor.call_tool("memory_create", create("project", "linter", "ruff"))
+            )
+            assert created["scope"] == "project"
+            hits = payload(await codex.call_tool("memory_search", {"query": "linter"}))["hits"]
+            assert [hit["fact_id"] for hit in hits] == [created["fact_id"]]
+
+            note = payload(
+                await unexpanded.call_tool("memory_create", create("user", "editor", "helix"))
+            )
+            assert note["scope"] == "global"

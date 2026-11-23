@@ -19,7 +19,11 @@ from mnemo.db import migration_names
 @pytest.fixture(autouse=True)
 def _no_real_opencode(tmp_path, monkeypatch):
     """Every test detects "opencode" on PATH; keep its default config dir, and the
-    store file, in tmp."""
+    store file, in tmp. HOME is a temporary folder too, so no default path (Cursor's,
+    Claude Desktop's) can reach the real configs on the machine running the tests."""
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "home" / "AppData" / "Roaming"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "home" / "AppData" / "Local"))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
     monkeypatch.setenv("MNEMO_DB", str(tmp_path / "store" / "mnemo.db"))
     inst.get_settings.cache_clear()
@@ -877,3 +881,210 @@ def test_windows_default_config_locations_and_checkout_detection(tmp_path, monke
         inst, "__file__", str(tmp_path / "Lib" / "Site-Packages" / "mnemo" / "install.py")
     )
     assert not inst.running_from_checkout()
+
+
+# --- Cursor and Claude Desktop ---------------------------------------------------------
+
+OTHER_SERVER = {"command": "docker", "args": ["mcp", "gateway", "run"]}
+
+
+def cursor_args(claude: Path, codex: Path, cursor: Path, *extra: str) -> list[str]:
+    return args(claude, codex, "--cursor-dir", str(cursor), *extra)
+
+
+def test_cursor_gets_a_server_told_the_open_project_and_an_always_applied_rule(homes, tmp_path):
+    claude, codex = homes
+    cursor = tmp_path / "cursor"
+    cursor.mkdir()
+    config = cursor / "mcp.json"
+    config.write_text(json.dumps({"mcpServers": {"docker": OTHER_SERVER}}, indent=4) + "\n")
+    # Detected (the folder exists), so a plain install includes Cursor.
+    assert inst.main(cursor_args(claude, codex, cursor, "--yes"), runner=FakeCli()) == 0
+    written = config.read_text()
+    servers = json.loads(written)["mcpServers"]
+    assert servers["docker"] == OTHER_SERVER
+    assert servers["mnemo"]["type"] == "stdio"
+    assert servers["mnemo"]["command"] == inst.server_command()
+    assert servers["mnemo"]["env"]["MNEMO_ACTOR"] == "cursor"
+    assert servers["mnemo"]["env"]["MNEMO_PROJECT_DIR"] == "${workspaceFolder}"
+    assert '\n    "mcpServers"' in written  # the file's own indent is kept
+    rule = (cursor / "rules" / "mnemo.mdc").read_text()
+    assert rule.startswith("---\ndescription:") and "alwaysApply: true" in rule.split("---")[1]
+    assert inst.policy_text().strip() in rule
+
+    before = {path: path.read_text() for path in (config, cursor / "rules" / "mnemo.mdc")}
+    assert inst.main(cursor_args(claude, codex, cursor, "--yes"), runner=FakeCli()) == 0
+    assert {path: path.read_text() for path in before} == before
+
+    gone = cursor_args(claude, codex, cursor, "--uninstall", "--yes")
+    assert inst.main(gone, runner=FakeCli()) == 0
+    assert json.loads(config.read_text()) == {"mcpServers": {"docker": OTHER_SERVER}}
+    assert not (cursor / "rules" / "mnemo.mdc").exists()
+
+
+def test_cursor_is_left_alone_when_it_is_not_installed(homes, tmp_path):
+    claude, codex = homes
+    cursor = tmp_path / "no-cursor"
+    assert inst.main(cursor_args(claude, codex, cursor, "--yes"), runner=FakeCli()) == 0
+    assert not cursor.exists()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        '{\n  // mine\n  "mcpServers": {}\n}\n',
+        json.dumps({"mcpServers": {"mnemo": {"command": "something-else"}}}),
+    ],
+    ids=["comments", "unmanaged-mnemo"],
+)
+def test_a_cursor_config_it_cannot_rewrite_skips_cursor_unless_asked_for(
+    homes, tmp_path, capsys, text
+):
+    claude, codex = homes
+    cursor = tmp_path / "cursor"
+    cursor.mkdir()
+    (cursor / "mcp.json").write_text(text)
+    assert inst.main(cursor_args(claude, codex, cursor, "--yes"), runner=FakeCli()) == 0
+    assert "Skipped Cursor:" in capsys.readouterr().out
+    assert (cursor / "mcp.json").read_text() == text and not (cursor / "rules").exists()
+    assert (claude / "CLAUDE.md").exists()  # the other agents were still installed
+
+    asked = cursor_args(claude, codex, cursor, "--agent", "cursor", "--yes")
+    assert inst.main(asked, runner=FakeCli()) == 2
+    assert "mnemo-install:" in capsys.readouterr().err
+
+
+def test_the_cursor_rule_keeps_what_someone_else_added(homes, tmp_path):
+    claude, codex = homes
+    cursor = tmp_path / "cursor"
+    (cursor / "rules").mkdir(parents=True)
+    assert inst.main(cursor_args(claude, codex, cursor, "--yes"), runner=FakeCli()) == 0
+    rule = cursor / "rules" / "mnemo.mdc"
+    rule.write_text(rule.read_text() + "\nAlso: prefer short answers.\n")
+    gone = cursor_args(claude, codex, cursor, "--uninstall", "--yes")
+    assert inst.main(gone, runner=FakeCli()) == 0
+    assert rule.read_text().endswith("Also: prefer short answers.\n")
+
+
+DESKTOP = {"preferences": {"quickEntryShortcut": "off"}, "coworkUserFilesPath": "/x"}
+
+
+def test_claude_desktop_only_when_named_and_global(homes, tmp_path, capsys):
+    claude, codex = homes
+    config = tmp_path / "Claude" / "claude_desktop_config.json"
+    config.parent.mkdir()
+    config.write_text(json.dumps(DESKTOP))
+    base = args(claude, codex, "--claude-desktop-config", str(config))
+    assert inst.main(base + ["--yes"], runner=FakeCli()) == 0
+    assert json.loads(config.read_text()) == DESKTOP  # not named: untouched
+
+    assert inst.main(base + ["--agent", "claude-desktop", "--yes"], runner=FakeCli()) == 0
+    data = json.loads(config.read_text())
+    assert {k: v for k, v in data.items() if k != "mcpServers"} == DESKTOP
+    server = data["mcpServers"]["mnemo"]
+    assert server["command"] == inst.server_command() and server["args"] == []
+    assert server["env"]["MNEMO_ACTOR"] == "claude-desktop"
+    assert "MNEMO_PROJECT_DIR" not in server["env"]
+    out = capsys.readouterr().out
+    assert "global memories only" in out and "Quit it fully" in out
+
+    gone = base + ["--agent", "claude-desktop", "--uninstall", "--yes"]
+    assert inst.main(gone, runner=FakeCli()) == 0
+    assert json.loads(config.read_text()) == DESKTOP
+
+
+def test_claude_desktop_config_location_per_system(tmp_path, monkeypatch):
+    name = "claude_desktop_config.json"
+    monkeypatch.setattr(inst.Path, "home", staticmethod(lambda: tmp_path))
+    monkeypatch.setattr(inst.sys, "platform", "darwin")
+    assert inst.default_claude_desktop_config() == (
+        tmp_path / "Library" / "Application Support" / "Claude" / name
+    )
+    monkeypatch.setattr(inst.sys, "platform", "linux")
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    assert inst.default_claude_desktop_config() == tmp_path / ".config" / "Claude" / name
+
+    monkeypatch.setattr(inst.sys, "platform", "win32")
+    roaming, local = tmp_path / "Roaming", tmp_path / "Local"
+    monkeypatch.setenv("APPDATA", str(roaming))
+    monkeypatch.setenv("LOCALAPPDATA", str(local))
+    assert inst.default_claude_desktop_config() == roaming / "Claude" / name
+    (local / inst.MSIX_CLAUDE).mkdir(parents=True)  # only the Microsoft Store copy exists
+    assert inst.default_claude_desktop_config() == local / inst.MSIX_CLAUDE / name
+    (roaming / "Claude").mkdir(parents=True)  # both: the documented one wins
+    assert inst.default_claude_desktop_config() == roaming / "Claude" / name
+
+
+def test_the_preview_hides_credentials_in_cursor_servers(homes, tmp_path, capsys):
+    claude, codex = homes
+    cursor = tmp_path / "cursor"
+    cursor.mkdir()
+    secret = "q8Lm2Vx7Rt4Kp9Zw" * 2
+    servers = {
+        "github": {"command": "gh-mcp", "env": {"GITHUB_TOKEN": secret}},
+        "api": {"command": "tool", "args": [f"--api-key={secret}"]},
+        "db": {"command": "pg", "args": [f"postgres://app:{secret}@db.example.com/app"]},
+    }
+    (cursor / "mcp.json").write_text(json.dumps({"mcpServers": servers}, indent=2))
+    assert inst.main(cursor_args(claude, codex, cursor, "--dry-run"), runner=FakeCli()) == 0
+    out = capsys.readouterr().out
+    assert '"mnemo": {' in out
+    assert secret not in out and secret[:12] not in out
+    assert "postgres://app:<hidden>@db.example.com/app" in out
+
+
+@pytest.mark.parametrize(
+    ("value", "found"),
+    [(None, "cwd"), ("", None), ("  ", None), ("${workspaceFolder}", None), ("missing", None)],
+)
+def test_project_root_never_falls_back_to_the_working_directory(tmp_path, value, found):
+    from mnemo.project import project_root
+
+    cwd = tmp_path / "cwd"
+    if value == "missing":
+        value = str(tmp_path / "nowhere")
+    assert project_root(value, cwd) == (cwd if found == "cwd" else None)
+    (tmp_path / "repo").mkdir()
+    assert project_root(str(tmp_path / "repo"), cwd) == tmp_path / "repo"
+
+
+def test_the_preview_keeps_a_last_line_without_a_newline_on_its_own_line(tmp_path):
+    change = inst.FileChange(tmp_path / "mcp.json", '{"a": 1}', '{\n  "a": 2\n}\n')
+    assert change.diff().splitlines()[3:] == [
+        '-{"a": 1}',
+        "\\ No newline at end of file",
+        "+{",
+        '+  "a": 2',
+        "+}",
+    ]
+
+
+def test_the_preview_hides_credentials_on_one_line_json_and_inline_toml():
+    secret = "q8Lm2Vx7Rt4Kp9Zw" * 2
+    minified = json.dumps(
+        {
+            "mcpServers": {
+                "gh": {"command": "x", "env": {"GITHUB_TOKEN": secret}},
+                "a": {"args": [f"--api-key={secret}", "--port=8080"]},
+            }
+        },
+        separators=(",", ":"),
+    )
+    shown = inst.hide_secrets(minified)
+    assert secret not in shown
+    assert '"GITHUB_TOKEN":"<hidden>"' in shown and '"--api-key=<hidden>"' in shown
+    assert '"command":"x"' in shown and '"--port=8080"' in shown
+    inline = f'mcp_servers.gh = {{ env = {{ GITHUB_TOKEN = "{secret}" }} }}'
+    assert inst.hide_secrets(inline) == 'mcp_servers.gh = { env = { GITHUB_TOKEN = "<hidden>" } }'
+
+
+def test_a_plain_uninstall_also_removes_claude_desktop_once_it_was_set_up(homes, tmp_path):
+    claude, codex = homes
+    config = tmp_path / "Claude" / "claude_desktop_config.json"
+    config.parent.mkdir()
+    config.write_text(json.dumps(DESKTOP))
+    base = args(claude, codex, "--claude-desktop-config", str(config))
+    assert inst.main(base + ["--agent", "claude-desktop", "--yes"], runner=FakeCli()) == 0
+    assert "mnemo" in json.loads(config.read_text())["mcpServers"]
+    assert inst.main(base + ["--uninstall", "--yes"], runner=FakeCli()) == 0
+    assert json.loads(config.read_text()) == DESKTOP

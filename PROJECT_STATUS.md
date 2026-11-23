@@ -1,5 +1,14 @@
 # Mnemo — implementation status
 
+## Cursor and Claude Desktop in the installer (November 23, 2026)
+
+`mnemo install` sets up Cursor when it is installed (server in `~/.cursor/mcp.json`,
+told the open project through `${workspaceFolder}`; policy in
+`~/.cursor/rules/mnemo.mdc`) and Claude Desktop when named with `--agent
+claude-desktop` (global memories only). Cursor's project detection and rules format
+are not yet verified in the app
+([spec §43](PROJECT_SPEC.md#43-cursor-and-claude-desktop-in-the-installer--november-23-2026)).
+
 ## Read-only commands in the terminal (November 22, 2026)
 
 `mnemo ls`, `search`, `show` and `log` show what the agents saved in this project and

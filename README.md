@@ -19,14 +19,15 @@ names), but nobody has run it there yet.
 
 ```bash
 uv tool install mnemohive
-mnemo install   # connect Claude Code, Codex and OpenCode (shows every change, asks first)
+mnemo install   # connect Claude Code, Codex, OpenCode and Cursor (shows every change, asks first)
 ```
 
 The package is `mnemohive` on PyPI; the command it installs is `mnemo`.
 
 `mnemo install` downloads the embedding model (`BAAI/bge-small-en-v1.5`, about 67 MB,
 from Hugging Face) after you confirm, creates the memory file (readable only by you),
-registers Mnemo with Claude Code and Codex (and OpenCode, when it is installed), and
+registers Mnemo with Claude Code and Codex (and OpenCode and Cursor, when they are
+installed), and
 adds a short [memory policy](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/memory_policy.md) to their global instructions. The agents run
 the installed tool's own server. Then start a new session in any repository. For
 example, tell Claude Code:
@@ -148,12 +149,14 @@ Settings come from `MNEMO_*` environment variables or `.env`; see
 | `MNEMO_BACKEND` | `local` | Embeddings: `local` (a model inside Mnemo, no server; see below), `ollama` (a local Ollama server), `hash` (no model, matches exact words only) or `openai` (sends text to OpenAI). |
 | `MNEMO_ACTOR` | the agent ID | Who is writing; set per agent by `mnemo install`. |
 | `MNEMO_PROJECT` | detected | Overrides the project detected from the git repository. |
+| `MNEMO_PROJECT_DIR` | the working directory | Where the project is detected, for clients that start servers elsewhere (Cursor passes `${workspaceFolder}`). Empty, unexpanded or not a directory: no project. |
 | `MNEMO_NAMESPACE`, `MNEMO_USER_ID` | `default` | Shared by every agent that should see the same memory. |
 
 `mnemo install` options: `--dry-run` shows the changes only,
-`--agent claude|codex|opencode` limits them to the agents named, `--codex-home` points
-at another Codex home (a `codex` wrapper that pins one is detected), `--opencode-dir`
-at another OpenCode config directory, `--backend ollama` uses Ollama's
+`--agent claude|codex|opencode|cursor|claude-desktop` limits them to the agents named,
+`--codex-home` points at another Codex home (a `codex` wrapper that pins one is
+detected), `--opencode-dir` at another OpenCode config directory, `--cursor-dir` at
+another Cursor folder, `--claude-desktop-config` at another Claude Desktop config file, `--backend ollama` uses Ollama's
 `nomic-embed-text` instead of the model inside Mnemo, and `--claude-auto-memory off` also turns off Claude Code's built-in memory.
 
 OpenCode gets a `mnemo` server under `mcp` in `~/.config/opencode/opencode.json`
@@ -163,6 +166,24 @@ the entry to paste instead, and when OpenCode was only detected, not named with
 `--agent`, it sets up the other agents and skips OpenCode. The policy goes into `~/.config/opencode/AGENTS.md`, or into
 `~/.claude/CLAUDE.md` when OpenCode is reading that file because it has no
 `AGENTS.md` of its own (creating one would stop it reading CLAUDE.md).
+
+Cursor (when `~/.cursor` exists) gets a `mnemo` server in `~/.cursor/mcp.json`. Cursor
+starts servers in your home folder, so the entry passes the open project as
+`MNEMO_PROJECT_DIR=${workspaceFolder}`; if Cursor leaves that unexpanded, the server
+uses no project and writes to global rather than guess. The policy goes into
+`~/.cursor/rules/mnemo.mdc` as an always-applied rule. Cursor asks before each tool
+call until you allow `mnemo` tools in its settings (`"mnemo:*"` in an `mcpAllowlist`
+in `~/.cursor/permissions.json` also works, but that file replaces the allowlist set in
+the settings, so the installer does not create it). A `mcp.json` it cannot rewrite is handled as for
+OpenCode.
+
+Claude Desktop is set up when named (`--agent claude-desktop`), and after that by every
+`mnemo install` and `mnemo uninstall`: it gets a
+server in `claude_desktop_config.json` (macOS `~/Library/Application Support/Claude/`,
+Windows `%APPDATA%\Claude\`, Linux `~/.config/Claude/`). It works outside any
+project, so it reads and writes global memories. It has no instructions file, and
+whether it passes the server's own instructions to the model is not documented, so it
+may not follow the policy. Quit it fully and reopen it after installing.
 
 **The default `local` backend** runs the embedding model inside each Mnemo server.
 `mnemo install` downloads `BAAI/bge-small-en-v1.5` (about 67 MB, from Hugging Face)
@@ -224,12 +245,10 @@ OpenCode, in `~/.config/opencode/opencode.json`:
 
 Also paste [the memory policy](https://github.com/Yugesh-reddy/Mnemo/blob/main/mnemo/memory_policy.md) into `~/.claude/CLAUDE.md`,
 `$CODEX_HOME/AGENTS.md` and OpenCode's rules file: without it, Codex did not save
-anything in the eval. Other
-clients such as Claude Desktop or [Cursor](https://cursor.com/docs/mcp) take the same
-command and environment in their JSON configuration (Cursor also needs
-`"type": "stdio"`). They are not started inside a repository, so they see only the
-global scope unless you set `MNEMO_PROJECT`. In a checkout, `make mcp` runs
-the server from source.
+anything in the eval. Other MCP clients take the same command and environment in
+their JSON configuration. A client that does not start servers inside the repository
+sees only the global scope unless you set `MNEMO_PROJECT` or `MNEMO_PROJECT_DIR`. In a
+checkout, `make mcp` runs the server from source.
 
 ## What Mnemo depends on
 

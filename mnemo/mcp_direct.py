@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -33,7 +34,7 @@ from mnemo.db import check_schema, connect
 from mnemo.direct import DirectMemory
 from mnemo.embedder import Embedder, build_embedder
 from mnemo.errors import ErrorCode, MnemoError
-from mnemo.project import resolve_lanes
+from mnemo.project import project_root, resolve_lanes
 from mnemo.services import service_error
 from mnemo.sqlite import Connection
 
@@ -53,7 +54,8 @@ def _settings() -> Settings:
 
 def _resolve_lanes(settings: Settings) -> dict[str, str]:
     """Project scope first (when there is a project), then the global namespace."""
-    return resolve_lanes(settings.namespace, settings.project, Path.cwd())
+    root = project_root(settings.project_dir, Path.cwd())
+    return resolve_lanes(settings.namespace, settings.project, root)
 
 
 def _actor(settings: Settings) -> str:
@@ -65,6 +67,9 @@ async def lifespan(server: FastMCP) -> AsyncIterator[dict[str, Any]]:
     global _embedder, _lanes
     settings = _settings()
     _lanes = _resolve_lanes(settings)
+    # On stderr, which clients show as the server's log: which project this server serves.
+    scopes = ", ".join(f"{scope}={namespace}" for scope, namespace in _lanes.items())
+    print(f"mnemo-mcp-direct: scopes {scopes}", file=sys.stderr, flush=True)
     embedder = build_embedder(settings)
     try:
         _embedder = embedder

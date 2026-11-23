@@ -91,10 +91,22 @@ def detect_project(cwd: Path | str) -> str | None:
     return f"path:{normalize_project_path(Path(top).resolve())}"
 
 
-def resolve_lanes(namespace: str, project: str | None, cwd: Path | str) -> dict[str, str]:
-    """Scope -> namespace for a process started in ``cwd``: the project scope first (when
+def project_root(project_dir: str | None, cwd: Path | str) -> Path | None:
+    """The directory to detect the project from: ``project_dir`` when it is set (None when
+    it is empty, an unexpanded ``${...}`` variable or not a directory), else ``cwd``."""
+    if project_dir is None:
+        return Path(cwd)
+    text = project_dir.strip()
+    if not text or "${" in text:
+        return None
+    path = Path(text).expanduser()
+    return path if path.is_dir() else None
+
+
+def resolve_lanes(namespace: str, project: str | None, cwd: Path | str | None) -> dict[str, str]:
+    """Scope -> namespace for a process working in ``cwd``: the project scope first (when
     there is a project: ``project``, else the one detected from ``cwd``), then global."""
-    project = project or detect_project(cwd)
+    project = project or (detect_project(cwd) if cwd is not None else None)
     lanes = {"project": f"{namespace}@{project}"} if project else {}
     lanes["global"] = namespace
     return lanes
