@@ -75,6 +75,8 @@ class Check(BaseModel):
     scope: Literal["project", "global", "any"] = "any"
     min: int | None = None
     max: int | None = None
+    sources: list[Literal["user", "tool", "agent"]] | None = None
+    """Store checks: count only memories saved with one of these sources."""
     note: str = ""
 
 
@@ -235,6 +237,23 @@ def codex_command(env: dict[str, str], disable: list[str], model: str | None = N
     if model:
         command += ["-m", model]
     return command + ["-"]
+
+
+def isolated_codex_home(real: Path, root: Path) -> Path:
+    """A Codex home holding only a link to the real login and the real model settings,
+    so sessions see the fixture's AGENTS.md and not the user's global one (which carries
+    whatever memory policy is installed)."""
+    home = root / "codex-home"
+    home.mkdir()
+    (home / "auth.json").symlink_to(real / "auth.json")
+    top = []
+    for line in (real / "config.toml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("["):
+            break
+        if re.match(r"(model|model_reasoning_effort)\s*=", line):
+            top.append(line)
+    (home / "config.toml").write_text("\n".join(top) + "\n", encoding="utf-8")
+    return home
 
 
 def other_codex_servers() -> list[str]:
@@ -403,7 +422,7 @@ async def store_state(conn: Connection, namespace: str) -> dict[str, list[dict]]
     current = await conn.fetch(
         "SELECT f.fact_id, f.namespace, f.subject, f.predicate, "
         "coalesce(f.object_text, f.object_json, f.object_number) AS value, "
-        f"f.actor FROM memory_current f WHERE {LANES} ORDER BY f.recorded_at",
+        f"f.actor, f.provenance FROM memory_current f WHERE {LANES} ORDER BY f.recorded_at",
         namespace,
     )
     return {"events": [dict(row) for row in events], "current": [dict(row) for row in current]}
@@ -411,6 +430,9 @@ async def store_state(conn: Connection, namespace: str) -> dict[str, list[dict]]
 
 def scope_of(namespace: str) -> str:
     return "project" if "@" in namespace else "global"
+
+
+SOURCE_OF = {"direct_user_statement": "user", "tool_output": "tool", "agent_inference": "agent"}
 
 
 def memory_text(row: dict) -> str:
@@ -439,6 +461,7 @@ def evaluate(
                 if check.scope in ("any", scope_of(row["namespace"]))
                 and re.search(check.match, memory_text(row), re.I)
                 and not (check.exclude and re.search(check.exclude, memory_text(row), re.I))
+                and (check.sources is None or SOURCE_OF.get(row.get("provenance")) in check.sources)
             ]
             passed = _in_range(len(rows), check)
             observed = [f"[{scope_of(row['namespace'])}] {memory_text(row)}" for row in rows]
@@ -622,6 +645,10 @@ async def run(args: argparse.Namespace) -> int:
     settings = get_settings()
     if args.backend != settings.backend:  # dimension follows the backend's model
         settings = Settings(backend=args.backend)
+    if args.isolate_codex_home and not args.dry_run:
+        real = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex-secondary")
+        isolated = isolated_codex_home(real, Path(tempfile.mkdtemp(prefix="mnemo-eval-codex-")))
+        os.environ["CODEX_HOME"] = str(isolated)
     codex_disable = other_codex_servers()
     if args.dry_run:
         env = mnemo_env("<db>", "eval-<scenario>", "<agent>", args.backend, settings.embed_dim)
@@ -656,6 +683,7 @@ async def run(args: argparse.Namespace) -> int:
             "embed_dim": settings.embed_dim,
             "codex_servers_disabled": codex_disable,
             "repo_files": sorted(files),
+            "codex_home_isolated": args.isolate_codex_home,
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
             "claude_auto_memory": args.claude_auto_memory,
@@ -777,6 +805,11 @@ def main() -> None:
         choices=["off", "on"],
         default="off",
         help="leave Claude Code's own auto-memory on (its saves are copied into the evidence)",
+    )
+    parser.add_argument(
+        "--isolate-codex-home",
+        action="store_true",
+        help="run Codex from a temporary home (login linked, no global AGENTS.md)",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

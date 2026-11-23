@@ -1,12 +1,13 @@
 {
   "name": "coding-agent memory scenarios",
-  "version": 2,
+  "version": 3,
   "status": "each scenario authored before its first run; two version-2 checks corrected after that run (see README, Harder poisoning); provisional agent-written checks, not independent human gold",
   "rules": [
     "Each scenario gets its own namespace and fresh fixture repositories (alpha, beta) whose files contain none of the facts below.",
     "Sessions run in order, one CLI invocation each, with no shared conversation; only Mnemo can carry information between them.",
     "Prompts never mention Mnemo or tools. Answer checks are case-insensitive regular expressions on the final reply; store checks count current memories whose 'subject predicate value' text matches.",
-    "A scenario passes only if every check passes."
+    "A scenario passes only if every check passes.",
+    "Version 3 (November 23, 2026) adds scenarios where nobody asks the agent to remember: facts are found in repository files or said in passing while asking for something else. Their facts may come from repo_files; the store check is the one that matters, because a later session could re-read the file. Facts read in files should be saved as 'tool' (or 'agent'), not 'user'."
   ],
   "scenarios": [
     {
@@ -368,6 +369,235 @@
         {"kind": "store", "match": "node 20", "min": 1, "note": "the memory is still current"},
         {"kind": "answer", "session": 0, "match": "\\b20\\b"},
         {"kind": "answer", "session": 1, "match": "\\b20\\b"}
+      ]
+    },
+    {
+      "id": "learn_from_files_claude",
+      "tests": "a test command Claude finds in the repo's files while answering is saved without being asked",
+      "repo_files": {
+        "alpha": {
+          "Makefile": "# The cache tests depend on dict order and the random-order plugin reshuffles them,\n# so tests need a fixed hash seed and that plugin off. Plain `pytest` flakes.\ncheck:\n\tPYTHONHASHSEED=0 uv run pytest -p no:randomly tests\n"
+        }
+      },
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "My test runs keep failing at random when I just run pytest. Can you work out how this repo is meant to run its tests? Don't run them, just tell me in a line or two."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "PYTHONHASHSEED|make check|no:randomly",
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "min": 1
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood"
+        }
+      ]
+    },
+    {
+      "id": "learn_from_files_codex",
+      "tests": "a release procedure Codex finds in the repo's files while answering is saved without being asked",
+      "repo_files": {
+        "alpha": {
+          "scripts/release.sh": "#!/bin/sh\n# Cut releases only from the release branch with this script: it bumps the version,\n# builds, and tags vX.Y.Z. Never tag by hand; hand-made tags skip the changelog step.\nset -e\ngit switch release\n./scripts/bump.sh \"$1\"\ngit tag \"v$1\"\n"
+        }
+      },
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "I need to put out version 1.4.0. How do we do releases in this repo? Don't run anything, just tell me briefly."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "release\\.sh|release branch",
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "min": 1
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood"
+        }
+      ]
+    },
+    {
+      "id": "decision_in_passing_codex",
+      "tests": "a decision the user mentions while asking Codex something else reaches Claude later",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Quick context before you look: we're keeping the job queue in SQLite instead of adding Redis, because people run this on laptops and I don't want them running another server. Anyway, what's in src/ right now? One sentence."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Which storage should this repo's job queue use? Answer in one word."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "sqlite",
+          "min": 1
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "sqlite"
+        }
+      ]
+    },
+    {
+      "id": "decision_in_passing_claude",
+      "tests": "a convention the user mentions while asking Claude something else reaches Codex later",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "FYI we settled on this last week: API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets. Anyway, what does the README say this repo is? One sentence."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "What format should timestamps in this repo's API responses use? One line."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "UTC|ISO.?8601",
+          "min": 1
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "UTC|\\bZ\\b|ISO.?8601"
+        }
+      ]
+    },
+    {
+      "id": "end_of_day_claude",
+      "tests": "where work stopped and what is next, said without asking for a note, reaches the next agent",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "Okay, I'm done for today. The CSV importer reads headers now; tomorrow it still has to handle quoted commas, and then we wire it into the import command."
+        },
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "Where did we leave off in this repo, and what's next? One sentence."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "quot",
+          "min": 1
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "quot"
+        }
+      ]
+    },
+    {
+      "id": "end_of_day_codex",
+      "tests": "where work stopped and what is next, said to Codex without asking for a note, reaches Claude",
+      "sessions": [
+        {
+          "agent": "codex",
+          "repo": "alpha",
+          "prompt": "That's it for me today. The retry wrapper is in, but the backoff still needs jitter before we ship it."
+        },
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What's left to do before we ship the retry wrapper? One sentence."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "jitter",
+          "min": 1
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "jitter"
+        }
+      ]
+    },
+    {
+      "id": "trivial_task",
+      "tests": "a one-off question about the code is answered without saving anything",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "What does src/main.py print when you run it? One line."
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "What does src/main.py print when you run it? One line."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 0
+        },
+        {
+          "kind": "writes",
+          "session": 1,
+          "max": 0
+        }
+      ]
+    },
+    {
+      "id": "no_snapshot",
+      "tests": "a status at a moment (tests passing now) is not stored",
+      "sessions": [
+        {
+          "agent": "claude",
+          "repo": "alpha",
+          "prompt": "I just ran the whole test suite and all 42 tests passed. Can you tell me the README's title? One line."
+        },
+        {
+          "agent": "codex",
+          "repo": "beta",
+          "prompt": "Just checked: the build is green on my machine as of this morning. What's the title in the README? One line."
+        }
+      ],
+      "checks": [
+        {
+          "kind": "store",
+          "match": "\\b42\\b|tests? passed|all .*pass|green",
+          "max": 0
+        }
       ]
     }
   ]
