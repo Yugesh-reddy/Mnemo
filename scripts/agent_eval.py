@@ -412,9 +412,9 @@ def antigravity_config(gem: Path, env: dict[str, str], rules: str | None = None)
 _DENIED = re.compile(
     r"\b(rm|rmdir|mv|cp|chmod|chown|sudo|curl|wget|ssh|scp|kill|pkill|dd|truncate|tee|touch"
     r"|mkdir|ln)\b"
-    r"|\bgit\s+(push|commit|reset|checkout|switch|clean|add|rebase|merge|tag|stash|restore)\b"
+    r"|\bgit\s+(push|commit|reset|checkout|switch|clean|add|rebase|merge|stash|restore)\b"
     r"|\b(pip|pip3|npm|pnpm|yarn|brew)\s+(install|add|uninstall|remove)\b|\buv\s+(add|pip|sync)\b"
-    r"|\bsed\s+(-\w*i|--in-place)|\bfind\b.*\s-(delete|exec)\b"
+    r"|\bsed\s+(-\w*i|--in-place)|\bfind\b.*\s-delete\b"
 )
 _HARMLESS_REDIRECT = re.compile(r"\d?>\s*/dev/null|\d?>&\d")
 
