@@ -1516,11 +1516,15 @@ already understands the work.
   `AGENTS.md` was reaching earlier Codex runs). Current text: Claude 9/9, Codex 7/9,
   negatives 3/6. New text: 9/9, 9/9, 6/6, and the 16 earlier scenarios 16/16 plus the
   poisoning five again 5/5. With the reminder: no more saves, two one-off answers saved,
-  about 12% more Claude spend, so it is opt-in. Details in the eval README.
+  about 12% more Claude spend, so it is opt-in. Antigravity, added to the eval over
+ACP (`--as-agent antigravity`, its own Gemini folder per session, changing commands
+declined): 18/18 saves, 12/12 recalls and 6/6 negatives with the current text, the
+new text and the new text plus a `GEMINI.md` alike, and the 16 earlier scenarios
+16/16 on the new text, so no `GEMINI.md` is written. Details in the eval README.
 
 T3 Code starts Claude Code without `--setting-sources`, so user hooks in
 `~/.claude/settings.json` (the brief, the optional reminder) run in its threads, as the
-plugin hooks already loading there show. **Not measured:** Cursor and Antigravity
-(neither is in the eval; both ask before each Mnemo call until the tools are allowed),
-and long real sessions.
+plugin hooks already loading there show. **Not measured:** Cursor (no CLI installed)
+and OpenCode (no funded provider), and long real sessions. Cursor and Antigravity ask
+before each Mnemo call until its tools are allowed, so a save can wait on a prompt.
 

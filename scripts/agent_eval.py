@@ -57,7 +57,12 @@ SESSION_TIMEOUT = 300
 PREVIEW = 600
 CLAUDE_TOOL_PREFIX = "mcp__mnemo__"
 
-Agent = Literal["claude", "codex"]
+Agent = Literal["claude", "codex", "antigravity"]
+ACTORS = {"claude": "claude-code", "codex": "codex", "antigravity": "antigravity"}
+AGY = Path.home() / ".gemini" / "bin" / "agy"
+# Antigravity asks before each tool; reading and memory calls are approved, the rest
+# (edits, commands, fetches) declined, as the other agents run read-only.
+AGY_ALLOWED_KINDS = {"read", "search", "think"}
 
 
 class Session(BaseModel):
@@ -388,6 +393,171 @@ def run_cli(
     return ("ok" if done.returncode == 0 else "error"), done.stdout, done.stderr
 
 
+def antigravity_config(gem: Path, env: dict[str, str], rules: str | None = None) -> Path:
+    """A Gemini folder of its own whose only MCP server is this session's Mnemo, with
+    ``rules`` as its global GEMINI.md (as ``mnemo install`` would write it)."""
+    (gem / "config").mkdir(parents=True)
+    if rules is not None:
+        (gem / "GEMINI.md").write_text(rules, encoding="utf-8")
+    servers = {"mnemo": {"command": str(SERVER), "args": [], "env": env}}
+    (gem / "config" / "mcp_config.json").write_text(
+        json.dumps({"mcpServers": servers}), encoding="utf-8"
+    )
+    return gem
+
+
+# Antigravity ends its turn when a command is declined, so declining every non-reading
+# command left sessions without an answer. Commands run in the throwaway fixture
+# repository; only ones that change files, history or the network are declined.
+_DENIED = re.compile(
+    r"\b(rm|rmdir|mv|cp|chmod|chown|sudo|curl|wget|ssh|scp|kill|pkill|dd|truncate|tee|touch"
+    r"|mkdir|ln)\b"
+    r"|\bgit\s+(push|commit|reset|checkout|switch|clean|add|rebase|merge|stash|restore)\b"
+    r"|\b(pip|pip3|npm|pnpm|yarn|brew)\s+(install|add|uninstall|remove)\b|\buv\s+(add|pip|sync)\b"
+    r"|\bsed\s+(-\w*i|--in-place)|\bfind\b.*\s-delete\b"
+)
+_HARMLESS_REDIRECT = re.compile(r"\d?>\s*/dev/null|\d?>&\d")
+
+
+def read_only_command(line: str) -> bool:
+    """A command that does not change files, history or the network (a redirect is
+    allowed only to /dev/null or between streams)."""
+    rest = _HARMLESS_REDIRECT.sub(" ", line)
+    return ">" not in rest and not _DENIED.search(rest)
+
+
+def _agy_allowed(call: dict[str, Any]) -> bool:
+    text = json.dumps(call).lower()
+    if "memory_" in text or "mnemo" in text or call.get("kind") in AGY_ALLOWED_KINDS:
+        return True
+    args = call.get("args") or {}
+    command = args.get("CommandLine") if isinstance(args, dict) else None
+    return call.get("kind") == "execute" and isinstance(command, str) and read_only_command(command)
+
+
+def run_antigravity(
+    gem: Path, prompt: str, cwd: Path, timeout: float = SESSION_TIMEOUT
+) -> tuple[str, str, str]:
+    """One Antigravity session over ACP (``agy acp``), started in the repository as T3
+    Code starts it: (status, events as JSON lines, stderr)."""
+    import threading
+
+    stderr_path = gem / "acp-stderr.log"
+    with stderr_path.open("w") as stderr:
+        proc = subprocess.Popen(
+            [str(AGY), "acp", "--gemini-dir", str(gem), "--app-data-dir", "eval-acp"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=stderr,
+            cwd=cwd,
+            text=True,
+            bufsize=1,
+        )
+    events: list[str] = []
+    replies: dict[int, dict] = {}
+    done = threading.Condition()
+    counter = [0]
+
+    def write(message: dict) -> None:
+        assert proc.stdin is not None
+        proc.stdin.write(json.dumps(message) + "\n")
+        proc.stdin.flush()
+
+    def reader() -> None:
+        assert proc.stdout is not None
+        for line in proc.stdout:
+            try:
+                message = json.loads(line)
+            except ValueError:
+                continue
+            events.append(json.dumps(message))
+            if message.get("method") == "session/request_permission":
+                params = message.get("params", {})
+                allow = _agy_allowed(params.get("toolCall", {}))
+                options = params.get("options", [])
+                wanted = "allow" if allow else "reject"
+                choice = next((o for o in options if o.get("kind", "").startswith(wanted)), None)
+                outcome = (
+                    {"outcome": "selected", "optionId": choice["optionId"]}
+                    if choice
+                    else {"outcome": "cancelled"}
+                )
+                write({"jsonrpc": "2.0", "id": message["id"], "result": {"outcome": outcome}})
+            elif "id" in message and ("result" in message or "error" in message):
+                with done:
+                    replies[message["id"]] = message
+                    done.notify_all()
+
+    threading.Thread(target=reader, daemon=True).start()
+
+    def call(method: str, params: dict, wait: float) -> dict | None:
+        counter[0] += 1
+        ident = counter[0]
+        write({"jsonrpc": "2.0", "id": ident, "method": method, "params": params})
+        with done:
+            done.wait_for(lambda: ident in replies, timeout=wait)
+        return replies.get(ident)
+
+    status = "ok"
+    try:
+        capabilities = {"fs": {"readTextFile": False, "writeTextFile": False}, "terminal": False}
+        call("initialize", {"protocolVersion": 1, "clientCapabilities": capabilities}, 60)
+        new = call("session/new", {"cwd": str(cwd), "mcpServers": []}, 60) or {}
+        session = (new.get("result") or {}).get("sessionId")
+        if not session:
+            status = "error"
+        else:
+            prompt_parts = [{"type": "text", "text": prompt}]
+            reply = call("session/prompt", {"sessionId": session, "prompt": prompt_parts}, timeout)
+            if reply is None:
+                status = "timeout"
+            elif "error" in reply:
+                status = "error"
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(10)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+    return status, "\n".join(events), stderr_path.read_text(errors="replace")[-20000:]
+
+
+def parse_antigravity(stdout: str) -> dict[str, Any]:
+    parsed: dict[str, Any] = {"answer": "", "usage": {}, "cost_usd": None, "model": None}
+    parsed["error"], parsed["tool_calls"] = None, []
+    chunks: list[str] = []
+    calls: dict[str, dict[str, Any]] = {}
+    for line in stdout.splitlines():
+        try:
+            message = json.loads(line)
+        except ValueError:
+            continue
+        if message.get("method") != "session/update":
+            if "error" in message:
+                parsed["error"] = _preview(message["error"])
+            continue
+        update = message.get("params", {}).get("update", {})
+        kind = update.get("sessionUpdate")
+        if kind == "agent_message_chunk":
+            chunks.append((update.get("content") or {}).get("text", ""))
+        elif kind in ("tool_call", "tool_call_update"):
+            ident = update.get("toolCallId")
+            call = calls.setdefault(ident, {"tool": update.get("name", ""), "arguments": None})
+            if update.get("args") is not None:
+                call["arguments"] = update.get("args")
+            if update.get("status") in ("completed", "failed"):
+                call["is_error"] = update["status"] == "failed"
+    for call in calls.values():
+        args = call["arguments"] if isinstance(call["arguments"], dict) else {}
+        if args.get("ServerName") == "mnemo" and args.get("ToolName"):
+            # Antigravity calls MCP tools through call_mcp_tool.
+            call["tool"] = f"mnemo:{args['ToolName']}"
+            call["arguments"] = args.get("Arguments")
+    parsed["answer"] = "".join(chunks)
+    parsed["tool_calls"] = list(calls.values())
+    return parsed
+
+
 # ---- store and scoring -------------------------------------------------------------
 
 LANES = "(f.namespace = ?1 OR substr(f.namespace, 1, length(?1) + 1) = ?1 || '@')"
@@ -634,14 +804,32 @@ def run_session(
         )
         child_env = claude_env(auto_memory)
         parse: Callable[[str], dict[str, Any]] = parse_claude
+    elif session.agent == "antigravity":
+        # Resolved: /var is a link to /private/var, and Antigravity refuses the other form.
+        rules = Path(args.antigravity_rules).read_text() if args.antigravity_rules else None
+        gem = antigravity_config(work.resolve() / f"agy-{uuid4().hex[:8]}", env, rules)
+        command = [str(AGY), "acp", "--gemini-dir", "<gemini-dir>"]
+        started = time.monotonic()
+        status, stdout, stderr = run_antigravity(gem, session.prompt, repo.resolve())
+        return (
+            _record(session, status, parse_antigravity(stdout), stderr, started),
+            command,
+            stdout,
+            stderr,
+        )
     else:
         command = codex_command(env, codex_disable, args.codex_model)
         child_env = dict(os.environ)
         parse = parse_codex
     started = time.monotonic()
     status, stdout, stderr = run_cli(command, session.prompt, repo, child_env)
-    parsed = parse(stdout)
-    record = SessionRecord(
+    return _record(session, status, parse(stdout), stderr, started), command, stdout, stderr
+
+
+def _record(
+    session: Session, status: str, parsed: dict[str, Any], stderr: str, started: float
+) -> SessionRecord:
+    return SessionRecord(
         agent=session.agent,
         repo=session.repo,
         prompt=session.prompt,
@@ -655,7 +843,6 @@ def run_session(
         seconds=round(time.monotonic() - started, 2),
         error=parsed["error"] or (stderr[-PREVIEW:] if status != "ok" else None),
     )
-    return record, command, stdout, stderr
 
 
 async def run(args: argparse.Namespace) -> int:
@@ -668,6 +855,10 @@ async def run(args: argparse.Namespace) -> int:
     if args.only:
         wanted = set(args.only.split(","))
         scenarios = [s for s in scenarios if s.id in wanted]
+    if args.as_agent:  # one agent plays every session: it saves and later recalls
+        for scenario in scenarios:
+            for session in scenario.sessions:
+                session.agent = args.as_agent
     files = {}
     for spec in args.repo_file:
         source, _, dest = spec.partition(":")
@@ -714,6 +905,8 @@ async def run(args: argparse.Namespace) -> int:
             "codex_servers_disabled": codex_disable,
             "repo_files": sorted(files),
             "codex_home_isolated": args.isolate_codex_home,
+            "as_agent": args.as_agent,
+            "antigravity_rules": args.antigravity_rules,
             "claude_sessions_kept": args.claude_keep_sessions,
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
@@ -746,7 +939,7 @@ async def run(args: argparse.Namespace) -> int:
                 env = mnemo_env(
                     db,
                     namespace,
-                    "claude-code" if session.agent == "claude" else "codex",
+                    ACTORS[session.agent],
                     args.backend,
                     settings.embed_dim,
                     settings,
@@ -846,6 +1039,16 @@ def main() -> None:
         "--claude-keep-sessions",
         action="store_true",
         help="let Claude Code save its transcripts (a Stop hook reads the turn from them)",
+    )
+    parser.add_argument(
+        "--as-agent",
+        choices=["claude", "codex", "antigravity"],
+        help="run every session with this agent (Antigravity runs only this way)",
+    )
+    parser.add_argument(
+        "--antigravity-rules",
+        metavar="FILE",
+        help="put FILE in each Antigravity session's Gemini folder as its global GEMINI.md",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

@@ -1,0 +1,1426 @@
+{
+  "arm": "v3-agy-C-new-text-and-gemini-md",
+  "started_at_utc": "2026-11-24T00:58:20.800158+00:00",
+  "environment": {
+    "mnemo_commit": "1a05f75a0fea9a522b85c260763c03847bebbe11",
+    "mnemo_dirty": false,
+    "claude": "2.1.331 (Claude Code)",
+    "codex": "codex-cli 0.163.0",
+    "server": "/private/tmp/claude-501/-Users-yugesh-Desktop-Projects-Mnemo/3ccc9cbb-8087-40df-bc1f-675f64333c41/scratchpad/wt-c/.venv/bin/mnemo-mcp-direct",
+    "backend": "local",
+    "embed_model": "BAAI/bge-small-en-v1.5",
+    "embed_dim": 384,
+    "codex_servers_disabled": [
+      "vercel"
+    ],
+    "repo_files": [],
+    "codex_home_isolated": false,
+    "as_agent": "antigravity",
+    "antigravity_rules": "mnemo/memory_policy.md",
+    "claude_sessions_kept": false,
+    "claude_session_usd_cap": 0.6,
+    "claude_total_usd_cap": 6.0,
+    "claude_auto_memory": "off"
+  },
+  "database": "mnemo-agent-eval-59206e1e-ilkdnxm_",
+  "scenarios": [
+    {
+      "id": "learn_from_files_claude",
+      "tests": "a test command Claude finds in the repo's files while answering is saved without being asked",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "PYTHONHASHSEED|make check|no:randomly",
+          "min": 1,
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "passed": true,
+          "observed": [
+            "[project] tests run_command Run tests via `make check` (`PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`), as defined in Makefile. Plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them, requiring a fixed hash seed and `-p no:randomly`."
+          ]
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood",
+          "passed": true,
+          "observed": 1
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "My test runs keep failing at random when I just run pytest. Can you work out how this repo is meant to run its tests? Don't run them, just tell me in a line or two.",
+          "status": "ok",
+          "answer": "Run tests via `make check` (`PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`), as configured in [Makefile](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/alpha/Makefile#L1-L4). Plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them, so they require a fixed hash seed (`PYTHONHASHSEED=0`) and `-p no:randomly`.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/agy-f1d891ec/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/agy-f1d891ec/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/agy-f1d891ec/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la && find . -maxdepth 3 -not -path '*/.*'",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List repository files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "test pytest command"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/alpha/Makefile"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_claude-suxeq129/alpha/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "run_command",
+                "scope": "project",
+                "source": "tool",
+                "subject": "tests",
+                "value": "Run tests via `make check` (`PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`), as defined in Makefile. Plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them, requiring a fixed hash seed and `-p no:randomly`."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 31.38,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 1,
+            "event_id": "4bd31fac-8774-4700-9528-a04965163f49",
+            "fact_id": "09bc0bed-3407-44c1-8de4-7ced147287cc",
+            "namespace": "eval-learn_from_files_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "tests",
+            "predicate": "run_command",
+            "op": "ADD",
+            "value": "Run tests via `make check` (`PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`), as defined in Makefile. Plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them, requiring a fixed hash seed and `-p no:randomly`.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 00:58:47.355089+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "09bc0bed-3407-44c1-8de4-7ced147287cc",
+            "namespace": "eval-learn_from_files_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "tests",
+            "predicate": "run_command",
+            "value": "Run tests via `make check` (`PYTHONHASHSEED=0 uv run pytest -p no:randomly tests`), as defined in Makefile. Plain `pytest` flakes because the cache tests depend on dict order and the random-order plugin reshuffles them, requiring a fixed hash seed and `-p no:randomly`.",
+            "actor": "antigravity",
+            "provenance": "tool_output"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "learn_from_files_codex",
+      "tests": "a release procedure Codex finds in the repo's files while answering is saved without being asked",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "release\\.sh|release branch",
+          "min": 1,
+          "sources": [
+            "tool",
+            "agent"
+          ],
+          "passed": true,
+          "observed": [
+            "[project] releases procedure Cut releases only from the `release` branch by running `./scripts/release.sh <X.Y.Z>` (e.g., `./scripts/release.sh 1.4.0`), which switches to `release`, runs `./scripts/bump.sh` to bump the version, builds, and creates the `v<X.Y.Z>` tag. Never tag releases by hand because hand-made tags skip the changelog step."
+          ]
+        },
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 3,
+          "note": "a few notes at most, not a flood",
+          "passed": true,
+          "observed": 1
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "I need to put out version 1.4.0. How do we do releases in this repo? Don't run anything, just tell me briefly.",
+          "status": "ok",
+          "answer": "According to [release.sh](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/scripts/release.sh#L1-L7):\n\n- Run `./scripts/release.sh 1.4.0` \u2014 releases are cut only from the `release` branch using this script.\n- The script switches to the `release` branch, runs `./scripts/bump.sh 1.4.0` (which handles the version bump/build), and tags `v1.4.0`.\n- **Don't tag by hand**, as manual tags skip the changelog step.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/agy-172e8010/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/agy-172e8010/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/agy-172e8010/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/agy-172e8010/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/RELEASING.md"
+              },
+              "is_error": true
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/CONTRIBUTING.md"
+              },
+              "is_error": true
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/Makefile"
+              },
+              "is_error": true
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "release version deploy tag"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find . -maxdepth 4 -not -path '*/.git/*'",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List repository files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/scripts/release.sh"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-learn_from_files_codex-2m7sqviv/alpha/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "procedure",
+                "scope": "project",
+                "source": "tool",
+                "subject": "releases",
+                "value": "Cut releases only from the `release` branch by running `./scripts/release.sh <X.Y.Z>` (e.g., `./scripts/release.sh 1.4.0`), which switches to `release`, runs `./scripts/bump.sh` to bump the version, builds, and creates the `v<X.Y.Z>` tag. Never tag releases by hand because hand-made tags skip the changelog step."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 90.3,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 2,
+            "event_id": "4601ff4f-1c86-41e5-935d-4427e734a854",
+            "fact_id": "65b30b32-8249-4922-951c-e70a04f00b16",
+            "namespace": "eval-learn_from_files_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "releases",
+            "predicate": "procedure",
+            "op": "ADD",
+            "value": "Cut releases only from the `release` branch by running `./scripts/release.sh <X.Y.Z>` (e.g., `./scripts/release.sh 1.4.0`), which switches to `release`, runs `./scripts/bump.sh` to bump the version, builds, and creates the `v<X.Y.Z>` tag. Never tag releases by hand because hand-made tags skip the changelog step.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 01:00:13.818849+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "65b30b32-8249-4922-951c-e70a04f00b16",
+            "namespace": "eval-learn_from_files_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "releases",
+            "predicate": "procedure",
+            "value": "Cut releases only from the `release` branch by running `./scripts/release.sh <X.Y.Z>` (e.g., `./scripts/release.sh 1.4.0`), which switches to `release`, runs `./scripts/bump.sh` to bump the version, builds, and creates the `v<X.Y.Z>` tag. Never tag releases by hand because hand-made tags skip the changelog step.",
+            "actor": "antigravity",
+            "provenance": "tool_output"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "decision_in_passing_codex",
+      "tests": "a decision the user mentions while asking Codex something else reaches Claude later",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "sqlite",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] job queue architecture decision Keep the job queue in SQLite instead of adding Redis, because people run this project on laptops and should not have to run another server."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "sqlite",
+          "passed": true,
+          "observed": "SQLite"
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "Quick context before you look: we're keeping the job queue in SQLite instead of adding Redis, because people run this on laptops and I don't want them running another server. Anyway, what's in src/ right now? One sentence.",
+          "status": "ok",
+          "answer": "Right now `src/` contains a single file, [app.py](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/alpha/src/app.py), which defines a `main()` function that prints `\"hello\"`.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/agy-dae8ef79/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/agy-dae8ef79/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/agy-dae8ef79/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la src/ && head -n 50 src/* 2>/dev/null || true",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List and inspect src directory"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 5,
+                "query": "job queue SQLite Redis"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "architecture decision",
+                "scope": "project",
+                "source": "user",
+                "subject": "job queue",
+                "value": "Keep the job queue in SQLite instead of adding Redis, because people run this project on laptops and should not have to run another server."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 29.53,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "Which storage should this repo's job queue use? Answer in one word.",
+          "status": "ok",
+          "answer": "SQLite",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/agy-1edcef13/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "job queue storage"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find src -maxdepth 3 -type f",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List files in src"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_codex-bdt40jqb/alpha/src/app.py"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 23.69,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 3,
+            "event_id": "a04cadc2-e39f-4392-b22d-e2c3e5dcd979",
+            "fact_id": "00161fb3-0646-4848-9036-27d206743de8",
+            "namespace": "eval-decision_in_passing_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "job queue",
+            "predicate": "architecture decision",
+            "op": "ADD",
+            "value": "Keep the job queue in SQLite instead of adding Redis, because people run this project on laptops and should not have to run another server.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 01:00:47.597676+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "00161fb3-0646-4848-9036-27d206743de8",
+            "namespace": "eval-decision_in_passing_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "job queue",
+            "predicate": "architecture decision",
+            "value": "Keep the job queue in SQLite instead of adding Redis, because people run this project on laptops and should not have to run another server.",
+            "actor": "antigravity",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "decision_in_passing_claude",
+      "tests": "a convention the user mentions while asking Claude something else reaches Codex later",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "UTC|ISO.?8601",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] API timestamps format API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "UTC|\\bZ\\b|ISO.?8601",
+          "passed": true,
+          "observed": "UTC in ISO-8601 format with a trailing `Z` (because the mobile client broke on offsets)."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "FYI we settled on this last week: API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets. Anyway, what does the README say this repo is? One sentence.",
+          "status": "ok",
+          "answer": "According to [README.md](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/alpha/README.md), `alpha` is a small internal service.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-ea4c591d/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-ea4c591d/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-ea4c591d/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "API timestamps UTC ISO-8601"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-ea4c591d/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "format",
+                "scope": "project",
+                "source": "user",
+                "subject": "API timestamps",
+                "value": "API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 30.73,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "What format should timestamps in this repo's API responses use? One line.",
+          "status": "ok",
+          "answer": "UTC in ISO-8601 format with a trailing `Z` (because the mobile client broke on offsets).",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-0a7cb5a0/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/agy-0a7cb5a0/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "timestamp format API responses"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-decision_in_passing_claude-qttl4tzt/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find src -maxdepth 3 -type f -exec head -n 100 {} +",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "Inspect src files"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 23.35,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 4,
+            "event_id": "badf4e6a-a30a-42c6-adea-cd6c2ff3109f",
+            "fact_id": "c026c144-560c-44ff-87db-67f91b981247",
+            "namespace": "eval-decision_in_passing_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "API timestamps",
+            "predicate": "format",
+            "op": "ADD",
+            "value": "API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 01:01:40.652435+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "c026c144-560c-44ff-87db-67f91b981247",
+            "namespace": "eval-decision_in_passing_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "API timestamps",
+            "predicate": "format",
+            "value": "API timestamps are always UTC in ISO-8601 with a trailing Z, because the mobile client broke on offsets.",
+            "actor": "antigravity",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "end_of_day_claude",
+      "tests": "where work stopped and what is next, said without asking for a note, reaches the next agent",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "quot",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] CSV importer unfinished_work The CSV importer reads headers now. Next steps: handle quoted commas, then wire the CSV importer into the import command."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "quot",
+          "passed": true,
+          "observed": "We left off with the CSV importer reading headers, and the next steps are to handle quoted commas and then wire it into the `import` command."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "Okay, I'm done for today. The CSV importer reads headers now; tomorrow it still has to handle quoted commas, and then we wire it into the import command.",
+          "status": "ok",
+          "answer": "Sounds good\u2014have a great evening! I've saved the current state and next steps for the CSV importer to project memory:\n\n- **Done:** Reads headers\n- **Next steps:** Handle quoted commas, then wire the CSV importer into the `import` command",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-82d49496/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-82d49496/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-82d49496/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-82d49496/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "CSV importer"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "import command next step unfinished"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-82d49496/eval-acp/mcp/mnemo/memory_get.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "unfinished_work",
+                "scope": "project",
+                "source": "user",
+                "subject": "CSV importer",
+                "value": "The CSV importer reads headers now. Next steps: handle quoted commas, then wire the CSV importer into the import command."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 28.29,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "Where did we leave off in this repo, and what's next? One sentence.",
+          "status": "ok",
+          "answer": "We left off with the CSV importer reading headers, and the next steps are to handle quoted commas and then wire it into the `import` command.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-c2ddd70b/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/agy-c2ddd70b/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "git status; git log -n 5 --oneline; ls -la",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "Check git status and repo files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "unfinished next step ongoing work left off"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "alpha project status progress todo"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find src -maxdepth 3 -ls",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List files in src directory"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_claude-fmmcxlsm/alpha/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "CSV importer import command"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 28.38,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 5,
+            "event_id": "db39e61e-b03a-4ff9-814b-8f5e5667870f",
+            "fact_id": "7c42b326-c9d8-4b80-9ca9-6414eaf7fa81",
+            "namespace": "eval-end_of_day_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "CSV importer",
+            "predicate": "unfinished_work",
+            "op": "ADD",
+            "value": "The CSV importer reads headers now. Next steps: handle quoted commas, then wire the CSV importer into the import command.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 01:02:34.979660+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "7c42b326-c9d8-4b80-9ca9-6414eaf7fa81",
+            "namespace": "eval-end_of_day_claude-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "CSV importer",
+            "predicate": "unfinished_work",
+            "value": "The CSV importer reads headers now. Next steps: handle quoted commas, then wire the CSV importer into the import command.",
+            "actor": "antigravity",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "end_of_day_codex",
+      "tests": "where work stopped and what is next, said to Codex without asking for a note, reaches Claude",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "jitter",
+          "min": 1,
+          "passed": true,
+          "observed": [
+            "[project] retry_wrapper next_step The retry wrapper is in, but the backoff still needs jitter added before shipping."
+          ]
+        },
+        {
+          "kind": "answer",
+          "session": 1,
+          "match": "jitter",
+          "passed": true,
+          "observed": "According to shared memory, jitter still needs to be added to the backoff before shipping the retry wrapper."
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "That's it for me today. The retry wrapper is in, but the backoff still needs jitter before we ship it.",
+          "status": "ok",
+          "answer": "Got it\u2014I've saved a note to project memory that the retry wrapper is in and the backoff still needs jitter before shipping. Have a good rest of your evening!",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-661d3230/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-661d3230/eval-acp/mcp/mnemo/memory_create.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-661d3230/eval-acp/mcp/mnemo/memory_update.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-661d3230/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "retry wrapper backoff jitter"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "unfinished ongoing work next step"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_create",
+              "arguments": {
+                "predicate": "next_step",
+                "scope": "project",
+                "source": "user",
+                "subject": "retry_wrapper",
+                "value": "The retry wrapper is in, but the backoff still needs jitter added before shipping."
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 34.04,
+          "writes": 1,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "What's left to do before we ship the retry wrapper? One sentence.",
+          "status": "ok",
+          "answer": "According to shared memory, jitter still needs to be added to the backoff before shipping the retry wrapper.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-ddb8854f/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/agy-ddb8854f/eval-acp/mcp/mnemo/instructions.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "retry wrapper"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 10,
+                "query": "unfinished next step ship"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find . -maxdepth 3 -not -path '*/.git*'",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files recursively"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/alpha/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-end_of_day_codex-i7q6_mes/alpha/README.md"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 30.31,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [
+          {
+            "seq": 6,
+            "event_id": "74252033-cf3b-44d2-a648-ec4fa41d71ac",
+            "fact_id": "165dc2e6-4b58-41e5-82ed-02fb1e4a9b50",
+            "namespace": "eval-end_of_day_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "retry_wrapper",
+            "predicate": "next_step",
+            "op": "ADD",
+            "value": "The retry wrapper is in, but the backoff still needs jitter added before shipping.",
+            "actor": "antigravity",
+            "recorded_at": "2026-11-24 01:03:35.180923+00:00"
+          }
+        ],
+        "current": [
+          {
+            "fact_id": "165dc2e6-4b58-41e5-82ed-02fb1e4a9b50",
+            "namespace": "eval-end_of_day_codex-59206e1e@github.com/mnemo-eval/alpha",
+            "subject": "retry_wrapper",
+            "predicate": "next_step",
+            "value": "The retry wrapper is in, but the backoff still needs jitter added before shipping.",
+            "actor": "antigravity",
+            "provenance": "direct_user_statement"
+          }
+        ]
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "trivial_task",
+      "tests": "a one-off question about the code is answered without saving anything",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "writes",
+          "session": 0,
+          "max": 0,
+          "passed": true,
+          "observed": 0
+        },
+        {
+          "kind": "writes",
+          "session": 1,
+          "max": 0,
+          "passed": true,
+          "observed": 0
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "What does src/main.py print when you run it? One line.",
+          "status": "ok",
+          "answer": "`src/main.py` does not exist; the only script is [src/app.py](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/alpha/src/app.py), which prints nothing when run directly (its `main()` function prints `hello` if called).",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/alpha/src/main.py"
+              },
+              "is_error": true
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find . -maxdepth 3 -not -path '*/.*'",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/alpha/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/agy-f460e89f/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la && git status -s && git log -n 5 --stat 2>&1 || true",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "Check directory and git history"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "limit": 5,
+                "query": "src/main.py"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 30.38,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "beta",
+          "prompt": "What does src/main.py print when you run it? One line.",
+          "status": "ok",
+          "answer": "`src/main.py` does not exist in this workspace; the only file in `src/` is [app.py](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/beta/src/app.py), which prints nothing when run directly (it defines `main()` to print `\"hello\"` without invoking it).",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/beta/src/main.py"
+              },
+              "is_error": true
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "find . -maxdepth 3 -not -path '*/.*'",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/beta/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/beta/src/app.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-trivial_task-4ij2_fyb/agy-a4872ed5/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "src/main.py"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la && ls -la src && git status 2>&1; git log -n 5 --stat 2>&1",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "Check directory contents and git history"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 28.9,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [],
+        "current": []
+      },
+      "claude_auto_memory_files": []
+    },
+    {
+      "id": "no_snapshot",
+      "tests": "a status at a moment (tests passing now) is not stored",
+      "passed": true,
+      "checks": [
+        {
+          "kind": "store",
+          "match": "\\b42\\b|tests? passed|all .*pass|green",
+          "max": 0,
+          "passed": true,
+          "observed": []
+        }
+      ],
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "repo": "alpha",
+          "prompt": "I just ran the whole test suite and all 42 tests passed. Can you tell me the README's title? One line.",
+          "status": "ok",
+          "answer": "The title in [README.md](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-0s2ghdmy/alpha/README.md#L1) is `alpha`.",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-0s2ghdmy/alpha/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "run_command",
+              "arguments": {
+                "CommandLine": "ls -la",
+                "WaitMsBeforeAsync": 5000,
+                "toolSummary": "List workspace files"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 15.28,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        },
+        {
+          "agent": "antigravity",
+          "repo": "beta",
+          "prompt": "Just checked: the build is green on my machine as of this morning. What's the title in the README? One line.",
+          "status": "ok",
+          "answer": "The title in [README.md](file:///private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-0s2ghdmy/beta/README.md#L1) is `beta` (`# beta`).",
+          "tool_calls": [
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-0s2ghdmy/beta/README.md"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "read_file",
+              "arguments": {
+                "Path": "/private/var/folders/7w/qlk0gjgs4sq1rnp7q80q5x840000gn/T/mnemo-eval-no_snapshot-0s2ghdmy/agy-42948af9/eval-acp/mcp/mnemo/memory_search.json"
+              },
+              "is_error": false
+            },
+            {
+              "tool": "mnemo:memory_search",
+              "arguments": {
+                "query": "build README preferences"
+              },
+              "is_error": false
+            }
+          ],
+          "usage": {},
+          "cost_usd": null,
+          "model": null,
+          "seconds": 33.42,
+          "writes": 0,
+          "reminders": 0,
+          "error": null
+        }
+      ],
+      "store": {
+        "events": [],
+        "current": []
+      },
+      "claude_auto_memory_files": []
+    }
+  ],
+  "commands": {
+    "antigravity": [
+      "/Users/yugesh/.gemini/bin/agy",
+      "acp",
+      "--gemini-dir",
+      "<gemini-dir>"
+    ]
+  },
+  "summary": {
+    "scenarios_passed": 8,
+    "scenarios_run": 8,
+    "checks_passed": 15,
+    "checks": 15,
+    "sessions_by_status": {
+      "ok": 14,
+      "error": 0,
+      "timeout": 0,
+      "skipped": 0
+    },
+    "sessions_with_mnemo_calls": 13,
+    "mnemo_calls_by_tool": {
+      "mnemo:memory_create": 6,
+      "mnemo:memory_search": 18
+    },
+    "write_sources": {
+      "tool": 2,
+      "user": 4
+    },
+    "memory_writes": 6,
+    "claude_reminders": 0,
+    "claude_auto_memory_files": 0,
+    "claude_cost_usd": 0,
+    "codex_tokens": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0
+    }
+  },
+  "finished_at_utc": "2026-11-24T01:05:59.467335+00:00",
+  "database_removed": true
+}

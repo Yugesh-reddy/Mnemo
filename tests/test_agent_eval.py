@@ -385,3 +385,65 @@ def test_events_whose_message_is_plain_text_are_skipped():
         ]
     )
     assert ae.parse_claude(stream)["answer"] == "Done"
+
+
+def test_antigravity_events_give_the_answer_and_its_memory_calls():
+    def update(body):
+        return json.dumps({"method": "session/update", "params": {"update": body}})
+
+    call = {"ServerName": "mnemo", "ToolName": "memory_create", "Arguments": {"subject": "s"}}
+    stream = "\n".join(
+        [
+            update({"sessionUpdate": "agent_message_chunk", "content": {"text": "Run "}}),
+            update(
+                {
+                    "sessionUpdate": "tool_call",
+                    "toolCallId": "1",
+                    "name": "call_mcp_tool",
+                    "args": call,
+                }
+            ),
+            update({"sessionUpdate": "tool_call_update", "toolCallId": "1", "status": "completed"}),
+            update({"sessionUpdate": "agent_message_chunk", "content": {"text": "make check."}}),
+        ]
+    )
+    parsed = ae.parse_antigravity(stream)
+    assert parsed["answer"] == "Run make check."
+    assert parsed["tool_calls"] == [
+        {"tool": "mnemo:memory_create", "arguments": {"subject": "s"}, "is_error": False}
+    ]
+
+
+@pytest.mark.parametrize(
+    "command, allowed",
+    [
+        ("ls -la && find . -maxdepth 3", True),
+        ("cat Makefile | grep check", True),
+        ("git log --oneline -3", True),
+        ("ls -la && git status -s && git log -n 5 --oneline 2>/dev/null || true", True),
+        ("git log 2>&1 | head", True),
+        ("python3 src/main.py", True),
+        ("find src -type f -exec head -n 100 {} +", True),
+        ("git branch -a && git tag -l", True),
+        ("find . -exec rm {} +", False),
+        ("rm -rf build", False),
+        ("echo x > f", False),
+        ("sed -i s/a/b/ f", False),
+        ("git push", False),
+        ("git commit -am x", False),
+        ("find . -delete", False),
+        ("curl https://example.com", False),
+        ("pip install requests", False),
+    ],
+)
+def test_antigravity_may_only_run_read_only_commands(command, allowed):
+    call = {"kind": "execute", "args": {"CommandLine": command}}
+    assert ae._agy_allowed(call) is allowed
+
+
+def test_an_antigravity_session_folder_gets_the_server_and_optional_rules(tmp_path):
+    gem = ae.antigravity_config(tmp_path / "g", {"MNEMO_DB": "x"}, "## rules\n")
+    servers = json.loads((gem / "config" / "mcp_config.json").read_text())["mcpServers"]
+    assert list(servers) == ["mnemo"] and servers["mnemo"]["env"] == {"MNEMO_DB": "x"}
+    assert (gem / "GEMINI.md").read_text() == "## rules\n"
+    assert not (ae.antigravity_config(tmp_path / "h", {}) / "GEMINI.md").exists()

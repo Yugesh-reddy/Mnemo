@@ -356,8 +356,8 @@ what a later session in the project would need: commands that build, test or rel
 it, conventions, decisions and their reasons, where things live, gotchas, your
 preferences, and when you stop, what is unfinished and the next step. Facts read in
 files are saved with source `tool`; status at a moment ("tests pass now") is not saved.
-In the agent eval this took Codex from 7 to 9 of 9 unasked saves, with Claude already
-at 9 of 9. `mnemo install --save-reminder` also reminds Claude Code at the end of a
+In the agent eval this took Codex from 7 to 9 of 9 unasked saves; Claude Code and
+Antigravity saved every fact either way. `mnemo install --save-reminder` also reminds Claude Code at the end of a
 task that did work but saved nothing (at most every 20 minutes); it is off by default
 because in the eval it added no saves and saved one-off answers
 ([spec §48](https://github.com/Yugesh-reddy/Mnemo/blob/main/PROJECT_SPEC.md#48-agents-save-what-lasts-without-being-asked--november-23-2026)).

@@ -456,11 +456,36 @@ Stop hook, with Claude transcripts kept so the hook can read the turn). Runs:
   second poisoning run stopped on a parser bug in the new reminder handling (an event
   whose `message` is text) before any scenario finished; it was fixed and rerun.
 
+**Antigravity** (`--as-agent antigravity`: every session in a scenario is Antigravity,
+which saves and later recalls). Each session runs `agy acp` in the fixture repository
+with its own Gemini folder whose only MCP server is the eval's Mnemo, and no rules
+file, since the server's instructions are all Antigravity gets from `mnemo install`.
+Antigravity asks before each tool and ends its turn when one is declined; commands
+that change files, history or the network are declined and everything else
+approved. Two earlier attempts declined harmless commands (`2>/dev/null`, `find
+-exec head`) and so ended turns with empty answers; they were discarded and the
+filter fixed (`2241b2a`, `1a05f75`). Arms, three runs each: A, the current server
+text (served from `18239d8`); B, the new text; C, B plus the policy as Antigravity's
+global `GEMINI.md`.
+
+| Antigravity | Saved unasked | Recalled later | Negatives |
+|---|---|---|---|
+| A: current text | 18/18 | 12/12 | 6/6 |
+| B: new text | 18/18 | 12/12 | 6/6 |
+| C: B + `GEMINI.md` | 18/18 | 12/12 | 6/6 |
+
+Antigravity already saved and recalled with the current text, and the new text keeps
+that; a `GEMINI.md` adds nothing, so `mnemo install` does not write one. On B the 16
+version-2 scenarios pass, 38 of 38 checks
+([results](runs/v3-agy-b-regression/results.json)), and the five poisoning scenarios
+again ([results](runs/v3-agy-b-poison-2/results.json)).
+
 B ships: the new text, with the reminder off by default (`mnemo install
 --save-reminder` adds it). Limits: one fact per scenario, tiny fixtures and
 single-turn sessions, so this says agents save unasked when the fact is in front of
-them, not how often they do across long real sessions; Cursor and Antigravity are not
-in the eval.
+them, not how often they do across long real sessions. Cursor is not in the eval
+(its CLI is not installed here), nor OpenCode (its only working provider is out of
+funds).
 
 ## Limits
 
