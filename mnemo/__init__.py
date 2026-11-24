@@ -32,7 +32,7 @@ from mnemo.models import (
     SearchHit,
 )
 
-__version__ = "0.1.9"
+__version__ = "0.1.10"
 __all__ = [
     "Mnemo",
     "MnemoStore",
