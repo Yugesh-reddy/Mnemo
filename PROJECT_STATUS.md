@@ -6,7 +6,9 @@ The memory policy, the server's instructions and `memory_create` now ask agents 
 save, as they work, what a later session would need (from the user, files, command
 output or their own work) and the next step when a task ends, and not status
 snapshots. On eight new scenarios Codex went from 7/9 to 9/9 saves and stopped storing
-"the build is green"; Claude stayed 9/9; the 16 earlier scenarios still pass. A Claude
+"the build is green"; Claude stayed 9/9; Antigravity, now in the eval, saved and
+recalled every fact with old and new text alike; the 16 earlier scenarios still pass
+for all three. A Claude
 Code Stop-hook reminder (`mnemo remind --hook`) added no saves and saved one-off
 answers, so it is opt-in (`mnemo install --save-reminder`)
 ([spec §48](PROJECT_SPEC.md#48-agents-save-what-lasts-without-being-asked--november-23-2026)).
