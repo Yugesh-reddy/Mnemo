@@ -408,12 +408,14 @@ def test_local_embedder_activity_extends_idle_window(tmp_path, monkeypatch) -> N
         return StubModel()
 
     monkeypatch.setattr(emb_mod, "_text_embedding", fake_loader)
-    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=0.15)
+    # Gaps well inside the idle window: a busy CI runner can overrun a short sleep
+    # (0.07 s against 0.15 s unloaded the model between calls on macOS CI).
+    embedder = emb_mod.LocalEmbedder(model="stub", dim=4, cache_dir=tmp_path, idle_seconds=1.0)
     try:
         embedder.embed("a")
-        time.sleep(0.07)
+        time.sleep(0.3)
         embedder.embed("b")
-        time.sleep(0.07)
+        time.sleep(0.3)
         embedder.embed("c")
         assert loads == 1 and embedder._model is not None
 
