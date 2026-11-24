@@ -436,3 +436,11 @@ def test_antigravity_events_give_the_answer_and_its_memory_calls():
 def test_antigravity_may_only_run_read_only_commands(command, allowed):
     call = {"kind": "execute", "args": {"CommandLine": command}}
     assert ae._agy_allowed(call) is allowed
+
+
+def test_an_antigravity_session_folder_gets_the_server_and_optional_rules(tmp_path):
+    gem = ae.antigravity_config(tmp_path / "g", {"MNEMO_DB": "x"}, "## rules\n")
+    servers = json.loads((gem / "config" / "mcp_config.json").read_text())["mcpServers"]
+    assert list(servers) == ["mnemo"] and servers["mnemo"]["env"] == {"MNEMO_DB": "x"}
+    assert (gem / "GEMINI.md").read_text() == "## rules\n"
+    assert not (ae.antigravity_config(tmp_path / "h", {}) / "GEMINI.md").exists()

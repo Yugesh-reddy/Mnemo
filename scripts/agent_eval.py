@@ -393,9 +393,12 @@ def run_cli(
     return ("ok" if done.returncode == 0 else "error"), done.stdout, done.stderr
 
 
-def antigravity_config(gem: Path, env: dict[str, str]) -> Path:
-    """A Gemini folder of its own whose only MCP server is this session's Mnemo."""
+def antigravity_config(gem: Path, env: dict[str, str], rules: str | None = None) -> Path:
+    """A Gemini folder of its own whose only MCP server is this session's Mnemo, with
+    ``rules`` as its global GEMINI.md (as ``mnemo install`` would write it)."""
     (gem / "config").mkdir(parents=True)
+    if rules is not None:
+        (gem / "GEMINI.md").write_text(rules, encoding="utf-8")
     servers = {"mnemo": {"command": str(SERVER), "args": [], "env": env}}
     (gem / "config" / "mcp_config.json").write_text(
         json.dumps({"mcpServers": servers}), encoding="utf-8"
@@ -803,7 +806,8 @@ def run_session(
         parse: Callable[[str], dict[str, Any]] = parse_claude
     elif session.agent == "antigravity":
         # Resolved: /var is a link to /private/var, and Antigravity refuses the other form.
-        gem = antigravity_config(work.resolve() / f"agy-{uuid4().hex[:8]}", env)
+        rules = Path(args.antigravity_rules).read_text() if args.antigravity_rules else None
+        gem = antigravity_config(work.resolve() / f"agy-{uuid4().hex[:8]}", env, rules)
         command = [str(AGY), "acp", "--gemini-dir", "<gemini-dir>"]
         started = time.monotonic()
         status, stdout, stderr = run_antigravity(gem, session.prompt, repo.resolve())
@@ -902,6 +906,7 @@ async def run(args: argparse.Namespace) -> int:
             "repo_files": sorted(files),
             "codex_home_isolated": args.isolate_codex_home,
             "as_agent": args.as_agent,
+            "antigravity_rules": args.antigravity_rules,
             "claude_sessions_kept": args.claude_keep_sessions,
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
@@ -1039,6 +1044,11 @@ def main() -> None:
         "--as-agent",
         choices=["claude", "codex", "antigravity"],
         help="run every session with this agent (Antigravity runs only this way)",
+    )
+    parser.add_argument(
+        "--antigravity-rules",
+        metavar="FILE",
+        help="put FILE in each Antigravity session's Gemini folder as its global GEMINI.md",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
