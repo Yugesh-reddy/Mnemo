@@ -403,24 +403,24 @@ def antigravity_config(gem: Path, env: dict[str, str]) -> Path:
     return gem
 
 
-READ_ONLY_COMMANDS = {"ls", "find", "cat", "head", "tail", "grep", "rg", "sed", "wc", "tree"}
-READ_ONLY_COMMANDS |= {"pwd", "echo", "file", "stat", "git", "cd", "awk", "sort", "uniq"}
-READ_ONLY_GIT = {"log", "status", "show", "diff", "branch", "ls-files", "rev-parse", "remote"}
+# Antigravity ends its turn when a command is declined, so declining every non-reading
+# command left sessions without an answer. Commands run in the throwaway fixture
+# repository; only ones that change files, history or the network are declined.
+_DENIED = re.compile(
+    r"\b(rm|rmdir|mv|cp|chmod|chown|sudo|curl|wget|ssh|scp|kill|pkill|dd|truncate|tee|touch"
+    r"|mkdir|ln)\b"
+    r"|\bgit\s+(push|commit|reset|checkout|switch|clean|add|rebase|merge|tag|stash|restore)\b"
+    r"|\b(pip|pip3|npm|pnpm|yarn|brew)\s+(install|add|uninstall|remove)\b|\buv\s+(add|pip|sync)\b"
+    r"|\bsed\s+(-\w*i|--in-place)|\bfind\b.*\s-(delete|exec)\b"
+)
+_HARMLESS_REDIRECT = re.compile(r"\d?>\s*/dev/null|\d?>&\d")
 
 
 def read_only_command(line: str) -> bool:
-    """A shell command that only reads (Codex's read-only sandbox, roughly)."""
-    if re.search(r"[>`]|\$\(|-delete\b|-exec\b|\bsed\s+-i|-i\b.*\bsed", line):
-        return False
-    for part in re.split(r"&&|\|\||;|\|", line):
-        words = part.split()
-        if not words:
-            continue
-        if words[0] not in READ_ONLY_COMMANDS:
-            return False
-        if words[0] == "git" and (len(words) < 2 or words[1] not in READ_ONLY_GIT):
-            return False
-    return True
+    """A command that does not change files, history or the network (a redirect is
+    allowed only to /dev/null or between streams)."""
+    rest = _HARMLESS_REDIRECT.sub(" ", line)
+    return ">" not in rest and not _DENIED.search(rest)
 
 
 def _agy_allowed(call: dict[str, Any]) -> bool:

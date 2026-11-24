@@ -420,11 +420,17 @@ def test_antigravity_events_give_the_answer_and_its_memory_calls():
         ("ls -la && find . -maxdepth 3", True),
         ("cat Makefile | grep check", True),
         ("git log --oneline -3", True),
+        ("ls -la && git status -s && git log -n 5 --oneline 2>/dev/null || true", True),
+        ("git log 2>&1 | head", True),
+        ("python3 src/main.py", True),
         ("rm -rf build", False),
         ("echo x > f", False),
         ("sed -i s/a/b/ f", False),
         ("git push", False),
+        ("git commit -am x", False),
         ("find . -delete", False),
+        ("curl https://example.com", False),
+        ("pip install requests", False),
     ],
 )
 def test_antigravity_may_only_run_read_only_commands(command, allowed):
