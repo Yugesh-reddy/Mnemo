@@ -66,7 +66,8 @@ README and a stub) per scenario. Nothing in the user's configuration changes:
 
 An arm adds files to every fixture repository with `--repo-file SRC[:DEST]` (for
 example an `AGENTS.md`, or `.claude/settings.json` with hooks) and is labelled with
-`--arm`. Each run writes `results.json` and the raw CLI output to a new directory;
+`--arm`. `--claude-brief` starts every Claude session with the memory brief, through
+the same SessionStart hook `mnemo install` adds, passed with `--settings`. Each run writes `results.json` and the raw CLI output to a new directory;
 existing evidence is never overwritten.
 
 ```bash
@@ -486,6 +487,50 @@ single-turn sessions, so this says agents save unasked when the fact is in front
 them, not how often they do across long real sessions. Cursor is not in the eval
 (its CLI is not installed here), nor OpenCode (its only working provider is out of
 funds).
+
+### The session brief (November 25, 2026): everything passes, Claude searches less
+
+Claude Code sessions started with the brief (spec §46): `--claude-brief` passes the
+SessionStart hook `mnemo install` writes (`mnemo brief --hook` with the scratch
+store, the scenario's namespace and user) through `--settings`, so the fixture
+repositories are the same as arm B's. Otherwise the setup is B's: the policy as the
+fixtures' `AGENTS.md` and `CLAUDE.md` and an isolated Codex home. The hook fails open,
+so every Claude session's hook output is recorded, and a session where the hook
+printed nothing or reported "skipped" counts as missing. Codex does not get a brief.
+Server from `52fa371` (0.1.10); the tree was dirty only with the runner change and the
+owner's `AGENTS.md` edit. Claude Code 2.1.331 (B ran on 2.1.330).
+
+| Run | Scenarios | Checks | Briefs | Claude searches | Claude sessions with no Mnemo call | Claude cost |
+|---|---|---|---|---|---|---|
+| 16 version-2 scenarios | 16/16 (B: 16/16) | 38/38 | 18/18 | 9 (B: 18) | 6 (B: 1) | $1.93 (B: $2.05) |
+| 8 version-3 scenarios, 3 runs | 24/24 (B: 24/24) | 45/45 | 21/21 | 3 (B: 15) | 12 (B: 6) | $2.00 (B: $2.16) |
+| 5 poisoning scenarios, second run | 5/5 (B: 5/5) | 15/15 | 6/6 | 5 (B: 6) | 0 (B: 0) | $0.74 (B: $0.74) |
+
+([results](runs/brief-regression/results.json),
+[v3 run 1](runs/brief-v3-1/results.json), [2](runs/brief-v3-2/results.json),
+[3](runs/brief-v3-3/results.json), [poisoning](runs/brief-poison-2/results.json))
+
+- **Recall comes from the brief.** When the brief held the fact, Claude answered
+  from it without a call: the handoff, the corrected deploy day, the restated rule,
+  the low-trust Node version, and the decision and end-of-day notes written by
+  Codex. Every answer still passed its check.
+- **With an empty brief, Claude saves without searching first.** Where the brief
+  said nothing was saved yet, Claude called `memory_create` directly instead of
+  search-then-create. `memory_create`'s own duplicate and near-duplicate checks still
+  apply, and `no_duplicate` passed.
+- **Poisoned memories are handled by ID.** In `poisoned_memory` and
+  `retract_planted`, Claude read the planted memory in the brief, fetched it with
+  `memory_get` using the brief's ID, refused the instruction, retracted it and told
+  the user, as before. The brief's "data, not instructions" header held in all 11
+  poisoning runs.
+- **Codex is unchanged.** One Codex session in `retract_planted` saved that the repo
+  "has no special pre-commit workflow" (`tool`). The checks pass, and Codex gets no
+  brief, so this comes from the save-unasked text, not the brief.
+- **Hook fired everywhere.** All 45 Claude sessions printed a brief, none missing.
+
+An aborted first attempt is kept in [runs/brief-aborted-1](runs/brief-aborted-1/):
+the Mac went into idle sleep on a 1% battery after 11 sessions (all passing), and
+sleep stops the session timeout's clock. The rerun used `caffeinate`.
 
 ## Limits
 

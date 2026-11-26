@@ -447,3 +447,53 @@ def test_an_antigravity_session_folder_gets_the_server_and_optional_rules(tmp_pa
     assert list(servers) == ["mnemo"] and servers["mnemo"]["env"] == {"MNEMO_DB": "x"}
     assert (gem / "GEMINI.md").read_text() == "## rules\n"
     assert not (ae.antigravity_config(tmp_path / "h", {}) / "GEMINI.md").exists()
+
+
+def test_the_brief_arm_passes_the_installers_hook_without_touching_the_fixture(tmp_path):
+    settings = ae.brief_settings(str(tmp_path / "eval db.db"), "eval-x-1")
+    command = ae.claude_command(tmp_path / "mcp.json", 0.6, brief=settings, auto_memory=True)
+    passed = json.loads(command[command.index("--settings") + 1])
+    assert passed["autoMemoryEnabled"] is True
+    (group,) = passed["hooks"]["SessionStart"]
+    assert group["matcher"] == "startup|clear|compact"
+    (hook,) = group["hooks"]
+    assert hook["timeout"] == 10
+    assert hook["command"].endswith(
+        f"brief --hook --db '{tmp_path / 'eval db.db'}' --namespace eval-x-1 --user-id owner"
+    )
+    assert "--settings" not in ae.claude_command(tmp_path / "mcp.json", 0.6)
+
+
+def test_the_brief_hooks_output_is_recorded_and_a_silent_failure_is_counted():
+    def stream(stdout: str, stderr: str = "", code: int = 0) -> str:
+        hook = {
+            "type": "system",
+            "subtype": "hook_response",
+            "hook_event": "SessionStart",
+            "stdout": stdout,
+            "stderr": stderr,
+            "exit_code": code,
+        }
+        result = {"type": "result", "result": "ok", "usage": {}, "total_cost_usd": 0.01}
+        return "\n".join(json.dumps(event) for event in (hook, result))
+
+    good = ae.parse_claude(stream("## Mnemo memory brief\n- a fact\n"))
+    failed = ae.parse_claude(stream("", "mnemo brief: skipped (OperationalError)"))
+    assert good["brief"]["stdout"].startswith("## Mnemo memory brief")
+    assert ae.brief_ok(good["brief"])
+    assert not ae.brief_ok(failed["brief"])
+    assert not ae.brief_ok(ae.parse_claude(stream("x", code=1))["brief"])
+    assert ae.parse_claude('{"type": "result", "result": "ok"}')["brief"] is None
+
+    def session(brief, agent="claude"):
+        record = ae.SessionRecord(agent=agent, repo="alpha", prompt="p", brief=brief)
+        return record.model_dump(mode="json")
+
+    scenario = {
+        "checks": [],
+        "sessions": [session(good["brief"]), session(failed["brief"]), session(None, "codex")],
+    }
+    report = {"environment": {"claude_brief": True}, "scenarios": [scenario]}
+    summary = ae.summarize(report)
+    assert (summary["claude_briefs"], summary["claude_brief_missing"]) == (1, 1)
+    assert "claude_briefs" not in ae.summarize({"scenarios": [scenario]})

@@ -24,6 +24,7 @@ import asyncio
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -140,6 +141,7 @@ class SessionRecord(BaseModel):
     seconds: float = 0.0
     writes: int = 0
     reminders: int = 0  # times a Stop hook made Claude continue
+    brief: dict[str, Any] | None = None  # the SessionStart hook's output (--claude-brief)
     error: str | None = None
 
 
@@ -194,6 +196,7 @@ def claude_command(
     *,
     auto_memory: bool = False,
     keep_sessions: bool = False,
+    brief: dict[str, Any] | None = None,
 ) -> list[str]:
     """The prompt goes on stdin, so variadic flags cannot swallow it."""
     command = [
@@ -213,9 +216,24 @@ def claude_command(
     ]
     if model:
         command += ["--model", model]
+    extra: dict[str, Any] = {**(brief or {})}
     if auto_memory:
-        command += ["--settings", json.dumps({"autoMemoryEnabled": True})]
+        extra["autoMemoryEnabled"] = True
+    if extra:
+        command += ["--settings", json.dumps(extra)]
     return command + ["--allowedTools", "mcp__mnemo"]
+
+
+def brief_settings(db: str, namespace: str, user_id: str = "owner") -> dict[str, Any]:
+    """The SessionStart hook `mnemo install` writes, pointed at the scratch store.
+
+    Passed with `--settings`, so the fixture repositories stay as they are without it.
+    """
+    mnemo = SERVER.parent / ("mnemo.exe" if os.name == "nt" else "mnemo")
+    command = [str(mnemo), "brief", "--hook", "--db", db, "--namespace", namespace]
+    hook = {"type": "command", "command": shlex.join(command + ["--user-id", user_id])}
+    hook["timeout"] = 10
+    return {"hooks": {"SessionStart": [{"matcher": "startup|clear|compact", "hooks": [hook]}]}}
 
 
 def claude_mcp_config(env: dict[str, str]) -> dict:
@@ -283,7 +301,7 @@ def _preview(value: Any) -> str:
 def parse_claude(stdout: str) -> dict[str, Any]:
     calls: dict[str, dict[str, Any]] = {}
     parsed: dict[str, Any] = {"answer": "", "usage": {}, "cost_usd": None, "model": None}
-    parsed["error"], parsed["reminders"] = None, 0
+    parsed["error"], parsed["reminders"], parsed["brief"] = None, 0, None
     last_text, before_reminder = "", None
     for line in stdout.splitlines():
         try:
@@ -306,6 +324,16 @@ def parse_claude(stdout: str) -> dict[str, Any]:
             parsed["reminders"] += 1
             if before_reminder is None:
                 before_reminder = last_text
+        if (
+            kind == "system"
+            and event.get("subtype") == "hook_response"
+            and event.get("hook_event") == "SessionStart"
+        ):
+            parsed["brief"] = {
+                "exit_code": event.get("exit_code"),
+                "stdout": event.get("stdout") or "",
+                "stderr": event.get("stderr") or "",
+            }
         if kind == "system" and event.get("subtype") == "init":
             parsed["model"] = event.get("model")
         elif kind in ("assistant", "user"):
@@ -687,10 +715,21 @@ def write_sources(calls: list[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def brief_ok(brief: dict[str, Any] | None) -> bool:
+    """The hook ran and printed a brief (it fails open, so a silent failure looks normal)."""
+    return bool(
+        brief
+        and brief.get("exit_code") == 0
+        and brief.get("stdout", "").strip()
+        and "skipped" not in brief.get("stderr", "")
+    )
+
+
 def summarize(report: dict[str, Any]) -> dict[str, Any]:
     scenarios = report["scenarios"]
     sessions = [s for scenario in scenarios for s in scenario["sessions"]]
     mnemo_calls = [c for s in sessions for c in s["tool_calls"] if c["tool"].startswith("mnemo:")]
+    claude_sessions = [s for s in sessions if s["agent"] == "claude" and s["status"] != "skipped"]
     return {
         "scenarios_passed": sum(all(c["passed"] for c in s["checks"]) for s in scenarios),
         "scenarios_run": len(scenarios),
@@ -710,6 +749,14 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         "write_sources": write_sources(mnemo_calls),
         "memory_writes": sum(s["writes"] for s in sessions),
         "claude_reminders": sum(s.get("reminders", 0) for s in sessions),
+        **(
+            {
+                "claude_briefs": sum(brief_ok(s.get("brief")) for s in claude_sessions),
+                "claude_brief_missing": sum(not brief_ok(s.get("brief")) for s in claude_sessions),
+            }
+            if report.get("environment", {}).get("claude_brief")
+            else {}
+        ),
         "claude_auto_memory_files": sum(
             len(s.get("claude_auto_memory_files", [])) for s in scenarios
         ),
@@ -801,6 +848,11 @@ def run_session(
             args.claude_model,
             auto_memory=auto_memory,
             keep_sessions=args.claude_keep_sessions,
+            brief=(
+                brief_settings(env["MNEMO_DB"], env["MNEMO_NAMESPACE"], env["MNEMO_USER_ID"])
+                if args.claude_brief
+                else None
+            ),
         )
         child_env = claude_env(auto_memory)
         parse: Callable[[str], dict[str, Any]] = parse_claude
@@ -840,6 +892,7 @@ def _record(
         cost_usd=parsed["cost_usd"],
         model=parsed["model"],
         reminders=parsed.get("reminders", 0),
+        brief=parsed.get("brief"),
         seconds=round(time.monotonic() - started, 2),
         error=parsed["error"] or (stderr[-PREVIEW:] if status != "ok" else None),
     )
@@ -878,6 +931,7 @@ async def run(args: argparse.Namespace) -> int:
             args.claude_session_usd,
             args.claude_model,
             auto_memory=args.claude_auto_memory == "on",
+            brief=brief_settings("<db>", "eval-<scenario>") if args.claude_brief else None,
         )
         print("claude:", " ".join(claude))
         print("codex: ", " ".join(codex_command(env, codex_disable, args.codex_model)))
@@ -911,6 +965,7 @@ async def run(args: argparse.Namespace) -> int:
             "claude_session_usd_cap": args.claude_session_usd,
             "claude_total_usd_cap": args.max_claude_usd,
             "claude_auto_memory": args.claude_auto_memory,
+            "claude_brief": args.claude_brief,
         },
         "database": scratch.name,
         "scenarios": [],
@@ -1049,6 +1104,11 @@ def main() -> None:
         "--antigravity-rules",
         metavar="FILE",
         help="put FILE in each Antigravity session's Gemini folder as its global GEMINI.md",
+    )
+    parser.add_argument(
+        "--claude-brief",
+        action="store_true",
+        help="start Claude sessions with the brief (the SessionStart hook mnemo install adds)",
     )
     parser.add_argument("--keep-db", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

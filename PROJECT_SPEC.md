@@ -1388,9 +1388,18 @@ searched again. Now Claude Code is handed the memories when a session starts.
 - **Other agents.** Codex, OpenCode, Cursor and Antigravity still rely on the policy
   and the server's instructions to search first; Antigravity was seen doing so (§45).
 
-**Not verified:** that Claude Code sessions started by other hosts through the Agent
-SDK (T3 Code) load user hooks from `~/.claude/settings.json`; they do load
-`~/.claude/CLAUDE.md`. **Not measured yet:** the agent eval (§39) with the brief.
+**Hosts.** Claude Code sessions started by T3 Code through the Agent SDK load the
+hook from `~/.claude/settings.json` (seen November 25, 2026: a T3 Code session began
+with the brief).
+
+**Measured (November 25, 2026).** The agent eval (§39) with `--claude-brief`, which
+passes this hook to every Claude session: the 16 version-2 scenarios, the 8 version-3
+scenarios three times and the five poisoning scenarios again all pass, as without the
+brief. All 45 Claude sessions got a brief. Claude answered recall questions from it
+without searching (searches 17 against 39 without it) and, with an empty brief, saved
+without searching first; planted memories in the brief were refused and retracted by
+ID as before. Claude cost fell slightly
+([results](docs/agent-eval/README.md#the-session-brief-november-25-2026-everything-passes-claude-searches-less)).
 
 
 ## 47. Capture: a note-taker for finished conversations — November 23, 2026

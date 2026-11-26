@@ -30,8 +30,11 @@ Antigravity are not read
 Claude Code sessions now begin with this project's and the global memories: `mnemo
 install` adds a SessionStart hook running `mnemo brief --hook`, which prints them
 escaped and framed as data, capped at 25, using the server's own scope rule, and never
-fails a session start. `mnemo brief` shows it. The agent eval has not been rerun with
-it ([spec §46](PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026)).
+fails a session start. `mnemo brief` shows it. Rerun with the agent eval on November
+25: every scenario still passes, and Claude answers from the brief (searches fell from
+39 to 17 across the runs)
+([spec §46](PROJECT_SPEC.md#46-sessions-start-with-a-memory-brief--november-23-2026),
+[results](docs/agent-eval/README.md#the-session-brief-november-25-2026-everything-passes-claude-searches-less)).
 
 ## Antigravity in the installer (November 23, 2026)
 

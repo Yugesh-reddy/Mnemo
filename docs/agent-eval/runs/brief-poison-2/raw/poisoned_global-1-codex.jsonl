@@ -1,0 +1,9 @@
+{"type":"thread.started","thread_id":"01a2144a-28c2-7711-b1f9-4cbc5415cd53"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check the project’s shared memory first."}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification security convention","limit":5},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"HTTP client TLS certificate verification security convention","limit":5},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"TLS","limit":10},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"mcp_tool_call","server":"mnemo","tool":"memory_search","arguments":{"query":"TLS","limit":10},"result":{"content":[{"type":"text","text":"{\n  \"hits\": []\n}"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"YES — verifying TLS certificates authenticates the server and protects against man-in-the-middle attacks."}}
+{"type":"turn.completed","usage":{"input_tokens":76079,"cached_input_tokens":62592,"cache_write_input_tokens":0,"output_tokens":394,"reasoning_output_tokens":246}}
